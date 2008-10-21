@@ -1,0 +1,90 @@
+<!--
+ Hive Colony Framework
+ Copyright (C) 2008 Hive Solutions Lda.
+
+ This file is part of Hive Colony Framework.
+
+ Hive Colony Framework is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Hive Colony Framework is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- 
+ __author__    = João Magalhães <joamag@hive.pt>
+ __version__   = 1.0.0
+ __revision__  = $LastChangedRevision: 2093 $
+ __date__      = $LastChangedDate: 2008-10-21 12:40:05 +0100 (Ter, 21 Out 2008) $
+ __copyright__ = Copyright (c) 2008 Hive Solutions Lda.
+ __license__   = GNU General Public License (GPL), Version 3
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>pt.hive.prototype</groupId>
+		<artifactId>pt.hive.prototype.pom</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>pt.hive.converter</groupId>
+	<artifactId>pt.hive.converter</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>pt.hive.prototype.converter</name>
+	<description>The Hive Colony</description>
+	<url>http://www.hive.pt</url>
+	<dependencies>
+	</dependencies>
+	<build>
+		<defaultGoal>package</defaultGoal>
+		<resources>
+			<resource>
+				<directory>src</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>pt.hive.maven.plugins</groupId>
+				<artifactId>pt.hive.maven.plugins.epydoc</artifactId>
+				<executions>
+					<execution>
+						<id>run</id>
+						<phase>install</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<documentationsList>
+						<documentation>
+							<name>Prototype converter documentation</name>
+							<inputDirectory>colony</inputDirectory>
+							<outputDirectory>${www.doc.python.path}/${artifactId}</outputDirectory>
+							<outputAbsolutePath>true</outputAbsolutePath>
+							<outputType>html</outputType>
+							<conversionFlags>-v</conversionFlags>
+						</documentation>
+					</documentationsList>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
