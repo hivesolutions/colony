@@ -151,6 +151,7 @@ def main():
     prefix_path + "pt.hive.colony.plugins.adapters.input.handlers/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.adapters.output/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.adapters.output.handlers/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.build.automation/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.business/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.configuration.startup/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.dummy/src/colony/plugins;" +\
