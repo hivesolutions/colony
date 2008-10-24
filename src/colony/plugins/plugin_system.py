@@ -2868,12 +2868,28 @@ class PluginThread(threading.Thread):
                 return
 
 class PluginEventThread(threading.Thread):
+    """
+    The plugin event thread class.
+    """
 
     method = None;
+    """ The method for the event thread """
 
     def __init__ (self, method):
+        """
+        Constructor of the class
+        
+        @type method: BusinessDummyBusinessLogicPlugin
+        @param method: The method for the event thread.
+        """
+        
         threading.Thread.__init__(self)
         self.method = method
 
     def run(self):
+        """
+        The method to start running the thread.
+        """
+
+        # calls the event thread method
         self.method()
