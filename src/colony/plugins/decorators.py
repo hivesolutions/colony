@@ -104,6 +104,7 @@ def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enable
         @param: The decorator interceptor function
         """
 
+        # creates the plugin tuple using the plugin id and version
         plugin_tuple = (plugin_id, plugin_version)
 
         if not load_plugin.load_plugin_map:
@@ -243,6 +244,7 @@ def load_allowed(plugin_id, plugin_version, load_plugin = False):
         @param: The decorator interceptor function
         """
 
+        # creates the plugin tuple using the plugin id and version
         plugin_tuple = (plugin_id, plugin_version)
 
         if not load_allowed.load_allowed_map:
@@ -375,6 +377,7 @@ def unload_allowed(plugin_id, plugin_version, load_plugin = False):
         @param: The decorator interceptor function
         """
 
+        # creates the plugin tuple using the plugin id and version
         plugin_tuple = (plugin_id, plugin_version)
 
         if not unload_allowed.unload_allowed_map:
@@ -510,6 +513,7 @@ def inject_dependencies(plugin_id, plugin_version, load_plugin = False):
         @param: The decorator interceptor function
         """
 
+        # creates the plugin tuple using the plugin id and version
         plugin_tuple = (plugin_id, plugin_version)
 
         if not inject_dependencies.inject_dependencies_map:
@@ -657,6 +661,7 @@ def event_handler(plugin_id, plugin_version, load_plugin = False):
         @param: The decorator interceptor function
         """
 
+        # creates the plugin tuple using the plugin id and version
         plugin_tuple = (plugin_id, plugin_version)
 
         if not event_handler.event_handler_methods_map:
