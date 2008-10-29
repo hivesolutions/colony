@@ -36,3 +36,15 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
+
+def PluginSystemException(Exception):
+    """
+    The plugin system exception class.
+    """
+
+    def __init__(self, message):
+        Exception.__init__(self)
+        self.message = message
+
+    def __str__(self):
+       return "Plugin system exception: %s" % self.message
