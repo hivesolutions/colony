@@ -159,7 +159,6 @@ def main():
     prefix_path + "pt.hive.colony.plugins.configuration.startup/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.dummy/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.gui.diamante/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.hivefs/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.io/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.javascript.file_handler/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.javascript.handlers/src/colony/plugins;" +\
