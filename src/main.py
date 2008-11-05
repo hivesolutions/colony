@@ -111,7 +111,7 @@ def main():
     """
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hvdnmp:", ["help", "verbose", "debug", "noloop", "manager_dir=", "plugin_dir="])
+        opts, args = getopt.getopt(sys.argv[1:], "hvdnm:p:", ["help", "verbose", "debug", "noloop", "manager_dir=", "plugin_dir="])
     except getopt.GetoptError, err:
         # prints help information and exit
         # will print something like "option -a not recognized"
