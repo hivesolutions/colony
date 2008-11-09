@@ -72,7 +72,7 @@ def run(plugin_path, verbose = False, debug = False, noloop = False):
     """
 
     # checks if the path is not empty
-    if plugin_path != None:
+    if not plugin_path == None:
         plugin_paths = plugin_path.split(";")
     else:
         plugin_paths = []
