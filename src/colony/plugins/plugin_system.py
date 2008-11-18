@@ -1078,7 +1078,7 @@ class PluginManager:
         plugin_instance = plugin(self)
 
         # retrieves the path to the plugin file
-        plugin_path = inspect.getsourcefile(plugin)
+        plugin_path = inspect.getfile(plugin)
 
         # retrieves the absolute path to the plugin file
         absolute_plugin_path = os.path.abspath(plugin_path)
