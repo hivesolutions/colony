@@ -949,8 +949,11 @@ class PluginManager:
             mode = os.stat(full_path)[stat.ST_MODE]
             if not stat.S_ISDIR(mode):
                 split = os.path.splitext(file_name)
-                if split[-1] == ".py":
-                    modules.append(string.join(split[:-1], ""))
+                extension = split[-1] 
+                if extension == ".py" or extension == ".pyc":
+                    module_name = string.join(split[:-1], "")
+                    if not module_name in modules:
+                        modules.append(module_name)
         return modules
 
     def init_plugin_system(self, configuration):
