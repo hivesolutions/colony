@@ -43,8 +43,22 @@ def PluginSystemException(Exception):
     """
 
     def __init__(self, message):
+        """
+        Constructor of the class.
+        
+        @type message: String
+        @param message: The message to be printed.
+        """
+
         Exception.__init__(self)
         self.message = message
 
     def __str__(self):
-       return "Plugin system exception: %s" % self.message
+        """
+        Returns the string representation of the class.
+        
+        @rtype: String
+        @return: The string representation of the class.
+        """
+
+        return "Plugin system exception: %s" % self.message
