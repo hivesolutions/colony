@@ -172,6 +172,7 @@ def main():
     prefix_path + "pt.hive.colony.plugins.main.mod_python/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.remote/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.remote.jsonrpc/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.main.remote.pyro/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.remote.soap/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.remote.xmlrpc/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.restricted/src/colony/plugins;" +\
