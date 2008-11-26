@@ -137,7 +137,7 @@ def main():
         elif option in ("-n", "--noloop"):
             noloop = True
         elif option in ("-c", "--container"):
-            conatinaer = value
+            container = value
         elif option in ("-m", "--manager_dir"):
             manager_path = value
         elif option in ("-p", "--plugin_dir"):
