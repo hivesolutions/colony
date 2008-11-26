@@ -38,6 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import sys
+import time
 
 CPYTHON_ENVIRONMENT = "cpython"
 """ CPython environment value """
@@ -47,6 +48,9 @@ JYTHON_ENVIRONMENT = "jython"
 
 IRON_PYTHON_ENVIRONMENT = "ironpython"
 """ IronPython environment value """
+
+UID_PRECISION = 8
+""" Unique id precision """
 
 #@todo: review and comment this file
 class Event:
@@ -105,3 +109,23 @@ def get_environment():
         return IRON_PYTHON_ENVIRONMENT
     else:
         return CPYTHON_ENVIRONMENT
+
+def get_timestamp_uid():
+    """
+    Retrieves a unique id based in the current timestamp.
+    
+    @rtype: String
+    @return: A unique id based in the current timestamp.
+    """
+
+    # retrieves the current timestamp
+    timestamp = time.time()
+
+    # increments precision decimal places
+    float_value = timestamp * (10 ** UID_PRECISION)
+
+    # retrieves the integer value
+    int_value = int(float_value)
+
+    # returns the integer value
+    return int_value

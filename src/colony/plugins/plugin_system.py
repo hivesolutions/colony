@@ -726,6 +726,9 @@ class PluginManager:
     The plugin manager class
     """
 
+    uid = None
+    """ The unique identification """
+
     logger = None
     """ The logger used """
 
@@ -835,6 +838,7 @@ class PluginManager:
         self.main_loop_active = main_loop_active
         self.container = container
 
+        self.uid = colony.plugins.util.get_timestamp_uid()
         self.semaphore = threading.BoundedSemaphore()
 
         self.current_id = 0
