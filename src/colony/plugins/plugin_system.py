@@ -750,6 +750,9 @@ class PluginManager:
     container = "default"
     """ The name of the plugin manager container """
 
+    attributes_map = {}
+    """ The attributes map """
+
     plugin_manager_plugins_loaded = False
     """ The plugin manager plugins loaded flag """
 
@@ -816,7 +819,7 @@ class PluginManager:
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
-    def __init__(self, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], main_loop_active = True, container = "default"):
+    def __init__(self, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], main_loop_active = True, container = "default", attributes_map = {}):
         """
         Constructor of the class
         
@@ -830,6 +833,8 @@ class PluginManager:
         @param main_loop_active: The boolean value for the main loop activation
         @type container: String
         @param container: The name of the plugin manager container
+        @type attributes_map: Dictionary
+        @param attributes_map: The map associating the attribute key and the attribute value
         """
 
         self.plugin_paths = plugin_paths
@@ -837,6 +842,7 @@ class PluginManager:
         self.init_complete_handlers = init_complete_handlers
         self.main_loop_active = main_loop_active
         self.container = container
+        self.attributes_map = attributes_map
 
         self.uid = colony.plugins.util.get_timestamp_uid()
         self.semaphore = threading.BoundedSemaphore()

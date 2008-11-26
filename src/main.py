@@ -57,7 +57,7 @@ def usage():
 
     print USAGE
 
-def run(plugin_path, verbose = False, debug = False, noloop = False, container = "default"):
+def run(plugin_path, verbose = False, debug = False, noloop = False, container = "default", attributes_map = {}):
     """
     Starts the loading of the plugin manager.
     
@@ -70,6 +70,8 @@ def run(plugin_path, verbose = False, debug = False, noloop = False, container =
     @type noloop: bool
     @param noloop: If the plugin manager is going to run in a loop.
     @type container: String
+    @param container: The name of the plugin manager container.
+    @type container: Dictionary
     @param container: The name of the plugin manager container.
     """
 
@@ -86,7 +88,7 @@ def run(plugin_path, verbose = False, debug = False, noloop = False, container =
     platform = colony.plugins.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], not noloop, container)
+    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], not noloop, container, attributes_map)
 
     # conditional logging import (depending on the current environment)
     if platform == colony.plugins.util.CPYTHON_ENVIRONMENT:
@@ -113,17 +115,18 @@ def main():
     """
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hvdnc:m:p:", ["help", "verbose", "debug", "noloop", "container=", "manager_dir=", "plugin_dir="])
-    except getopt.GetoptError, err:
+        opts, args = getopt.getopt(sys.argv[1:], "hvdnc:a:m:p:", ["help", "verbose", "debug", "noloop", "container=", "attributes=", "manager_dir=", "plugin_dir="])
+    except getopt.GetoptError, error:
         # prints help information and exit
         # will print something like "option -a not recognized"
-        print str(err)
+        print str(error)
         usage()
         sys.exit(2)
     verbose = False
     debug = False
     noloop = False
     container = "default"
+    attributes_map = None
     manager_path = None
     plugin_path = None
     for option, value in opts:
@@ -138,6 +141,8 @@ def main():
             noloop = True
         elif option in ("-c", "--container"):
             container = value
+        elif option in ("-a", "--attributes"):
+            attributes_map = parse_attributes(value)
         elif option in ("-m", "--manager_dir"):
             manager_path = value
         elif option in ("-p", "--plugin_dir"):
@@ -195,7 +200,31 @@ def main():
     prefix_path + "pt.hive.omni.plugins.eureka.mocks/src/omni/plugins"
 
     # starts the running process
-    run(plugin_path, verbose, debug, noloop, container)
+    run(plugin_path, verbose, debug, noloop, container, attributes_map)
+
+def parse_attributes(attributes_string):
+    # creates an attributes map
+    attributes_map = {}
+
+    # strips the attributes string
+    attributes_string_stripped = attributes_string.strip()
+
+    # splits the attributes string 
+    attributes_string_list = attributes_string_stripped.split(",")
+
+    # iterates over all the attributes string list
+    for attributes_string_item in attributes_string_list:
+        # strips the attributes string item
+        attributes_string_item_stripped = attributes_string_item.strip()
+
+        # splits the attributes string item
+        attributes_string_item_splitted = attributes_string_item_stripped.split(":")
+
+        if len(attributes_string_item_splitted) == 2:
+            attribute_key, attribute_value = attributes_string_item_splitted
+            attributes_map[attribute_key] = attribute_value
+
+    return attributes_map
 
 if __name__ == "__main__":
     main()
