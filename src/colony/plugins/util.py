@@ -125,7 +125,10 @@ def get_timestamp_uid():
     float_value = timestamp * (10 ** UID_PRECISION)
 
     # retrieves the integer value
-    int_value = int(float_value)
+    integer_value = int(float_value)
 
-    # returns the integer value
-    return int_value
+    # converts the integer value to string value
+    string_value = str(integer_value)
+
+    # returns the string value
+    return string_value
