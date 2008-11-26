@@ -943,6 +943,11 @@ class PluginManager:
         """
 
         modules = []
+
+        if not os.path.exists(path):
+            self.logger.warning("Path '%s' does not exist in the current filesystem" % (path))
+            return modules
+
         dir_list = os.listdir(path)
         for file_name in dir_list:
             full_path = path + "/" + file_name
