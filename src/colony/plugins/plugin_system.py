@@ -744,6 +744,9 @@ class PluginManager:
     main_loop_active = True
     """ The boolean value for the main loop activation """
 
+    container = "default"
+    """ The name of the plugin manager container """
+
     plugin_manager_plugins_loaded = False
     """ The plugin manager plugins loaded flag """
 
@@ -810,7 +813,7 @@ class PluginManager:
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
-    def __init__(self, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], main_loop_active = True):
+    def __init__(self, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], main_loop_active = True, container = "default"):
         """
         Constructor of the class
         
@@ -822,12 +825,15 @@ class PluginManager:
         @param init_complete_handlers: The list of handlers to be called at the end of the plugin manager initialization
         @type main_loop_active: bool
         @param main_loop_active: The boolean value for the main loop activation
+        @type container: String
+        @param container: The name of the plugin manager container
         """
 
         self.plugin_paths = plugin_paths
         self.platform = platform
         self.init_complete_handlers = init_complete_handlers
         self.main_loop_active = main_loop_active
+        self.container = container
 
         self.semaphore = threading.BoundedSemaphore()
 

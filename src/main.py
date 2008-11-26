@@ -52,23 +52,25 @@ USAGE = "Help:\n\
 
 def usage():
     """
-    Prints the usage for the command line
+    Prints the usage for the command line.
     """
 
     print USAGE
 
-def run(plugin_path, verbose = False, debug = False, noloop = False):
+def run(plugin_path, verbose = False, debug = False, noloop = False, container = "default"):
     """
-    Starts the loading of the plugin manager
+    Starts the loading of the plugin manager.
     
     @type plugin_path: String
-    @param plugin_path: The set of paths to the various plugin locations separated by a semi-column
+    @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
     @type verbose: bool
-    @param verbose: If the log is going to be of type verbose
+    @param verbose: If the log is going to be of type verbose.
     @type debug: bool
-    @param debug: If the log is going to be of type debug
+    @param debug: If the log is going to be of type debug.
     @type noloop: bool
-    @param noloop: If the plugin manager is going to run in a loop
+    @param noloop: If the plugin manager is going to run in a loop.
+    @type container: String
+    @param container: The name of the plugin manager container.
     """
 
     # checks if the path is not empty
@@ -84,7 +86,7 @@ def run(plugin_path, verbose = False, debug = False, noloop = False):
     platform = colony.plugins.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], not noloop)
+    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], not noloop, container)
 
     # conditional logging import (depending on the current environment)
     if platform == colony.plugins.util.CPYTHON_ENVIRONMENT:
@@ -107,11 +109,11 @@ def run(plugin_path, verbose = False, debug = False, noloop = False):
 
 def main():
     """
-    The main entry point of the application
+    The main entry point of the application.
     """
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hvdnm:p:", ["help", "verbose", "debug", "noloop", "manager_dir=", "plugin_dir="])
+        opts, args = getopt.getopt(sys.argv[1:], "hvdnc:m:p:", ["help", "verbose", "debug", "noloop", "container=", "manager_dir=", "plugin_dir="])
     except getopt.GetoptError, err:
         # prints help information and exit
         # will print something like "option -a not recognized"
@@ -121,6 +123,7 @@ def main():
     verbose = False
     debug = False
     noloop = False
+    container = "default"
     manager_path = None
     plugin_path = None
     for option, value in opts:
@@ -133,6 +136,8 @@ def main():
             debug = True
         elif option in ("-n", "--noloop"):
             noloop = True
+        elif option in ("-c", "--container"):
+            conatinaer = value
         elif option in ("-m", "--manager_dir"):
             manager_path = value
         elif option in ("-p", "--plugin_dir"):
@@ -190,7 +195,7 @@ def main():
     prefix_path + "pt.hive.omni.plugins.eureka.mocks/src/omni/plugins"
 
     # starts the running process
-    run(plugin_path, verbose, debug, noloop)
+    run(plugin_path, verbose, debug, noloop, container)
 
 if __name__ == "__main__":
     main()
