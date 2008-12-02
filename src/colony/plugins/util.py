@@ -37,6 +37,7 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import os
 import sys
 import time
 
@@ -49,13 +50,25 @@ JYTHON_ENVIRONMENT = "jython"
 IRON_PYTHON_ENVIRONMENT = "ironpython"
 """ IronPython environment value """
 
+WINDOWS_OS = "windows"
+""" The windows os value """
+
+MAC_OS = "mac"
+""" The mac os value """
+
+UNIX_OS = "unix"
+""" The unix os value """
+
+OTHER_OS = "other"
+""" The other os value """
+
 UID_PRECISION = 8
 """ Unique id precision """
 
 #@todo: review and comment this file
 class Event:
     """
-    The class that describes an event to be used in a generic event queue
+    The class that describes an event to be used in a generic event queue.
     """
 
     event_name = None
@@ -66,12 +79,12 @@ class Event:
 
     def __init__(self, event_name, event_args = []):
         """
-        Constructor of the class
+        Constructor of the class.
         
         @type event_name: String
-        @param event_name: The name of the event
+        @param event_name: The name of the event.
         @type event_args: List
-        @param event_args: The arguments of the event
+        @param event_args: The arguments of the event.
         """
 
         self.event_name = event_name
@@ -79,12 +92,12 @@ class Event:
 
 def module_import(module_name):
     """
-    Imports the module with the given name
+    Imports the module with the given name.
     
     @type module_name: String 
-    @param module_name: The name of the module to be imported
+    @param module_name: The name of the module to be imported.
     @rtype: module
-    @return: The imported module
+    @return: The imported module.
     """
 
     module = __import__(module_name)
@@ -95,10 +108,10 @@ def module_import(module_name):
 
 def get_environment():
     """
-    Retrieves the current python environment
+    Retrieves the current python environment.
     
     @rtype: String
-    @return: The type of the current python environment
+    @return: The type of the current python environment.
     """
 
     platform = sys.platform
@@ -109,6 +122,23 @@ def get_environment():
         return IRON_PYTHON_ENVIRONMENT
     else:
         return CPYTHON_ENVIRONMENT
+
+def get_operative_system():
+    """
+    Retrieves the current operative system.
+    
+    @rtype: String
+    @return: The type of the current operative system.
+    """
+
+    if os_name == "nt" or os_name == "dos":
+        return WINDOWS_OS
+    elif os_name == "mac":
+        return MAC_OS
+    elif os_name == "posix":
+        return UNIX_OS
+
+    return OTHER_OS
 
 def get_timestamp_uid():
     """
