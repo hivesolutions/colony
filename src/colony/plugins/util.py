@@ -131,6 +131,9 @@ def get_operative_system():
     @return: The type of the current operative system.
     """
 
+    # retrieves the current os name
+    os_name = os.name
+
     if os_name == "nt" or os_name == "dos":
         return WINDOWS_OS
     elif os_name == "mac":

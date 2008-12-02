@@ -2446,34 +2446,101 @@ class PluginManager:
         return self.init_complete
 
 class Dependency:
-    
+    """
+    The dependency class.
+    """
+
     mandatory = True
-    
-    def __init__(self, mandatory = True):
+    """ The mandatory value """
+
+    conditions_list = True
+    """ The list of conditions """
+
+    def __init__(self, mandatory = True, conditions_list = []):
+        """
+        Constructor of the class.
+        
+        @type mandatory: bool
+        @param mandatory: The mandatory value.
+        @type conditions_list: List
+        @param conditions_list: The list of conditions.
+        """
+
         self.mandatory = mandatory
+        self.conditions_list = conditions_list
+
+    def test_dependency(self, manager):
+        """
+        Tests the environment for the plugin manager.
         
-    def test_dependency(self, manager, plugin):
-        pass
-    
+        @type manager: PluginManager
+        @param manager: The current plugin manager in use.
+        @rtype: bool
+        @return: The result of the test (if successful or not).
+        """
+
+        return True
+
+    def test_conditions(self):
+        """
+        Tests the available conditions.
+        
+        @rtype: bool
+        @return: The result of the test (if successful or not).
+        """
+
+        # iterates over all the conditions
+        for condition in self.conditions_list:
+            if not condition.test_condition():
+                return False
+
+        return True
+
     def get_tuple(self):
-        pass
+        """
+        Retrieves a tuple representing the dependency.
         
+        @rtype: Tuple
+        @return: A tuple representing the dependency.
+        """
+
+        return ()
+
 class PluginDependency(Dependency):
+    """
+    The plugin dependency class.
+    """
 
     plugin_id = "none"
+    """ The plugin id """
+    
     plugin_version = "none"
+    """ The plugin version """
 
-    def __init__(self, plugin_id = "none", plugin_version = "none", mandatory = True):
-        Dependency.__init__(self, mandatory)
+    def __init__(self, plugin_id = "none", plugin_version = "none", mandatory = True, conditions_list = []):
+        """
+        Constructor of the class.
+        
+        @type plugin_id: String
+        @param plugin_id: The plugin id.
+        @type plugin_version: String
+        @param plugin_version: The plugin version.
+        @type mandatory: bool
+        @param mandatory: The mandatory value.
+        @type conditions_list: List
+        @param conditions_list: The list of conditions.
+        """
+
+        Dependency.__init__(self, mandatory, conditions_list)
         self.plugin_id = plugin_id
         self.plugin_version = plugin_version
 
     def __repr__(self):
         """
-        Returns the default representation of the class
+        Returns the default representation of the class.
         
         @rtype: String
-        @return: The default representation of the class
+        @return: The default representation of the class.
         """
 
         return "<%s, %s, %s>" % (
@@ -2484,17 +2551,21 @@ class PluginDependency(Dependency):
 
     def test_dependency(self, manager, plugin):
         """
-        Tests the environment for the given plugin dependency and plugin manager
+        Tests the environment for the given plugin dependency and plugin manager.
         
         @type manager: PluginManager
-        @param manager: The current plugin manager in use
+        @param manager: The current plugin manager in use.
         @type package: PluginDependency
-        @param package: The plugin dependency to test
+        @param package: The plugin dependency to test.
         @rtype: bool
-        @return: The result of the test (if successful or not)
+        @return: The result of the test (if successful or not).
         """
 
-        Dependency.test_dependency(self, manager, plugin)
+        Dependency.test_dependency(self, manager)
+
+        # in case some of the conditions are not fulfilled plugin
+        if not self.test_conditions():
+            return True
 
         # retrieves the plugin id for the plugin dependency
         plugin_id = plugin.plugin_id
@@ -2513,17 +2584,51 @@ class PluginDependency(Dependency):
         return True
 
     def get_tuple(self):
+        """
+        Retrieves a tuple representing the plugin dependency.
+        
+        @rtype: Tuple
+        @return: A tuple representing the plugin dependency.
+        """
+
         return (self.plugin_id, self.plugin_version)
 
 class PackageDependency(Dependency):
+    """
+    The package dependency class.
+    """
 
     package_name = "none"
-    package_import_name = "none"
-    package_version = "none"
-    package_url = "none"
+    """ The package name """
 
-    def __init__(self, package_name = "none", package_import_name = "none", package_version = "none", package_url = "none", mandatory = True):
-        Dependency.__init__(self, mandatory)
+    package_import_name = "none"
+    """ The package import name """
+
+    package_version = "none"
+    """ The package version """
+
+    package_url = "none"
+    """ The package url """
+
+    def __init__(self, package_name = "none", package_import_name = "none", package_version = "none", package_url = "none", mandatory = True, conditions_list = []):
+        """
+        Constructor of the class.
+        
+        @type package_name: String
+        @param package_name: The package name.
+        @type package_import_name: String
+        @param package_import_name: The package import name.
+        @type package_version: String
+        @param package_version: The package version.
+        @type package_url: String
+        @param package_url: The package url.
+        @type mandatory: bool
+        @param mandatory: The mandatory value.
+        @type conditions_list: List
+        @param conditions_list: The list of conditions.
+        """
+
+        Dependency.__init__(self, mandatory, conditions_list)
         self.package_name = package_name
         self.package_import_name= package_import_name
         self.package_version = package_version
@@ -2555,7 +2660,11 @@ class PackageDependency(Dependency):
         @return: The result of the test (if successful or not)
         """
 
-        Dependency.test_dependency(self, manager, package)
+        Dependency.test_dependency(self, manager)
+
+        # in case some of the conditions are not fulfilled plugin
+        if not self.test_conditions():
+            return True
 
         # retrieves the package name for the package dependency
         package_name = package.package_name
@@ -2582,7 +2691,74 @@ class PackageDependency(Dependency):
         return True
 
     def get_tuple(self):
+        """
+        Retrieves a tuple representing the package dependency.
+        
+        @rtype: Tuple
+        @return: A tuple representing the package dependency.
+        """
+
         return (self.package_name, self.package_version)
+
+class Condition:
+    """
+    The condition class.
+    """
+
+    def __init__(self):
+        """
+        Constructor of the class.
+        """
+
+        pass
+
+    def test_condition(self):
+        """
+        Test the condition returning the result of the test.
+        
+        @rtype: bool
+        @return: The result of the test (if successfull or not).
+        """
+
+        return True
+
+class OperativeSystemCondition(Condition):
+    """
+    The operative system condition class.
+    """
+
+    operative_system_name = "none"
+    """ The operative system name """
+
+    def __init__(self, operative_system_name = "none"):
+        """
+        Constructor of the class.
+        
+        @type operative_system_name: String
+        @param operative_system_name: The operative system name.
+        """
+
+        self.operative_system_name = operative_system_name
+
+    def test_condition(self):
+        """
+        Test the condition returning the result of the test.
+        
+        @rtype: bool
+        @return: The result of the test (if successfull or not).
+        """
+
+        if not Condition.test_condition(self):
+            return False
+
+        # retrieves the current operative system name
+        current_operative_system_name = colony.plugins.util.get_operative_system()
+
+        # in case the current operative system is the same as the defined in the condition
+        if current_operative_system_name == self.operative_system_name:
+            return True
+        else:
+            return False
 
 class Capability:
     """
