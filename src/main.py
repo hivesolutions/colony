@@ -194,6 +194,7 @@ def main():
     prefix_path + "pt.hive.colony.plugins.main.remote.soap/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.remote.xmlrpc/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.restricted/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.main.service.http/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.test/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.tasks/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.threads/src/colony/plugins;" +\
