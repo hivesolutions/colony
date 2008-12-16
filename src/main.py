@@ -202,7 +202,10 @@ def main():
     prefix_path + "pt.hive.colony.plugins.misc/src/colony/plugins;"  +\
     prefix_path + "pt.hive.colony.plugins.misc.gui/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.prototype.business/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.search/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.crawler/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.search.indexer/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.search.interpreter/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.provider/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.system.updater/src/colony/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.eureka/src/omni/plugins;" +\
