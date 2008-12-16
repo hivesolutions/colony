@@ -1,1 +1,1 @@
-pprofui.py results.dat
+python pprofui.py results.dat
