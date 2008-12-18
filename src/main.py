@@ -204,9 +204,13 @@ def main():
     prefix_path + "pt.hive.colony.plugins.prototype.business/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.crawler/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.search.index_persistence/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.search.index_serializer/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.indexer/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.interpreter/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.provider/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.search.query_evaluator/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.search.query_interpreter/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.system.updater/src/colony/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.eureka/src/omni/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.eureka.mocks/src/omni/plugins"
