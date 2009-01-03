@@ -182,6 +182,7 @@ def main():
     prefix_path + "pt.hive.colony.plugins.main.gui/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.log/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.logic/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.main.login/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.mod_python/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.remote/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.remote.client/src/colony/plugins;" +\
