@@ -779,7 +779,7 @@ class Plugin(object):
         @return: The formated logging message
         """
 
-        logger_message = message
+        logger_message = "[" + self.id + "] " + message
         return logger_message
 
 class PluginManagerPlugin(Plugin):
