@@ -65,7 +65,6 @@ OTHER_OS = "other"
 UID_PRECISION = 8
 """ Unique id precision """
 
-#@todo: review and comment this file
 class Event:
     """
     The class that describes an event to be used in a generic event queue.

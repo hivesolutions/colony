@@ -75,6 +75,9 @@ DEFAULT_LOGGER = "default_messages"
 DEFAULT_LOGGING_LEVEL = logging.WARN
 """ The default logging level """
 
+DEFAULT_LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
+""" The default logging format """
+
 EAGER_LOADING_TYPE = "eager_loading"
 """ The eager loading plugin loading type """
 
@@ -236,7 +239,7 @@ class Plugin(object):
         # sets the loaded flag as true
         self.lazy_loaded = False
 
-        self.logger.info("Loading plugin '%s' v%s" % (self.short_name, self.version))
+        self.info("Loading plugin '%s' v%s" % (self.short_name, self.version))
 
     def lazy_load_plugin(self):
         """
@@ -252,14 +255,14 @@ class Plugin(object):
         # sets the loaded flag as true
         self.lazy_loaded = True
 
-        self.logger.info("Lazy loading plugin '%s' v%s" % (self.short_name, self.version))
+        self.info("Lazy loading plugin '%s' v%s" % (self.short_name, self.version))
 
     def end_load_plugin(self):
         """
         Method called at the end of the plugin loading process
         """
 
-        self.logger.info("Loading process for plugin '%s' v%s completed" % (self.short_name, self.version))
+        self.info("Loading process for plugin '%s' v%s completed" % (self.short_name, self.version))
 
     def unload_plugin(self):
         """
@@ -273,14 +276,14 @@ class Plugin(object):
         self.loaded = False
         self.allowed_loaded = []
         self.dependencies_loaded = []
-        self.logger.info("Unloading plugin '%s' v%s" % (self.short_name, self.version))
+        self.info("Unloading plugin '%s' v%s" % (self.short_name, self.version))
 
     def end_unload_plugin(self):
         """
         Method called at the end of the plugin unloading process
         """
 
-        self.logger.info("Unloading process for plugin '%s' v%s completed" % (self.short_name, self.version))
+        self.info("Unloading process for plugin '%s' v%s completed" % (self.short_name, self.version))
 
     def load_allowed(self, plugin, capability):
         """
@@ -294,7 +297,7 @@ class Plugin(object):
 
         self.allowed_loaded.append(plugin)
         self.register_all_registrable_events_plugin(plugin)
-        self.logger.info("Loading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+        self.info("Loading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
     def unload_allowed(self, plugin, capability):
         """
@@ -308,7 +311,7 @@ class Plugin(object):
 
         self.allowed_loaded.remove(plugin)
         self.unregister_all_registrable_events_plugin(plugin)
-        self.logger.info("Unloading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+        self.info("Unloading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
     def dependency_injected(self, plugin):
         """
@@ -319,14 +322,14 @@ class Plugin(object):
         """
 
         self.dependencies_loaded.append(plugin)
-        self.logger.info("Plugin dependency '%s' v%s injected in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+        self.info("Plugin dependency '%s' v%s injected in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
     def init_complete(self):
         """
         Method called at the end of the plugin manager initialization
         """
 
-        self.logger.info("Plugin '%s' v%s notified about the end of the plugin manager init process" % (self.short_name, self.version))
+        self.info("Plugin '%s' v%s notified about the end of the plugin manager init process" % (self.short_name, self.version))
 
     def register_all_registrable_events_plugin(self, plugin):
         """
@@ -435,7 +438,7 @@ class Plugin(object):
         """
         Unregisters a given plugin manager event in self
         
-        @type event_neme: String
+        @type event_name: String
         @param event_name: The name of the event to be unregistered
         """
 
@@ -484,7 +487,7 @@ class Plugin(object):
 
         if not plugin in self.event_plugins_handled_loaded_map[event_name]:
             self.event_plugins_handled_loaded_map[event_name].append(plugin)
-            self.logger.info("Registering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.short_name, plugin.version, self.short_name, self.version))
+            self.info("Registering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.short_name, plugin.version, self.short_name, self.version))
 
     def unregister_plugin_event(self, plugin, event_name):
         """
@@ -499,7 +502,7 @@ class Plugin(object):
         if event_name in self.event_plugins_handled_loaded_map:
             if plugin in self.event_plugins_handled_loaded_map[event_name]:
                 self.event_plugins_handled_loaded_map[event_name].remove(plugin)
-                self.logger.info("Unregistering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.short_name, plugin.version, self.short_name, self.version))
+                self.info("Unregistering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.short_name, plugin.version, self.short_name, self.version))
 
     def notify_handlers(self, event_name, event_args):
         """
@@ -522,7 +525,7 @@ class Plugin(object):
             if event_or_super_event in self.event_plugins_handled_loaded_map:
                 # iterates over all the plugins registered for notification
                 for event_plugin_loaded in self.event_plugins_handled_loaded_map[event_or_super_event]:
-                    self.logger.info("Notifying '%s' v%s about event '%s' generated in '%s' v%s" % (event_plugin_loaded.short_name, event_plugin_loaded.version, event_name, self.short_name, self.version))
+                    self.info("Notifying '%s' v%s about event '%s' generated in '%s' v%s" % (event_plugin_loaded.short_name, event_plugin_loaded.version, event_name, self.short_name, self.version))
 
                     event_plugin_loaded.event_handler(event_name, *event_args)
 
@@ -538,7 +541,7 @@ class Plugin(object):
 
         if not is_event_or_super_event_in_list(event_name, self.events_handled):
             return
-        self.logger.info("Event '%s' generated in '%s' v%s" % (event_name, self.short_name, self.version))
+        self.info("Event '%s' generated in '%s' v%s" % (event_name, self.short_name, self.version))
 
         self.notify_handlers(event_name, event_args)
 
@@ -552,7 +555,7 @@ class Plugin(object):
         @param event_args: The arguments for the handler
         """
 
-        self.logger.info("Event '%s' caught in '%s' v%s" % (event_name, self.short_name, self.version))
+        self.info("Event '%s' caught in '%s' v%s" % (event_name, self.short_name, self.version))
 
     def is_loaded(self):
         """
@@ -647,7 +650,7 @@ class Plugin(object):
         @param exception: The exception object to be treated
         """
 
-        self.logger.info("Exception '%s' generated in '%s' v%s" % (str(exception), self.short_name, self.version))
+        self.info("Exception '%s' generated in '%s' v%s" % (str(exception), self.short_name, self.version))
         self.manager.unload_plugin(self.id)
 
     def release_ready_semaphore(self):
@@ -709,7 +712,75 @@ class Plugin(object):
 
         # iterates over the traceback lines
         for formated_traceback_line in formated_traceback:
-            self.logger.debug(formated_traceback_line)
+            self.debug(formated_traceback_line)
+
+    def debug(self, message):
+        """
+        Adds the given debug message to the logger
+        
+        @type message: String
+        @param message: The debug message to be added to the logger
+        """
+
+        logger_message = self.format_logger_message(message)
+        self.logger.debug(logger_message)
+
+    def info(self, message):
+        """
+        Adds the given info message to the logger
+        
+        @type message: String
+        @param message: The info message to be added to the logger
+        """
+
+        logger_message = self.format_logger_message(message)
+        self.logger.info(logger_message)
+
+    def warning(self, message):
+        """
+        Adds the given warning message to the logger
+        
+        @type message: String
+        @param message: The warning message to be added to the logger
+        """
+
+        logger_message = self.format_logger_message(message)
+        self.logger.warning(logger_message)
+
+    def error(self, message):
+        """
+        Adds the given error message to the logger
+        
+        @type message: String
+        @param message: The error message to be added to the logger
+        """
+
+        logger_message = self.format_logger_message(message)
+        self.logger.error(logger_message)
+
+    def critical(self, message):
+        """
+        Adds the given critical message to the logger
+        
+        @type message: String
+        @param message: The critical message to be added to the logger
+        """
+
+        logger_message = self.format_logger_message(message)
+        self.logger.critical(logger_message)
+
+    def format_logger_message(self, message):
+        """
+        Formats the given message into a logging message
+        
+        @type message: String
+        @param message: The message to be formated into logging message
+        @rtype: String
+        @return: The formated logging message
+        """
+
+        logger_message = message
+        return logger_message
 
 class PluginManagerPlugin(Plugin):
     """
@@ -879,6 +950,8 @@ class PluginManager:
         logger = logging.getLogger(DEFAULT_LOGGER)
         logger.setLevel(log_level)
         stream_handler = logging.StreamHandler()
+        formatter = logging.Formatter(DEFAULT_LOGGING_FORMAT)
+        stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
         self.logger = logger
 
