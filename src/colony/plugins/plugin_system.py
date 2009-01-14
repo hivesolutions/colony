@@ -52,6 +52,12 @@ import os.path
 import colony.plugins.util
 import colony.plugins.decorators
 
+import colony.plugins.plugin_system_configuration
+import colony.plugins.plugin_system_exceptions
+
+plugin_manager_configuration = colony.plugins.plugin_system_configuration.plugin_manager_configuration
+""" The plugin manager configuration """
+
 CPYTHON_ENVIRONMENT = colony.plugins.util.CPYTHON_ENVIRONMENT
 """ CPython environment value """
 
@@ -779,7 +785,10 @@ class Plugin(object):
         @return: The formated logging message
         """
 
-        logger_message = "[" + self.id + "] " + message
+        if plugin_manager_configuration.get("plugin_id_logging", False):
+            logger_message = "[" + self.id + "] " + message
+        else:
+            logger_message = message
         return logger_message
 
 class PluginManagerPlugin(Plugin):
@@ -950,7 +959,8 @@ class PluginManager:
         logger = logging.getLogger(DEFAULT_LOGGER)
         logger.setLevel(log_level)
         stream_handler = logging.StreamHandler()
-        formatter = logging.Formatter(DEFAULT_LOGGING_FORMAT)
+        logging_format = plugin_manager_configuration.get("logging_format", DEFAULT_LOGGING_FORMAT)
+        formatter = logging.Formatter(logging_format)
         stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
         self.logger = logger
