@@ -44,8 +44,8 @@ import inspect
 import threading
 import traceback
 import time
+import types
 import string
-import imp
 
 import os.path
 
@@ -2761,15 +2761,30 @@ class PackageDependency(Dependency):
         # retrieves the package url for the package dependency
         package_url = package.package_url
 
-        try:
-            # tries to find the given module
-            imp.find_module(package_import_name)  
-        except ImportError, import_error:
-            manager.logger.info("Package '%s' v%s does not exist in your system" % (package_name, package_version))
-            if not package_url == "none":
-                manager.logger.info("You can download the package at %s" % package_url)
+        # retrieves the package import name type
+        package_import_name_type = type(package_import_name)
 
-            return False
+        if package_import_name_type == types.StringType:
+            try:
+                # tries to find (import) the given module
+                __import__(package_import_name)  
+            except ImportError, import_error:
+                manager.logger.info("Package '%s' v%s does not exist in your system" % (package_name, package_version))
+                if not package_url == "none":
+                    manager.logger.info("You can download the package at %s" % package_url)
+
+                return False
+        elif package_import_name_type == types.ListType:
+            for package_import_name_item in package_import_name:
+                try:
+                    # tries to find (import) the given module
+                    __import__(package_import_name_item)
+                except ImportError, import_error:
+                    manager.logger.info("Package '%s' v%s does not exist in your system" % (package_name, package_version))
+                    if not package_url == "none":
+                        manager.logger.info("You can download the package at %s" % package_url)
+
+                    return False
 
         return True
 
