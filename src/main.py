@@ -217,6 +217,7 @@ def main():
     prefix_path + "pt.hive.colony.plugins.system.updater/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.template.administration/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.template.handler/src/colony/plugins;" +\
+    prefix_path + "pt.hive.omni.plugins.base.data/src/omni/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.eureka/src/omni/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.eureka.mocks/src/omni/plugins"
 
