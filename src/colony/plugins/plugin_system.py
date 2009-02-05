@@ -1654,7 +1654,7 @@ class PluginManager:
         for plugin_dependency in plugin_dependencies:
 
             # in case the test dependency tests fails
-            if not plugin_dependency.test_dependency(self, plugin_dependency):
+            if not plugin_dependency.test_dependency(self):
                 self.logger.info("Problem with dependency for plugin '%s' v%s" % (plugin.short_name, plugin.version))
                 return False
 
@@ -2634,14 +2634,12 @@ class PluginDependency(Dependency):
             self.plugin_version,
         )
 
-    def test_dependency(self, manager, plugin):
+    def test_dependency(self, manager):
         """
-        Tests the environment for the given plugin dependency and plugin manager.
+        Tests the environment for the plugin dependency and the given plugin manager.
         
         @type manager: PluginManager
         @param manager: The current plugin manager in use.
-        @type package: PluginDependency
-        @param package: The plugin dependency to test.
         @rtype: bool
         @return: The result of the test (if successful or not).
         """
@@ -2653,10 +2651,10 @@ class PluginDependency(Dependency):
             return True
 
         # retrieves the plugin id for the plugin dependency
-        plugin_id = plugin.plugin_id
+        plugin_id = self.plugin_id
 
         # retrieves the plugin version for the plugin dependency
-        plugin_version = plugin.plugin_version
+        plugin_version = self.plugin_version
 
         if not plugin_id in manager.loaded_plugins_map:
             return False
@@ -2733,14 +2731,12 @@ class PackageDependency(Dependency):
             self.package_version
         )
 
-    def test_dependency(self, manager, package):
+    def test_dependency(self, manager):
         """
-        Tests the environment for the given package dependency and plugin manager
+        Tests the environment for the package dependency and the given plugin manager
         
         @type manager: PluginManager
         @param manager: The current plugin manager in use
-        @type package: PackageDependency
-        @param package: The package dependency to test
         @rtype: bool
         @return: The result of the test (if successful or not)
         """
@@ -2752,16 +2748,16 @@ class PackageDependency(Dependency):
             return True
 
         # retrieves the package name for the package dependency
-        package_name = package.package_name
+        package_name = self.package_name
 
         # retrieves the package import name for the package dependency
-        package_import_name = package.package_import_name
+        package_import_name = self.package_import_name
 
         # retrieves the package version for the package dependency
-        package_version = package.package_version
+        package_version = self.package_version
 
         # retrieves the package url for the package dependency
-        package_url = package.package_url
+        package_url = self.package_url
 
         # retrieves the package import name type
         package_import_name_type = type(package_import_name)
