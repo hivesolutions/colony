@@ -1739,11 +1739,9 @@ class PluginManager:
                     self._inject_allowed(capability_plugin, plugin, plugin_capability)
 
     def add_plugin_dependent_plugins_map(self, plugin_id, dependency_plugin_instance):
-        if plugin_id in self.plugin_dependent_plugins_map:
-            self.plugin_dependent_plugins_map[plugin_id].append(dependency_plugin_instance)
-        else:
+        if not plugin_id in self.plugin_dependent_plugins_map:
             self.plugin_dependent_plugins_map[plugin_id] = []
-            self.plugin_dependent_plugins_map[plugin_id].append(dependency_plugin_instance)
+        self.plugin_dependent_plugins_map[plugin_id].append(dependency_plugin_instance)
 
     def get_plugin_dependent_plugins_map(self, plugin_id):
         if plugin_id in self.plugin_dependent_plugins_map:
@@ -1755,11 +1753,9 @@ class PluginManager:
         self.plugin_dependent_plugins_map[plugin_id] = []
 
     def add_plugin_allowed_plugins_map(self, plugin_id, allowed_plugin_info_list):
-        if plugin_id in self.plugin_allowed_plugins_map:
-            self.plugin_allowed_plugins_map[plugin_id].append(allowed_plugin_info_list)
-        else:
+        if not plugin_id in self.plugin_allowed_plugins_map:
             self.plugin_allowed_plugins_map[plugin_id] = []
-            self.plugin_allowed_plugins_map[plugin_id].append(allowed_plugin_info_list)
+        self.plugin_allowed_plugins_map[plugin_id].append(allowed_plugin_info_list)
 
     def get_plugin_allowed_plugins_map(self, plugin_id):
         if plugin_id in self.plugin_allowed_plugins_map:
@@ -1780,11 +1776,9 @@ class PluginManager:
                     break
 
     def add_capabilities_plugins_map(self, capability, plugin):
-        if capability in self.capabilities_plugins_map:
-            self.capabilities_plugins_map[capability].append(plugin)
-        else:
+        if not capability in self.capabilities_plugins_map:
             self.capabilities_plugins_map[capability] = []
-            self.capabilities_plugins_map[capability].append(plugin)
+        self.capabilities_plugins_map[capability].append(plugin)
 
     def get_capabilities_plugins_map(self, capability):
         if capability in self.capabilities_plugins_map:
