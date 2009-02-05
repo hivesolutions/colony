@@ -1650,8 +1650,10 @@ class PluginManager:
     def test_dependencies_available(self, plugin):
         plugin_dependencies = plugin.dependencies
 
+        # iterates over all the plugin dependencies
         for plugin_dependency in plugin_dependencies:
 
+            # in case the test dependency tests fails
             if not plugin_dependency.test_dependency(self, plugin_dependency):
                 self.logger.info("Problem with dependency for plugin '%s' v%s" % (plugin.short_name, plugin.version))
                 return False
