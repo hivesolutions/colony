@@ -1658,15 +1658,6 @@ class PluginManager:
                 self.logger.info("Problem with dependency for plugin '%s' v%s" % (plugin.short_name, plugin.version))
                 return False
 
-            # in case the dependency is of type PluginDependency
-            if plugin_dependency.__class__ == PluginDependency:
-                plugin_id = plugin_dependency.plugin_id
-                plugin_dependency_plugin = self.loaded_plugins_map[plugin_id]
-
-                if not self.test_plugin_load(plugin_dependency_plugin):
-                    self.logger.info("Problem with plugin dependency '%s' v%s for plugin '%s' v%s" % (plugin_dependency_plugin.short_name, plugin_dependency_plugin.version, plugin.short_name, plugin.version))
-                    return False
-
         return True
 
     def test_platform_compatible(self, plugin):
@@ -2663,6 +2654,10 @@ class PluginDependency(Dependency):
 
         if not plugin.version == plugin_version:
             return False
+
+        # in case the plugin load test is not successful
+        if not manager.test_plugin_load(plugin):
+            return False;
 
         return True
 
