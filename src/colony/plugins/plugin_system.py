@@ -2485,7 +2485,7 @@ class PluginManager:
 
         self.plugin_manager_plugins_loaded = value
 
-    def get_init_complete(self):
+    def get_plugin_manager_plugins_loaded(self):
         """
         Retrieves the current plugin_manager_plugins_loaded flag value
         
