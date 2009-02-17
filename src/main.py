@@ -219,7 +219,8 @@ def main():
     prefix_path + "pt.hive.colony.plugins.system.updater/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.template.administration/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.template.handler/src/colony/plugins;" +\
-    prefix_path + "pt.hive.omni.plugins.base.data/src/omni/plugins"
+    prefix_path + "pt.hive.omni.plugins.base.data/src/omni/plugins;" +\
+    prefix_path + "pt.hive.omni.plugins.base.logic/src/omni/plugins"
 
     # starts the running process
     run(plugin_path, verbose, debug, noloop, container, attributes_map)
