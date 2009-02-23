@@ -1338,14 +1338,13 @@ class PluginManager:
         for capability in plugin.capabilities:
             capability_and_super_capabilites_list = capability_and_super_capabilites(capability)
 
-            for capability_or_super_capability in capability_and_super_capabilites_list:
-                if not capability_or_super_capability in self.capabilities_plugin_instances_map:
-                    self.capabilities_plugin_instances_map[capability_or_super_capability] = []
-                self.capabilities_plugin_instances_map[capability_or_super_capability].append(plugin)
-
-            for capability_or_super_capability_index in range(len(capability_and_super_capabilites_list)):
+            for capability_or_super_capability_index in range(len(capability_and_super_capabilites_list)):               
                 capability = capability_and_super_capabilites_list[capability_or_super_capability_index]
                 sub_capabilities_list = capability_and_super_capabilites_list[capability_or_super_capability_index + 1:]
+                
+                if not capability in self.capabilities_plugin_instances_map:
+                    self.capabilities_plugin_instances_map[capability] = []
+                self.capabilities_plugin_instances_map[capability].append(plugin)
 
                 if not capability in self.capabilities_sub_capabilities_map:
                     self.capabilities_sub_capabilities_map[capability] = []
@@ -1364,16 +1363,15 @@ class PluginManager:
 
         # iterates over all the plugin instance capabilities
         for capability in plugin.capabilities:
-            capability_and_super_capabilites_list = capability_and_super_capabilites(capability)
-
-            for capability_or_super_capability in capability_and_super_capabilites_list:
-                if capability_or_super_capability in self.capabilities_plugin_instances_map:
-                    if plugin in self.capabilities_plugin_instances_map[capability_or_super_capability]:
-                        self.capabilities_plugin_instances_map[capability_or_super_capability].remove(plugin)
+            capability_and_super_capabilites_list = capability_and_super_capabilites(capability)              
 
             for capability_or_super_capability_index in range(len(capability_and_super_capabilites_list)):
                 capability = capability_and_super_capabilites_list[capability_or_super_capability_index]
                 sub_capabilities_list = capability_and_super_capabilites_list[capability_or_super_capability_index + 1:]
+                
+                if capability in self.capabilities_plugin_instances_map:
+                    if plugin in self.capabilities_plugin_instances_map[capability]:
+                        self.capabilities_plugin_instances_map[capability].remove(plugin)
 
                 if capability in self.capabilities_sub_capabilities_map:
                     for sub_capability in sub_capabilities_list:
