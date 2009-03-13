@@ -157,24 +157,21 @@ def main():
         prefix_path = "../../"
 
     # creates the plugin path
-    plugin_path = prefix_path + "pt.hive.colony.plugins.adapters.input/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.adapters.input.handlers/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.adapters.output/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.adapters.output.handlers/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.build.automation/src/colony/plugins;" +\
+    plugin_path = prefix_path + "pt.hive.colony.plugins.build.automation/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.build.automation.extensions/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.build.automation.items/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.business/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.business.access_control/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.document/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.configuration.startup/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.data_converter/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.data_converter.configuration.diamante_2003_omni/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.distribution/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.distribution.helper/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.distribution.registry/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.dummy/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.eureka/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.eureka.mocks/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.gui.diamante/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.io/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.javascript.file_handler/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.javascript.handlers/src/colony/plugins;" +\
@@ -184,7 +181,6 @@ def main():
     prefix_path + "pt.hive.colony.plugins.main.distribution/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.gui/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.log/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.logic/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.login/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.mod_python/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.main.pool/src/colony/plugins;" +\
