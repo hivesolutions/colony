@@ -165,7 +165,6 @@ def main():
     prefix_path + "pt.hive.colony.plugins.document/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.configuration.startup/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.data_converter/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.data_converter.configuration.diamante_2003_omni/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.distribution/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.distribution.helper/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.distribution.registry/src/colony/plugins;" +\
@@ -217,7 +216,9 @@ def main():
     prefix_path + "pt.hive.colony.plugins.template.administration/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.template.handler/src/colony/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.base.data/src/omni/plugins;" +\
-    prefix_path + "pt.hive.omni.plugins.base.logic/src/omni/plugins"
+    prefix_path + "pt.hive.omni.plugins.base.logic/src/omni/plugins;" +\
+    prefix_path + "pt.hive.omni.plugins.data_converter.configuration.input.diamante_2003/src/omni/plugins;" +\
+    prefix_path + "pt.hive.omni.plugins.data_converter.configuration.output.omni/src/omni/plugins"
 
     # starts the running process
     run(plugin_path, verbose, debug, noloop, container, attributes_map)
