@@ -217,6 +217,7 @@ def main():
     prefix_path + "pt.hive.colony.plugins.template.handler/src/colony/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.base.data/src/omni/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.base.logic/src/omni/plugins;" +\
+    prefix_path + "pt.hive.omni.plugins.extra.business/src/omni/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.data_converter.configuration.input.diamante_2003/src/omni/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.data_converter.configuration.output.omni/src/omni/plugins"
 
