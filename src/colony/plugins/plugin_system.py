@@ -40,6 +40,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import stat
 import sys
+import thread
 import inspect
 import threading
 import traceback
@@ -785,10 +786,20 @@ class Plugin(object):
         @return: The formated logging message
         """
 
+        # the default formatting message
+        formatting_message = ""
+
+        # in case the plugin id logging option is activated
         if plugin_manager_configuration.get("plugin_id_logging", False):
-            logger_message = "[" + self.id + "] " + message
-        else:
-            logger_message = message
+            formatting_message += "[" + self.id + "] "
+
+        # in case the thread id logging option is activated
+        if plugin_manager_configuration.get("thread_id_logging", False):
+            formatting_message += "[" + str(thread.get_ident()) + "] "
+
+        # appends the formatting message to the logging message
+        logger_message = formatting_message + message
+
         return logger_message
 
 class PluginManagerPlugin(Plugin):
