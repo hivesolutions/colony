@@ -201,6 +201,7 @@ def main():
     prefix_path + "pt.hive.colony.plugins.messaging/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.misc/src/colony/plugins;"  +\
     prefix_path + "pt.hive.colony.plugins.misc.gui/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.printing/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.crawler/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.index_persistence/src/colony/plugins;" +\
