@@ -4,7 +4,7 @@
 # This software is placed into the public domain
 
 #Reduced font size, added horizontal scroll bars: Drew Gulino, 2005
-#Added support for python 2.5, thanks to David Ross, 2007 
+#Added support for python 2.5, thanks to David Ross, 2007
 
 from Tkinter import *
 import sys, string, re, cStringIO, pstats
@@ -27,7 +27,7 @@ class Profile(Frame):
         hscroll.config(command=self._callers.xview)
         hscroll.pack(side=BOTTOM, fill=BOTH)
         vscroll.configure(command=self._callers.yview)
-        vscroll.pack(side=RIGHT, fill=BOTH)        
+        vscroll.pack(side=RIGHT, fill=BOTH)
         self._callers.pack(side=RIGHT, expand=YES, fill=BOTH)
         self._callers.bind('<Button-1>',
                            lambda e, s=self: s.choose(e, s._callers))
@@ -43,9 +43,9 @@ class Profile(Frame):
         hscroll.config(command=self._callees.xview)
         hscroll.pack(side=BOTTOM, fill=BOTH)
         vscroll.configure(command=self._callees.yview)
-        vscroll.pack(side=RIGHT, fill=BOTH)        
+        vscroll.pack(side=RIGHT, fill=BOTH)
         self._callees.pack(side=RIGHT, expand=YES, fill=BOTH)
-        self._callees.bind('<Button-1>', 
+        self._callees.bind('<Button-1>',
                            lambda e, s=self: s.choose(e, s._callees))
         self._callees.bind('<ButtonRelease-1>', ignore)
         self._callees.bind('<B1-Motion>', ignore)
@@ -81,7 +81,6 @@ class Profile(Frame):
             self._stats = stats = pstats.Stats(filename, stream=self._stream)
         except TypeError:
             self._stats = stats = pstats.Stats(filename)
-#        stats.strip_dirs()
         self.sort('cumulative')
 
     def listall(self):

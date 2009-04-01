@@ -79,7 +79,7 @@ class Event:
     def __init__(self, event_name, event_args = []):
         """
         Constructor of the class.
-        
+
         @type event_name: String
         @param event_name: The name of the event.
         @type event_args: List
@@ -92,8 +92,8 @@ class Event:
 def module_import(module_name):
     """
     Imports the module with the given name.
-    
-    @type module_name: String 
+
+    @type module_name: String
     @param module_name: The name of the module to be imported.
     @rtype: module
     @return: The imported module.
@@ -108,7 +108,7 @@ def module_import(module_name):
 def get_environment():
     """
     Retrieves the current python environment.
-    
+
     @rtype: String
     @return: The type of the current python environment.
     """
@@ -125,7 +125,7 @@ def get_environment():
 def get_operative_system():
     """
     Retrieves the current operative system.
-    
+
     @rtype: String
     @return: The type of the current operative system.
     """
@@ -145,7 +145,7 @@ def get_operative_system():
 def get_timestamp_uid():
     """
     Retrieves a unique id based in the current timestamp.
-    
+
     @rtype: String
     @return: A unique id based in the current timestamp.
     """

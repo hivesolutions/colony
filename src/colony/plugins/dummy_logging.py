@@ -78,7 +78,7 @@ _levelNames = {
 def getLogger(name):
     """
     Returns the dummy logger for the given name
-    
+
     @type name: String
     @param name: The name of the logger to retrieve
     @rtype: DummyLogger
@@ -90,7 +90,7 @@ def getLogger(name):
 def getLevelName(level):
     """
     Returns the textual representation of logging level
-    
+
     @type level: int
     @param level: The logging level to retrieve the textual representation
     @rtype: String
@@ -107,7 +107,7 @@ class DummyLogger:
     def __init__(self, name, level = NOTSET):
         """
         Constructor of the class
-        
+
         @type name: String
         @param name: The name of the logger
         @type level: int
@@ -119,7 +119,7 @@ class DummyLogger:
     def setLevel(self, level):
         """
         Sets the level of the logger
-        
+
         @type level: int
         @param level: The level of the logger
         """
@@ -129,7 +129,7 @@ class DummyLogger:
     def debug(self, msg, *args, **kwargs):
         """
         Prints a debug message to the logger
-        
+
         @type msg: String
         @param msg: The message to print
         """
@@ -139,7 +139,7 @@ class DummyLogger:
     def info(self, msg, *args, **kwargs):
         """
         Prints an info message to the logger
-        
+
         @type msg: String
         @param msg: The message to print
         """
@@ -149,7 +149,7 @@ class DummyLogger:
     def warning(self, msg, *args, **kwargs):
         """
         Prints a warning message to the logger
-        
+
         @type msg: String
         @param msg: The message to print
         """
@@ -159,7 +159,7 @@ class DummyLogger:
     def error(self, msg, *args, **kwargs):
         """
         Prints an error message to the logger
-        
+
         @type msg: String
         @param msg: The message to print
         """
@@ -169,7 +169,7 @@ class DummyLogger:
     def exception(self, msg, *args):
         """
         Prints an exception message to the logger
-        
+
         @type msg: String
         @param msg: The message to print
         """
@@ -179,17 +179,17 @@ class DummyLogger:
     def critical(self, msg, *args, **kwargs):
         """
         Prints a critical message to the logger
-        
+
         @type msg: String
         @param msg: The message to print
         """
 
         pass
-    
+
     def addHandler(self, hdlr):
         """
         Adds an handler to the logger
-        
+
         @type hdlr: Handler
         @param hdlr: The handler to add to the logger
         """
@@ -199,7 +199,7 @@ class DummyLogger:
     def removeHandler(self, hdlr):
         """
         Removes an handler from the logger
-        
+
         @type hdlr: Handler
         @param hdlr: The handler to remove from the logger
         """

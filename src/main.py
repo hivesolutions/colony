@@ -60,7 +60,7 @@ def usage():
 def run(plugin_path, verbose = False, debug = False, noloop = False, container = "default", attributes_map = {}):
     """
     Starts the loading of the plugin manager.
-    
+
     @type plugin_path: String
     @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
     @type verbose: bool
@@ -231,7 +231,7 @@ def parse_attributes(attributes_string):
     # strips the attributes string
     attributes_string_stripped = attributes_string.strip()
 
-    # splits the attributes string 
+    # splits the attributes string
     attributes_string_list = attributes_string_stripped.split(",")
 
     # iterates over all the attributes string list

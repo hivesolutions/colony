@@ -104,7 +104,7 @@ THREAD_TYPE = "thread"
 """ The thread plugin type """
 
 FULL_LOAD_TYPE = "full_load"
-""" The full load plugin loading type """ 
+""" The full load plugin loading type """
 
 DEPENDENCY_TYPE = "dependency"
 """ The dependency plugin loading/unloading type """
@@ -201,7 +201,7 @@ class Plugin(object):
     def __init__(self, manager = None):
         """
         Constructor of the class
-        
+
         @type manager: PluginManager
         @param manager: The plugin manager of the system
         """
@@ -220,7 +220,7 @@ class Plugin(object):
     def __repr__(self):
         """
         Returns the default representation of the class
-        
+
         @rtype: String
         @return: The default representation of the class
         """
@@ -295,7 +295,7 @@ class Plugin(object):
     def load_allowed(self, plugin, capability):
         """
         Method called at the loading of an allowed plugin
-        
+
         @type plugin: Plugin
         @param plugin: The allowed plugin that is being loaded
         @type capability: String
@@ -309,7 +309,7 @@ class Plugin(object):
     def unload_allowed(self, plugin, capability):
         """
         Method called at the unloading of an allowed plugin
-        
+
         @type plugin: Plugin
         @param plugin: The allowed plugin that is being unloaded
         @type capability: String
@@ -323,7 +323,7 @@ class Plugin(object):
     def dependency_injected(self, plugin):
         """
         Method called at the injection of a plugin dependency
-        
+
         @type plugin: Plugin
         @param plugin: The dependency plugin to be injected
         """
@@ -341,7 +341,7 @@ class Plugin(object):
     def register_all_registrable_events_plugin(self, plugin):
         """
         Registers all the allowed events from a given plugin in self
-        
+
         @param plugin: The plugin containing the events to be registered
         """
 
@@ -353,7 +353,7 @@ class Plugin(object):
     def unregister_all_registrable_events_plugin(self, plugin):
         """
         Unregisters all the allowed events from a given plugin in self
-        
+
         @param plugin: The plugin containing the events to be unregistered
         """
 
@@ -382,7 +382,7 @@ class Plugin(object):
     def register_for_plugin_event(self, plugin, event_name):
         """
         Registers a given event from a given plugin in self
-        
+
         @type plugin: Plugin
         @param plugin: The plugin containing the event to be registered
         @type event_name: String
@@ -406,7 +406,7 @@ class Plugin(object):
     def unregister_for_plugin_event(self, plugin, event_name):
         """
         Unregisters a given event from a given plugin in self
-        
+
         @type plugin: Plugin
         @param plugin: The plugin containing the event to be unregistered
         @type event_name: String
@@ -427,7 +427,7 @@ class Plugin(object):
     def register_for_plugin_manager_event(self, event_name):
         """
         Registers a given plugin manager event in self
-        
+
         @type event_neme: String
         @param event_name: The name of the event to be registered
         """
@@ -444,7 +444,7 @@ class Plugin(object):
     def unregister_for_plugin_manager_event(self, event_name):
         """
         Unregisters a given plugin manager event in self
-        
+
         @type event_name: String
         @param event_name: The name of the event to be unregistered
         """
@@ -461,7 +461,7 @@ class Plugin(object):
     def unregister_all_for_plugin_event(self, event_name):
         """
         Unregisters all the handlers for the event with the given name
-        
+
         @type event_name: String
         @param event_name: The name of the event to be unregistered
         """
@@ -482,7 +482,7 @@ class Plugin(object):
     def register_plugin_event(self, plugin, event_name):
         """
         Registers a given event in the given plugin
-        
+
         @type plugin: Plugin
         @param plugin: The plugin containing the handler to the event
         @type event_name: String
@@ -499,7 +499,7 @@ class Plugin(object):
     def unregister_plugin_event(self, plugin, event_name):
         """
         Unregisters a given event in the given plugin
-        
+
         @type plugin: Plugin
         @param plugin: The plugin containing the handler to the event
         @type event_name: String
@@ -514,7 +514,7 @@ class Plugin(object):
     def notify_handlers(self, event_name, event_args):
         """
         Notifies all the handlers for the event with the given name with the give arguments
-        
+
         @type event_name: String
         @param event_name: The name of the event to be notified
         @type event_args: List
@@ -539,7 +539,7 @@ class Plugin(object):
     def generate_event(self, event_name, event_args):
         """
         Generates an event and starts the process of handler notification
-        
+
         @type event_name: String
         @param event_name: The name of the event to be notified
         @type event_args: List
@@ -555,7 +555,7 @@ class Plugin(object):
     def event_handler(self, event_name, *event_args):
         """
         The top level event handling method
-        
+
         @type event_name: String
         @param event_name: The name of the event triggered
         @type event_args: List
@@ -567,7 +567,7 @@ class Plugin(object):
     def is_loaded(self):
         """
         Returns the result of the loading test
-        
+
         @rtype: bool
         @return: The result of the loading test (if the plugin is loaded or not)
         """
@@ -577,7 +577,7 @@ class Plugin(object):
     def is_lazy_loaded(self):
         """
         Returns the result of the lazy loading test
-        
+
         @rtype: bool
         @return: The result of the lazy loading test (if the plugin is lazy loaded or not)
         """
@@ -587,17 +587,17 @@ class Plugin(object):
     def is_loaded_or_lazy_loaded(self):
         """
         Returns the result of the loading and lazy loading tests
-        
+
         @rtype: bool
         @return: The result of the loading and lazy loading tests (if the plugin is loaded or lazy loaded or not)
         """
 
         return self.loaded or self.lazy_loaded
-    
+
     def contains_metadata(self):
         """
         Returns the result of the metadata test
-        
+
         @rtype: bool
         @return: The result of the metadata test (if the plugin contains metadata or not)
         """
@@ -610,7 +610,7 @@ class Plugin(object):
     def contains_metadata_key(self, metadata_key):
         """
         Returns the result of the metadata key test
-        
+
         @type metadata_key: String
         @param metadata_key: The value of the metadata key to test for metadata
         @rtype: bool
@@ -628,7 +628,7 @@ class Plugin(object):
     def get_metadata(self):
         """
         Returns the metadata of the plugin
-        
+
         @rtype: Dictionary
         @return: The metadata of the plugin
         """
@@ -639,7 +639,7 @@ class Plugin(object):
     def get_metadata_key(self, metadata_key):
         """
         Returns the metadata key of the plugin
-        
+
         @type metadata_key: String
         @param metadata_key: The value of the metadata key to retrieve
         @rtype: Object
@@ -652,7 +652,7 @@ class Plugin(object):
     def treat_exception(self, exception):
         """
         Treats the exception at the most abstract level
-        
+
         @type exception: Exception
         @param exception: The exception object to be treated
         """
@@ -671,7 +671,7 @@ class Plugin(object):
     def get_all_plugin_dependencies(self):
         """
         Retrieves all the plugin dependencies of the plugin
-        
+
         @rtype: List
         @requires: A list containing all the plugin dependencies of the plugin
         """
@@ -687,7 +687,7 @@ class Plugin(object):
     def get_all_package_dependencies(self):
         """
         Retrieves all the packages dependencies of the plugin
-        
+
         @rtype: List
         @requires: A list containing all the package dependencies of the plugin
         """
@@ -703,7 +703,7 @@ class Plugin(object):
     def get_tuple(self):
         """
         Retrieves a tuple representing the plugin (id and version)
-        
+
         @rtype: Tuple
         @return: Tuple representing the plugin (id and version)
         """
@@ -724,7 +724,7 @@ class Plugin(object):
     def debug(self, message):
         """
         Adds the given debug message to the logger
-        
+
         @type message: String
         @param message: The debug message to be added to the logger
         """
@@ -735,7 +735,7 @@ class Plugin(object):
     def info(self, message):
         """
         Adds the given info message to the logger
-        
+
         @type message: String
         @param message: The info message to be added to the logger
         """
@@ -746,7 +746,7 @@ class Plugin(object):
     def warning(self, message):
         """
         Adds the given warning message to the logger
-        
+
         @type message: String
         @param message: The warning message to be added to the logger
         """
@@ -757,7 +757,7 @@ class Plugin(object):
     def error(self, message):
         """
         Adds the given error message to the logger
-        
+
         @type message: String
         @param message: The error message to be added to the logger
         """
@@ -768,7 +768,7 @@ class Plugin(object):
     def critical(self, message):
         """
         Adds the given critical message to the logger
-        
+
         @type message: String
         @param message: The critical message to be added to the logger
         """
@@ -779,7 +779,7 @@ class Plugin(object):
     def format_logger_message(self, message):
         """
         Formats the given message into a logging message
-        
+
         @type message: String
         @param message: The message to be formated into logging message
         @rtype: String
@@ -913,7 +913,7 @@ class PluginManager:
     def __init__(self, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], main_loop_active = True, container = "default", attributes_map = {}):
         """
         Constructor of the class
-        
+
         @type plugin_paths: List
         @param plugin_paths: The list of directory paths for the loading of the plugins
         @type platform: int
@@ -962,7 +962,7 @@ class PluginManager:
     def start_logger(self, log_level = DEFAULT_LOGGING_LEVEL):
         """
         Starts the logging system with the given log level
-        
+
         @type log_level: int
         @param log_level: The log level of the logger
         """
@@ -1036,7 +1036,7 @@ class PluginManager:
     def add_event(self, event):
         """
         Adds an event to the list of events in the plugin manager
-        
+
         @type event: Event
         @param event: The event to add to the list of events in the plugin manager
         """
@@ -1047,9 +1047,9 @@ class PluginManager:
     def get_all_modules(self, path):
         """
         Retrieves all the modules in a given path
-        
-        @type path: String 
-        @param path: The path to retrieve the modules 
+
+        @type path: String
+        @param path: The path to retrieve the modules
         """
 
         modules = []
@@ -1064,7 +1064,7 @@ class PluginManager:
             mode = os.stat(full_path)[stat.ST_MODE]
             if not stat.S_ISDIR(mode):
                 split = os.path.splitext(file_name)
-                extension = split[-1] 
+                extension = split[-1]
                 if extension == ".py" or extension == ".pyc":
                     module_name = string.join(split[:-1], "")
                     if not module_name in modules:
@@ -1085,16 +1085,16 @@ class PluginManager:
         # loads the plugin files into memory
         self.load_plugins(configuration["plugins"])
 
-        # starts all the available the plugin manager plugins 
+        # starts all the available the plugin manager plugins
         self.start_plugin_manager_plugins()
 
-        # loads the plugin manager plugins 
+        # loads the plugin manager plugins
         self.load_plugin_manager_plugins()
 
         # sets the plugin manager plugins loaded to true
         self.set_plugin_manager_plugins_loaded(True)
 
-        # starts all the available the plugins 
+        # starts all the available the plugins
         self.start_plugins()
 
         # loads the startup plugins
@@ -1115,7 +1115,7 @@ class PluginManager:
     def set_python_path(self, plugin_paths):
         """
         Updates the python path adding the defined list of plugin paths
-        
+
         @type plugin_paths: List
         @param plugin_paths: The list of python paths to add to the python path
         """
@@ -1130,9 +1130,9 @@ class PluginManager:
     def load_plugins(self, plugins):
         """
         Imports a module starting the plugin
-        
+
         @type plugins: List
-        @param plugins: The list of plugins to be loaded  
+        @param plugins: The list of plugins to be loaded
         """
 
         # iterates over all the available plugins
@@ -1152,7 +1152,7 @@ class PluginManager:
 
         # iterates over all the available plugin manger plugin classes
         for plugin in plugin_classes:
-            # tests the plugin for loading            
+            # tests the plugin for loading
             if not plugin in self.loaded_plugins:
                 # starts the plugin
                 self.start_plugin(plugin)
@@ -1167,7 +1167,7 @@ class PluginManager:
 
         # iterates over all the available plugin classes
         for plugin in plugin_classes:
-            # tests the plugin for loading            
+            # tests the plugin for loading
             if not plugin in self.loaded_plugins:
                 # starts the plugin
                 self.start_plugin(plugin)
@@ -1175,7 +1175,7 @@ class PluginManager:
     def start_plugin(self, plugin):
         """
         Starts the given plugin, creating a singleton instance
-        
+
         @type plugin: Class
         @param plugin: The plugin to start
         """
@@ -1220,7 +1220,7 @@ class PluginManager:
     def stop_plugin_complete_by_id(self, plugin_id):
         """
         Stops a plugin with the given id, removing it and the refering module from the plugin system
-        
+
         @type plugin_id: String
         @param plugin: The id of the plugin to be removed from the plugin system
         """
@@ -1234,7 +1234,7 @@ class PluginManager:
     def stop_module(self, module):
         """
         Stops the given plugin module in the plugin manager
-        
+
         @type module: String
         @param module: The name of the plugin module to stop
         """
@@ -1260,7 +1260,7 @@ class PluginManager:
     def stop_plugin(self, plugin):
         """
         Stops a plugin, removing it from the plugin system
-        
+
         @type plugin: Plugin
         @param plugin: The plugin to be removed from the plugin system
         """
@@ -1305,7 +1305,7 @@ class PluginManager:
     def get_all_plugin_classes(self, base_plugin_class = Plugin):
         """
         Retrieves all the available plugin classes, from the defined base plugin class
-        
+
         @type base_plugin_class: Class
         @param base_plugin_class: The base plugin class to retrieve the plugin classes
         @rtype: List
@@ -1319,7 +1319,7 @@ class PluginManager:
     def get_plugin_sub_classes(self, plugin, plugin_classes):
         """
         Retrieves all the sub classes for the given plugin class
-        
+
         @type plugin: Class
         @param plugin: The plugin class to retrieve the sub classes
         @type plugin_classes: List
@@ -1340,7 +1340,7 @@ class PluginManager:
     def register_plugin_capabilities(self, plugin):
         """
         Registers all the available capabilities for the given plugin
-        
+
         @type plugin: String
         @param plugin: The plugin to register the capabilities
         """
@@ -1349,10 +1349,10 @@ class PluginManager:
         for capability in plugin.capabilities:
             capability_and_super_capabilites_list = capability_and_super_capabilites(capability)
 
-            for capability_or_super_capability_index in range(len(capability_and_super_capabilites_list)):               
+            for capability_or_super_capability_index in range(len(capability_and_super_capabilites_list)):
                 capability = capability_and_super_capabilites_list[capability_or_super_capability_index]
                 sub_capabilities_list = capability_and_super_capabilites_list[capability_or_super_capability_index + 1:]
-                
+
                 if not capability in self.capabilities_plugin_instances_map:
                     self.capabilities_plugin_instances_map[capability] = []
                 self.capabilities_plugin_instances_map[capability].append(plugin)
@@ -1367,19 +1367,19 @@ class PluginManager:
     def unregister_plugin_capabilities(self, plugin):
         """
         Unregisters all the available capabilities for the given plugin
-        
+
         @type plugin: String
         @param plugin: The plugin to unregister the capabilities
         """
 
         # iterates over all the plugin instance capabilities
         for capability in plugin.capabilities:
-            capability_and_super_capabilites_list = capability_and_super_capabilites(capability)              
+            capability_and_super_capabilites_list = capability_and_super_capabilites(capability)
 
             for capability_or_super_capability_index in range(len(capability_and_super_capabilites_list)):
                 capability = capability_and_super_capabilites_list[capability_or_super_capability_index]
                 sub_capabilities_list = capability_and_super_capabilites_list[capability_or_super_capability_index + 1:]
-                
+
                 if capability in self.capabilities_plugin_instances_map:
                     if plugin in self.capabilities_plugin_instances_map[capability]:
                         self.capabilities_plugin_instances_map[capability].remove(plugin)
@@ -1678,7 +1678,7 @@ class PluginManager:
             return False
 
     def resolve_capabilities(self, plugin):
-        # adds itself to the map of plugins that have a given capability 
+        # adds itself to the map of plugins that have a given capability
         for plugin_capability_allowed in plugin.capabilities_allowed:
             self.add_capabilities_plugins_map(plugin_capability_allowed, plugin)
 
@@ -1703,7 +1703,7 @@ class PluginManager:
     def inject_allowed(self, plugin):
         """
         Injects all the allowed plugins for the given plugin
-        
+
         @type plugin: Plugin
         @param plugin: The plugin to inject the dependencies
         """
@@ -1731,7 +1731,7 @@ class PluginManager:
     def inject_all_allowed(self, plugin):
         """
         Injects the plugin in all the plugins that allow one of it's capabilities
-        
+
         @type plugin: Plugin
         @param plugin: The plugin to inject in the plugins that allow one of it's capabilities
         """
@@ -1860,7 +1860,7 @@ class PluginManager:
     def get_all_plugins(self):
         """
         Retrieves all the started plugin instances
-        
+
         @rtype: List
         @return: The list with all the started plugin instances
         """
@@ -1870,7 +1870,7 @@ class PluginManager:
     def get_all_loaded_plugins(self):
         """
         Retrieves all the loaded plugin instances
-        
+
         @rtype: List
         @return: The list with all the loaded plugin instances
         """
@@ -1886,7 +1886,7 @@ class PluginManager:
     def get_plugin(self, plugin):
         """
         Retrieves a plugin and loads it if necessary
-        
+
         @type plugin: Plugin
         @param plugin: The plugin to retrieve
         @rtype: Plugin
@@ -1900,7 +1900,7 @@ class PluginManager:
     def get_plugin_by_id(self, plugin_id):
         """
         Retrieves an instance of a plugin with the given id
-        
+
         @type plugin_id: String
         @param plugin_id: The id of the plugin to retrieve
         @rtype: Plugin
@@ -1914,7 +1914,7 @@ class PluginManager:
     def _get_plugin_by_id(self, plugin_id):
         """
         Retrieves an instance (not verified to be loaded) of a plugin with the given id
-        
+
         @type plugin_id: String
         @param plugin_id: The id of the plugin to retrieve
         @rtype: Plugin
@@ -1928,7 +1928,7 @@ class PluginManager:
     def get_plugin_by_id_and_version(self, plugin_id, plugin_version):
         """
         Retrieves an instance of a plugin with the given id and version
-        
+
         @type plugin_id: String
         @param plugin_id: The id of the plugin to retrieve
         @type plugin_version: String
@@ -1945,7 +1945,7 @@ class PluginManager:
     def _get_plugin_by_id_and_version(self, plugin_id, plugin_version):
         """
         Retrieves an instance (not verified to be loaded) of a plugin with the given id and version
-        
+
         @type plugin_id: String
         @param plugin_id: The id of the plugin to retrieve
         @type plugin_version: String
@@ -1962,7 +1962,7 @@ class PluginManager:
     def get_plugins_by_capability(self, capability):
         """
         Retrieves all the plugins with the given capability and sub capabilities
-        
+
         @type capability: String
         @param capability: The capability of the plugins to retrieve
         @rtype: List
@@ -1987,7 +1987,7 @@ class PluginManager:
     def _get_plugins_by_capability_cache(self, capability):
         """
         Retrieves all the plugins (not verified to be loaded) with the given capability and sub capabilities (using cache system)
-        
+
         @type capability: String
         @param capability: The capability of the plugins to retrieve
         @rtype: List
@@ -2011,7 +2011,7 @@ class PluginManager:
     def _get_plugins_by_capability(self, capability):
         """
         Retrieves all the plugins (not verified to be loaded) with the given capability and sub capabilities
-        
+
         @type capability: String
         @param capability: The capability of the plugins to retrieve
         @rtype: List
@@ -2036,7 +2036,7 @@ class PluginManager:
     def __get_plugins_by_capability(self, capability):
         """
         Retrieves all the plugins with the given capability
-        
+
         @type capability: String
         @param capability: The capability of the plugins to retrieve
         @rtype: List
@@ -2053,7 +2053,7 @@ class PluginManager:
     def get_plugins_by_capability_allowed(self, capability_allowed):
         """
         Retrieves all the plugins with the given allowed capability and sub capabilities
-        
+
         @type capability_allowed: String
         @param capability_allowed: The capability allowed of the plugins to retrieve
         @rtype: List
@@ -2078,7 +2078,7 @@ class PluginManager:
     def _get_plugins_by_capability_allowed(self, capability_allowed):
         """
         Retrieves all the plugins (not verified to be loaded) with the given allowed capability and sub capabilities
-        
+
         @type capability_allowed: String
         @param capability_allowed: The capability allowed of the plugins to retrieve
         @rtype: List
@@ -2143,7 +2143,7 @@ class PluginManager:
     def get_plugins_by_dependency(self, plugin_id):
         """
         Retrieves all the plugins with a dependency with the given plugin id
-        
+
         @type plugin_id: String
         @param plugin_id: The id of the plugin dependency
         @rtype: List
@@ -2174,7 +2174,7 @@ class PluginManager:
     def get_plugins_allow_capability(self, capability):
         """
         Retrieves all the plugins that allow the given capability
-        
+
         @type capability: String
         @param capability: The capability to be tested
         @rtype: List
@@ -2199,7 +2199,7 @@ class PluginManager:
     def _get_plugins_allow_capability(self, capability):
         """
         Retrieves all the plugins (not verified to be loaded) that allow the given capability
-        
+
         @type capability: String
         @param capability: The capability to be tested
         @rtype: List
@@ -2224,7 +2224,7 @@ class PluginManager:
     def get_plugin_path_by_id(self, plugin_id):
         """
         Retrieves the plugin execution path for the given plugin id
-        
+
         @type plugin_id: String
         @param plugin_id: The id of the plugin to retrieve the execution path
         @rtype: String
@@ -2237,7 +2237,7 @@ class PluginManager:
     def get_plugin_module_name_by_id(self, plugin_id):
         """
         Retrieves the plugin module name for the given plugin id
-        
+
         @type plugin_id: String
         @param plugin_id: The id of the plugin to retrieve the plugin module name
         @rtype: String
@@ -2252,7 +2252,7 @@ class PluginManager:
     def get_plugin_by_module_name(self, module):
         """
         Retrieves an instance of a plugin for the given plugin module name
-        
+
         @type module: String
         @param module: The plugin module name to retrieve
         @rtype: Plugin
@@ -2270,7 +2270,7 @@ class PluginManager:
     def get_loaded_plugin_by_module_name(self, module):
         """
         Retrieves an instance of a loaded plugin for the given plugin module name
-        
+
         @type module: String
         @param module: The loaded plugin module name to retrieve
         @rtype: Plugin
@@ -2288,7 +2288,7 @@ class PluginManager:
     def get_plugin_class_by_module_name(self, module):
         """
         Retrieves a the plugin class for the given plugin module name
-        
+
         @type module: String
         @param module: The plugin module name to retrieve
         @rtype: Class
@@ -2304,7 +2304,7 @@ class PluginManager:
     def register_plugin_manager_event(self, plugin, event_name):
         """
         Registers a given plugin manager event in the given plugin
-        
+
         @type plugin: Plugin
         @param plugin: The plugin containing the handler to the event
         @type event_name: String
@@ -2321,7 +2321,7 @@ class PluginManager:
     def unregister_plugin_manager_event(self, plugin, event_name):
         """
         Unregisters a given plugin manager event in the given plugin
-        
+
         @type plugin: Plugin
         @param plugin: The plugin containing the handler to the event
         @type event_name: String
@@ -2332,11 +2332,11 @@ class PluginManager:
             if plugin in self.event_plugins_handled_loaded_map[event_name]:
                 self.event_plugins_handled_loaded_map[event_name].remove(plugin)
                 self.logger.info("Unregistering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
-    
+
     def notify_handlers(self, event_name, event_args):
         """
         Notifies all the handlers for the event with the given name with the give arguments
-        
+
         @type event_name: String
         @param event_name: The name of the event to be notified
         @type event_args: List
@@ -2361,7 +2361,7 @@ class PluginManager:
     def generate_event(self, event_name, event_args):
         """
         Generates an event and starts the process of handler notification
-        
+
         @type event_name: String
         @param event_name: The name of the event to be notified
         @type event_args: List
@@ -2376,7 +2376,7 @@ class PluginManager:
         """
         Executes a plugin manager call in all the plugin manager plugins with
         the defined execution type capability
-        
+
         @type execution_type: String
         @param execution_type: The type of execution
         @type arguments: List
@@ -2410,7 +2410,7 @@ class PluginManager:
         """
         Executes a plugin manager call in all the plugin manager plugins with
         the defined execution type capability (the execution is conditional)
-        
+
         @type execution_type: String
         @param execution_type: The type of execution
         @type arguments: List
@@ -2449,7 +2449,7 @@ class PluginManager:
         """
         Tests all the available plugin manager plugins of the type execution_type
         in the search of one that is available for execution
-        
+
         @type execution_type: String
         @param execution_type: The type of execution
         @type arguments: List
@@ -2487,7 +2487,7 @@ class PluginManager:
     def set_plugin_manager_plugins_loaded(self, value = True):
         """
         Sets the value for the plugin_manager_plugins_loaded flag
-        
+
         @type value: bool
         @param value: The value to set for the plugin_manager_plugins_loaded flag
         """
@@ -2497,7 +2497,7 @@ class PluginManager:
     def get_plugin_manager_plugins_loaded(self):
         """
         Retrieves the current plugin_manager_plugins_loaded flag value
-        
+
         @rtype: bool
         @return: The current plugin_manager_plugins_loaded flag value
         """
@@ -2507,7 +2507,7 @@ class PluginManager:
     def set_init_complete(self, value = True):
         """
         Sets the value for the init_complete flag
-        
+
         @type value: bool
         @param value: The value to set for the init_complete flag
         """
@@ -2517,7 +2517,7 @@ class PluginManager:
     def get_init_complete(self):
         """
         Retrieves the current init_complete flag value
-        
+
         @rtype: bool
         @return: The current init_complete flag value
         """
@@ -2538,7 +2538,7 @@ class Dependency:
     def __init__(self, mandatory = True, conditions_list = []):
         """
         Constructor of the class.
-        
+
         @type mandatory: bool
         @param mandatory: The mandatory value.
         @type conditions_list: List
@@ -2551,7 +2551,7 @@ class Dependency:
     def test_dependency(self, manager):
         """
         Tests the environment for the plugin manager.
-        
+
         @type manager: PluginManager
         @param manager: The current plugin manager in use.
         @rtype: bool
@@ -2563,7 +2563,7 @@ class Dependency:
     def test_conditions(self):
         """
         Tests the available conditions.
-        
+
         @rtype: bool
         @return: The result of the test (if successful or not).
         """
@@ -2578,7 +2578,7 @@ class Dependency:
     def get_tuple(self):
         """
         Retrieves a tuple representing the dependency.
-        
+
         @rtype: Tuple
         @return: A tuple representing the dependency.
         """
@@ -2592,14 +2592,14 @@ class PluginDependency(Dependency):
 
     plugin_id = "none"
     """ The plugin id """
-    
+
     plugin_version = "none"
     """ The plugin version """
 
     def __init__(self, plugin_id = "none", plugin_version = "none", mandatory = True, conditions_list = []):
         """
         Constructor of the class.
-        
+
         @type plugin_id: String
         @param plugin_id: The plugin id.
         @type plugin_version: String
@@ -2617,7 +2617,7 @@ class PluginDependency(Dependency):
     def __repr__(self):
         """
         Returns the default representation of the class.
-        
+
         @rtype: String
         @return: The default representation of the class.
         """
@@ -2631,7 +2631,7 @@ class PluginDependency(Dependency):
     def test_dependency(self, manager):
         """
         Tests the environment for the plugin dependency and the given plugin manager.
-        
+
         @type manager: PluginManager
         @param manager: The current plugin manager in use.
         @rtype: bool
@@ -2667,7 +2667,7 @@ class PluginDependency(Dependency):
     def get_tuple(self):
         """
         Retrieves a tuple representing the plugin dependency.
-        
+
         @rtype: Tuple
         @return: A tuple representing the plugin dependency.
         """
@@ -2694,7 +2694,7 @@ class PackageDependency(Dependency):
     def __init__(self, package_name = "none", package_import_name = "none", package_version = "none", package_url = "none", mandatory = True, conditions_list = []):
         """
         Constructor of the class.
-        
+
         @type package_name: String
         @param package_name: The package name.
         @type package_import_name: String
@@ -2718,7 +2718,7 @@ class PackageDependency(Dependency):
     def __repr__(self):
         """
         Returns the default representation of the class
-        
+
         @rtype: String
         @return: The default representation of the class
         """
@@ -2732,7 +2732,7 @@ class PackageDependency(Dependency):
     def test_dependency(self, manager):
         """
         Tests the environment for the package dependency and the given plugin manager
-        
+
         @type manager: PluginManager
         @param manager: The current plugin manager in use
         @rtype: bool
@@ -2763,7 +2763,7 @@ class PackageDependency(Dependency):
         if package_import_name_type == types.StringType:
             try:
                 # tries to find (import) the given module
-                __import__(package_import_name)  
+                __import__(package_import_name)
             except ImportError, import_error:
                 manager.logger.info("Package '%s' v%s does not exist in your system" % (package_name, package_version))
                 if not package_url == "none":
@@ -2787,7 +2787,7 @@ class PackageDependency(Dependency):
     def get_tuple(self):
         """
         Retrieves a tuple representing the package dependency.
-        
+
         @rtype: Tuple
         @return: A tuple representing the package dependency.
         """
@@ -2809,7 +2809,7 @@ class Condition:
     def test_condition(self):
         """
         Test the condition returning the result of the test.
-        
+
         @rtype: bool
         @return: The result of the test (if successfull or not).
         """
@@ -2827,7 +2827,7 @@ class OperativeSystemCondition(Condition):
     def __init__(self, operative_system_name = "none"):
         """
         Constructor of the class.
-        
+
         @type operative_system_name: String
         @param operative_system_name: The operative system name.
         """
@@ -2837,7 +2837,7 @@ class OperativeSystemCondition(Condition):
     def test_condition(self):
         """
         Test the condition returning the result of the test.
-        
+
         @rtype: bool
         @return: The result of the test (if successfull or not).
         """
@@ -2899,7 +2899,7 @@ class Capability:
     def capability_and_super_capabilites(self):
         """
         Retrieves the list of the capability and all super capabilities
-        
+
         @rtype: List
         @return: The of the capability and all super capabilities
         """
@@ -3013,11 +3013,11 @@ class Event:
             return True
         else:
             return False
-        
+
 def capability_and_super_capabilites(capability):
     """
     Retrieves the list of the capability and all super capabilities
-    
+
     @rtype: List
     @return: The of the capability and all super capabilities
     """
@@ -3027,7 +3027,7 @@ def capability_and_super_capabilites(capability):
     return capability_structure.capability_and_super_capabilites()
 
 def is_capability_or_sub_capability(base_capability, capability):
-    
+
     base_capability_structure = Capability(base_capability)
     capability_structure = Capability(capability)
 
@@ -3172,11 +3172,11 @@ class PluginEventThread(threading.Thread):
     def __init__ (self, method):
         """
         Constructor of the class
-        
+
         @type method: BusinessDummyBusinessLogicPlugin
         @param method: The method for the event thread.
         """
-        
+
         threading.Thread.__init__(self)
         self.method = method
 
