@@ -211,6 +211,7 @@ def main():
     prefix_path + "pt.hive.colony.plugins.search.provider/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.query_evaluator/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.query_interpreter/src/colony/plugins;" +\
+    prefix_path + "pt.hive.colony.plugins.search.remote_service/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.search.scorer/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.system.updater/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.template.administration/src/colony/plugins;" +\
