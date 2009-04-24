@@ -222,7 +222,8 @@ def main():
     prefix_path + "pt.hive.omni.plugins.base.logic/src/omni/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.extra.business/src/omni/plugins;" +\
     prefix_path + "pt.hive.omni.plugins.data_converter.configuration.input.diamante_2003/src/omni/plugins;" +\
-    prefix_path + "pt.hive.omni.plugins.data_converter.configuration.output.omni/src/omni/plugins"
+    prefix_path + "pt.hive.omni.plugins.data_converter.configuration.output.omni/src/omni/plugins;" +\
+    prefix_path + "pt.hive.omni.plugins.pos.logic/src/omni/plugins"
 
     # starts the running process
     run(plugin_path, verbose, debug, noloop, container, attributes_map)
