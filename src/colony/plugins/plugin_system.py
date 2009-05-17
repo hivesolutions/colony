@@ -2524,6 +2524,18 @@ class PluginManager:
 
         return self.init_complete
 
+    def echo(self, value = "echo"):
+        """
+        Returns an echo value.
+
+        @type value: String
+        @param value: The value to be echoed.
+        @rtype: String
+        @return: The echo value.
+        """
+
+        return value
+
 class Dependency:
     """
     The dependency class.
