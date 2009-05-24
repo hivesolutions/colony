@@ -170,8 +170,6 @@ def main():
     prefix_path + "pt.hive.colony.plugins.data_converter.intermediate_structure.io_adapter.dbase/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.data_converter.intermediate_structure.io_adapter.entity_manager/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.data_converter.intermediate_structure.io_adapter.pickle/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.data_converter/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.data_converter/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.distribution/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.distribution.helper/src/colony/plugins;" +\
     prefix_path + "pt.hive.colony.plugins.distribution.registry/src/colony/plugins;" +\
