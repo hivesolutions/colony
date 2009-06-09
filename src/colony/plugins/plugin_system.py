@@ -186,6 +186,9 @@ class Plugin(object):
     event_plugin_manager_registered_loaded_list = []
     """ The list with all the events registered in the plugin manager """
 
+    configuration_map = {}
+    """ The configuration of the plugin """
+
     loaded = False
     """ The loading flag """
 
@@ -215,6 +218,7 @@ class Plugin(object):
         self.event_plugins_handled_loaded_map = {}
         self.event_plugins_registered_loaded_map = {}
         self.event_plugin_manager_registered_loaded_list = []
+        self.configuration_map = {}
         self.loaded = False
 
     def __repr__(self):
@@ -563,6 +567,30 @@ class Plugin(object):
         """
 
         self.info("Event '%s' caught in '%s' v%s" % (event_name, self.short_name, self.version))
+
+    def get_configuration_property(self, property_name):
+        """
+        Returns the configuration property for the given property name.
+
+        @type property_name: String
+        @param property_name: The property name to retrieve the property.
+        @rtype: Object
+        @return: The configuration property for the given property name.
+        """
+
+        return self.configuration_map[property_name]
+
+    def set_configuration_property(self, property_name, property):
+        """
+        Sets the configuration property for the given property name.
+
+        @type property_name: String
+        @param property_name: The property name to set the property.
+        @type property: String
+        @param property: The property name to set.
+        """
+
+        self.configuration_map[property_name] = property
 
     def is_loaded(self):
         """
