@@ -2890,7 +2890,7 @@ class Capability:
         len_a = len(list_value_a)
         len_b = len(list_value_b)
 
-        if len_a != len_b:
+        if not len_a == len_b:
             return False
 
         for index in range(len_a):
@@ -2982,7 +2982,7 @@ class Event:
         len_a = len(list_value_a)
         len_b = len(list_value_b)
 
-        if len_a != len_b:
+        if not len_a == len_b:
             return False
 
         for index in range(len_a):
