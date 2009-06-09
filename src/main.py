@@ -40,6 +40,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import getopt
 import sys
 
+import colony_configuration
+
 import colony.plugins.plugin_system
 import colony.plugins.util
 
@@ -156,74 +158,14 @@ def main():
     else:
         prefix_path = "../../"
 
-    # creates the plugin path
-    plugin_path = prefix_path + "pt.hive.colony.plugins.build.automation/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.build.automation.extensions/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.build.automation.items/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.business/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.business.access_control/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.business.data/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.configuration.startup/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.distribution/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.distribution.helper/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.distribution.registry/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.dummy/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.eureka/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.eureka.mocks/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.io/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.javascript.file_handler/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.javascript.handlers/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.javascript.manager/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.access/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.console/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.distribution/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.gui/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.log/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.login/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.mod_python/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.pool/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.remote/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.remote.client/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.remote.client.jsonrpc/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.remote.client.pyro/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.remote.client.soap/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.remote.client.xmlrpc/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.remote.jsonrpc/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.remote.pyro/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.remote.soap/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.remote.xmlrpc/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.restricted/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.service/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.service.http/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.test/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.tasks/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.main.threads/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.messaging/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.misc/src/colony/plugins;"  +\
-    prefix_path + "pt.hive.colony.plugins.misc.gui/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.printing/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search.crawler/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search.index_persistence/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search.index_serializer/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search.indexer/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search.interpreter/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search.provider/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search.query_evaluator/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search.query_interpreter/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search.remote_service/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.search.scorer/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.system.updater/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.template_engine/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.template.administration/src/colony/plugins;" +\
-    prefix_path + "pt.hive.colony.plugins.template.handler/src/colony/plugins;" +\
-    prefix_path + "pt.hive.omni.plugins.base.data/src/omni/plugins;" +\
-    prefix_path + "pt.hive.omni.plugins.base.logic/src/omni/plugins;" +\
-    prefix_path + "pt.hive.omni.plugins.extra.business/src/omni/plugins;" +\
-    prefix_path + "pt.hive.omni.plugins.pos.logic/src/omni/plugins"
+    # parses the configuration options
+    verbose, debug, plugin_path = parse_configuration(verbose, debug, plugin_path, prefix_path);
+
+    # strips the plugin path around the semi-colon character
+    plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(plugin_path, verbose, debug, noloop, container, attributes_map)
+    run(plugin_path_striped, verbose, debug, noloop, container, attributes_map)
 
 def parse_attributes(attributes_string):
     # creates an attributes map
@@ -248,6 +190,31 @@ def parse_attributes(attributes_string):
             attributes_map[attribute_key] = attribute_value
 
     return attributes_map
+
+def parse_configuration(verbose, debug, plugin_path, prefix_path):
+    # retrieves the colony configuration contents
+    colony_configuration_contents = dir(colony_configuration)
+
+    # in case the verbose variable is defined in the colony configuration
+    if "verbose" in dir(colony_configuration):
+        verbose = colony_configuration.verbose
+
+    # in case the debug variable is defined in the colony configuration
+    if "debug" in dir(colony_configuration):
+        debug = colony_configuration.debug
+
+    if plugin_path:
+        plugin_path += ";"
+    else:
+        # creates a new plugin path string
+        plugin_path = ""
+
+    # iterates over all the colony configuration plugin paths
+    for plugin_path_item in colony_configuration.plugin_path_list:
+        parsed_plugin_path = plugin_path_item.replace("%prefix_path%", prefix_path)
+        plugin_path += parsed_plugin_path + ";"
+
+    return (verbose, debug, plugin_path)
 
 if __name__ == "__main__":
     main()
