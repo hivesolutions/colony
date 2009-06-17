@@ -77,138 +77,156 @@ _levelNames = {
 
 def getLogger(name):
     """
-    Returns the dummy logger for the given name
+    Returns the dummy logger for the given name.
 
     @type name: String
-    @param name: The name of the logger to retrieve
+    @param name: The name of the logger to retrieve.
     @rtype: DummyLogger
-    @return: The dummy logger for the gtiven name
+    @return: The dummy logger for the gtiven name.
     """
 
     return DummyLogger("dummy")
 
 def getLevelName(level):
     """
-    Returns the textual representation of logging level
+    Returns the textual representation of logging level.
 
     @type level: int
-    @param level: The logging level to retrieve the textual representation
+    @param level: The logging level to retrieve the textual representation.
     @rtype: String
-    @return: The textual representation of logging level
+    @return: The textual representation of logging level.
     """
 
     return _levelNames.get(level, ("Level %s" % level))
 
 class DummyLogger:
     """
-    The dummy logger class
+    The dummy logger class.
     """
 
     def __init__(self, name, level = NOTSET):
         """
-        Constructor of the class
+        Constructor of the class.
 
         @type name: String
-        @param name: The name of the logger
+        @param name: The name of the logger.
         @type level: int
-        @param level: The logging level for the new logger
+        @param level: The logging level for the new logger.
         """
 
         pass
 
     def setLevel(self, level):
         """
-        Sets the level of the logger
+        Sets the level of the logger.
 
         @type level: int
-        @param level: The level of the logger
+        @param level: The level of the logger.
         """
 
         pass
 
     def debug(self, msg, *args, **kwargs):
         """
-        Prints a debug message to the logger
+        Prints a debug message to the logger.
 
         @type msg: String
-        @param msg: The message to print
+        @param msg: The message to print.
         """
 
         pass
 
     def info(self, msg, *args, **kwargs):
         """
-        Prints an info message to the logger
+        Prints an info message to the logger.
 
         @type msg: String
-        @param msg: The message to print
+        @param msg: The message to print.
         """
 
         pass
 
     def warning(self, msg, *args, **kwargs):
         """
-        Prints a warning message to the logger
+        Prints a warning message to the logger.
 
         @type msg: String
-        @param msg: The message to print
+        @param msg: The message to print.
         """
 
         pass
 
     def error(self, msg, *args, **kwargs):
         """
-        Prints an error message to the logger
+        Prints an error message to the logger.
 
         @type msg: String
-        @param msg: The message to print
+        @param msg: The message to print.
         """
 
         pass
 
     def exception(self, msg, *args):
         """
-        Prints an exception message to the logger
+        Prints an exception message to the logger.
 
         @type msg: String
-        @param msg: The message to print
+        @param msg: The message to print.
         """
 
         pass
 
     def critical(self, msg, *args, **kwargs):
         """
-        Prints a critical message to the logger
+        Prints a critical message to the logger.
 
         @type msg: String
-        @param msg: The message to print
+        @param msg: The message to print.
         """
 
         pass
 
     def addHandler(self, hdlr):
         """
-        Adds an handler to the logger
+        Adds an handler to the logger.
 
         @type hdlr: Handler
-        @param hdlr: The handler to add to the logger
+        @param hdlr: The handler to add to the logger.
         """
 
         pass
 
     def removeHandler(self, hdlr):
         """
-        Removes an handler from the logger
+        Removes an handler from the logger.
 
         @type hdlr: Handler
-        @param hdlr: The handler to remove from the logger
+        @param hdlr: The handler to remove from the logger.
         """
 
         pass
 
 class StreamHandler:
     """
-    The stream handler class
+    The stream handler class.
     """
 
-    pass
+    def setFormatter(self, fmt):
+        """
+        Sets the formatter for this handler.
+        """
+
+        self.formatter = fmt
+
+class Formatter:
+    """
+    The formatter class.
+    """
+
+    def __init__(self, format):
+        """
+        Constructor of the class.
+
+        @type format: String
+        @param format: The formatter format.
+        """

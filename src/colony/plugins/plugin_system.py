@@ -69,10 +69,8 @@ IRON_PYTHON_ENVIRONMENT = colony.plugins.util.IRON_PYTHON_ENVIRONMENT
 """ IronPython environment value """
 
 # conditional logging import (depending on the current environment)
-if colony.plugins.util.get_environment() == CPYTHON_ENVIRONMENT:
+if colony.plugins.util.get_environment() == CPYTHON_ENVIRONMENT or colony.plugins.util.get_environment() == JYTHON_ENVIRONMENT:
     import logging
-elif colony.plugins.util.get_environment() == JYTHON_ENVIRONMENT:
-    import colony.plugins.dummy_logging as logging
 elif colony.plugins.util.get_environment() == IRON_PYTHON_ENVIRONMENT:
     import colony.plugins.dummy_logging as logging
 
