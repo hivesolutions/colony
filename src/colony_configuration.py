@@ -43,7 +43,8 @@ verbose = False
 debug = True
 """ The debug flag """
 
-plugin_path_list = ["%prefix_path%/pt.hive.colony.plugins.build.automation/src/colony/plugins",
+plugin_path_list = ["plugins",
+                    "%prefix_path%/pt.hive.colony.plugins.build.automation/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.build.automation.extensions/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.build.automation.items/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.business/src/colony/plugins",
