@@ -163,6 +163,9 @@ class Plugin(object):
     events_registrable = []
     """ The events that the plugin can register for """
 
+    main_modules = []
+    """ The main modules of the plugin """
+
     valid = True
     """ The valid flag of the plugin """
 
@@ -565,6 +568,23 @@ class Plugin(object):
         """
 
         self.info("Event '%s' caught in '%s' v%s" % (event_name, self.short_name, self.version))
+
+    def reload_main_modules(self):
+        """
+        Reloads the plugin main modules in the interpreter
+        """
+
+        self.info("Reloading main modules in '%s' v%s" % (self.short_name, self.version))
+
+        # iterates over all the main modules
+        for main_module in self.main_modules:
+            # in case the main module is already loaded
+            if main_module in sys.modules:
+                # retrieves the main module value
+                main_module_value = sys.modules[main_module]
+
+                # reloads the main module
+                reload(main_module_value)
 
     def get_configuration_property(self, property_name):
         """
@@ -1327,6 +1347,23 @@ class PluginManager:
 
         # unregisters the decorator information associated with the plugin
         colony.plugins.decorators.unregister_plugin_decorators(plugin_id, plugin_version)
+
+        # in case the plugin exists in the plugin threads map
+        if plugin_id in self.plugin_threads_map:
+            # retrieves the available thread for the plugin
+            plugin_thread = self.plugin_threads_map[plugin_id]
+
+            # creates the plugin exit event
+            event = colony.plugins.util.Event("exit")
+
+            # adds the load event to the thread queue
+            plugin_thread.add_event(event)
+
+            # joins the plugin thread
+            plugin_thread.join()
+
+            # removes the plugin thread from the plugin threads map
+            del self.plugin_threads_map[plugin_id]
 
     def get_all_plugin_classes(self, base_plugin_class = Plugin):
         """
