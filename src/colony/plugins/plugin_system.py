@@ -1328,7 +1328,12 @@ class PluginManager:
 
         # in case the plugin is loaded the plugin is unloaded
         if plugin_instance.is_loaded():
-            self._unload_plugin(plugin_instance, FILE_REMOVED_TYPE)
+            if MAIN_TYPE in plugin.capabilities:
+                self._unload_plugin(plugin_instance, FILE_REMOVED_TYPE, MAIN_TYPE)
+            elif THREAD_TYPE in plugin.capabilities:
+                self._unload_plugin(plugin_instance, FILE_REMOVED_TYPE, THREAD_TYPE)
+            else:
+                self._unload_plugin(plugin_instance, FILE_REMOVED_TYPE)
 
         # removes all the plugin class resources
         self.loaded_plugins.remove(plugin)
@@ -1683,15 +1688,40 @@ class PluginManager:
         # clears the map for the capabilities plugins
         self.clear_capabilities_plugins_map_for_plugin(plugin.id)
 
-        # unloads the plugin
-        plugin.unload_plugin()
-
-        # finishes the unloading process of the plugin
-        plugin.end_unload_plugin()
-
         # if it's a main or thread type unload
         if unloading_type == MAIN_TYPE or unloading_type == THREAD_TYPE:
-            pass
+            # retrieves the available thread for the plugin
+            plugin_thread = self.plugin_threads_map[plugin.id]
+
+            # sets the plugin unload as not completed
+            plugin_thread.set_unload_complete(False);
+
+            # creates the plugin unload event
+            event = colony.plugins.util.Event("unload")
+
+            # adds the unload event to the thread queue
+            plugin_thread.add_event(event)
+
+            # acquires the ready semaphore for the beginning of the unloading process
+            plugin.ready_semaphore.acquire()
+
+            # sets the plugin end unload as not completed
+            plugin_thread.set_end_unload_complete(False);
+
+            # creates the plugin end unload event
+            event = colony.plugins.util.Event("end_unload")
+
+            # adds the end unload event to the thread queue
+            plugin_thread.add_event(event)
+
+            # acquires the ready semaphore for the beginning of the end unloading process
+            plugin.ready_semaphore.acquire()
+        else:
+            # calls the unload plugin method in the plugin (plugin shutdown process)
+            plugin.unload_plugin()
+
+            # calls the end unload plugin method in the plugin (plugin shutdown process)
+            plugin.end_unload_plugin()
 
         return True
 
@@ -3174,10 +3204,24 @@ def convert_to_event_list(event_list):
     return event_list_structure
 
 class PluginThread(threading.Thread):
+    """
+    The plugin thread class.
+    """
 
     plugin = None
+    """ The plugin to be used """
+
     load_complete = False
+    """ The load complete flag """
+
     end_load_complete = False
+    """ The end load complete flag """
+
+    unload_complete = False
+    """ The unload complete flag """
+
+    end_unload_complete = False
+    """ The end unload complete flag """
 
     load_plugin_thread = None
     """ The thread that controls the load plugin method call """
@@ -3185,10 +3229,17 @@ class PluginThread(threading.Thread):
     end_load_plugin_thread = None
     """ The thread that controls the end load plugin method call """
 
+    end_load_plugin_thread = None
+    """ The thread that controls the end load plugin method call """
+
+    end_unload_plugin_thread = None
+    """ The thread that controls the end unload plugin method call """
+
     event_queue = []
     """ The queue of events to be processed """
 
     semaphore = None
+    """ The plugin thread semaphore """
 
     def __init__ (self, plugin):
         threading.Thread.__init__(self)
@@ -3204,6 +3255,12 @@ class PluginThread(threading.Thread):
     def set_end_load_complete(self, value):
         self.end_load_complete = value
 
+    def set_unload_complete(self, value):
+        self.unload_complete = value
+
+    def set_end_unload_complete(self, value):
+        self.end_unload_complete = value
+
     def add_event(self, event):
         self.event_queue.append(event)
         self.semaphore.release()
@@ -3216,6 +3273,10 @@ class PluginThread(threading.Thread):
                     self.load_plugin_thread.join()
                 if self.end_load_plugin_thread.isAlive():
                     self.end_load_plugin_thread.join()
+                if self.unload_plugin_thread.isAlive():
+                    self.unload_plugin_thread.join()
+                if self.end_unload_plugin_thread.isAlive():
+                    self.end_unload_plugin_thread.join()
                 return True
             elif event.event_name == "load":
                 self.load_plugin_thread = PluginEventThread(self.plugin.load_plugin)
@@ -3230,7 +3291,13 @@ class PluginThread(threading.Thread):
                 self.end_load_plugin_thread.start()
                 self.end_load_complete = True
             elif event.event_name == "unload":
-                pass
+                self.unload_plugin_thread = PluginEventThread(self.plugin.unload_plugin)
+                self.unload_plugin_thread.start()
+                self.unload_complete = True
+            elif event.event_name == "end_unload":
+                self.end_unload_plugin_thread = PluginEventThread(self.plugin.end_unload_plugin)
+                self.end_unload_plugin_thread.start()
+                self.end_unload_complete = True
 
     def run(self):
         while True:
