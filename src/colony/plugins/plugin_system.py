@@ -1046,7 +1046,12 @@ class PluginManager:
 
         for plugin_instance in self.plugin_instances:
             if plugin_instance.is_loaded():
-                self._unload_plugin(plugin_instance, None)
+                if MAIN_TYPE in plugin_instance.capabilities:
+                    self._unload_plugin(plugin_instance, None, MAIN_TYPE)
+                elif THREAD_TYPE in plugin_instance.capabilities:
+                    self._unload_plugin(plugin_instance, None, THREAD_TYPE)
+                else:
+                    self._unload_plugin(plugin_instance, None)
 
         exit_event = colony.plugins.util.Event("exit")
         self.add_event(exit_event)
@@ -1076,7 +1081,7 @@ class PluginManager:
                         plugin_thread.add_event(exit_event)
                         plugin_thread.join()
 
-                    # returns the methos exiting the plugin system
+                    # returns the method exiting the plugin system
                     return
 
     def add_event(self, event):
@@ -3234,8 +3239,8 @@ class PluginThread(threading.Thread):
     end_load_plugin_thread = None
     """ The thread that controls the end load plugin method call """
 
-    end_load_plugin_thread = None
-    """ The thread that controls the end load plugin method call """
+    unload_plugin_thread = None
+    """ The thread that controls the unload plugin method call """
 
     end_unload_plugin_thread = None
     """ The thread that controls the end unload plugin method call """
