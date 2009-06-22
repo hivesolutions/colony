@@ -1670,7 +1670,12 @@ class PluginManager:
         # unloads the plugins that depend on the plugin being unloaded
         for dependent_plugin in self.get_plugin_dependent_plugins_map(plugin.id):
             if dependent_plugin.is_loaded():
-                self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE)
+                if MAIN_TYPE in dependent_plugin.capabilities:
+                    self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE, MAIN_TYPE)
+                elif THREAD_TYPE in dependent_plugin.capabilities:
+                    self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE, THREAD_TYPE)
+                else:
+                    self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE)
 
         # notifies the allowed plugins about the unload
         for allowed_plugin_info in self.get_plugin_allowed_plugins_map(plugin.id):
