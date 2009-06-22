@@ -1540,6 +1540,8 @@ class PluginManager:
         return True
 
     def _load_plugin(self, plugin, type = None, loading_type = None):
+        # generates the init load plugin event
+        self.generate_event("plugin_manager.init_load_plugin", [plugin.id, plugin.version, plugin])
 
         # in case there is an handler for the plugin loading
         if self.exists_plugin_manager_plugin_execute_conditional("_load_plugin", [plugin, type, loading_type]):
@@ -1646,8 +1648,8 @@ class PluginManager:
             # notifies the plugin about the load complete
             plugin.init_complete()
 
-        # generates the loaded plugin event
-        self.generate_event("plugin_manager.loaded_plugin", [plugin.id, plugin.version, plugin])
+        # generates the end load plugin event
+        self.generate_event("plugin_manager.end_load_plugin", [plugin.id, plugin.version, plugin])
 
         return True
 
