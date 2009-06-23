@@ -196,6 +196,9 @@ class Plugin(object):
     lazy_loaded = False
     """ The lazy loading flag """
 
+    error_state = False
+    """ The error state flag """
+
     ready_semaphore = None
     """ The ready semaphore """
 
@@ -230,6 +233,8 @@ class Plugin(object):
         self.event_plugin_manager_registered_loaded_list = []
         self.configuration_map = {}
         self.loaded = False
+        self.lazy_loaded = False
+        self.error_state = False
 
     def __repr__(self):
         """
@@ -260,6 +265,9 @@ class Plugin(object):
         # sets the loaded flag as true
         self.lazy_loaded = False
 
+        # sets the error state as false
+        self.error_state = False
+
         self.info("Loading plugin '%s' v%s" % (self.short_name, self.version))
 
     def lazy_load_plugin(self):
@@ -275,6 +283,9 @@ class Plugin(object):
 
         # sets the loaded flag as true
         self.lazy_loaded = True
+
+        # sets the error state as false
+        self.error_state = False
 
         self.info("Lazy loading plugin '%s' v%s" % (self.short_name, self.version))
 
@@ -295,6 +306,10 @@ class Plugin(object):
 
         self.unregister_all_for_plugin()
         self.loaded = False
+
+        # sets the error state as false
+        self.error_state = False
+
         self.allowed_loaded = []
         self.dependencies_loaded = []
         self.info("Unloading plugin '%s' v%s" % (self.short_name, self.version))
@@ -303,6 +318,9 @@ class Plugin(object):
         """
         Method called at the end of the plugin unloading process
         """
+
+        # sets the error state as false
+        self.error_state = False
 
         self.info("Unloading process for plugin '%s' v%s completed" % (self.short_name, self.version))
 
@@ -627,7 +645,7 @@ class Plugin(object):
         @return: The result of the loading test (if the plugin is loaded or not)
         """
 
-        return self.loaded and not self.lazy_loaded
+        return self.loaded and not self.lazy_loaded and not self.error_state
 
     def is_lazy_loaded(self):
         """
@@ -637,7 +655,7 @@ class Plugin(object):
         @return: The result of the lazy loading test (if the plugin is lazy loaded or not)
         """
 
-        return self.lazy_loaded
+        return self.lazy_loaded and not self.error_state
 
     def is_loaded_or_lazy_loaded(self):
         """
@@ -647,7 +665,7 @@ class Plugin(object):
         @return: The result of the loading and lazy loading tests (if the plugin is loaded or lazy loaded or not)
         """
 
-        return self.loaded or self.lazy_loaded
+        return (self.loaded or self.lazy_loaded) and not self.error_state
 
     def contains_metadata(self):
         """
@@ -1229,8 +1247,11 @@ class PluginManager:
         for plugin in plugins:
             # in case the plugin module is not currently loaded
             if not plugin in sys.modules:
-                # imports the plugin module file
-                __import__(plugin)
+                try:
+                    # imports the plugin module file
+                    __import__(plugin)
+                except:
+                    self.logger.error("Problem importing module %s" % plugin)
 
     def start_plugin_manager_plugins(self):
         """
@@ -1651,13 +1672,25 @@ class PluginManager:
             # acquires the ready semaphore for the beginning of the loading process
             plugin.acquire_ready_semaphore()
         else:
-            # in case the loading type of the plugin is eager
-            if plugin.loading_type == EAGER_LOADING_TYPE or type == FULL_LOAD_TYPE:
-                # calls the load plugin method in the plugin (plugin bootup process)
-                plugin.load_plugin()
-            elif plugin.loading_type == LAZY_LOADING_TYPE:
-                # calls the lazy load plugin method in the plugin (plugin bootup process)
-                plugin.lazy_load_plugin()
+            try:
+                # in case the loading type of the plugin is eager
+                if plugin.loading_type == EAGER_LOADING_TYPE or type == FULL_LOAD_TYPE:
+                    # calls the load plugin method in the plugin (plugin bootup process)
+                    plugin.load_plugin()
+                elif plugin.loading_type == LAZY_LOADING_TYPE:
+                    # calls the lazy load plugin method in the plugin (plugin bootup process)
+                    plugin.lazy_load_plugin()
+            except:
+                # sets the plugin error state flag
+                plugin.error_state = True
+
+        # in case the plugin is in an error state
+        if plugin.error_state:
+            # prints the error message
+            self.logger.error("Problem loading plugin '%s' v%s" % (plugin.short_name, plugin.version))
+
+            # returns false in the loading process
+            return False
 
         # in case the loading type is lazy, the loading task is complete
         if plugin.loading_type == LAZY_LOADING_TYPE and not type == FULL_LOAD_TYPE:
@@ -1685,8 +1718,20 @@ class PluginManager:
             # acquires the ready semaphore for the beginning of the end loading process
             plugin.acquire_ready_semaphore()
         else:
-            # calls the end load plugin method in the plugin (plugin bootup process)
-            plugin.end_load_plugin()
+            try:
+                # calls the end load plugin method in the plugin (plugin bootup process)
+                plugin.end_load_plugin()
+            except:
+                # sets the plugin error state flag
+                plugin.error_state = True
+
+        # in case the plugin is in an error state
+        if plugin.error_state:
+            # prints the error message
+            self.logger.error("Problem end loading plugin '%s' v%s" % (plugin.short_name, plugin.version))
+
+            # returns false in the loading process
+            return False
 
         # injects the allowed plugins into the plugin
         if not self.inject_allowed(plugin):
@@ -1753,6 +1798,26 @@ class PluginManager:
 
             # acquires the ready semaphore for the beginning of the unloading process
             plugin.acquire_ready_semaphore()
+        else:
+            try:
+                # calls the unload plugin method in the plugin (plugin shutdown process)
+                plugin.unload_plugin()
+            except:
+                # sets the plugin error state flag
+                plugin.error_state = True
+
+        # in case the plugin is in an error state
+        if plugin.error_state:
+            # prints the error message
+            self.logger.error("Problem unloading plugin '%s' v%s" % (plugin.short_name, plugin.version))
+
+            # returns false in the unloading process
+            return False
+
+        # if it's a main or thread type unload
+        if unloading_type == MAIN_TYPE or unloading_type == THREAD_TYPE:
+            # retrieves the available thread for the plugin
+            plugin_thread = self.plugin_threads_map[plugin.id]
 
             # sets the plugin end unload as not completed
             plugin_thread.set_end_unload_complete(False);
@@ -1766,11 +1831,20 @@ class PluginManager:
             # acquires the ready semaphore for the beginning of the end unloading process
             plugin.acquire_ready_semaphore()
         else:
-            # calls the unload plugin method in the plugin (plugin shutdown process)
-            plugin.unload_plugin()
+            try:
+                # calls the end unload plugin method in the plugin (plugin shutdown process)
+                plugin.end_unload_plugin()
+            except:
+                # sets the plugin error state flag
+                plugin.error_state = True
 
-            # calls the end unload plugin method in the plugin (plugin shutdown process)
-            plugin.end_unload_plugin()
+        # in case the plugin is in an error state
+        if plugin.error_state:
+            # prints the error message
+            self.logger.error("Problem end unloading plugin '%s' v%s" % (plugin.short_name, plugin.version))
+
+            # returns false in the unloading process
+            return False
 
         return True
 
@@ -3318,13 +3392,13 @@ class PluginThread(threading.Thread):
         if len(self.event_queue):
             event = self.event_queue.pop(0)
             if event.event_name == "exit":
-                if self.load_plugin_thread.isAlive():
+                if self.load_plugin_thread and self.load_plugin_thread.isAlive():
                     self.load_plugin_thread.join()
-                if self.end_load_plugin_thread.isAlive():
+                if self.end_load_plugin_thread and self.end_load_plugin_thread.isAlive():
                     self.end_load_plugin_thread.join()
-                if self.unload_plugin_thread.isAlive():
+                if self.unload_plugin_thread and self.unload_plugin_thread.isAlive():
                     self.unload_plugin_thread.join()
-                if self.end_unload_plugin_thread.isAlive():
+                if self.end_unload_plugin_thread and self.end_unload_plugin_thread.isAlive():
                     self.end_unload_plugin_thread.join()
                 return True
             elif event.event_name == "load":
@@ -3396,20 +3470,23 @@ class PluginEventThread(threading.Thread):
 
             # calls the event thread method
             self.method()
-        finally:
-            # acquires the ready semaphore lock
-            self.plugin.ready_semaphore_lock.acquire()
+        except:
+            # sets the plugin error state flag
+            self.plugin.error_state = True
 
-            # retrieves the original semaphore release count
-            new_semaphore_release_count = self.plugin.ready_semaphore_release_count
+        # acquires the ready semaphore lock
+        self.plugin.ready_semaphore_lock.acquire()
 
-            # releases the ready semaphore lock
-            self.plugin.ready_semaphore_lock.release()
+        # retrieves the original semaphore release count
+        new_semaphore_release_count = self.plugin.ready_semaphore_release_count
 
-            # in case the semaphore is locked waiting for the release
-            if new_semaphore_release_count == original_semaphore_release_count:
-                # releases the ready semaphore
-                self.plugin.release_ready_semaphore()
+        # releases the ready semaphore lock
+        self.plugin.ready_semaphore_lock.release()
 
-                # prints log message
-                self.plugin.error("No Semaphore released upon thread call")
+        # in case the semaphore is locked waiting for the release
+        if new_semaphore_release_count == original_semaphore_release_count:
+            # releases the ready semaphore
+            self.plugin.release_ready_semaphore()
+
+            # prints log message
+            self.plugin.error("No Semaphore released upon thread call")
