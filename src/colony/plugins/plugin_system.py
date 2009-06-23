@@ -199,6 +199,12 @@ class Plugin(object):
     ready_semaphore = None
     """ The ready semaphore """
 
+    ready_semaphore_lock = None
+    """ The ready semaphore lock """
+
+    ready_semaphore_release_count = 0
+    """ The ready semaphore release count """
+
     manager = None
     """ The parent plugin manager """
 
@@ -212,6 +218,9 @@ class Plugin(object):
 
         self.manager = manager
         self.ready_semaphore = threading.Semaphore(0)
+        self.ready_semaphore_lock = threading.Lock()
+
+        self.ready_semaphore_release_count = 0
 
         self.logger = logging.getLogger(DEFAULT_LOGGER)
         self.dependencies_loaded = []
@@ -719,8 +728,17 @@ class Plugin(object):
         Releases the ready semaphore (usefull for thread enabled plugins)
         """
 
+        # acquires the ready semaphore lock
+        self.ready_semaphore_lock.acquire()
+
+        # increment the ready semaphore release count
+        self.ready_semaphore_release_count += 1
+
         # releases the ready semaphore
         self.ready_semaphore.release()
+
+        # releases the ready semaphore lock
+        self.ready_semaphore_lock.release()
 
     def ready_semaphore_status(self):
         """
@@ -3373,10 +3391,25 @@ class PluginEventThread(threading.Thread):
         """
 
         try:
+            # retrieves the original semaphore release count
+            original_semaphore_release_count = self.plugin.ready_semaphore_release_count
+
             # calls the event thread method
             self.method()
         finally:
+            # acquires the ready semaphore lock
+            self.plugin.ready_semaphore_lock.acquire()
+
+            # retrieves the original semaphore release count
+            new_semaphore_release_count = self.plugin.ready_semaphore_release_count
+
+            # releases the ready semaphore lock
+            self.plugin.ready_semaphore_lock.release()
+
             # in case the semaphore is locked waiting for the release
-            if not self.plugin.ready_semaphore_status():
-                # releases the ready semphore
+            if new_semaphore_release_count == original_semaphore_release_count:
+                # releases the ready semaphore
                 self.plugin.release_ready_semaphore()
+
+                # prints log message
+                self.plugin.error("No Semaphore released upon thread call")
