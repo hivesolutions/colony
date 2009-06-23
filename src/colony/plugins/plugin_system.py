@@ -706,6 +706,14 @@ class Plugin(object):
         self.info("Exception '%s' generated in '%s' v%s" % (str(exception), self.short_name, self.version))
         self.manager.unload_plugin(self.id)
 
+    def acquire_ready_semaphore(self):
+        """
+        Acquires the ready semaphore (usefull for thread enabled plugins)
+        """
+
+        # acquires the ready semaphore
+        self.ready_semaphore.acquire()
+
     def release_ready_semaphore(self):
         """
         Releases the ready semaphore (usefull for thread enabled plugins)
@@ -713,6 +721,19 @@ class Plugin(object):
 
         # releases the ready semaphore
         self.ready_semaphore.release()
+
+    def ready_semaphore_status(self):
+        """
+        Retrieves the status of the ready semaphore (usefull for thread enabled plugins)
+        """
+
+        # retrieves thre ready semaphore condition
+        ready_semaphore_condition = self.ready_semaphore._Semaphore__cond
+
+        # retrieves the ready semaphore condition lock
+        ready_semaphore_condition_lock = ready_semaphore_condition._Condition__lock
+
+        return not ready_semaphore_condition_lock.locked()
 
     def get_all_plugin_dependencies(self):
         """
@@ -1610,7 +1631,7 @@ class PluginManager:
             plugin_thread.add_event(event)
 
             # acquires the ready semaphore for the beginning of the loading process
-            plugin.ready_semaphore.acquire()
+            plugin.acquire_ready_semaphore()
         else:
             # in case the loading type of the plugin is eager
             if plugin.loading_type == EAGER_LOADING_TYPE or type == FULL_LOAD_TYPE:
@@ -1644,7 +1665,7 @@ class PluginManager:
             plugin_thread.add_event(event)
 
             # acquires the ready semaphore for the beginning of the end loading process
-            plugin.ready_semaphore.acquire()
+            plugin.acquire_ready_semaphore()
         else:
             # calls the end load plugin method in the plugin (plugin bootup process)
             plugin.end_load_plugin()
@@ -1713,7 +1734,7 @@ class PluginManager:
             plugin_thread.add_event(event)
 
             # acquires the ready semaphore for the beginning of the unloading process
-            plugin.ready_semaphore.acquire()
+            plugin.acquire_ready_semaphore()
 
             # sets the plugin end unload as not completed
             plugin_thread.set_end_unload_complete(False);
@@ -1725,7 +1746,7 @@ class PluginManager:
             plugin_thread.add_event(event)
 
             # acquires the ready semaphore for the beginning of the end unloading process
-            plugin.ready_semaphore.acquire()
+            plugin.acquire_ready_semaphore()
         else:
             # calls the unload plugin method in the plugin (plugin shutdown process)
             plugin.unload_plugin()
@@ -2973,7 +2994,7 @@ class OperativeSystemCondition(Condition):
 
 class Capability:
     """
-    Class that describes a neutral structure for a capability
+    Class that describes a neutral structure for a capability.
     """
 
     list_value = []
@@ -3015,10 +3036,10 @@ class Capability:
 
     def capability_and_super_capabilites(self):
         """
-        Retrieves the list of the capability and all super capabilities
+        Retrieves the list of the capability and all super capabilities.
 
         @rtype: List
-        @return: The of the capability and all super capabilities
+        @return: The of the capability and all super capabilities.
         """
 
         capability_and_super_capabilites_list = []
@@ -3065,7 +3086,7 @@ class Capability:
 
 class Event:
     """
-    Class that describes a neutral structure for an event
+    Class that describes a neutral structure for an event.
     """
 
     list_value = []
@@ -3133,10 +3154,10 @@ class Event:
 
 def capability_and_super_capabilites(capability):
     """
-    Retrieves the list of the capability and all super capabilities
+    Retrieves the list of the capability and all super capabilities.
 
     @rtype: List
-    @return: The of the capability and all super capabilities
+    @return: The of the capability and all super capabilities.
     """
 
     capability_structure = Capability(capability)
@@ -3289,30 +3310,35 @@ class PluginThread(threading.Thread):
                     self.end_unload_plugin_thread.join()
                 return True
             elif event.event_name == "load":
-                self.load_plugin_thread = PluginEventThread(self.plugin.load_plugin)
+                self.load_plugin_thread = PluginEventThread(self.plugin, self.plugin.load_plugin)
                 self.load_plugin_thread.start()
                 self.load_complete = True
             elif event.event_name == "lazy_load":
-                self.lazy_load_plugin_thread = PluginEventThread(self.plugin.lazy_load_plugin)
+                self.lazy_load_plugin_thread = PluginEventThread(self.plugin, self.plugin.lazy_load_plugin)
                 self.lazy_load_plugin_thread.start()
                 self.load_complete = True
             elif event.event_name == "end_load":
-                self.end_load_plugin_thread = PluginEventThread(self.plugin.end_load_plugin)
+                self.end_load_plugin_thread = PluginEventThread(self.plugin, self.plugin.end_load_plugin)
                 self.end_load_plugin_thread.start()
                 self.end_load_complete = True
             elif event.event_name == "unload":
-                self.unload_plugin_thread = PluginEventThread(self.plugin.unload_plugin)
+                self.unload_plugin_thread = PluginEventThread(self.plugin, self.plugin.unload_plugin)
                 self.unload_plugin_thread.start()
                 self.unload_complete = True
             elif event.event_name == "end_unload":
-                self.end_unload_plugin_thread = PluginEventThread(self.plugin.end_unload_plugin)
+                self.end_unload_plugin_thread = PluginEventThread(self.plugin, self.plugin.end_unload_plugin)
                 self.end_unload_plugin_thread.start()
                 self.end_unload_complete = True
 
     def run(self):
+        # loops continuously
         while True:
+            # acquires the semaphore
             self.semaphore.acquire()
+
+            # flushes the queue
             if self.flush_queue():
+                # returns immediately
                 return
 
 class PluginEventThread(threading.Thread):
@@ -3320,18 +3346,25 @@ class PluginEventThread(threading.Thread):
     The plugin event thread class.
     """
 
+    plugin = None;
+    """ The plugin that contains the method to be executed"""
+
     method = None;
     """ The method for the event thread """
 
-    def __init__ (self, method):
+    def __init__ (self, plugin, method):
         """
         Constructor of the class
 
-        @type method: BusinessDummyBusinessLogicPlugin
+        @type plugin: Plugin
+        @param plugin: The plugin that contains the method to be executed.
+        @type method: Method
         @param method: The method for the event thread.
         """
 
         threading.Thread.__init__(self)
+
+        self.plugin = plugin
         self.method = method
 
     def run(self):
@@ -3339,5 +3372,11 @@ class PluginEventThread(threading.Thread):
         The method to start running the thread.
         """
 
-        # calls the event thread method
-        self.method()
+        try:
+            # calls the event thread method
+            self.method()
+        finally:
+            # in case the semaphore is locked waiting for the release
+            if not self.plugin.ready_semaphore_status():
+                # releases the ready semphore
+                self.plugin.release_ready_semaphore()
