@@ -44,6 +44,7 @@ debug = True
 """ The debug flag """
 
 plugin_path_list = ["colony/plugins",
+                    "%prefix_path%/pt.hive.colony.demo.plugins.twitter/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.build.automation/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.build.automation.extensions/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.build.automation.items/src/colony/plugins",
