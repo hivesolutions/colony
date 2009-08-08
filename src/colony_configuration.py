@@ -43,6 +43,9 @@ verbose = False
 debug = True
 """ The debug flag """
 
+stop_on_cycle_error = True
+""" The stop on cycle error flag """
+
 plugin_path_list = ["colony/plugins",
                     "%prefix_path%/pt.hive.colony.demo.plugins.twitter/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.build.automation/src/colony/plugins",
@@ -91,7 +94,7 @@ plugin_path_list = ["colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.main.threads/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.main.web/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.messaging/src/colony/plugins",
-                    "%prefix_path%/pt.hive.colony.plugins.misc/src/colony/plugins;"  +\
+                    "%prefix_path%/pt.hive.colony.plugins.misc/src/colony/plugins"  +\
                     "%prefix_path%/pt.hive.colony.plugins.misc.gui/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.plugin_manager/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.printing/src/colony/plugins",

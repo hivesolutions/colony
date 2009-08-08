@@ -59,7 +59,7 @@ def usage():
 
     print USAGE
 
-def run(plugin_path, verbose = False, debug = False, noloop = False, container = "default", attributes_map = {}):
+def run(plugin_path, verbose = False, debug = False, stop_on_cycle_error = True, noloop = False, container = "default", attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -69,6 +69,8 @@ def run(plugin_path, verbose = False, debug = False, noloop = False, container =
     @param verbose: If the log is going to be of type verbose.
     @type debug: bool
     @param debug: If the log is going to be of type debug.
+    @type stop_on_cycle_error: bool
+    @param stop_on_cycle_error: If the plugin system should stop on cycle error.
     @type noloop: bool
     @param noloop: If the plugin manager is going to run in a loop.
     @type container: String
@@ -90,7 +92,7 @@ def run(plugin_path, verbose = False, debug = False, noloop = False, container =
     platform = colony.plugins.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], not noloop, container, attributes_map)
+    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], stop_on_cycle_error, not noloop, container, attributes_map)
 
     # conditional logging import (depending on the current environment)
     if platform == colony.plugins.util.CPYTHON_ENVIRONMENT:
@@ -159,13 +161,13 @@ def main():
         prefix_path = "../../"
 
     # parses the configuration options
-    verbose, debug, plugin_path = parse_configuration(verbose, debug, plugin_path, prefix_path);
+    verbose, debug, stop_on_cycle_error, plugin_path = parse_configuration(verbose, debug, plugin_path, prefix_path)
 
     # strips the plugin path around the semi-colon character
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(plugin_path_striped, verbose, debug, noloop, container, attributes_map)
+    run(plugin_path_striped, verbose, debug, stop_on_cycle_error, noloop, container, attributes_map)
 
 def parse_attributes(attributes_string):
     # creates an attributes map
@@ -203,6 +205,10 @@ def parse_configuration(verbose, debug, plugin_path, prefix_path):
     if "debug" in dir(colony_configuration):
         debug = colony_configuration.debug
 
+    # in case the stop on cycle error variable is defined in the colony configuration
+    if "stop_on_cycle_error" in dir(colony_configuration):
+        stop_on_cycle_error = colony_configuration.stop_on_cycle_error
+
     if plugin_path:
         plugin_path += ";"
     else:
@@ -214,7 +220,7 @@ def parse_configuration(verbose, debug, plugin_path, prefix_path):
         parsed_plugin_path = plugin_path_item.replace("%prefix_path%", prefix_path)
         plugin_path += parsed_plugin_path + ";"
 
-    return (verbose, debug, plugin_path)
+    return (verbose, debug, stop_on_cycle_error, plugin_path)
 
 if __name__ == "__main__":
     main()

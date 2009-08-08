@@ -1013,7 +1013,7 @@ class PluginManager:
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
-    def __init__(self, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], main_loop_active = True, container = "default", attributes_map = {}):
+    def __init__(self, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, container = "default", attributes_map = {}):
         """
         Constructor of the class
 
@@ -1023,6 +1023,8 @@ class PluginManager:
         @param platform: The current executing platform
         @type init_complete_handlers: List
         @param init_complete_handlers: The list of handlers to be called at the end of the plugin manager initialization
+        @type stop_on_cycle_error: bool
+        @param stop_on_cycle_error: The boolean value for the stop on cycle error
         @type main_loop_active: bool
         @param main_loop_active: The boolean value for the main loop activation
         @type container: String
@@ -1034,6 +1036,7 @@ class PluginManager:
         self.plugin_paths = plugin_paths
         self.platform = platform
         self.init_complete_handlers = init_complete_handlers
+        self.stop_on_cycle_error = stop_on_cycle_error
         self.main_loop_active = main_loop_active
         self.container = container
         self.attributes_map = attributes_map
@@ -1656,7 +1659,7 @@ class PluginManager:
                 self.logger.info("New thread started for plugin '%s' v%s" % (plugin.short_name, plugin.version))
 
             # sets the plugin load as not completed
-            plugin_thread.set_load_complete(False);
+            plugin_thread.set_load_complete(False)
 
             # in case the loading type of the plugin is eager
             if plugin.loading_type == EAGER_LOADING_TYPE or type == FULL_LOAD_TYPE:
@@ -1672,7 +1675,7 @@ class PluginManager:
             # acquires the ready semaphore for the beginning of the loading process
             plugin.acquire_ready_semaphore()
         else:
-            try:
+            if self.stop_on_cycle_error:
                 # in case the loading type of the plugin is eager
                 if plugin.loading_type == EAGER_LOADING_TYPE or type == FULL_LOAD_TYPE:
                     # calls the load plugin method in the plugin (plugin bootup process)
@@ -1680,9 +1683,18 @@ class PluginManager:
                 elif plugin.loading_type == LAZY_LOADING_TYPE:
                     # calls the lazy load plugin method in the plugin (plugin bootup process)
                     plugin.lazy_load_plugin()
-            except:
-                # sets the plugin error state flag
-                plugin.error_state = True
+            else:
+                try:
+                    # in case the loading type of the plugin is eager
+                    if plugin.loading_type == EAGER_LOADING_TYPE or type == FULL_LOAD_TYPE:
+                        # calls the load plugin method in the plugin (plugin bootup process)
+                        plugin.load_plugin()
+                    elif plugin.loading_type == LAZY_LOADING_TYPE:
+                        # calls the lazy load plugin method in the plugin (plugin bootup process)
+                        plugin.lazy_load_plugin()
+                except:
+                    # sets the plugin error state flag
+                    plugin.error_state = True
 
         # in case the plugin is in an error state
         if plugin.error_state:
@@ -1707,7 +1719,7 @@ class PluginManager:
         # in case the plugin to be loaded is either of type main or thread
         if loading_type == MAIN_TYPE or loading_type == THREAD_TYPE:
             # sets the plugin end load as not completed
-            plugin_thread.set_end_load_complete(False);
+            plugin_thread.set_end_load_complete(False)
 
             # creates the plugin end load event
             event = colony.plugins.util.Event("end_load")
@@ -1718,12 +1730,16 @@ class PluginManager:
             # acquires the ready semaphore for the beginning of the end loading process
             plugin.acquire_ready_semaphore()
         else:
-            try:
+            if self.stop_on_cycle_error:
                 # calls the end load plugin method in the plugin (plugin bootup process)
                 plugin.end_load_plugin()
-            except:
-                # sets the plugin error state flag
-                plugin.error_state = True
+            else:
+                try:
+                    # calls the end load plugin method in the plugin (plugin bootup process)
+                    plugin.end_load_plugin()
+                except:
+                    # sets the plugin error state flag
+                    plugin.error_state = True
 
         # in case the plugin is in an error state
         if plugin.error_state:
@@ -1788,7 +1804,7 @@ class PluginManager:
             plugin_thread = self.plugin_threads_map[plugin.id]
 
             # sets the plugin unload as not completed
-            plugin_thread.set_unload_complete(False);
+            plugin_thread.set_unload_complete(False)
 
             # creates the plugin unload event
             event = colony.plugins.util.Event("unload")
@@ -1820,7 +1836,7 @@ class PluginManager:
             plugin_thread = self.plugin_threads_map[plugin.id]
 
             # sets the plugin end unload as not completed
-            plugin_thread.set_end_unload_complete(False);
+            plugin_thread.set_end_unload_complete(False)
 
             # creates the plugin end unload event
             event = colony.plugins.util.Event("end_unload")
@@ -2073,7 +2089,7 @@ class PluginManager:
             if not self._unload_plugin(plugin, type):
                 return False
 
-        return True;
+        return True
 
     def get_all_plugins(self):
         """
@@ -2890,7 +2906,7 @@ class PluginDependency(Dependency):
 
         # in case the plugin load test is not successful
         if not manager.test_plugin_load(plugin):
-            return False;
+            return False
 
         return True
 
@@ -3438,10 +3454,10 @@ class PluginEventThread(threading.Thread):
     The plugin event thread class.
     """
 
-    plugin = None;
+    plugin = None
     """ The plugin that contains the method to be executed"""
 
-    method = None;
+    method = None
     """ The method for the event thread """
 
     def __init__ (self, plugin, method):
@@ -3464,15 +3480,22 @@ class PluginEventThread(threading.Thread):
         The method to start running the thread.
         """
 
-        try:
+        if self.plugin.manager.stop_on_cycle_error:
             # retrieves the original semaphore release count
             original_semaphore_release_count = self.plugin.ready_semaphore_release_count
 
             # calls the event thread method
             self.method()
-        except:
-            # sets the plugin error state flag
-            self.plugin.error_state = True
+        else:
+            try:
+                # retrieves the original semaphore release count
+                original_semaphore_release_count = self.plugin.ready_semaphore_release_count
+
+                # calls the event thread method
+                self.method()
+            except:
+                # sets the plugin error state flag
+                self.plugin.error_state = True
 
         # acquires the ready semaphore lock
         self.plugin.ready_semaphore_lock.acquire()
