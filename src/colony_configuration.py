@@ -94,7 +94,7 @@ plugin_path_list = ["colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.main.threads/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.main.web/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.messaging/src/colony/plugins",
-                    "%prefix_path%/pt.hive.colony.plugins.misc/src/colony/plugins"  +\
+                    "%prefix_path%/pt.hive.colony.plugins.misc/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.misc.gui/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.plugin_manager/src/colony/plugins",
                     "%prefix_path%/pt.hive.colony.plugins.printing/src/colony/plugins",
