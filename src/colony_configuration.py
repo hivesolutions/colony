@@ -120,6 +120,7 @@ plugin_path_list = ["colony/plugins",
                     "%prefix_path%/pt.hive.omni.plugins.base.data/src/omni/plugins",
                     "%prefix_path%/pt.hive.omni.plugins.base.logic/src/omni/plugins",
                     "%prefix_path%/pt.hive.omni.plugins.extra.business/src/omni/plugins",
+                    "%prefix_path%/pt.hive.omni.plugins.pos.logic/src/omni/plugins",
                     "%prefix_path%/pt.hive.omni.plugins.migration/src/omni/plugins",
                     "%prefix_path%/pt.hive.omni.plugins.migration.demo_data/src/omni/plugins",
                     "%prefix_path%/pt.hive.omni.plugins.migration.diamante/src/omni/plugins"]
