@@ -37,6 +37,9 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+layout_mode = "development"
+""" The project layout mode """
+
 verbose = False
 """ The verbose flag """
 

@@ -49,6 +49,11 @@ USAGE = "Help:\n\
 --help[-h] - prints this message\n\
 --verbose[-v] - starts the program in verbose mode\n\
 --debug[-d] - starts the program in debug mode\n\
+--noloop[-n] - sets the manager to not use the loop mode\n\
+--layout-mode[-l]=development/svn_repository/production - sets the layout mode to be used\n\
+--container[-c]=default - sets the container to be used\n\
+--attributes[-a]=... - sets the attributes to be used\n\
+--manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the manager\n\
 --plugin-dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use"
 """ The usage string for the command line arguments """
 
@@ -194,6 +199,21 @@ def parse_attributes(attributes_string):
     return attributes_map
 
 def parse_configuration(verbose, debug, plugin_path, prefix_path):
+    """
+    Parses the configuration using the given values as default values.
+
+    @type verbose: bool
+    @param verbose: If the log is going to be of type verbose.
+    @type debug: bool
+    @param debug: If the log is going to be of type debug.
+    @type plugin_path: String
+    @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
+    @type prefix_path: String
+    @param prefix_path: The prefix path to be used in the path substitution.
+    @rtype: Tuple
+    @return: The tuple with the values parsed value.
+    """
+
     # retrieves the colony configuration contents
     colony_configuration_contents = dir(colony_configuration)
 
@@ -209,7 +229,9 @@ def parse_configuration(verbose, debug, plugin_path, prefix_path):
     if "stop_on_cycle_error" in dir(colony_configuration):
         stop_on_cycle_error = colony_configuration.stop_on_cycle_error
 
+    # in case the plugin path is defined
     if plugin_path:
+        # appends a separator to the plugin path
         plugin_path += ";"
     else:
         # creates a new plugin path string
