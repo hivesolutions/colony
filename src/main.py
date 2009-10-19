@@ -50,11 +50,12 @@ USAGE = "Help:\n\
 --verbose[-v] - starts the program in verbose mode\n\
 --debug[-d] - starts the program in debug mode\n\
 --noloop[-n] - sets the manager to not use the loop mode\n\
---layout-mode[-l]=development/svn_repository/production - sets the layout mode to be used\n\
+--layout_mode[-l]=development/svn_repository/production - sets the layout mode to be used\n\
+--run_mode[-r]=development/test/production - sets the run mode to be used\n\
 --container[-c]=default - sets the container to be used\n\
 --attributes[-a]=... - sets the attributes to be used\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the manager\n\
---plugin-dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use"
+--plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use"
 """ The usage string for the command line arguments """
 
 def usage():
@@ -64,7 +65,7 @@ def usage():
 
     print USAGE
 
-def run(plugin_path, verbose = False, debug = False, stop_on_cycle_error = True, noloop = False, container = "default", attributes_map = {}):
+def run(plugin_path, verbose = False, debug = False, layout_mode = "default", stop_on_cycle_error = True, noloop = False, container = "default", attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -74,6 +75,8 @@ def run(plugin_path, verbose = False, debug = False, stop_on_cycle_error = True,
     @param verbose: If the log is going to be of type verbose.
     @type debug: bool
     @param debug: If the log is going to be of type debug.
+    @type layout_mode: String
+    @param layout_mode: The layout mode to be used by the plugin system.
     @type stop_on_cycle_error: bool
     @param stop_on_cycle_error: If the plugin system should stop on cycle error.
     @type noloop: bool
@@ -97,7 +100,7 @@ def run(plugin_path, verbose = False, debug = False, stop_on_cycle_error = True,
     platform = colony.plugins.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], stop_on_cycle_error, not noloop, container, attributes_map)
+    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, container, attributes_map)
 
     # conditional logging import (depending on the current environment)
     if platform == colony.plugins.util.CPYTHON_ENVIRONMENT:
@@ -124,7 +127,7 @@ def main():
     """
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hvdnc:a:m:p:", ["help", "verbose", "debug", "noloop", "container=", "attributes=", "manager_dir=", "plugin_dir="])
+        opts, args = getopt.getopt(sys.argv[1:], "hvdnl:r:c:a:m:p:", ["help", "verbose", "debug", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "plugin_dir="])
     except getopt.GetoptError, error:
         # prints help information and exit
         # will print something like "option -a not recognized"
@@ -134,6 +137,8 @@ def main():
     verbose = False
     debug = False
     noloop = False
+    layout_mode = "default"
+    run_mode = "default"
     container = "default"
     attributes_map = None
     manager_path = None
@@ -148,6 +153,10 @@ def main():
             debug = True
         elif option in ("-n", "--noloop"):
             noloop = True
+        elif option in ("-l", "--layout_mode"):
+            layout_mode = value
+        elif option in ("-r", "--run_mode"):
+            run_mode = value
         elif option in ("-c", "--container"):
             container = value
         elif option in ("-a", "--attributes"):
@@ -166,13 +175,13 @@ def main():
         prefix_path = "../../"
 
     # parses the configuration options
-    verbose, debug, stop_on_cycle_error, plugin_path = parse_configuration(verbose, debug, plugin_path, prefix_path)
+    verbose, debug, layout_mode, stop_on_cycle_error, plugin_path = parse_configuration(verbose, debug, layout_mode, plugin_path, prefix_path)
 
     # strips the plugin path around the semi-colon character
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(plugin_path_striped, verbose, debug, stop_on_cycle_error, noloop, container, attributes_map)
+    run(plugin_path_striped, verbose, debug, layout_mode, stop_on_cycle_error, noloop, container, attributes_map)
 
 def parse_attributes(attributes_string):
     # creates an attributes map
@@ -198,7 +207,7 @@ def parse_attributes(attributes_string):
 
     return attributes_map
 
-def parse_configuration(verbose, debug, plugin_path, prefix_path):
+def parse_configuration(verbose, debug, layout_mode, plugin_path, prefix_path):
     """
     Parses the configuration using the given values as default values.
 
@@ -206,6 +215,8 @@ def parse_configuration(verbose, debug, plugin_path, prefix_path):
     @param verbose: If the log is going to be of type verbose.
     @type debug: bool
     @param debug: If the log is going to be of type debug.
+    @type layout_mode: String
+    @param layout_mode: The layout mode to be used by the plugin system.
     @type plugin_path: String
     @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
     @type prefix_path: String
@@ -225,6 +236,10 @@ def parse_configuration(verbose, debug, plugin_path, prefix_path):
     if "debug" in dir(colony_configuration):
         debug = colony_configuration.debug
 
+    # in case the layout mode variable is defined in the colony configuration
+    if "layout_mode" in dir(colony_configuration):
+        layout_mode = colony_configuration.layout_mode
+
     # in case the stop on cycle error variable is defined in the colony configuration
     if "stop_on_cycle_error" in dir(colony_configuration):
         stop_on_cycle_error = colony_configuration.stop_on_cycle_error
@@ -242,7 +257,7 @@ def parse_configuration(verbose, debug, plugin_path, prefix_path):
         parsed_plugin_path = plugin_path_item.replace("%prefix_path%", prefix_path)
         plugin_path += parsed_plugin_path + ";"
 
-    return (verbose, debug, stop_on_cycle_error, plugin_path)
+    return (verbose, debug, layout_mode, stop_on_cycle_error, plugin_path)
 
 if __name__ == "__main__":
     main()
