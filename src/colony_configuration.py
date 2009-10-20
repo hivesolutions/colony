@@ -43,9 +43,9 @@ layout_mode = "production"
 run_mode = "production"
 """ The project run mode """
 
-prefix_paths = {"development" : {"colony" : "../../", "omni" : "../../", "demo" : "../../"},
-                "repository_svn" : {"colony" : "../../", "omni" : "../../../../pt.hive.omni/trunk", "demo" : "../../../../pt.hive.colony.demo/trunk"},
-                "production" : {"colony" : "", "omni" : "", "demo" : ""}}
+prefix_paths = {"development" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../"},
+                "repository_svn" : {"colony" : "../../", "omni" : "../../../../pt.hive.omni/trunk", "colony_demo" : "../../../../pt.hive.colony.demo/trunk"},
+                "production" : {"colony" : "", "omni" : "", "colony_demo" : ""}}
 """ The prefix path maps """
 
 verbose = False
@@ -58,7 +58,7 @@ stop_on_cycle_error = True
 """ The stop on cycle error flag """
 
 plugin_path_list = ["colony/plugins",
-                    "%demo_prefix_path%/pt.hive.colony.demo.plugins.twitter/src/colony/plugins",
+                    "%colony_demo_prefix_path%/pt.hive.colony.demo.plugins.twitter/src/colony/plugins",
                     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation/src/colony/plugins",
                     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation.extensions/src/colony/plugins",
                     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation.items/src/colony/plugins",
