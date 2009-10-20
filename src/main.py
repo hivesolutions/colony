@@ -61,6 +61,12 @@ USAGE = "Help:\n\
 DEFAULT_STRING_VALUE = "default"
 """ The default string value """
 
+PREFIX_PATH_PREFIX_VALUE = "%"
+""" The prefix path prefix value """
+
+PREFIX_PATH_SUFIX_VALUE = "_prefix_path%"
+""" The prefix path sufix value """
+
 def usage():
     """
     Prints the usage for the command line.
@@ -173,14 +179,8 @@ def main():
         else:
             assert False, "unhandled option"
 
-    # sets the prefix path for the plugins
-    if manager_path:
-        prefix_path = manager_path + "/../../"
-    else:
-        prefix_path = "../../"
-
     # parses the configuration options
-    verbose, debug, layout_mode, run_mode, stop_on_cycle_error, plugin_path = parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, prefix_path)
+    verbose, debug, layout_mode, run_mode, stop_on_cycle_error, plugin_path = parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, manager_path)
 
     # strips the plugin path around the semi-colon character
     plugin_path_striped = plugin_path.strip(";")
@@ -212,7 +212,7 @@ def parse_attributes(attributes_string):
 
     return attributes_map
 
-def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, prefix_path):
+def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, manager_path):
     """
     Parses the configuration using the given values as default values.
 
@@ -226,8 +226,8 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, pref
     @param run_mode: The run mode to be used by the plugin system.
     @type plugin_path: String
     @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
-    @type prefix_path: String
-    @param prefix_path: The prefix path to be used in the path substitution.
+    @type manager_path: String
+    @param manager_path: The path to the plugin system.
     @rtype: Tuple
     @return: The tuple with the values parsed value.
     """
@@ -251,6 +251,10 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, pref
     if run_mode == DEFAULT_STRING_VALUE and "run_mode" in dir(colony_configuration):
         run_mode = colony_configuration.run_mode
 
+    # in case the prefix paths variable is defined in the colony configuration
+    if "prefix_paths" in dir(colony_configuration):
+        prefix_paths = colony_configuration.prefix_paths
+
     # in case the stop on cycle error variable is defined in the colony configuration
     if "stop_on_cycle_error" in dir(colony_configuration):
         stop_on_cycle_error = colony_configuration.stop_on_cycle_error
@@ -263,9 +267,31 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, pref
         # creates a new plugin path string
         plugin_path = ""
 
+    # retrieves the current prefix paths
+    current_prefix_paths = prefix_paths[layout_mode]
+
     # iterates over all the colony configuration plugin paths
     for plugin_path_item in colony_configuration.plugin_path_list:
-        parsed_plugin_path = plugin_path_item.replace("%prefix_path%", prefix_path)
+        # in case the manager path is defined
+        if manager_path:
+            # sets the initial parsed plugin path
+            parsed_plugin_path = manager_path + "/" + plugin_path_item
+        else:
+            # sets the initial parsed plugin path
+            parsed_plugin_path = plugin_path_item
+
+        # iterates over all the current prefix paths
+        for current_prefix_path in current_prefix_paths:
+            # retrieves the current prefix path name
+            current_prefix_path_name = PREFIX_PATH_PREFIX_VALUE + current_prefix_path + PREFIX_PATH_SUFIX_VALUE
+
+            # retrieves the current prefix path value
+            current_prefix_path_value = current_prefix_paths[current_prefix_path]
+
+            # replaces the current prefix path name with the current prefix path value
+            parsed_plugin_path = parsed_plugin_path.replace(current_prefix_path_name, current_prefix_path_value)
+
+        # adds the parsed plugin path to the plugin path
         plugin_path += parsed_plugin_path + ";"
 
     return (verbose, debug, layout_mode, run_mode, stop_on_cycle_error, plugin_path)
