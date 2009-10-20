@@ -58,6 +58,9 @@ USAGE = "Help:\n\
 --plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use"
 """ The usage string for the command line arguments """
 
+DEFAULT_STRING_VALUE = "default"
+""" The default string value """
+
 def usage():
     """
     Prints the usage for the command line.
@@ -65,7 +68,7 @@ def usage():
 
     print USAGE
 
-def run(plugin_path, verbose = False, debug = False, layout_mode = "default", run_mode = "default", stop_on_cycle_error = True, noloop = False, container = "default", attributes_map = {}):
+def run(plugin_path, verbose = False, debug = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -139,9 +142,9 @@ def main():
     verbose = False
     debug = False
     noloop = False
-    layout_mode = "default"
-    run_mode = "default"
-    container = "default"
+    layout_mode = DEFAULT_STRING_VALUE
+    run_mode = DEFAULT_STRING_VALUE
+    container = DEFAULT_STRING_VALUE
     attributes_map = None
     manager_path = None
     plugin_path = None
@@ -233,19 +236,19 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, pref
     colony_configuration_contents = dir(colony_configuration)
 
     # in case the verbose variable is defined in the colony configuration
-    if "verbose" in dir(colony_configuration):
+    if not debug and "verbose" in dir(colony_configuration):
         verbose = colony_configuration.verbose
 
     # in case the debug variable is defined in the colony configuration
-    if "debug" in dir(colony_configuration):
+    if not debug and "debug" in dir(colony_configuration):
         debug = colony_configuration.debug
 
     # in case the layout mode variable is defined in the colony configuration
-    if "layout_mode" in dir(colony_configuration):
+    if layout_mode == DEFAULT_STRING_VALUE and "layout_mode" in dir(colony_configuration):
         layout_mode = colony_configuration.layout_mode
 
     # in case the run mode variable is defined in the colony configuration
-    if "run_mode" in dir(colony_configuration):
+    if run_mode == DEFAULT_STRING_VALUE and "run_mode" in dir(colony_configuration):
         run_mode = colony_configuration.run_mode
 
     # in case the stop on cycle error variable is defined in the colony configuration
