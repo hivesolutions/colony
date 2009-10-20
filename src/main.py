@@ -65,7 +65,7 @@ def usage():
 
     print USAGE
 
-def run(plugin_path, verbose = False, debug = False, layout_mode = "default", stop_on_cycle_error = True, noloop = False, container = "default", attributes_map = {}):
+def run(plugin_path, verbose = False, debug = False, layout_mode = "default", run_mode = "default", stop_on_cycle_error = True, noloop = False, container = "default", attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -77,6 +77,8 @@ def run(plugin_path, verbose = False, debug = False, layout_mode = "default", st
     @param debug: If the log is going to be of type debug.
     @type layout_mode: String
     @param layout_mode: The layout mode to be used by the plugin system.
+    @type run_mode: String
+    @param run_mode: The run mode to be used by the plugin system.
     @type stop_on_cycle_error: bool
     @param stop_on_cycle_error: If the plugin system should stop on cycle error.
     @type noloop: bool
@@ -100,7 +102,7 @@ def run(plugin_path, verbose = False, debug = False, layout_mode = "default", st
     platform = colony.plugins.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, container, attributes_map)
+    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, attributes_map)
 
     # conditional logging import (depending on the current environment)
     if platform == colony.plugins.util.CPYTHON_ENVIRONMENT:
@@ -175,13 +177,13 @@ def main():
         prefix_path = "../../"
 
     # parses the configuration options
-    verbose, debug, layout_mode, stop_on_cycle_error, plugin_path = parse_configuration(verbose, debug, layout_mode, plugin_path, prefix_path)
+    verbose, debug, layout_mode, run_mode, stop_on_cycle_error, plugin_path = parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, prefix_path)
 
     # strips the plugin path around the semi-colon character
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(plugin_path_striped, verbose, debug, layout_mode, stop_on_cycle_error, noloop, container, attributes_map)
+    run(plugin_path_striped, verbose, debug, layout_mode, run_mode, stop_on_cycle_error, noloop, container, attributes_map)
 
 def parse_attributes(attributes_string):
     # creates an attributes map
@@ -207,7 +209,7 @@ def parse_attributes(attributes_string):
 
     return attributes_map
 
-def parse_configuration(verbose, debug, layout_mode, plugin_path, prefix_path):
+def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, prefix_path):
     """
     Parses the configuration using the given values as default values.
 
@@ -217,6 +219,8 @@ def parse_configuration(verbose, debug, layout_mode, plugin_path, prefix_path):
     @param debug: If the log is going to be of type debug.
     @type layout_mode: String
     @param layout_mode: The layout mode to be used by the plugin system.
+    @type run_mode: String
+    @param run_mode: The run mode to be used by the plugin system.
     @type plugin_path: String
     @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
     @type prefix_path: String
@@ -240,6 +244,10 @@ def parse_configuration(verbose, debug, layout_mode, plugin_path, prefix_path):
     if "layout_mode" in dir(colony_configuration):
         layout_mode = colony_configuration.layout_mode
 
+    # in case the run mode variable is defined in the colony configuration
+    if "run_mode" in dir(colony_configuration):
+        run_mode = colony_configuration.run_mode
+
     # in case the stop on cycle error variable is defined in the colony configuration
     if "stop_on_cycle_error" in dir(colony_configuration):
         stop_on_cycle_error = colony_configuration.stop_on_cycle_error
@@ -257,7 +265,7 @@ def parse_configuration(verbose, debug, layout_mode, plugin_path, prefix_path):
         parsed_plugin_path = plugin_path_item.replace("%prefix_path%", prefix_path)
         plugin_path += parsed_plugin_path + ";"
 
-    return (verbose, debug, layout_mode, stop_on_cycle_error, plugin_path)
+    return (verbose, debug, layout_mode, run_mode, stop_on_cycle_error, plugin_path)
 
 if __name__ == "__main__":
     main()

@@ -40,6 +40,9 @@ __license__ = "GNU General Public License (GPL), Version 3"
 layout_mode = "development"
 """ The project layout mode """
 
+run_mode = "development"
+""" The project run mode """
+
 verbose = False
 """ The verbose flag """
 

@@ -944,6 +944,9 @@ class PluginManager:
     layout_mode = True
     """ The layout mode used in the plugin loading """
 
+    run_mode = True
+    """ The layout mode used in the plugin loading """
+
     container = "default"
     """ The name of the plugin manager container """
 
@@ -1016,7 +1019,7 @@ class PluginManager:
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
-    def __init__(self, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", container = "default", attributes_map = {}):
+    def __init__(self, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", attributes_map = {}):
         """
         Constructor of the class
 
@@ -1044,6 +1047,7 @@ class PluginManager:
         self.stop_on_cycle_error = stop_on_cycle_error
         self.main_loop_active = main_loop_active
         self.layout_mode = layout_mode
+        self.run_mode = run_mode
         self.container = container
         self.attributes_map = attributes_map
 
