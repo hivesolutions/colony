@@ -51,7 +51,7 @@ prefix_paths = {"development" : {"colony" : "../../", "omni" : "../../", "colony
 verbose = False
 """ The verbose flag """
 
-debug = True
+debug = False
 """ The debug flag """
 
 stop_on_cycle_error = True
