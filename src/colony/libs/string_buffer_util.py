@@ -72,6 +72,9 @@ class StringBuffer:
             return_value = self.current_value[self.current_position:]
             self.seek(self.current_size, os.SEEK_SET)
 
+        # returns the return value
+        return return_value
+
     def write(self, string_value):
         pass
 
@@ -100,10 +103,10 @@ class StringBuffer:
     def seek(self, offset, whence = os.SEEK_SET):
         if whence == os.SEEK_SET:
             self.current_position = offset
-        if whence == os.SEEK_END:
+        elif whence == os.SEEK_END:
             self.current_position = self.current_size - offset
         elif whence == os.SEEK_CUR:
-            if self.current_position + position < self.current_size:
+            if self.current_position + offset < self.current_size:
                 self.current_position += offset
             else:
                 self.current_position = self.current_size
