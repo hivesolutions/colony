@@ -57,9 +57,9 @@ class StringBuffer:
         self.fast = fast
 
         if fast:
-            self.write = self.write_fast
+            self.write = self._write_fast
         else:
-            self.write = self.write_slow
+            self.write = self._write_slow
 
     def read(self, size = None):
         # regenerates the current value
@@ -77,15 +77,6 @@ class StringBuffer:
 
     def write(self, string_value):
         pass
-
-    def write_fast(self, string_value):
-        self.string_list.append(string_value)
-
-    def write_slow(self, string_value):
-        self.string_list.append(string_value)
-        self.dirty = True
-        self.current_size += len(string_value)
-        self.current_position = self.current_size
 
     def close(self):
         pass
@@ -120,10 +111,10 @@ class StringBuffer:
     def truncate(self):
         pass
 
-    def readline(self):
+    def readline(self, size = None):
         return None
 
-    def readlines(self):
+    def readlines(self, sizehint = None):
         return None
 
     def writelines(self, lines):
@@ -149,6 +140,15 @@ class StringBuffer:
         if self.dirty or self.fast:
             # regenerates the current value
             self._regenerate()
+
+    def _write_fast(self, string_value):
+        self.string_list.append(string_value)
+
+    def _write_slow(self, string_value):
+        self.string_list.append(string_value)
+        self.dirty = True
+        self.current_size += len(string_value)
+        self.current_position = self.current_size
 
     def _regenerate(self):
         self.current_value = "".join(self.string_list)
