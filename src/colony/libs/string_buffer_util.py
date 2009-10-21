@@ -99,12 +99,12 @@ class StringBuffer:
 
     def seek(self, offset, whence = os.SEEK_SET):
         if whence == os.SEEK_SET:
-            self.current_position = position
+            self.current_position = offset
         if whence == os.SEEK_END:
-            self.current_position = self.current_size - position
+            self.current_position = self.current_size - offset
         elif whence == os.SEEK_END:
             if self.current_position + position < self.current_size:
-                self.current_position += position
+                self.current_position += offset
             else:
                 self.current_position = self.current_size
 
