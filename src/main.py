@@ -67,6 +67,9 @@ PREFIX_PATH_PREFIX_VALUE = "%"
 PREFIX_PATH_SUFIX_VALUE = "_prefix_path%"
 """ The prefix path sufix value """
 
+LIBRARY_DIRECTORY = "colony/libs"
+""" The colony library directory """
+
 def usage():
     """
     Prints the usage for the command line.
@@ -178,6 +181,9 @@ def main():
             plugin_path = value
         else:
             assert False, "unhandled option"
+
+    # configures the system path
+    configure_path(manager_path)
 
     # parses the configuration options
     verbose, debug, layout_mode, run_mode, stop_on_cycle_error, plugin_path = parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, manager_path)
@@ -295,6 +301,25 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, mana
         plugin_path += parsed_plugin_path + ";"
 
     return (verbose, debug, layout_mode, run_mode, stop_on_cycle_error, plugin_path)
+
+def configure_path(manager_path):
+    """
+    Configures the system path for the given manager path.
+
+    @type manager_path: String
+    @param manager_path: The manager path to configure the system path.
+    """
+
+    # in case the manager path is defined
+    if manager_path:
+        # constructs the library path
+        library_path = manager_path + "/" + LIBRARY_DIRECTORY
+    else:
+        # constructs the library path
+        library_path = LIBRARY_DIRECTORY
+
+    # inserts the library path into the system path
+    sys.path.insert(0, library_path)
 
 if __name__ == "__main__":
     main()
