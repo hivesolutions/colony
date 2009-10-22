@@ -281,13 +281,8 @@ class StringBuffer:
         Regenerates the current value (auxiliary method).
         """
 
-        # in case the length of the string list is bigger than one
-        if len(self.string_list) > 1:
-            # joins all the string list elements
-            self.current_value = "".join(self.string_list)
-        else:
-            # retrieves the first string list element
-            self.current_value = self.string_list[0]
+        # joins all the string list elements
+        self.current_value = "".join(self.string_list)
 
         # unsets the dirty flag
         self.dirty = False
