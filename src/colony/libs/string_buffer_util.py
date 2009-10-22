@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
+__author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
 __version__ = "1.0.0"
@@ -45,10 +45,19 @@ class StringBuffer:
     """
 
     softspace = 0
+    """ The soft space value """
 
     closed = False
+    """ The closed value """
 
     def __init__(self, fast = True):
+        """
+        Constructor of the class.
+
+        @type fast: bool
+        @param fast: The fast flag to control the string buffer type.
+        """
+
         self.string_list = []
         self.current_value = ""
         self.dirty = False
@@ -62,6 +71,14 @@ class StringBuffer:
             self.write = self._write_slow
 
     def read(self, size = None):
+        """
+        Reads a buffer from the string buffer with the
+        given maximum size.
+
+        @type size: int
+        @param size: The maximum size of the buffer to be read.
+        """
+
         # regenerates the current value
         self.regenerate()
 
@@ -76,15 +93,34 @@ class StringBuffer:
         return return_value
 
     def write(self, string_value):
+        """
+        Writes the given string value to the string buffer.
+
+        @type string_value: String
+        @param string_value: The string value to be written.
+        """
+
         pass
 
     def close(self):
+        """
+        Closes the string buffer.
+        """
+
         pass
 
     def flush(self):
+        """
+        Flushes the string buffer.
+        """
+
         pass
 
     def reset(self):
+        """
+        Resets the string buffer.
+        """
+
         self.string_list = []
         self.current_value = ""
         self.dirty = False
@@ -92,6 +128,16 @@ class StringBuffer:
         self.current_size = 0
 
     def seek(self, offset, whence = os.SEEK_SET):
+        """
+        Seeks the string buffer to the given offset with the given jump mode,
+        defined with the whence.
+
+        @type offset: int
+        @param offset: The offset of the jump.
+        @type whence: int
+        @param whence: The jump mode to be used.
+        """
+
         if whence == os.SEEK_SET:
             self.current_position = offset
         elif whence == os.SEEK_END:
@@ -103,31 +149,93 @@ class StringBuffer:
                 self.current_position = self.current_size
 
     def next(self):
+        """
+        Retrieves the next string item from the string buffer.
+
+        @rtype: String
+        @return: The next string item from the string buffer.
+        """
+
         return None
 
     def tell(self):
+        """
+        Retrieves the current offset position in the string buffer.
+
+        @rtype: int
+        @return: The current offset position in the string buffer.
+        """
+
         return self.current_position
 
     def truncate(self):
+        """
+        Truncates the string buffer value.
+        """
+
         pass
 
     def readline(self, size = None):
+        """
+        Retrieves a line from the string buffer,
+        with the given maximum size.
+
+        @type size: int
+        @param size: The maximum size of the line to be read.
+        @rtype: String
+        @return: The read line.
+        """
+
         return None
 
     def readlines(self, sizehint = None):
+        """
+        Retrieves a series of lines from the string buffer,
+        with the given maximum size.
+
+        @type sizehint: int
+        @param sizehint: The maximum size of the lines to be read.
+        @rtype: List
+        @return: The read lines.
+        """
+
         return None
 
     def writelines(self, lines):
+        """
+        Writes the given lines to the string buffer.
+
+        @type lines: List
+        @param lines: The lines to be written to the string buffer.
+        """
+
+        # iterates over all the lines
         for line in lines:
+            # writes the lines to the string buffer
             self.write(line + "\n")
 
     def isatty(self):
+        """
+        Returns if the file buffer is of type tty.
+
+        @rtype: bool
+        @return: If the file buffer is of type tty.
+        """
+
         return False
 
     def getvalue(self):
+        """
+        Retrieves the current string value.
+        """
+
         return self.get_value()
 
     def get_value(self):
+        """
+        Retrieves the current string value.
+        """
+
         # regenerates the current value
         self.regenerate()
 
@@ -135,6 +243,10 @@ class StringBuffer:
         return self.current_value
 
     def regenerate(self):
+        """
+        Regenerates the current value.
+        """
+
         # in case the buffer is dirty
         # or the mode fast is enabled
         if self.dirty or self.fast:
@@ -142,13 +254,40 @@ class StringBuffer:
             self._regenerate()
 
     def _write_fast(self, string_value):
+        """
+        Writes the string value in fast mode.
+
+        @type string_value: String
+        @param string_value: The string value to be written.
+        """
+
         self.string_list.append(string_value)
 
     def _write_slow(self, string_value):
+        """
+        Writes the string value in slow mode.
+
+        @type string_value: String
+        @param string_value: The string value to be written.
+        """
+
         self.string_list.append(string_value)
         self.dirty = True
         self.current_size += len(string_value)
         self.current_position = self.current_size
 
     def _regenerate(self):
-        self.current_value = "".join(self.string_list)
+        """
+        Regenerates the current value (auxiliary method).
+        """
+
+        # in case the length of the string list is bigger than one
+        if len(self.string_list) > 1:
+            # joins all the string list elements
+            self.current_value = "".join(self.string_list)
+        else:
+            # retrieves the first string list element
+            self.current_value = self.string_list[0]
+
+        # unsets the dirty flag
+        self.dirty = False
