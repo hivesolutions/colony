@@ -46,7 +46,6 @@ import threading
 import traceback
 import time
 import types
-import string
 
 import os.path
 
@@ -1187,7 +1186,7 @@ class PluginManager:
                 split = os.path.splitext(file_name)
                 extension = split[-1]
                 if extension == ".py" or extension == ".pyc":
-                    module_name = string.join(split[:-1], "")
+                    module_name = "".join(split[:-1])
                     if not module_name in modules:
                         modules.append(module_name)
         return modules
