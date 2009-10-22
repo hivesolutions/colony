@@ -45,7 +45,7 @@ run_mode = "production"
 
 prefix_paths = {"development" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../"},
                 "repository_svn" : {"colony" : "../../", "omni" : "../../../../pt.hive.omni/trunk", "colony_demo" : "../../../../pt.hive.colony.demo/trunk"},
-                "production" : {"colony" : "", "omni" : "", "colony_demo" : ""}}
+                "production" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../"}}
 """ The prefix path maps """
 
 verbose = False
