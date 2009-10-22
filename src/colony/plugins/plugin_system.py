@@ -961,6 +961,9 @@ class PluginManager:
     event_queue = []
     """ The queue of events to be processed """
 
+    manager_path = None
+    """ The manager base path for execution """
+
     plugin_paths = None
     """ The set of paths for the loaded plugins """
 
@@ -1018,10 +1021,12 @@ class PluginManager:
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
-    def __init__(self, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", attributes_map = {}):
+    def __init__(self, manager_path = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", attributes_map = {}):
         """
         Constructor of the class
 
+        @type manager_path: List
+        @param manager_path: The manager base path for execution.
         @type plugin_paths: List
         @param plugin_paths: The list of directory paths for the loading of the plugins
         @type platform: int
@@ -1040,6 +1045,7 @@ class PluginManager:
         @param attributes_map: The map associating the attribute key and the attribute value
         """
 
+        self.manager_path = manager_path
         self.plugin_paths = plugin_paths
         self.platform = platform
         self.init_complete_handlers = init_complete_handlers
@@ -2766,6 +2772,16 @@ class PluginManager:
         """
 
         return self.init_complete
+
+    def get_manager_path(self):
+        """
+        Retrieves the manager base path for execution.
+
+        @rtype: String
+        @return: The manager base path for execution.
+        """
+
+        return self.manager_path
 
     def echo(self, value = "echo"):
         """

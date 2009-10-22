@@ -61,6 +61,9 @@ USAGE = "Help:\n\
 DEFAULT_STRING_VALUE = "default"
 """ The default string value """
 
+DEFAULT_MANAGER_PATH_VALUE = "."
+""" The default manager path """
+
 PREFIX_PATH_PREFIX_VALUE = "%"
 """ The prefix path prefix value """
 
@@ -77,10 +80,12 @@ def usage():
 
     print USAGE
 
-def run(plugin_path, verbose = False, debug = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, attributes_map = {}):
+def run(manager_path, plugin_path, verbose = False, debug = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
+    @type manager_path: String
+    @param manager_path: The manager base path for execution.
     @type plugin_path: String
     @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
     @type verbose: bool
@@ -114,7 +119,7 @@ def run(plugin_path, verbose = False, debug = False, layout_mode = DEFAULT_STRIN
     platform = colony.plugins.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.plugins.plugin_system.PluginManager(plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, attributes_map)
+    plugin_manager = colony.plugins.plugin_system.PluginManager(manager_path, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, attributes_map)
 
     # conditional logging import (depending on the current environment)
     if platform == colony.plugins.util.CPYTHON_ENVIRONMENT:
@@ -155,7 +160,7 @@ def main():
     run_mode = DEFAULT_STRING_VALUE
     container = DEFAULT_STRING_VALUE
     attributes_map = None
-    manager_path = None
+    manager_path = DEFAULT_MANAGER_PATH_VALUE
     plugin_path = None
     for option, value in opts:
         if option in ("-h", "--help"):
@@ -192,7 +197,7 @@ def main():
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(plugin_path_striped, verbose, debug, layout_mode, run_mode, stop_on_cycle_error, noloop, container, attributes_map)
+    run(manager_path, plugin_path_striped, verbose, debug, layout_mode, run_mode, stop_on_cycle_error, noloop, container, attributes_map)
 
 def parse_attributes(attributes_string):
     # creates an attributes map
@@ -278,13 +283,8 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, mana
 
     # iterates over all the colony configuration plugin paths
     for plugin_path_item in colony_configuration.plugin_path_list:
-        # in case the manager path is defined
-        if manager_path:
-            # sets the initial parsed plugin path
-            parsed_plugin_path = manager_path + "/" + plugin_path_item
-        else:
-            # sets the initial parsed plugin path
-            parsed_plugin_path = plugin_path_item
+        # sets the initial parsed plugin path
+        parsed_plugin_path = manager_path + "/" + plugin_path_item
 
         # iterates over all the current prefix paths
         for current_prefix_path in current_prefix_paths:
@@ -310,13 +310,8 @@ def configure_path(manager_path):
     @param manager_path: The manager path to configure the system path.
     """
 
-    # in case the manager path is defined
-    if manager_path:
-        # constructs the library path
-        library_path = manager_path + "/" + LIBRARY_DIRECTORY
-    else:
-        # constructs the library path
-        library_path = LIBRARY_DIRECTORY
+    # constructs the library path
+    library_path = manager_path + "/" + LIBRARY_DIRECTORY
 
     # inserts the library path into the system path
     sys.path.insert(0, library_path)
