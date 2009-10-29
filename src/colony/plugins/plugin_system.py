@@ -1273,13 +1273,13 @@ class PluginManager:
 
     def start_plugin_manager_plugins(self):
         """
-        Starts all the available plugin manger plugins, creating a singleton instance for each of them
+        Starts all the available plugin manager plugins, creating a singleton instance for each of them
         """
 
-        # retrieves all the plugin manger plugin classes available
+        # retrieves all the plugin manager plugin classes available
         plugin_classes = self.get_all_plugin_classes(PluginManagerPlugin)
 
-        # iterates over all the available plugin manger plugin classes
+        # iterates over all the available plugin manager plugin classes
         for plugin in plugin_classes:
             # tests the plugin for loading
             if not plugin in self.loaded_plugins:
