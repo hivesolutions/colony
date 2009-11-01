@@ -73,6 +73,24 @@ PREFIX_PATH_SUFIX_VALUE = "_prefix_path%"
 LIBRARY_DIRECTORY = "colony/libs"
 """ The colony library directory """
 
+VERBOSE_VALUE = "verbose"
+""" The verbose value """
+
+DEBUG_VALUE = "debug"
+""" The debug value """
+
+LAYOUT_MODE_VALUE = "layout_mode"
+""" The layout mode value """
+
+RUN_MODE_VALUE = "run_mode"
+""" The run mode value """
+
+PREFIX_PATHS_VALUE = "prefix_paths"
+""" The prefix paths value """
+
+STOP_ON_CYCLE_ERROR_VALUE = "stop_on_cycle_error"
+""" The stop on cycle error value """
+
 def usage():
     """
     Prints the usage for the command line.
@@ -247,27 +265,27 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, mana
     colony_configuration_contents = dir(colony_configuration)
 
     # in case the verbose variable is defined in the colony configuration
-    if not debug and "verbose" in dir(colony_configuration):
+    if not debug and VERBOSE_VALUE in dir(colony_configuration):
         verbose = colony_configuration.verbose
 
     # in case the debug variable is defined in the colony configuration
-    if not debug and "debug" in dir(colony_configuration):
+    if not debug and DEBUG_VALUE in dir(colony_configuration):
         debug = colony_configuration.debug
 
     # in case the layout mode variable is defined in the colony configuration
-    if layout_mode == DEFAULT_STRING_VALUE and "layout_mode" in dir(colony_configuration):
+    if layout_mode == DEFAULT_STRING_VALUE and LAYOUT_MODE_VALUE in dir(colony_configuration):
         layout_mode = colony_configuration.layout_mode
 
     # in case the run mode variable is defined in the colony configuration
-    if run_mode == DEFAULT_STRING_VALUE and "run_mode" in dir(colony_configuration):
+    if run_mode == DEFAULT_STRING_VALUE and RUN_MODE_VALUE in dir(colony_configuration):
         run_mode = colony_configuration.run_mode
 
     # in case the prefix paths variable is defined in the colony configuration
-    if "prefix_paths" in dir(colony_configuration):
+    if PREFIX_PATHS_VALUE in dir(colony_configuration):
         prefix_paths = colony_configuration.prefix_paths
 
     # in case the stop on cycle error variable is defined in the colony configuration
-    if "stop_on_cycle_error" in dir(colony_configuration):
+    if STOP_ON_CYCLE_ERROR_VALUE in dir(colony_configuration):
         stop_on_cycle_error = colony_configuration.stop_on_cycle_error
 
     # in case the plugin path is defined
