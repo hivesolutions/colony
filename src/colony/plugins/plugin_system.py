@@ -1039,6 +1039,8 @@ class PluginManager:
         @param main_loop_active: The boolean value for the main loop activation
         @type layout_mode: String
         @param layout_mode: The layout mode used in the plugin loading
+        @type run_mode: String
+        @param run_mode: The run mode used in the plugin loading
         @type container: String
         @param container: The name of the plugin manager container
         @type attributes_map: Dictionary
