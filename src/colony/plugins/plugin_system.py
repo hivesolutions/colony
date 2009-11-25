@@ -48,6 +48,7 @@ import time
 import types
 
 import os.path
+import logging.handlers
 
 import colony.plugins.util
 import colony.plugins.decorators
@@ -81,6 +82,24 @@ DEFAULT_LOGGING_LEVEL = logging.WARN
 
 DEFAULT_LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 """ The default logging format """
+
+DEFAULT_LOGGING_FILE_NAME_PREFIX = "colony"
+""" The default logging file name prefix """
+
+DEFAULT_LOGGING_FILE_NAME_SEPARATOR = "_"
+""" The default logging file name separator """
+
+DEFAULT_LOGGING_FILE_NAME_EXTENSION = ".log"
+""" The default logging file name extension """
+
+DEFAULT_LOGGING_FILE_MODE = "a"
+""" The default logging file mode """
+
+DEFAULT_LOGGING_FILE_SIZE = 10485760
+""" The deefault logging file size """
+
+DEFAULT_LOGGING_FILE_BACKUP_COUNT = 5
+""" The default logging file backup count """
 
 EAGER_LOADING_TYPE = "eager_loading"
 """ The eager loading plugin loading type """
@@ -1090,13 +1109,40 @@ class PluginManager:
         @param log_level: The log level of the logger
         """
 
+        # creates the logger file name
+        logger_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX + DEFAULT_LOGGING_FILE_NAME_SEPARATOR + self.run_mode + DEFAULT_LOGGING_FILE_NAME_EXTENSION
+
+        # retrieves the logger
         logger = logging.getLogger(DEFAULT_LOGGER)
+
+        # sets the logger level
         logger.setLevel(log_level)
+
+        # creates the stream handler
         stream_handler = logging.StreamHandler()
+
+        # creates the rotating file handler
+        rotating_file_handler = logging.handlers.RotatingFileHandler(logger_file_name, DEFAULT_LOGGING_FILE_MODE, DEFAULT_LOGGING_FILE_SIZE, DEFAULT_LOGGING_FILE_BACKUP_COUNT)
+
+        # retrieves the logging format
         logging_format = plugin_manager_configuration.get("logging_format", DEFAULT_LOGGING_FORMAT)
+
+        # creates the logging formatter
         formatter = logging.Formatter(logging_format)
+
+        # sets the formatter in the stream handler
         stream_handler.setFormatter(formatter)
+
+        # sets the formatter in the rotating file handler
+        rotating_file_handler.setFormatter(formatter)
+
+        # adds the stream handler to the logger
         logger.addHandler(stream_handler)
+
+        # adds the rotating file handler to the logger
+        logger.addHandler(rotating_file_handler)
+
+        # sets the logger
         self.logger = logger
 
     def load_system(self):
