@@ -58,6 +58,18 @@ USAGE = "Help:\n\
 --plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use"
 """ The usage string for the command line arguments """
 
+BRANDING_TEXT = "Hive Colony %s (Hive Solutions Lda. r1:Mar 19 2008)"
+""" The branding text value """
+
+VERSION = "1.0.0"
+""" The version value """
+
+VERSION_PRE_TEXT = "Python "
+""" The version pre text value """
+
+HELP_TEXT = "Type \"help\" for more information."
+""" The help text value """
+
 DEFAULT_STRING_VALUE = "default"
 """ The default string value """
 
@@ -98,6 +110,20 @@ def usage():
 
     print USAGE
 
+def print_information():
+    """
+    Prints the system information for the command line.
+    """
+
+    # print the branding information text
+    print BRANDING_TEXT % VERSION
+
+    # print the python information
+    print VERSION_PRE_TEXT + sys.version
+
+    # prints some help information
+    print HELP_TEXT
+
 def run(manager_path, plugin_path, verbose = False, debug = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
@@ -123,6 +149,9 @@ def run(manager_path, plugin_path, verbose = False, debug = False, layout_mode =
     @type container: Dictionary
     @param container: The name of the plugin manager container.
     """
+
+    # print the branding information text
+    print_information()
 
     # checks if the path is not empty
     if not plugin_path == None:
