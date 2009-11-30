@@ -38,13 +38,12 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import os
-import stat
 import sys
+import stat
 import thread
 import inspect
 import threading
 import traceback
-import time
 import types
 
 import os.path
@@ -2452,7 +2451,7 @@ class PluginManager:
 
         for plugin in self.plugin_instances:
             for dependency in plugin.dependencies:
-               if dependency.__class__.__name__ == "PluginDependency":
+                if dependency.__class__.__name__ == "PluginDependency":
                     if dependency.plugin_id == plugin_id:
                         result.append(self.get_plugin(plugin))
         return result
@@ -2463,7 +2462,7 @@ class PluginManager:
 
         for plugin in self.plugin_instances:
             for dependency in plugin.dependencies:
-               if dependency.__class__.__name__ == "PluginDependency":
+                if dependency.__class__.__name__ == "PluginDependency":
                     if dependency.plugin_id == plugin_id:
                         result.append(plugin)
         return result
@@ -2577,7 +2576,7 @@ class PluginManager:
         loaded_plugins = self.get_all_loaded_plugins()
 
         for loaded_plugin in loaded_plugins:
-            plugin_module = plugin.__module__
+            plugin_module = loaded_plugin.__module__
 
             if plugin_module == module:
                 return loaded_plugin
@@ -3187,33 +3186,41 @@ class Capability:
         else:
             self.list_value = []
 
-    def __eq__(a, b):
-        list_value_a = a.list_value
-        list_value_b = b.list_value
+    def __eq__(self, capability):
+        # retrieves the list value for self
+        list_value_self = self.list_value
 
-        if not list_value_a or not list_value_b:
+        # retrieves the list value for capability
+        list_value_capability = capability.list_value
+
+        # in case some of the lists is invalid
+        if not list_value_self or not list_value_capability:
+            # returns false
             return False
 
-        len_a = len(list_value_a)
-        len_b = len(list_value_b)
+        # retrieves the length of the list value for self
+        length_self = len(list_value_self)
 
-        if not len_a == len_b:
+        # retrieves the length of the list value for capability
+        length_capability = len(list_value_capability)
+
+        # in case the lengths for the list are different
+        if not length_self == length_capability:
+            # returns false
             return False
 
-        for index in range(len_a):
-            if list_value_a[index] != list_value_b[index]:
+        # iterates over all the lists
+        for index in range(length_self):
+            # compares both values
+            if list_value_self[index] != list_value_capability[index]:
+                # returns false
                 return False
 
+        # returns true
         return True
 
-    def __ne__(a, b):
-        return not self.__eq__(a, b)
-
-    def eq(a, b):
-        return self.__eq__(a, b)
-
-    def ne(a, b):
-        return self.__neq__(a, b)
+    def __ne__(self, capability):
+        return not self.__eq__(capability)
 
     def capability_and_super_capabilites(self):
         """
@@ -3279,33 +3286,41 @@ class Event:
         else:
             self.list_value = []
 
-    def __eq__(a, b):
-        list_value_a = a.list_value
-        list_value_b = b.list_value
+    def __eq__(self, event):
+        # retrieves the list value for self
+        list_value_self = self.list_value
 
-        if not list_value_a or not list_value_b:
+        # retrieves the list value for event
+        list_value_event = event.list_value
+
+        # in case some of the lists is invalid
+        if not list_value_self or not list_value_event:
+            # returns false
             return False
 
-        len_a = len(list_value_a)
-        len_b = len(list_value_b)
+        # retrieves the length of the list value for self
+        length_self = len(list_value_self)
 
-        if not len_a == len_b:
+        # retrieves the length of the list value for event
+        length_event = len(list_value_event)
+
+        # in case the lengths for the list are different
+        if not length_self == length_event:
+            # returns false
             return False
 
-        for index in range(len_a):
-            if list_value_a[index] != list_value_b[index]:
+        # iterates over all the lists
+        for index in range(length_self):
+            # compares both values
+            if list_value_self[index] != list_value_event[index]:
+                # returns false
                 return False
 
+        # returns true
         return True
 
-    def __ne__(a, b):
-        return not self.__eq__(a, b)
-
-    def eq(a, b):
-        return self.__eq__(a, b)
-
-    def ne(a, b):
-        return self.__neq__(a, b)
+    def __ne__(self, event):
+        return not self.__eq__(event)
 
     def is_sub_event(self, event):
 
