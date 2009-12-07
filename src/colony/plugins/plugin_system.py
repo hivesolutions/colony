@@ -1402,7 +1402,7 @@ class PluginManager:
         # retrieves the path to the directory containing the plugin file
         plugin_dir = os.path.dirname(absolute_plugin_path)
 
-        # starts all the plugin manager structures relateds with plugins
+        # starts all the plugin manager structures related with plugins
         self.loaded_plugins.append(plugin)
         self.loaded_plugins_map[plugin_id] = plugin
         self.loaded_plugins_id_map[plugin_id] = self.current_id
