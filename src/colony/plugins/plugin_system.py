@@ -1223,25 +1223,50 @@ class PluginManager:
 
         @type path: String
         @param path: The path to retrieve the modules
+        @rtype: List
+        @return: All the modules in the given path
         """
 
+        # starts the modules list
         modules = []
 
+        # in case the path does not exist
         if not os.path.exists(path):
             self.logger.warning("Path '%s' does not exist in the current filesystem" % (path))
             return modules
 
+        # retrieves the directory list for the path
         dir_list = os.listdir(path)
+
+        # iterates over all the file names
+        # in the directory list
         for file_name in dir_list:
+            # creates the full file path
             full_path = path + "/" + file_name
+
+            # retrieves the file mode
             mode = os.stat(full_path)[stat.ST_MODE]
+
+            # in case the file is not a directory
             if not stat.S_ISDIR(mode):
+                # splits the path
                 split = os.path.splitext(file_name)
+
+                # retrieves the extension
                 extension = split[-1]
+
+                # in case the extension is a valid python extension
                 if extension == ".py" or extension == ".pyc":
+                    # retrieves the module name from the file name
                     module_name = "".join(split[:-1])
+
+                    # in case the module name is not defined
+                    # in the modules list
                     if not module_name in modules:
+                        # adds the module name to the modules list
                         modules.append(module_name)
+
+        # returns the modules list
         return modules
 
     def init_plugin_system(self, configuration):
