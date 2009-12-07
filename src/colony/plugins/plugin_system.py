@@ -1390,7 +1390,7 @@ class PluginManager:
         # retrieves the plugin description
         plugin_description = plugin.description
 
-        # instanciates the plugin to create the singleton plugin instance
+        # instantiates the plugin to create the singleton plugin instance
         plugin_instance = plugin(self)
 
         # retrieves the path to the plugin file
