@@ -41,36 +41,36 @@ import plugin_system
 
 def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enabled = True):
     """
-    Decorator for the initial load of the plugin
+    Decorator for the initial load of the plugin.
 
     @type plugin_id: String
-    @param plugin_id: The id of the plugin to be loaded with allowed plugins
+    @param plugin_id: The id of the plugin to be loaded with allowed plugins.
     @type plugin_version: String
-    @param plugin_version: The version of the plugin to be loaded with allowed plugins
+    @param plugin_version: The version of the plugin to be loaded with allowed plugins.
     @type lazy_loading: bool
-    @param lazy_loading: The boolean flag to set the type of loading for the plugin
+    @param lazy_loading: The boolean flag to set the type of loading for the plugin.
     @type metadata_enabled: bool
-    @param metadata_enabled: The boolean flag to set the metadata availability
+    @param metadata_enabled: The boolean flag to set the metadata availability.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def create_decorator_interceptor(func):
         """
-        Creates a decorator interceptor, that intercepts the normal function call
+        Creates a decorator interceptor, that intercepts the normal function call.
 
         @type func: function
-        @param func: The callback function
+        @param func: The callback function.
         """
 
         def decorator_interceptor(*args, **kwargs):
             """
-            The interceptor function for the load_allowed decorator
+            The interceptor function for the load_allowed decorator.
 
             @type args: pointer
-            @param args: The function arguments list
+            @param args: The function arguments list.
             @type kwargs: pointer pointer
-            @param kwargs: The function arguments map
+            @param kwargs: The function arguments map.
             """
 
             # calls the callback function
@@ -92,16 +92,16 @@ def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enable
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the load_allowed decorator
+        The decorator function for the load_allowed decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The decorator interceptor function
+        @param: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -129,28 +129,28 @@ load_plugin.load_plugin_map = None
 
 def plugin_meta_information(metadata_key, metadata_values = {}):
     """
-    Decorator that sets a defined metadata value in a plugin
+    Decorator that sets a defined metadata value in a plugin.
 
     @type metadata_key: String
-    @param metadata_key: The metadata key to process the metadata
+    @param metadata_key: The metadata key to process the metadata.
     @type metadata_values: Dictionary
-    @param metadata_values: The dictionary containing the metadata values
+    @param metadata_values: The dictionary containing the metadata values.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the plugin_meta_information decorator
+        The decorator function for the plugin_meta_information decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The decorator interceptor function
+        @param: The decorator interceptor function.
         """
 
         # creates the load plugin tuple
@@ -179,34 +179,34 @@ def plugin_meta_information(metadata_key, metadata_values = {}):
 
 def load_allowed(plugin_id, plugin_version, load_plugin = False):
     """
-    Decorator that loads the allowed plugins into the defined methods
+    Decorator that loads the allowed plugins into the defined methods.
 
     @type plugin_id: String
-    @param plugin_id: The id of the plugin to be loaded with allowed plugins
+    @param plugin_id: The id of the plugin to be loaded with allowed plugins.
     @type plugin_version: String
-    @param plugin_version: The version of the plugin to be loaded with allowed plugins
+    @param plugin_version: The version of the plugin to be loaded with allowed plugins.
     @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading
+    @param load_plugin: The load plugin flag to set the test for plugin loading.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def create_decorator_interceptor(func):
         """
-        Creates a decorator interceptor, that intercepts the normal function call
+        Creates a decorator interceptor, that intercepts the normal function call.
 
         @type func: function
-        @param func: The callback function
+        @param func: The callback function.
         """
 
         def decorator_interceptor(*args, **kwargs):
             """
-            The interceptor function for the load_allowed decorator
+            The interceptor function for the load_allowed decorator.
 
             @type args: pointer
-            @param args: The function arguments list
+            @param args: The function arguments list.
             @type kwargs: pointer pointer
-            @param kwargs: The function arguments map
+            @param kwargs: The function arguments map.
             """
 
             # calls the callback function
@@ -232,16 +232,16 @@ def load_allowed(plugin_id, plugin_version, load_plugin = False):
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the load_allowed decorator
+        The decorator function for the load_allowed decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The decorator interceptor function
+        @param: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -268,28 +268,28 @@ def load_allowed(plugin_id, plugin_version, load_plugin = False):
 
 def load_allowed_capability(capability, load_plugin = False):
     """
-    Decorator that marks a method for loading of allowed plugins
+    Decorator that marks a method for loading of allowed plugins.
 
     @type capability: String
-    @param capability: The name of the capability to be loaded
+    @param capability: The name of the capability to be loaded.
     @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading
+    @param load_plugin: The load plugin flag to set the test for plugin loading.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the load_allowed_capability decorator
+        The decorator function for the load_allowed_capability decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The function to be decorated
+        @param: The function to be decorated.
         """
 
         load_allowed.func = func
@@ -312,34 +312,34 @@ load_allowed.load_allowed_map = None
 
 def unload_allowed(plugin_id, plugin_version, load_plugin = False):
     """
-    Decorator that unloads the allowed plugins into the defined methods
+    Decorator that unloads the allowed plugins into the defined methods.
 
     @type plugin_id: String
-    @param plugin_id: The id of the plugin to be unloaded with allowed plugins
+    @param plugin_id: The id of the plugin to be unloaded with allowed plugins.
     @type plugin_version: String
-    @param plugin_version: The version of the plugin to be unloaded with allowed plugins
+    @param plugin_version: The version of the plugin to be unloaded with allowed plugins.
     @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading
+    @param load_plugin: The load plugin flag to set the test for plugin loading.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def create_decorator_interceptor(func):
         """
-        Creates a decorator interceptor, that intercepts the normal function call
+        Creates a decorator interceptor, that intercepts the normal function call.
 
         @type func: function
-        @param func: The callback function
+        @param func: The callback function.
         """
 
         def decorator_interceptor(*args, **kwargs):
             """
-            The interceptor function for the unload_allowed decorator
+            The interceptor function for the unload_allowed decorator.
 
             @type args: pointer
-            @param args: The function arguments list
+            @param args: The function arguments list.
             @type kwargs: pointer pointer
-            @param kwargs: The function arguments map
+            @param kwargs: The function arguments map.
             """
 
             # calls the callback function
@@ -365,16 +365,16 @@ def unload_allowed(plugin_id, plugin_version, load_plugin = False):
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the unload_allowed decorator
+        The decorator function for the unload_allowed decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The decorator interceptor function
+        @param: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -401,28 +401,28 @@ def unload_allowed(plugin_id, plugin_version, load_plugin = False):
 
 def unload_allowed_capability(capability, load_plugin = False):
     """
-    Decorator that marks a method for unloading of allowed plugins
+    Decorator that marks a method for unloading of allowed plugins.
 
     @type capability: String
-    @param capability: The name of the capability to be unloaded
+    @param capability: The name of the capability to be unloaded.
     @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading
+    @param load_plugin: The load plugin flag to set the test for plugin loading.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the unload_allowed_capability decorator
+        The decorator function for the unload_allowed_capability decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The function to be decorated
+        @param: The function to be decorated.
         """
 
         unload_allowed.func = func
@@ -445,34 +445,34 @@ unload_allowed.unload_allowed_map = None
 
 def inject_dependencies(plugin_id, plugin_version, load_plugin = False):
     """
-    Decorator that injects the dependencies into the defined methods
+    Decorator that injects the dependencies into the defined methods.
 
     @type plugin_id: String
-    @param plugin_id: The id of the plugin to be injected with dependencies
+    @param plugin_id: The id of the plugin to be injected with dependencies.
     @type plugin_version: String
-    @param plugin_version: The version of the plugin to be injected with dependencies
+    @param plugin_version: The version of the plugin to be injected with dependencies.
     @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading
+    @param load_plugin: The load plugin flag to set the test for plugin loading.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def create_decorator_interceptor(func):
         """
-        Creates a decorator interceptor, that intercepts the normal function call
+        Creates a decorator interceptor, that intercepts the normal function call.
 
         @type func: function
-        @param func: The callback function
+        @param func: The callback function.
         """
 
         def decorator_interceptor(*args, **kwargs):
             """
-            The interceptor function for the inject_dependencies decorator
+            The interceptor function for the inject_dependencies decorator.
 
             @type args: pointer
-            @param args: The function arguments list
+            @param args: The function arguments list.
             @type kwargs: pointer pointer
-            @param kwargs: The function arguments map
+            @param kwargs: The function arguments map.
             """
 
             # calls the callback function
@@ -501,16 +501,16 @@ def inject_dependencies(plugin_id, plugin_version, load_plugin = False):
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the inject_dependencies decorator
+        The decorator function for the inject_dependencies decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The decorator interceptor function
+        @param: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -537,30 +537,30 @@ def inject_dependencies(plugin_id, plugin_version, load_plugin = False):
 
 def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
     """
-    Decorator that marks a method for injection of a dependency
+    Decorator that marks a method for injection of a dependency.
 
     @type plugin_id: String
-    @param plugin_id: The id of the plugin dependency to be injected
+    @param plugin_id: The id of the plugin dependency to be injected.
     @type plugin_version: String
-    @param plugin_version: The version of the plugin dependency to be injected
+    @param plugin_version: The version of the plugin dependency to be injected.
     @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading
+    @param load_plugin: The load plugin flag to set the test for plugin loading.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the plugin_inject decorator
+        The decorator function for the plugin_inject decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The function to be decorated
+        @param: The function to be decorated.
         """
 
         plugin_inject.func = func
@@ -583,34 +583,34 @@ inject_dependencies.inject_dependencies_map = None
 
 def event_handler(plugin_id, plugin_version, load_plugin = False):
     """
-    Decorator that redirects the event handling into the defined methods
+    Decorator that redirects the event handling into the defined methods.
 
     @type plugin_id: String
-    @param plugin_id: The id of the plugin to take care of the event handling
+    @param plugin_id: The id of the plugin to take care of the event handling.
     @type plugin_version: String
-    @param plugin_version: The version of the plugin to take care of the event handling
+    @param plugin_version: The version of the plugin to take care of the event handling.
     @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading
+    @param load_plugin: The load plugin flag to set the test for plugin loading.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def create_decorator_interceptor(func):
         """
-        Creates a decorator interceptor, that intercepts the normal function call
+        Creates a decorator interceptor, that intercepts the normal function call.
 
         @type func: function
-        @param func: The callback function
+        @param func: The callback function.
         """
 
         def decorator_interceptor(*args, **kwargs):
             """
-            The interceptor function for the event_handler decorator
+            The interceptor function for the event_handler decorator.
 
             @type args: pointer
-            @param args: The function arguments list
+            @param args: The function arguments list.
             @type kwargs: pointer pointer
-            @param kwargs: The function arguments map
+            @param kwargs: The function arguments map.
             """
 
             # calls the callback function
@@ -649,16 +649,16 @@ def event_handler(plugin_id, plugin_version, load_plugin = False):
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the event_handler decorator
+        The decorator function for the event_handler decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The decorator interceptor function
+        @param: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -685,28 +685,28 @@ def event_handler(plugin_id, plugin_version, load_plugin = False):
 
 def event_handler_method(event_name, load_plugin = False):
     """
-    Decorator that marks a method for event handling
+    Decorator that marks a method for event handling.
 
     @type event_name: String
-    @param event_name: The name of the event to be handled by the marked method
+    @param event_name: The name of the event to be handled by the marked method.
     @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading
+    @param load_plugin: The load plugin flag to set the test for plugin loading.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the event_handler_method decorator
+        The decorator function for the event_handler_method decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The function to be decorated
+        @param: The function to be decorated.
         """
 
         event_handler_method.func = func
@@ -729,26 +729,26 @@ event_handler.event_handler_methods_map = None
 
 def plugin_call(load_plugin = True):
     """
-    Decorator that intercepts a plugin front-end call method
+    Decorator that intercepts a plugin front-end call method.
 
     @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading
+    @param load_plugin: The load plugin flag to set the test for plugin loading.
     @rtype: function
-    @return: The created decorator
+    @return: The created decorator.
     """
 
     def decorator(func, *args, **kwargs):
         """
-        The decorator function for the plugin_call decorator
+        The decorator function for the plugin_call decorator.
 
         @type func: function
-        @param func: The function to be decorated
+        @param func: The function to be decorated.
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         @rtype: function
-        @param: The decorator interceptor function
+        @param: The decorator interceptor function.
         """
 
         if load_plugin:
@@ -764,20 +764,20 @@ def plugin_call(load_plugin = True):
 
 def create_load_plugin_interceptor(func):
     """
-    Creates a load plugin interceptor, that loads a lazy plugin on the fly
+    Creates a load plugin interceptor, that loads a lazy plugin on the fly.
 
     @type func: function
-    @param func: The callback function
+    @param func: The callback function.
     """
 
     def decorator_interceptor(*args, **kwargs):
         """
-        The interceptor function for the decorator
+        The interceptor function for the decorator.
 
         @type args: pointer
-        @param args: The function arguments list
+        @param args: The function arguments list.
         @type kwargs: pointer pointer
-        @param kwargs: The function arguments map
+        @param kwargs: The function arguments map.
         """
 
         # retrieves the original plugin instance
@@ -799,12 +799,12 @@ def create_load_plugin_interceptor(func):
 
 def unregister_plugin_decorators(plugin_id, plugin_version):
     """
-    Unregisters the decorators for the plugin with the given id and version
+    Unregisters the decorators for the plugin with the given id and version.
 
     @type plugin_id: String
-    @param plugin_id: The id of the plugin to unregister the decorators
+    @param plugin_id: The id of the plugin to unregister the decorators.
     @type plugin_version: String
-    @param plugin_version: The version of the plugin to unregister the decorators
+    @param plugin_version: The version of the plugin to unregister the decorators.
     """
 
     # creates the plugin tuple for the refered plugin
