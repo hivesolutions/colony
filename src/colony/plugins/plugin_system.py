@@ -3109,7 +3109,7 @@ class PackageDependency(Dependency):
             try:
                 # tries to find (import) the given module
                 __import__(package_import_name)
-            except ImportError, import_error:
+            except ImportError:
                 manager.logger.info("Package '%s' v%s does not exist in your system" % (package_name, package_version))
                 if not package_url == "none":
                     manager.logger.info("You can download the package at %s" % package_url)
@@ -3120,7 +3120,7 @@ class PackageDependency(Dependency):
                 try:
                     # tries to find (import) the given module
                     __import__(package_import_name_item)
-                except ImportError, import_error:
+                except ImportError:
                     manager.logger.info("Package '%s' v%s does not exist in your system" % (package_name, package_version))
                     if not package_url == "none":
                         manager.logger.info("You can download the package at %s" % package_url)
@@ -3156,7 +3156,7 @@ class Condition:
         Test the condition returning the result of the test.
 
         @rtype: bool
-        @return: The result of the test (if successfull or not).
+        @return: The result of the test (if successful or not).
         """
 
         return True
@@ -3184,7 +3184,7 @@ class OperativeSystemCondition(Condition):
         Test the condition returning the result of the test.
 
         @rtype: bool
-        @return: The result of the test (if successfull or not).
+        @return: The result of the test (if successful or not).
         """
 
         if not Condition.test_condition(self):

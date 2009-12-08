@@ -217,7 +217,6 @@ def load_allowed(plugin_id, plugin_version, load_plugin = False):
             capability = args[2]
 
             original_plugin_tuple = (original_plugin.id, original_plugin.version)
-            allowed_plugin_tuple = (allowed_plugin.id, allowed_plugin.version)
 
             if original_plugin_tuple in load_allowed.load_allowed_map:
                 allowed_functions_map = load_allowed.load_allowed_map[original_plugin_tuple]
@@ -350,7 +349,6 @@ def unload_allowed(plugin_id, plugin_version, load_plugin = False):
             capability = args[2]
 
             original_plugin_tuple = (original_plugin.id, original_plugin.version)
-            allowed_plugin_tuple = (allowed_plugin.id, allowed_plugin.version)
 
             if original_plugin_tuple in unload_allowed.unload_allowed_map:
                 allowed_functions_map = unload_allowed.unload_allowed_map[original_plugin_tuple]
@@ -618,7 +616,6 @@ def event_handler(plugin_id, plugin_version, load_plugin = False):
 
             original_plugin = args[0]
             event_name = args[1]
-            event_args = args[2:]
             all_method_args = args[1:]
 
             original_plugin_tuple = (original_plugin.id, original_plugin.version)
