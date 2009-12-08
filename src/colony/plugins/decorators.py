@@ -574,7 +574,7 @@ def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
             decorator_interceptor_function = func
 
         # returns the interceptor to be used
-        return func
+        return decorator_interceptor_function
 
     # returns the created decorator
     return decorator
