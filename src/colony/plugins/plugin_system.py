@@ -1318,7 +1318,7 @@ class PluginManager:
         @param plugin_paths: The list of python paths to add to the python path
         """
 
-        # iterates over all the plugin paths in plugin_paths
+        # iterates over all the plugin paths in plugin paths
         for plugin_path in plugin_paths:
             # if the path is not in the python lib
             # path inserts the path into it
