@@ -1641,7 +1641,7 @@ class PluginManager:
 
     def load_main_plugins(self):
         """
-        Loads the set of main plugins, staritng the system bootup process.
+        Loads the set of main plugins, starting the system bootup process.
         """
 
         # iterates over all the plugin instances
