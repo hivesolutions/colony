@@ -50,7 +50,7 @@ USAGE = "Help:\n\
 --verbose[-v] - starts the program in verbose mode\n\
 --debug[-d] - starts the program in debug mode\n\
 --noloop[-n] - sets the manager to not use the loop mode\n\
---layout_mode[-l]=development/svn_repository/production - sets the layout mode to be used\n\
+--layout_mode[-l]=development/repository_svn/production - sets the layout mode to be used\n\
 --run_mode[-r]=development/test/production - sets the run mode to be used\n\
 --container[-c]=default - sets the container to be used\n\
 --attributes[-a]=... - sets the attributes to be used\n\
