@@ -1116,6 +1116,9 @@ class PluginManager:
         # retrieves the logger
         logger = logging.getLogger(DEFAULT_LOGGER)
 
+        # sets the logger propagation to avoid propagation
+        logger.propagate = 0
+
         # sets the logger level
         logger.setLevel(log_level)
 
