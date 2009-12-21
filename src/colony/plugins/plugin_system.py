@@ -637,7 +637,7 @@ class Plugin(object):
         @return: The configuration property for the given property name.
         """
 
-        return self.configuration_map[property_name]
+        return self.configuration_map.get(property_name, None)
 
     def set_configuration_property(self, property_name, property):
         """
