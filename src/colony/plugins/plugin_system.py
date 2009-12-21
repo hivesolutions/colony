@@ -40,11 +40,12 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import sys
 import stat
+import types
 import thread
 import inspect
+import logging
 import threading
 import traceback
-import types
 
 import os.path
 import logging.handlers
@@ -66,12 +67,6 @@ JYTHON_ENVIRONMENT = colony.plugins.util.JYTHON_ENVIRONMENT
 
 IRON_PYTHON_ENVIRONMENT = colony.plugins.util.IRON_PYTHON_ENVIRONMENT
 """ IronPython environment value """
-
-# conditional logging import (depending on the current environment)
-if colony.plugins.util.get_environment() == CPYTHON_ENVIRONMENT or colony.plugins.util.get_environment() == JYTHON_ENVIRONMENT:
-    import logging
-elif colony.plugins.util.get_environment() == IRON_PYTHON_ENVIRONMENT:
-    import colony.plugins.dummy_logging as logging
 
 DEFAULT_LOGGER = "default_messages"
 """ The default logger name """
