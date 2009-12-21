@@ -840,8 +840,8 @@ class Plugin(object):
         # retrieves the execution information
         type, value, traceback_list = sys.exc_info()
 
-        # in case the traceback is valid
-        if traceback:
+        # in case the traceback list is valid
+        if traceback_list:
             formated_traceback = traceback.format_tb(traceback_list)
         else:
             formated_traceback = ()
