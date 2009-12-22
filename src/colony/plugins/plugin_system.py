@@ -1391,9 +1391,6 @@ class PluginManager:
         # retrieves the plugin id
         plugin_id = plugin.id
 
-        # retrieves the plugin version
-        plugin_version = plugin.version
-
         # retrieves the plugin description
         plugin_description = plugin.description
 
@@ -1966,17 +1963,20 @@ class PluginManager:
         # retrieves the plugin id
         plugin_id = plugin.id
 
+        # retrieves the plugin short name
+        plugin_short_name = plugin.short_name
+
         # retrieves the plugin version
         plugin_version = plugin.version
 
         # tests the plugin against the current platform
         if not self.test_platform_compatible(plugin):
-            self.logger.info("Current platform (%s) not compatible with plugin '%s' v%s" % (self.platform, plugin.short_name, plugin.version))
+            self.logger.info("Current platform (%s) not compatible with plugin '%s' v%s" % (self.platform, plugin_short_name, plugin_version))
             return False
 
         # tests the plugin for the availability of the dependencies
         if not self.test_dependencies_available(plugin):
-            self.logger.info("Missing dependencies for plugin '%s' v%s" % (plugin.short_name, plugin.version))
+            self.logger.info("Missing dependencies for plugin '%s' v%s" % (plugin_short_name, plugin_version))
             return False
 
         if not plugin_id in self.loaded_plugins_map:
@@ -3061,7 +3061,7 @@ class PackageDependency(Dependency):
 
         Dependency.__init__(self, mandatory, conditions_list)
         self.package_name = package_name
-        self.package_import_name= package_import_name
+        self.package_import_name = package_import_name
         self.package_version = package_version
         self.package_url = package_url
 
