@@ -1909,7 +1909,10 @@ class PluginManager:
             try:
                 # calls the unload plugin method in the plugin (plugin shutdown process)
                 plugin.unload_plugin()
-            except:
+            except Exception, exception:
+                # prints the error message
+                self.logger.error("There was an exception: %s" % exception)
+
                 # sets the plugin error state flag
                 plugin.error_state = True
 
