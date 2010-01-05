@@ -122,6 +122,15 @@ DEPENDENCY_TYPE = "dependency"
 ALLOWED_TYPE = "allowed"
 """ The allowed plugin loading/unloading type """
 
+SINGLETON_DIFFUSION_SCOPE = 1
+""" The singleton diffusion scope """
+
+SAME_DIFFUSION_SCOPE = 2
+""" The same diffusion scope """
+
+NEW_DIFFUSION_SCOPE = 3
+""" The new diffusion scope """
+
 FILE_REMOVED_TYPE = "file_removed"
 """ The file removed plugin loading/unloading type """
 
@@ -220,6 +229,12 @@ class Plugin(object):
     ready_semaphore_release_count = 0
     """ The ready semaphore release count """
 
+    original_id = None
+    """ The original id of the plugin """
+
+    diffusion_scope_id = None
+    """ The diffusion scope id of the plugin """
+
     manager = None
     """ The parent plugin manager """
 
@@ -231,6 +246,7 @@ class Plugin(object):
         @param manager: The plugin manager of the system.
         """
 
+        self.original_id = self.id
         self.manager = manager
         self.ready_semaphore = threading.Semaphore(0)
         self.ready_semaphore_lock = threading.Lock()
@@ -594,6 +610,8 @@ class Plugin(object):
 
         if not is_event_or_super_event_in_list(event_name, self.events_handled):
             return
+
+        # prints an info message
         self.info("Event '%s' generated in '%s' v%s" % (event_name, self.short_name, self.version))
 
         self.notify_handlers(event_name, event_args)
@@ -608,6 +626,7 @@ class Plugin(object):
         @param event_args: The arguments for the handler.
         """
 
+        # prints an info message
         self.info("Event '%s' caught in '%s' v%s" % (event_name, self.short_name, self.version))
 
     def reload_main_modules(self):
@@ -615,6 +634,7 @@ class Plugin(object):
         Reloads the plugin main modules in the interpreter.
         """
 
+        # prints an info message
         self.info("Reloading main modules in '%s' v%s" % (self.short_name, self.version))
 
         # iterates over all the main modules
@@ -1035,7 +1055,10 @@ class PluginManager:
     """ The map associating the plugins that allow the plugin with the id of the plugin """
 
     capabilities_plugins_map = {}
-    """ The map associating the capabilities  with the the plugin that supports the capability """
+    """ The map associating the capabilities with the the plugin that supports the capability """
+
+    diffusion_scope_loaded_plugins_map = {}
+    """ The map associating the diffusion scope with the loaded plugins that exist in the scope """
 
     deleted_plugin_classes = []
     """ The list containing the classes for the deleted plugins """
@@ -1101,6 +1124,7 @@ class PluginManager:
         self.plugin_dependent_plugins_map = {}
         self.plugin_allowed_plugins_map = {}
         self.capabilities_plugins_map = {}
+        self.diffusion_scope_loaded_plugins_map = {}
         self.deleted_plugin_classes = []
         self.event_plugins_handled_loaded_map = {}
 
@@ -1156,6 +1180,7 @@ class PluginManager:
         Starts the process of loading the plugin system.
         """
 
+        # prints an info message
         self.logger.info("Starting plugin manager...")
 
         # gets all modules from all plugin paths
@@ -1173,16 +1198,27 @@ class PluginManager:
         Unloads the plugin system from memory, exiting the system.
         """
 
+        # iterates over all the plugin instances
         for plugin_instance in self.plugin_instances:
+            # in case the plugin instance is loaded
             if plugin_instance.is_loaded():
+                # in case the plugin contains the main type capability
                 if MAIN_TYPE in plugin_instance.capabilities:
+                    # unloads the plugin using the main type unloading
                     self._unload_plugin(plugin_instance, None, MAIN_TYPE)
+                # in case the plugin contains the thread type capability
                 elif THREAD_TYPE in plugin_instance.capabilities:
+                    # unloads the plugin using the thread type unloading
                     self._unload_plugin(plugin_instance, None, THREAD_TYPE)
+                # otherwise
                 else:
+                    # unloads the plugin normally
                     self._unload_plugin(plugin_instance, None)
 
+        # creates the exit event
         exit_event = colony.plugins.util.Event("exit")
+
+        # adds the exist event to the event queue
         self.add_event(exit_event)
 
     def main_loop(self):
@@ -1676,6 +1712,20 @@ class PluginManager:
             init_complete_handler()
 
     def __load_plugin(self, plugin, type = None, loading_type = None):
+        """
+        Loads the given plugin with the given type and loading type.
+        The loading of the plugin consists the loading of the plugin itself (_load_plugin)
+        and in the registration of the plugin in all the plugins that allow it.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to be loaded.
+        @type type: String
+        @param type: The type of plugin to be loaded.
+        @type loading_type: String
+        @param loading_type: The loading type to be used.
+        @rtype: bool
+        @requires: The result of the plugin load.
+        """
 
         # in case the plugin is loaded
         if plugin.is_loaded():
@@ -1685,8 +1735,12 @@ class PluginManager:
         if (plugin.loading_type == LAZY_LOADING_TYPE and not type == FULL_LOAD_TYPE) and plugin.is_lazy_loaded():
             return True
 
+        # in case the plugin does not pass the test plugin load
         if not self.test_plugin_load(plugin):
+            # prints an info message
             self.logger.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
+
+            # returns false
             return False
 
         if not loading_type and MAIN_TYPE in plugin.capabilities:
@@ -1699,11 +1753,30 @@ class PluginManager:
             if not self._load_plugin(plugin, type, loading_type):
                 return False
 
+        # injects the plugin in all the plugins that allow
+        # one of it's capabilities.
         self.inject_all_allowed(plugin)
 
+        # returns true
         return True
 
     def _load_plugin(self, plugin, type = None, loading_type = None):
+        """
+        Loads the given plugin with the given type and loading type.
+        The loading of the plugin consists in the test for pre-conditions (dependencies),
+        creation of thread (if necessary), loading (if necessary) and injection of dependencies, loading
+        of the plugin resources and loading (if necessary) and injection of allowed plugins.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to be loaded.
+        @type type: String
+        @param type: The type of plugin to be loaded.
+        @type loading_type: String
+        @param loading_type: The loading type to be used.
+        @rtype: bool
+        @requires: The result of the plugin load.
+        """
+
         # generates the init load plugin event
         self.generate_event("plugin_manager.init_load_plugin", [plugin.id, plugin.version, plugin])
 
@@ -1713,21 +1786,33 @@ class PluginManager:
 
         # in case the return from the handler of the initialization of the plugin load returns false
         if not self.plugin_manager_plugin_execute("init_plugin_load", [plugin, type, loading_type]):
+
+            # returns false
             return False
 
         # in case the plugin is loaded
         if plugin.is_loaded():
+
+            # returns true
             return True
 
         # in case the plugin is lazy loaded
         if (plugin.loading_type == LAZY_LOADING_TYPE and not type == FULL_LOAD_TYPE) and plugin.is_lazy_loaded():
+
+            # returns true
             return True
 
+        # in case the plugin load is not successful
         if not self.test_plugin_load(plugin):
+            # prints an info message
             self.logger.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
+
+            # returns false
             return False
 
+        # in case a type is defined
         if type:
+            # prints an info message
             self.logger.info("Loading of type: '%s'" % (type))
 
         # in case the plugin to be loaded is either of type main or thread
@@ -1736,6 +1821,7 @@ class PluginManager:
                 # retrieves the available thread for the plugin
                 plugin_thread = self.plugin_threads_map[plugin.id]
 
+                # prints an info message
                 self.logger.info("Thread restarted for plugin '%s' v%s" % (plugin.short_name, plugin.version))
             else:
                 # creates a new tread to run the main plugin
@@ -1744,9 +1830,13 @@ class PluginManager:
                 # starts the thread
                 plugin_thread.start()
 
+                # adds the plugin thread to the plugin threads list
                 self.plugin_threads.append(plugin_thread)
+
+                # sets the plugin thread in the plugin threads map
                 self.plugin_threads_map[plugin.id] = plugin_thread
 
+                # prints an info message
                 self.logger.info("New thread started for plugin '%s' v%s" % (plugin.short_name, plugin.version))
 
             # sets the plugin load as not completed
@@ -1852,6 +1942,7 @@ class PluginManager:
         # generates the end load plugin event
         self.generate_event("plugin_manager.end_load_plugin", [plugin.id, plugin.version, plugin])
 
+        # returns true
         return True
 
     def _unload_plugin(self, plugin, type = None, unloading_type = None):
@@ -1959,7 +2050,17 @@ class PluginManager:
         return True
 
     def test_plugin_load(self, plugin):
+        """
+        Tests the given plugin, to check if the loading is possible.
 
+        @type plugin: Plugin
+        @param plugin: The plugin to be checked.
+        @rtype: bool
+        @return: The result of the plugin loading check.
+        """
+
+        # in case the plugin does not pass the test plugin load execution
+        # in the plugin system
         if not self.plugin_manager_plugin_execute("test_plugin_load", [plugin]):
             return False
 
@@ -1974,20 +2075,38 @@ class PluginManager:
 
         # tests the plugin against the current platform
         if not self.test_platform_compatible(plugin):
+            # prints an info message
             self.logger.info("Current platform (%s) not compatible with plugin '%s' v%s" % (self.platform, plugin_short_name, plugin_version))
+
+            # returns false
             return False
 
         # tests the plugin for the availability of the dependencies
         if not self.test_dependencies_available(plugin):
+            # prints an info message
             self.logger.info("Missing dependencies for plugin '%s' v%s" % (plugin_short_name, plugin_version))
+
+            # returns false
             return False
 
+        # in case the plugin id already exists in the loaded plugins map
         if not plugin_id in self.loaded_plugins_map:
             return False
 
+        # returns true
         return True
 
     def test_dependencies_available(self, plugin):
+        """
+        Tests if the dependencies for the given plugin are available.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to be tested for dependencies.
+        @rtype: bool
+        @return: The result of the plugin dependencies available check.
+        """
+
+        # retrieves the plugin dependencies
         plugin_dependencies = plugin.dependencies
 
         # iterates over all the plugin dependencies
@@ -1995,17 +2114,36 @@ class PluginManager:
 
             # in case the test dependency tests fails
             if not plugin_dependency.test_dependency(self):
+                # prints an info message
                 self.logger.info("Problem with dependency for plugin '%s' v%s" % (plugin.short_name, plugin.version))
+
+                # returns false
                 return False
 
+        # returns true
         return True
 
     def test_platform_compatible(self, plugin):
+        """
+        Tests if the current platform is compatible with the given plugin.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to be tested for platform compatibility.
+        @rtype: bool
+        @return: The result of the plugin platform compatibility check.
+        """
+
+        # retrieves the plugin platforms list
         plugin_platforms_list = plugin.platforms
 
+        # in case the current platform is in the
+        # plugin platforms list
         if self.platform in plugin_platforms_list:
+            # returns true
             return True
+        # otherwise
         else:
+            # returns false
             return False
 
     def resolve_capabilities(self, plugin):
@@ -2303,16 +2441,23 @@ class PluginManager:
         # the results list
         result = []
 
-        # the capability converter to internal capability structure
+        # the capability converted to internal capability structure
         capability_structure = Capability(capability)
 
+        # iterates over all the plugin instances
         for plugin in self.plugin_instances:
+            # retrieves the plugin capabilities structure
             plugin_capabilities_structure = convert_to_capability_list(plugin.capabilities)
 
+            # iterates over all the plugin capabilities structure
             for plugin_capability_structure in plugin_capabilities_structure:
+                # in case the plugin capability structure is capability is sub
+                # capability of the capability structure
                 if capability_structure.is_capability_or_sub_capability(plugin_capability_structure):
+                    # adds the plugin to the results list
                     result.append(self.get_plugin(plugin))
 
+        # returns the results list
         return result
 
     def _get_plugins_by_capability_cache(self, capability):
@@ -2352,7 +2497,7 @@ class PluginManager:
         # the results list
         result = []
 
-        # the capability converter to internal capbility structure
+        # the capability converter to internal capability structure
         capability_structure = Capability(capability)
 
         for plugin in self.plugin_instances:
@@ -3216,9 +3361,19 @@ class Capability:
     """ The value of the capability described as a list """
 
     def __init__(self, string_value = None):
+        """
+        Constructor of the class.
+
+        @type string_value: String
+        @param string_value: The capability string value.
+        """
+
+        # in case the string value is valid
         if string_value:
+            # splits the string value to retrieve the list value
             self.list_value = string_value.split(".")
         else:
+            # sets the list value as an empty list
             self.list_value = []
 
     def __eq__(self, capability):
@@ -3255,6 +3410,7 @@ class Capability:
         return True
 
     def __ne__(self, capability):
+        # retrieves the not value of the equals method
         return not self.__eq__(capability)
 
     def capability_and_super_capabilites(self):
@@ -3262,49 +3418,96 @@ class Capability:
         Retrieves the list of the capability and all super capabilities.
 
         @rtype: List
-        @return: The of the capability and all super capabilities.
+        @return: The list of the capability and all super capabilities.
         """
 
+        # creates the capability and super capabilities list
         capability_and_super_capabilites_list = []
 
         # retrieves the list value
         list_value_self = self.list_value
 
+        # start the current capability value
         curent_capability_value = None
 
+        # iterates over the list of values self
         for value_self in list_value_self:
+            # in case the current capability value is valied
             if curent_capability_value:
-                curent_capability_value = curent_capability_value + "." + value_self
+                # appends the value self and a dot to the current capability value
+                curent_capability_value += "." + value_self
+            # otherwise (initial iteration)
             else:
+                # sets the current capability value as the value self
                 curent_capability_value = value_self
+
+            # adds the current capability value to the capability
+            # and super capabilities list
             capability_and_super_capabilites_list.append(curent_capability_value)
 
+        # returns the capability and super capabilities list
         return capability_and_super_capabilites_list
 
     def is_sub_capability(self, capability):
+        """
+        Tests if the given capability is sub capability.
 
+        @type capability: Capability
+        @param capability: The capability to be tested.
+        @rtype: bool
+        @return: The result of the is sub capability test.
+        """
+
+        # retrieves the list value self
         list_value_self = self.list_value
+
+        # retrieves the list value capability
         list_value_capability = capability.list_value
 
+        # in case any of the lists is empty or invalid
         if not list_value_self or not list_value_capability:
+            # returns false
             return False
 
-        len_self = len(list_value_self)
-        len_capability = len(list_value_capability)
+        # retrieves the list value self length
+        list_value_self_length = len(list_value_self)
 
-        if len_capability <= len_self:
+        # retrieves the list value capability length
+        list_value_capability_length = len(list_value_capability)
+
+        # in case the list value capability length is less or
+        # equal than list value self length
+        if list_value_capability_length <= list_value_self_length:
+            # returns false
             return False
 
-        for index in range(len_self):
+        # iterates over the list value self range
+        for index in range(list_value_self_length):
+            # in case the values of each list are different
             if list_value_self[index] != list_value_capability[index]:
+                # returns false
                 return False
 
+        # returns true
         return True
 
     def is_capability_or_sub_capability(self, capability):
+        """
+        Tests if the given capability is a capability or sub capability.
+
+        @type capability: Capability
+        @param capability: The capability to be tested.
+        @rtype: bool
+        @return: The result of the is capability or sub capability test.
+        """
+
+        # in case the capability is equal or sub capability
         if self.__eq__(capability) or self.is_sub_capability(capability):
+            # returns true
             return True
+        # otherwise
         else:
+            # returns false
             return False
 
 class Event:
@@ -3316,9 +3519,19 @@ class Event:
     """ The value of the event described as a list """
 
     def __init__(self, string_value = None):
+        """
+        Constructor of the class.
+
+        @type string_value: String
+        @param string_value: The event string value.
+        """
+
+        # in case the string value is valid
         if string_value:
+            # splits the string value to retrieve the list value
             self.list_value = string_value.split(".")
         else:
+            # sets the list value as an empty list
             self.list_value = []
 
     def __eq__(self, event):
@@ -3358,111 +3571,298 @@ class Event:
         return not self.__eq__(event)
 
     def is_sub_event(self, event):
+        """
+        Tests if the given event is sub event.
 
+        @type event: Event
+        @param event: The event to be tested.
+        @rtype: bool
+        @return: The result of the is sub event test.
+        """
+
+        # retrieves the list value self
         list_value_self = self.list_value
+
+        # retrieves the list value event
         list_value_event = event.list_value
 
+        # in case any of the lists is empty or invalid
         if not list_value_self or not list_value_event:
+            # returns false
             return False
 
-        len_self = len(list_value_self)
-        len_event = len(list_value_event)
+        # retrieves the list value self length
+        list_value_self_length = len(list_value_self)
 
-        if len_event <= len_self:
+        # retrieves the list value event length
+        list_value_event_length = len(list_value_event)
+
+        # in case the list value event length is less or
+        # equal than list value self length
+        if list_value_event_length <= list_value_self_length:
             return False
 
-        for index in range(len_self):
+        # iterates over the list value self range
+        for index in range(list_value_self_length):
+            # in case the values of each list are different
             if list_value_self[index] != list_value_event[index]:
+                # returns false
                 return False
 
+        # returns true
         return True
 
     def is_event_or_sub_event(self, event):
+        """
+        Tests if the given event is a event or sub event.
+
+        @type event: Event
+        @param event: The event to be tested.
+        @rtype: bool
+        @return: The result of the is event or sub event test.
+        """
+
+        # in case the capability is equal or sub capability
         if self.__eq__(event) or self.is_sub_event(event):
+            # returns true
             return True
+        # otherwise
         else:
+            # returns false
             return False
 
 def capability_and_super_capabilites(capability):
     """
     Retrieves the list of the capability and all super capabilities.
 
+    @type capability: String
+    @param capability: The capability to retrieve the the list of the
+    capability and all super capabilities.
     @rtype: List
-    @return: The of the capability and all super capabilities.
+    @return: The list of the capability and all super capabilities.
     """
 
+    # creates the capability structure from the capability string
     capability_structure = Capability(capability)
 
+    # returns the list of the capability and all super capabilities
     return capability_structure.capability_and_super_capabilites()
 
 def is_capability_or_sub_capability(base_capability, capability):
+    """
+    Tests if the given capability is capability or sub capability
+    of the given base capability.
 
+    @type base_capability: String
+    @param base_capability: The base capability to be used for test.
+    @type capability: String
+    @param capability: The capability to be tested.
+    @rtype: bool
+    @return: The result of the test.
+    """
+
+    # creates the base capability structure from
+    # the base capability string
     base_capability_structure = Capability(base_capability)
+
+    # creates the capability structure from the capability string
     capability_structure = Capability(capability)
 
+    # returns the result of the is capability or sub capability test
     return base_capability_structure.is_capability_or_sub_capability(capability_structure)
 
 def is_capability_or_sub_capability_in_list(base_capability, capability_list):
+    """
+    Tests if any of the capabilities in the capability list is capability or
+    sub capability of the given base capability.
 
+    @type base_capability: String
+    @param base_capability: The base capability to be used for test.
+    @type capability_list: List
+    @param capability_list: The list of capabilities to be tested.
+    @rtype: bool
+    @return: The result of the test.
+    """
+
+    # iterates over all the capabilities in the capability list
     for capability in capability_list:
+        # tests if the capability is capability or
+        # sub capability of the base capability
         if is_capability_or_sub_capability(base_capability, capability):
+            # returns true
             return True
 
+    # returns false
     return False
 
 def convert_to_capability_list(capability_list):
+    """
+    Converts the given capability list (list of strings),
+    into a list of capability objects (structures).
 
+    @type capability_list: List
+    @para capability_list: The list of capability strings.
+    @rtype: List
+    @return: The list of converted capability objects (structures).
+    """
+
+    # creates the list of capability structures
     capability_list_structure = []
 
+    # iterates over all the capabilities in the capability list
     for capability in capability_list:
+        # creates the capability structure from the
+        # capability string
         capability_structure = Capability(capability)
+
+        # adds the capability structure to the list
+        # of capability structures
         capability_list_structure.append(capability_structure)
 
+    # returns the list of capability structures
     return capability_list_structure
 
 def is_event_or_sub_event(base_event, event):
+    """
+    Tests if the given event is event or sub event
+    of the given base event.
 
+    @type base_event: String
+    @param base_event: The base event to be used for test.
+    @type event: String
+    @param event: The event to be tested.
+    @rtype: bool
+    @return: The result of the test.
+    """
+
+    # creates the base event structure from
+    # the base event string
     base_event_structure = Event(base_event)
+
+    # creates the event structure from the event string
     event_structure = Event(event)
 
+    # returns the result of the is event or sub event test
     return base_event_structure.is_event_or_sub_event(event_structure)
 
 def is_event_or_super_event(base_event, event):
+    """
+    Tests if the given event is event or super event
+    of the given base event.
+
+    @type base_event: String
+    @param base_event: The base event to be used for test.
+    @type event: String
+    @param event: The event to be tested.
+    @rtype: bool
+    @return: The result of the test.
+    """
+
+    # returns the result of the is event or sub event test
+    # inverting the arguments
     return is_event_or_sub_event(event, base_event)
 
 def is_event_or_sub_event_in_list(base_event, event_list):
+    """
+    Tests if any of the event in the event list is event or
+    sub event of the given base event.
 
+    @type base_event: String
+    @param base_event: The base event to be used for test.
+    @type event_list: List
+    @param event_list: The list of events to be tested.
+    @rtype: bool
+    @return: The result of the test.
+    """
+
+    # iterates over all the events in the event list
     for event in event_list:
+        # tests if the event is event or
+        # sub event of the base event
         if is_event_or_sub_event(base_event, event):
+            # returns true
             return True
 
+    # returns false
     return False
 
 def is_event_or_super_event_in_list(base_event, event_list):
+    """
+    Tests if any of the event in the event list is event or
+    super event of the given base event.
 
+    @type base_event: String
+    @param base_event: The base event to be used for test.
+    @type event_list: List
+    @param event_list: The list of events to be tested.
+    @rtype: bool
+    @return: The result of the test.
+    """
+
+    # iterates over all the events in the event list
     for event in event_list:
+        # tests if the event is event or
+        # super event of the base event
         if is_event_or_super_event(base_event, event):
+            # returns true
             return True
 
+    # returns false
     return False
 
 def get_all_events_or_super_events_in_list(base_event, event_list):
+    """
+    Retrieves all the events or super events in the list.
+    Filters the event list, retrieving only the event thar are events or
+    super events of the base event.
+
+    @type base_event: String
+    @param base_event: The base event to be used for filtering.
+    @type event_list: List
+    @param event_list: The list of events to be filtered.
+    @rtype: List
+    @return: The filtered list of events.
+    """
+
+    # creates the events or super events list
     events_or_super_events_list = []
 
+    # iterates over all the events in the events list
     for event in event_list:
+        # tests if the event is event or
+        # super event of the base event
         if is_event_or_super_event(base_event, event):
+            # adds the event to the events or super events list
             events_or_super_events_list.append(event)
 
+    # returns the events or super events list
     return events_or_super_events_list
 
 def convert_to_event_list(event_list):
+    """
+    Converts the given event list (list of strings),
+    into a list of event objects (structures).
 
+    @type event_list: List
+    @para event_list: The list of event strings.
+    @rtype: List
+    @return: The list of converted event objects (structures).
+    """
+
+    # creates the list of event structures
     event_list_structure = []
 
+    # iterates over all the events in the event list
     for event in event_list:
+        # creates the event structure from the
+        # event string
         event_structure = Event(event)
+
+        # adds the event structure to the list
+        # of event structures
         event_list_structure.append(event_structure)
 
+    # returns the list of event structures
     return event_list_structure
 
 class PluginThread(threading.Thread):
@@ -3504,6 +3904,13 @@ class PluginThread(threading.Thread):
     """ The plugin thread semaphore """
 
     def __init__ (self, plugin):
+        """
+        Constructor of the class.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to be used.
+        """
+
         threading.Thread.__init__(self)
         self.plugin = plugin
         self.semaphore = threading.Semaphore()
