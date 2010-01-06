@@ -37,7 +37,7 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-def PluginSystemException(Exception):
+class PluginSystemException(Exception):
     """
     The plugin system exception class.
     """
@@ -65,3 +65,29 @@ def PluginSystemException(Exception):
         """
 
         return "Plugin system exception: %s" % self.message
+
+class PluginClassNotAvailable(PluginSystemException):
+    """
+    The plugin class not available class.
+    """
+
+    def __init__(self, message):
+        """
+        Constructor of the class.
+
+        @type message: String
+        @param message: The message to be printed.
+        """
+
+        PluginSystemException.__init__(self)
+        self.message = message
+
+    def __str__(self):
+        """
+        Returns the string representation of the class.
+
+        @rtype: String
+        @return: The string representation of the class.
+        """
+
+        return "Plugin class not available: %s" % self.message

@@ -476,11 +476,17 @@ def inject_dependencies(plugin_id, plugin_version, load_plugin = False):
             # calls the callback function
             func(*args, **kwargs)
 
+            # retrieves the original plugin
             original_plugin = args[0]
+
+            # retrieves the dependency plugin
             dependency_plugin = args[1]
 
-            original_plugin_tuple = (original_plugin.id, original_plugin.version)
-            dependency_plugin_tuple = (dependency_plugin.id, dependency_plugin.version)
+            # creates the original plugin tuple
+            original_plugin_tuple = (original_plugin.original_id, original_plugin.version)
+
+            # creates the dependency plugin tuple
+            dependency_plugin_tuple = (dependency_plugin.original_id, dependency_plugin.version)
 
             if original_plugin_tuple in inject_dependencies.inject_dependencies_map:
                 dependency_functions_map = inject_dependencies.inject_dependencies_map[original_plugin_tuple]

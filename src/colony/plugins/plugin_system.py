@@ -315,6 +315,7 @@ class Plugin(object):
         # sets the error state as false
         self.error_state = False
 
+        # prints an info message
         self.info("Lazy loading plugin '%s' v%s" % (self.short_name, self.version))
 
     def end_load_plugin(self):
@@ -1000,6 +1001,12 @@ class PluginManager:
     current_id = 0
     """ The current id used for the plugin """
 
+    replica_id = 0
+    """ The replica id for the replica plugins """
+
+    diffusion_scope_id = 0
+    """ The diffusion scope id for the replica plugins """
+
     event_queue = []
     """ The queue of events to be processed """
 
@@ -1026,6 +1033,12 @@ class PluginManager:
 
     loaded_plugins_descriptions = []
     """ The descriptions of the loaded plugins """
+
+    plugin_classes = []
+    """ The available plugin classes """
+
+    plugin_classes_map = {}
+    """ The map with classes associated with strings containing the id of the plugin """
 
     plugin_instances = []
     """ The instances of the created plugins """
@@ -1114,6 +1127,8 @@ class PluginManager:
         self.loaded_plugins_id_map = {}
         self.id_loaded_plugins_map = {}
         self.loaded_plugins_descriptions = []
+        self.plugin_classes = []
+        self.plugin_classes_map = {}
         self.plugin_instances = []
         self.plugin_instances_map = {}
         self.plugin_dirs_map = {}
@@ -1127,6 +1142,149 @@ class PluginManager:
         self.diffusion_scope_loaded_plugins_map = {}
         self.deleted_plugin_classes = []
         self.event_plugins_handled_loaded_map = {}
+
+    def create_plugin(self, plugin_id, plugin_version):
+        """
+        Creates a new instance of the plugin with the given id
+        and version.
+
+        @type plugin_id: String
+        @param plugin_id: The id of the plugin to create an instance.
+        @param plugin_version: plugin_version
+        @param plugin_version: The version of the plugin to create an instance.
+        @rtype: Plugin
+        @return: The created plugin instance.
+        """
+        # tenho de pensar em como posso obter as classes para criar novas instancias
+        # tenho de pensar como e ke as classes vao ser updatadas de modo a gerir autoloaders e afins
+
+        # tenho de criar novas estruturas: esta estrutura serve para associar o origianl id com todas as instances do tipo replica
+        # para depois quando se faze o reload do modulo tb fazemos reload das replicas
+        # originalModuleIdClassHash.get(moduleOriginalId);
+
+        # tenho de as manter actualizadas .... quando descarrego modulos, etc....
+        # tenho de actualizar sempre que faco start_plugins (porque e neste momento que vai ser feito o refresh)
+
+        # generates a new diffusion scope id
+        diffusion_scope_id = self.generate_diffusion_scope_id()
+
+        # creates a new plugin instance in the new diffusion scope id
+        plugin_instance = self._create_plugin(plugin_id, plugin_version, diffusion_scope_id)
+
+        # returns the created plugin instance
+        return plugin_instance
+
+    def _create_plugin(self, plugin_id, plugin_version, diffusion_scope_id):
+        """
+        Creates a new instance of the plugin with the given id
+        and version for the given difussion scope id.
+
+        @type plugin_id: String
+        @param plugin_id: The id of the plugin to create an instance.
+        @param plugin_version: plugin_version
+        @param plugin_version: The version of the plugin to create an instance.
+        @param diffusion_scope_id: int
+        @param diffusion_scope_id: The diffusion scope id to be used in the creation.
+        @rtype: Plugin
+        @return: The created plugin instance.
+        """
+
+        # in case the plugin id does not exist in the plugin classes map
+        if not plugin_id in self.plugin_classes_map:
+            # raises the plugin class not available exception
+            raise colony.plugins.plugin_system_exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
+
+        # retrieves the plugin class
+        plugin_class = self.plugin_classes_map[plugin_id]
+
+        # in case the plugin version is not the same
+        if not plugin_class.version == plugin_version:
+            # raises the plugin class not available exception
+            raise colony.plugins.plugin_system_exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
+
+        # retrieves the generated replica id
+        replica_id = self.generate_replica_id()
+
+        # creates the plugin instance id
+        plugin_instance_id = plugin_id + "[" + str(replica_id) + "]"
+
+        # retrieves the plugin description
+        plugin_description = plugin_class.description
+
+        # instantiates the plugin to create the plugin instance
+        plugin_instance = plugin_class(self)
+
+        # sets the plugin instance id as the generated one
+        plugin_instance.id = plugin_instance_id
+
+        # sets the plugin diffusion scope id as the defined one
+        plugin_instance.diffusion_scope_id = diffusion_scope_id
+
+        # retrieves the path to the plugin file
+        plugin_path = inspect.getfile(plugin_class)
+
+        # retrieves the absolute path to the plugin file
+        absolute_plugin_path = os.path.abspath(plugin_path)
+
+        # retrieves the path to the directory containing the plugin file
+        plugin_dir = os.path.dirname(absolute_plugin_path)
+
+        # starts all the plugin manager structures related with plugins
+        self.loaded_plugins_map[plugin_instance_id] = plugin_class
+        self.loaded_plugins_id_map[plugin_instance_id] = self.current_id
+        self.id_loaded_plugins_map[self.current_id] = plugin_instance_id
+        self.loaded_plugins_descriptions.append(plugin_description)
+        self.plugin_instances.append(plugin_instance)
+        self.plugin_instances_map[plugin_instance_id] = plugin_instance
+        self.plugin_dirs_map[plugin_instance_id] = plugin_dir
+
+        # registers the plugin capabilities in the plugin manager
+        self.register_plugin_capabilities(plugin_instance)
+
+        # increments the current id
+        self.current_id += 1
+
+        # returns the plugin instance
+        return plugin_instance
+
+    def generate_replica_id(self):
+        """
+        Generates the replica id.
+
+        @rtype: int
+        @return: The replica id.
+        """
+
+        # retrieves the replica id
+        replica_id = self.replica_id
+
+        # increments the replica id
+        self.replica_id += 1
+
+        # returns the current replica scope
+        return replica_id
+
+    def generate_diffusion_scope_id(self):
+        """
+        Generates the diffusion scope id.
+
+        @rtype: int
+        @return: The diffusion scope id.
+        """
+
+        # retrieves the diffusion scope id
+        diffusion_scope_id = self.diffusion_scope_id
+
+        # increments the diffusion scope id
+        self.diffusion_scope_id += 1
+
+        # returns the current diffusion scope
+        return diffusion_scope_id
+
+
+
+
+
 
     def start_logger(self, log_level = DEFAULT_LOGGING_LEVEL):
         """
@@ -1228,9 +1386,14 @@ class PluginManager:
 
         # main loop cycle
         while self.main_loop_active:
+            # acquires the semaphoere
             self.semaphore.acquire()
+
+            # iterates while the event queue has items
             while len(self.event_queue):
+                # pops the top item
                 event = self.event_queue.pop(0)
+
                 if event.event_name == "execute":
                     execution_method = event.event_args[0]
                     execution_arguments = event.event_args[1:]
@@ -1244,6 +1407,8 @@ class PluginManager:
                     for plugin_thread in self.plugin_threads:
                         # sends the exit event to the plugin thread
                         plugin_thread.add_event(exit_event)
+
+                        # joins the plugin thread (waiting for the end of it)
                         plugin_thread.join()
 
                     # returns the method exiting the plugin system
@@ -1366,6 +1531,7 @@ class PluginManager:
             # if the path is not in the python lib
             # path inserts the path into it
             if not plugin_path in sys.path:
+                # inserts the plugin path in the system path
                 sys.path.insert(0, plugin_path)
 
     def load_plugins(self, plugins):
@@ -1384,6 +1550,7 @@ class PluginManager:
                     # imports the plugin module file
                     __import__(plugin)
                 except:
+                    # prints an error message
                     self.logger.error("Problem importing module %s" % plugin)
 
     def start_plugin_manager_plugins(self):
@@ -1392,10 +1559,16 @@ class PluginManager:
         """
 
         # retrieves all the plugin manager plugin classes available
-        plugin_classes = self.get_all_plugin_classes(PluginManagerPlugin)
+        self.plugin_classes = self.get_all_plugin_classes(PluginManagerPlugin)
 
         # iterates over all the available plugin manager plugin classes
-        for plugin in plugin_classes:
+        for plugin in self.plugin_classes:
+            # retrieves the plugin id
+            plugin_id = plugin.id
+
+            # sets the plugin class in the plugin classes map
+            self.plugin_classes_map[plugin_id] = plugin
+
             # tests the plugin for loading
             if not plugin in self.loaded_plugins:
                 # starts the plugin
@@ -1407,10 +1580,16 @@ class PluginManager:
         """
 
         # retrieves all the plugin classes available
-        plugin_classes = self.get_all_plugin_classes()
+        self.plugin_classes = self.get_all_plugin_classes()
 
         # iterates over all the available plugin classes
-        for plugin in plugin_classes:
+        for plugin in self.plugin_classes:
+            # retrieves the plugin id
+            plugin_id = plugin.id
+
+            # sets the plugin class in the plugin classes map
+            self.plugin_classes_map[plugin_id] = plugin
+
             # tests the plugin for loading
             if not plugin in self.loaded_plugins:
                 # starts the plugin
@@ -1460,16 +1639,16 @@ class PluginManager:
 
     def stop_plugin_complete_by_id(self, plugin_id):
         """
-        Stops a plugin with the given id, removing it and the refering module from the plugin system.
+        Stops a plugin with the given id, removing it and the referring module from the plugin system.
 
         @type plugin_id: String
         @param plugin: The id of the plugin to be removed from the plugin system.
         """
 
-        # retrieves the refering plugin module
+        # retrieves the referring plugin module
         module = self.get_plugin_module_name_by_id(plugin_id)
 
-        # stops the refering plugin module
+        # stops the referring plugin module
         self.stop_module(module)
 
     def stop_module(self, module):
@@ -1518,7 +1697,7 @@ class PluginManager:
         # retrieves the temporary internal plugin id
         current_id = self.loaded_plugins_id_map[plugin_id]
 
-        # retrives the plugin instance
+        # retrieves the plugin instance
         plugin_instance = self.plugin_instances_map[plugin_id]
 
         # in case the plugin is loaded the plugin is unloaded
@@ -1575,8 +1754,14 @@ class PluginManager:
         @return: The list of plugin classes.
         """
 
+        # creates the plugin classes list
         plugin_classes = []
+
+        # retrieves the plugin sub classes (loads the sub classes into
+        # the plugin classes list)
         self.get_plugin_sub_classes(base_plugin_class, plugin_classes)
+
+        # returns the plugin classes list
         return plugin_classes
 
     def get_plugin_sub_classes(self, plugin, plugin_classes):
@@ -1610,21 +1795,41 @@ class PluginManager:
 
         # iterates over all the plugin instance capabilities
         for capability in plugin.capabilities:
+            # retrieves the capability and super capabilities list
             capability_and_super_capabilites_list = capability_and_super_capabilites(capability)
 
-            for capability_or_super_capability_index in range(len(capability_and_super_capabilites_list)):
+            # retrieves the capability and super capabilities list length
+            capability_and_super_capabilites_list_length = len(capability_and_super_capabilites_list)
+
+            # iterates over the capability or super capabilities list length range
+            for capability_or_super_capability_index in range(capability_and_super_capabilites_list_length):
+                # retrieves the capability from the capability and super capabilities list
                 capability = capability_and_super_capabilites_list[capability_or_super_capability_index]
+
+                # retrieves the sub capabilities list from the the capability and super capabilities list
                 sub_capabilities_list = capability_and_super_capabilites_list[capability_or_super_capability_index + 1:]
 
+                # in case the capability does not exists in the capabilities plugin instances map
                 if not capability in self.capabilities_plugin_instances_map:
+                    # creates a new list as the value for the capability in the
+                    # capabilities plugin instances map
                     self.capabilities_plugin_instances_map[capability] = []
+
+                # adds the plugin to the capabilities plugin instances map for the capability
                 self.capabilities_plugin_instances_map[capability].append(plugin)
 
+                # in case the capability does not exists in the capabilities and sub capabilities map
                 if not capability in self.capabilities_sub_capabilities_map:
+                    # creates a new list as the value for the capability in the
+                    # capabilities and sub capabilities map
                     self.capabilities_sub_capabilities_map[capability] = []
 
+                # iterates over all the sub capabilities in the sub capabilities list
                 for sub_capability in sub_capabilities_list:
+                    # in case the sub capability is not defined for the capability in the
+                    # capabilities sub capabilities map
                     if not sub_capability in self.capabilities_sub_capabilities_map[capability]:
+                        # adds the sub capability to the capabilities sub capabilities map for the capability
                         self.capabilities_sub_capabilities_map[capability].append(sub_capability)
 
     def unregister_plugin_capabilities(self, plugin):
@@ -1637,20 +1842,40 @@ class PluginManager:
 
         # iterates over all the plugin instance capabilities
         for capability in plugin.capabilities:
+            # retrieves the capability and super capabilities list
             capability_and_super_capabilites_list = capability_and_super_capabilites(capability)
 
-            for capability_or_super_capability_index in range(len(capability_and_super_capabilites_list)):
+            # retrieves the capability and super capabilities list length
+            capability_and_super_capabilites_list_length = len(capability_and_super_capabilites_list)
+
+            # iterates over the capability and super capabilities list length range
+            for capability_or_super_capability_index in range(capability_and_super_capabilites_list_length):
+                # retrieves the capability from the capability and super capabilities list
                 capability = capability_and_super_capabilites_list[capability_or_super_capability_index]
+
+                # retrieves the sub capabilities list from the the capability and super capabilities list
                 sub_capabilities_list = capability_and_super_capabilites_list[capability_or_super_capability_index + 1:]
 
+                # in case the capability exists in the capabilities plugin instances map
                 if capability in self.capabilities_plugin_instances_map:
+                    # in case the plugin exists in the value for the capability in the
+                    # capabilities plugin instances map
                     if plugin in self.capabilities_plugin_instances_map[capability]:
+                        # removes the plugin from the capabilities plugin instances map value for
+                        # the capability
                         self.capabilities_plugin_instances_map[capability].remove(plugin)
 
+                # in case the capability exists in the capabilities and sub capabilities map
                 if capability in self.capabilities_sub_capabilities_map:
+                    # iterates over all the sub capabilities in the sub capabilities list
                     for sub_capability in sub_capabilities_list:
+                        # in case the sub capability exists the in the capabilities sub capabilities map
+                        # for the capability
                         if sub_capability in self.capabilities_sub_capabilities_map[capability]:
+                            # in case this is the only instance to be registered with the given sub capability
                             if len(self.capabilities_plugin_instances_map[sub_capability]) == 0:
+                                # removes the sub capability from the value of capabilities sub capabilities map
+                                # for the given capability
                                 self.capabilities_sub_capabilities_map[capability].remove(sub_capability)
 
     def load_plugin_manager_plugins(self):
@@ -1946,16 +2171,35 @@ class PluginManager:
         return True
 
     def _unload_plugin(self, plugin, type = None, unloading_type = None):
+        """
+        Unloads the given plugin with the given type and unloading type.
+        The unloading of the plugin consists in the unloading of the dependent plugins,
+        notification of the plugins where the plugins is allowed and in the unloading
+        of the plugin resources.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to be unloaded.
+        @type type: String
+        @param type: The type of plugin to be unloaded.
+        @type loading_type: String
+        @param unloading_type: The unloading type to be used.
+        @rtype: bool
+        @requires: The result of the plugin unload.
+        """
 
         # in case the plugin is not loaded
         if not plugin.is_loaded():
+            # returns true
             return True
 
+        # in case a type is defined
         if type:
+            # prints an info message
             self.logger.info("Unloading of type: '%s'" % (type))
 
         # unloads the plugins that depend on the plugin being unloaded
         for dependent_plugin in self.get_plugin_dependent_plugins_map(plugin.id):
+            # in case the dependent plugin is loaded
             if dependent_plugin.is_loaded():
                 if MAIN_TYPE in dependent_plugin.capabilities:
                     self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE, MAIN_TYPE)
@@ -1966,8 +2210,13 @@ class PluginManager:
 
         # notifies the allowed plugins about the unload
         for allowed_plugin_info in self.get_plugin_allowed_plugins_map(plugin.id):
+            # retrieves the allowed plugin
             allowed_plugin = allowed_plugin_info[0]
+
+            # retrieves the allowed capability
             allowed_capability = allowed_plugin_info[1]
+
+            # in case the allowed plugin is loaded
             if allowed_plugin.is_loaded():
                 allowed_plugin.unload_allowed(plugin, allowed_capability)
 
@@ -2047,6 +2296,7 @@ class PluginManager:
             # returns false in the unloading process
             return False
 
+        # returns true
         return True
 
     def test_plugin_load(self, plugin):
@@ -2089,8 +2339,9 @@ class PluginManager:
             # returns false
             return False
 
-        # in case the plugin id already exists in the loaded plugins map
+        # in case the plugin id does not exists in the loaded plugins map
         if not plugin_id in self.loaded_plugins_map:
+            # returns false
             return False
 
         # returns true
@@ -2147,26 +2398,60 @@ class PluginManager:
             return False
 
     def resolve_capabilities(self, plugin):
+        """
+        Resolves the plugin capabilities, adding the plugin to the internal
+        structures representing the association between capabilities and plugin
+        instances.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to have the capabilities resolved.
+        @rtype: bool
+        @return: The result of the resolution.
+        """
+
         # adds itself to the map of plugins that have a given capability
         for plugin_capability_allowed in plugin.capabilities_allowed:
             self.add_capabilities_plugins_map(plugin_capability_allowed, plugin)
 
+        # returns true
         return True
 
     def inject_dependencies(self, plugin):
+        """
+        Injects the dependencies into the given plugin.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to haven the dependencies injected.
+        @rtype: bool
+        @return: The result of the injection.
+        """
+
         # gets all the dependencies of the plugin
         plugin_dependencies = plugin.dependencies
 
         # iterates over all the dependencies of the plugin
         for plugin_dependency in plugin_dependencies:
+            # in case the dependency is of type plugin dependency
             if plugin_dependency.__class__ == PluginDependency:
+                # retrieves the dependency plugin instances (by id and version)
                 dependency_plugin_instance = self._get_plugin_by_id_and_version(plugin_dependency.plugin_id, plugin_dependency.plugin_version)
+
+                # in case the loading of the dependency plugin was not successful
                 if not self.__load_plugin(dependency_plugin_instance, DEPENDENCY_TYPE):
+                    # returns false
                     return False
+
+                # in case the dependency plugin isntance is valid
                 if dependency_plugin_instance:
+                    # calls the dependency inject method in the plugin
+                    # with the dependency plugin instances
                     plugin.dependency_injected(dependency_plugin_instance)
+
+                    # adds the plugin to the plugin dependent plugins map for
+                    # the plugin dependency id
                     self.add_plugin_dependent_plugins_map(plugin_dependency.plugin_id, plugin)
 
+        # returns true
         return True
 
     def inject_allowed(self, plugin):
@@ -2174,7 +2459,7 @@ class PluginManager:
         Injects all the allowed plugins for the given plugin.
 
         @type plugin: Plugin
-        @param plugin: The plugin to inject the dependencies.
+        @param plugin: The plugin to inject the allowed plugins.
         """
 
         # gets all the capabilities allowed of the plugin
@@ -2182,20 +2467,82 @@ class PluginManager:
 
         # iterates over all the capabilities of the plugin
         for plugin_capability_allowed in plugin_capabilities_allowed:
+            # retrieves the plugin capability allowed type
+            plugin_capability_allowed_type = type(plugin_capability_allowed)
+
+            # in case the plugin capability allowed type is tuple
+            if plugin_capability_allowed_type == types.TupleType:
+                # retrieves the plugin capability allowed string and diffusion policy
+                plugin_capability_allowed_string, _diffusion_policy = plugin_capability_allowed
+            else:
+                # sets the plugin capability allowed string as
+                # the plugin capability allowed value
+                plugin_capability_allowed_string = plugin_capability_allowed
+
             # gets all the plugins of the defined capability
-            allowed_plugins = self._get_plugins_by_capability_cache(plugin_capability_allowed)
+            allowed_plugins = self._get_plugins_by_capability_cache(plugin_capability_allowed_string)
 
             # iterates over all the plugins of the defined capability
             for allowed_plugin in allowed_plugins:
+                # loads the plugin (if necessary) with allowed type
                 if self.__load_plugin(allowed_plugin, ALLOWED_TYPE):
+                    # injects the allowed plugin in the plugin with the given capability
                     self._inject_allowed(plugin, allowed_plugin, plugin_capability_allowed)
 
+        # returns true
         return True
 
     def _inject_allowed(self, plugin, allowed_plugin, capability):
+        """
+        Injects the given allowed plugin in the given plugin for the
+        given capability.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to have the allowed plugin injected.
+        @type allowed_plugin: Plugin
+        @param allowed_plugin: The plugin to be injected as allowed in the plugin.
+        @type capability: String/Tuple
+        @param capability: The capability for witch the allowed plugin is being injected.
+        """
+
+        # in case both the plugin and the allowed plugins are valid and
+        # the allowed plugin is not already "allowed" in the plugin
         if plugin and allowed_plugin and not allowed_plugin in plugin.allowed_loaded:
+            # retrieves the capability type
+            capability_type = type(capability)
+
+            # in case the capability type is tuple
+            if capability_type == types.TupleType:
+                # retrieves the real capability and diffusion policy
+                capability, diffusion_policy = capability
+
+                # in case the diffusion policy is same diffusion scope
+                if diffusion_policy == SAME_DIFFUSION_SCOPE:
+                    # prints an info message
+                    self.logger.info("Creating allowed plugin '%s' v%s as same diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
+
+                    # creates a new allowed plugin (in a the same diffusion scope as the plugin)
+                    allowed_plugin = self._create_plugin(allowed_plugin.id, allowed_plugin.version, plugin.diffusion_scope)
+
+                    # loads the allowed plugin (if necessary) with allowed type
+                    self.__load_plugin(allowed_plugin, ALLOWED_TYPE)
+                # in case the diffusion policy is new diffusion scope
+                elif diffusion_policy == NEW_DIFFUSION_SCOPE:
+                    # prints an info message
+                    self.logger.info("Creating allowed plugin '%s' v%s as new diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
+
+                    # creates a new allowed plugin (in a new diffusion scope)
+                    allowed_plugin = self.create_plugin(allowed_plugin.id, allowed_plugin.version)
+
+                    # loads the allowed plugin (if necessary) with allowed type
+                    self.__load_plugin(allowed_plugin, ALLOWED_TYPE)
+
+            # calls the load allowed in the plugin with the allowed plugin
             plugin.load_allowed(allowed_plugin, capability)
-            self.add_plugin_allowed_plugins_map(allowed_plugin.id, [plugin, capability])
+
+            # adds the allowed plugin to the allowed plugins map for the given allowed plugin
+            # and capability
+            self.add_plugin_allowed_plugins_map(allowed_plugin.id, (plugin, capability))
 
     def inject_all_allowed(self, plugin):
         """
@@ -2254,20 +2601,69 @@ class PluginManager:
                     break
 
     def add_capabilities_plugins_map(self, capability, plugin):
+        """
+        Adds a plugin to the capabilities plugins map.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to be added to the capabilities plugins map.
+        @type capability: String
+        @param capability: The capability to be used as key in the
+        capabilities plugins map.
+        """
+
+        # in case the capability does not exist in the
+        # capabilities plugins map
         if not capability in self.capabilities_plugins_map:
+            # sets an empty list as value for the capability in
+            # the capabilities plugins map
             self.capabilities_plugins_map[capability] = []
+
+        # adds the plugin to the capabilities plugins map for the given
+        # capability
         self.capabilities_plugins_map[capability].append(plugin)
 
     def get_capabilities_plugins_map(self, capability):
+        """
+        Retrieves the list of plugins for the given capability, according
+        to the capabilities plugins map.
+
+        @type capability: String
+        @param capability: The capability to retrieve the list of plugins.
+        @rtype: List
+        @return: The list of plugins for the given capability.
+        """
+
+        # in case the capability exists in the capabilities plugins map
         if capability in self.capabilities_plugins_map:
+            # returns the list of plugins for the given capability, from
+            # the capabilities plugins map
             return self.capabilities_plugins_map[capability]
+        # otherwise
         else:
+            # returns an empty list
             return []
 
     def clear_capabilities_plugins_map(self, capability):
+        """
+        Clears the capabilities plugins map, for the given capability.
+
+        @type capability: String
+        @param capability: The capability to be used to clear the capabilities
+        plugins map.
+        """
+
         self.capabilities_plugins_map[capability] = []
 
     def clear_capabilities_plugins_map_for_plugin(self, plugin_id):
+        """
+        Clears the capabilities plugins map, for the given plugin id.
+
+        @type plugin_id: String
+        @param plugin_id: The plugin id to be used to clear the capabilities
+        plugins map.
+        """
+
+        # retrieves the plugin using the id
         plugin = self._get_plugin_by_id(plugin_id)
 
         for plugin_capability_allowed in plugin.capabilities_allowed:
@@ -2277,7 +2673,18 @@ class PluginManager:
                     capability_plugins.remove(plugin)
 
     def load_plugin(self, plugin_id, type = None):
-        # retrieves the plugin
+        """
+        Loads a plugin for the given plugin id and type.
+
+        @type plugin_id: String
+        @param plugin_id: The id of the plugin to be loaded.
+        @type type: String
+        @param type: The type of plugin to be loaded.
+        @rtype: bool
+        @return: The result of the load.
+        """
+
+        # retrieves the plugin using the id
         plugin = self._get_plugin_by_id(plugin_id)
 
         # in case the plugin is loaded
@@ -2305,9 +2712,22 @@ class PluginManager:
 
         self.inject_all_allowed(plugin)
 
+        # returns true
         return True
 
     def unload_plugin(self, plugin_id, type = None):
+        """
+        Unloads a plugin for the given plugin id and type.
+
+        @type plugin_id: String
+        @param plugin_id: The id of the plugin to be unloaded.
+        @type type: String
+        @param type: The type of plugin to be unloaded.
+        @rtype: bool
+        @return: The result of the unload.
+        """
+
+        # retrieves the plugin using the id
         plugin = self._get_plugin_by_id(plugin_id)
 
         # in case the plugin is not loaded
@@ -2344,12 +2764,17 @@ class PluginManager:
         @return: The list with all the loaded plugin instances.
         """
 
+        # creates the loaded plugins instances list
         loaded_plugins_instances = []
 
+        # iterates over all the plugin instances
         for plugin_instance in self.plugin_instances:
+            # in case the plugin instance is loaded
             if plugin_instance.is_loaded():
+                # adds the plugin instance to the loaded plugins instances list
                 loaded_plugins_instances.append(plugin_instance)
 
+        # returns the loaded plugins instances
         return loaded_plugins_instances
 
     def get_plugin(self, plugin):
@@ -2362,8 +2787,12 @@ class PluginManager:
         @return: The retrieved plugin.
         """
 
+        # in case the plugin is not loaded
         if not plugin.is_loaded():
+            # loads the plugin
             self._load_plugin(plugin)
+
+        # returns the (loaded) plugin
         return plugin
 
     def get_plugin_by_id(self, plugin_id):
@@ -2473,15 +2902,24 @@ class PluginManager:
         # the results list
         result = []
 
+        # in case the capability does not exist in the capabilities sub capabilities map
         if not capability in self.capabilities_sub_capabilities_map:
+            # returns the result (empty list)
             return result
 
+        # retrieves the capability and sub capabilities list for the current capability
         capability_and_sub_capabilities_list = [capability] + self.capabilities_sub_capabilities_map[capability]
 
+        # iterates over all the capabilities (or sub capabilities) in the
+        # capability and sub capabilities list
         for capability_or_sub_capability in capability_and_sub_capabilities_list:
+            # retrieves the plugin instances that have the given capability
             plugin_instances = self.capabilities_plugin_instances_map[capability_or_sub_capability]
+
+            # adds the plugin instances to the result
             result += plugin_instances
 
+        # returns the result
         return result
 
     def _get_plugins_by_capability(self, capability):
@@ -2629,22 +3067,44 @@ class PluginManager:
         # the results list
         result = []
 
+        # iterates over all the plugin instances
         for plugin in self.plugin_instances:
+            # iterates over all the plugin dependencies
             for dependency in plugin.dependencies:
-                if dependency.__class__.__name__ == "PluginDependency":
+                # in case the dependency is of type plugin dependency
+                if dependency.__class__ == PluginDependency:
+                    # in case the dependency plugin id is the same
                     if dependency.plugin_id == plugin_id:
+                        # appends the plugin to the result
                         result.append(self.get_plugin(plugin))
         return result
 
     def _get_plugins_by_dependency(self, plugin_id):
+        """
+        Retrieves all the plugins (not verified to be loaded) with a dependency
+        with the given plugin id.
+
+        @type plugin_id: String
+        @param plugin_id: The id of the plugin dependency.
+        @rtype: List
+        @return: The list of plugins with a dependency with the given plugin id.
+        """
+
         # the results list
         result = []
 
+        # iterates over all the plugin instances
         for plugin in self.plugin_instances:
+            # iterates over all the plugin dependencies
             for dependency in plugin.dependencies:
-                if dependency.__class__.__name__ == "PluginDependency":
+                # in case the dependency is of type plugin dependency
+                if dependency.__class__ == PluginDependency:
+                    # in case the dependency plugin id is the same
                     if dependency.plugin_id == plugin_id:
+                        # appends the plugin to the result
                         result.append(plugin)
+
+        # returns the result
         return result
 
     def get_plugins_allow_capability(self, capability):
@@ -2720,9 +3180,12 @@ class PluginManager:
         @return: The plugin module name for the given plugin id.
         """
 
+        # retrieves the plugin (by id)
         plugin = self._get_plugin_by_id(plugin_id)
 
+        # in case the plugin is valid
         if plugin:
+            # returns the plugin module
             return plugin.__module__
 
     def get_plugin_by_module_name(self, module):
@@ -2735,12 +3198,17 @@ class PluginManager:
         @return: The plugin for the given plugin module name.
         """
 
+        # retrieves all the plugins
         plugins = self.get_all_plugins()
 
+        # iterates over all the plugins
         for plugin in plugins:
+            # retrieves the plugin module
             plugin_module = plugin.__module__
 
+            # in case the plugin module is the same as the given
             if plugin_module == module:
+                # returns the plugin
                 return plugin
 
     def get_loaded_plugin_by_module_name(self, module):
@@ -2792,6 +3260,8 @@ class PluginManager:
 
         if not plugin in self.event_plugins_handled_loaded_map[event_name]:
             self.event_plugins_handled_loaded_map[event_name].append(plugin)
+
+            # prints an info message
             self.logger.info("Registering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
 
     def unregister_plugin_manager_event(self, plugin, event_name):
@@ -2807,6 +3277,8 @@ class PluginManager:
         if event_name in self.event_plugins_handled_loaded_map:
             if plugin in self.event_plugins_handled_loaded_map[event_name]:
                 self.event_plugins_handled_loaded_map[event_name].remove(plugin)
+
+                # prints an info message
                 self.logger.info("Unregistering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
 
     def notify_handlers(self, event_name, event_args):
@@ -2844,8 +3316,10 @@ class PluginManager:
         @param event_args: The arguments to be passed to the handler.
         """
 
+        # prints an info message
         self.logger.info("Event '%s' generated in plugin manager" % (event_name))
 
+        # notifies the event handlers of the event name with the event arguments
         self.notify_handlers(event_name, event_args)
 
     def plugin_manager_plugin_execute(self, execution_type, arguments):
@@ -2912,7 +3386,7 @@ class PluginManager:
                     # retrieves the method
                     execute_call = getattr(execute_plugin, execution_type)
 
-                    # calls the method and retrives the return value
+                    # calls the method and retrieves the return value
                     return_value = execute_call(*arguments)
 
                     # calls the method
@@ -2950,6 +3424,7 @@ class PluginManager:
                 if validation_execute_call(*arguments):
                     return True
 
+        # returns false
         return False
 
     def print_all_plugins(self):
@@ -2957,7 +3432,9 @@ class PluginManager:
         Prints all the loaded plugins descriptions.
         """
 
+        # iterates over all the plugin instances
         for plugin in self.plugin_instances:
+            # prints the plugin
             print plugin
 
     def set_plugin_manager_plugins_loaded(self, value = True):
@@ -3094,7 +3571,10 @@ class PluginDependency(Dependency):
     plugin_version = "none"
     """ The plugin version """
 
-    def __init__(self, plugin_id = "none", plugin_version = "none", mandatory = True, conditions_list = []):
+    diffusion_policy = SINGLETON_DIFFUSION_SCOPE
+    """ The diffusion policy """
+
+    def __init__(self, plugin_id = "none", plugin_version = "none", diffusion_policy = SINGLETON_DIFFUSION_SCOPE, mandatory = True, conditions_list = []):
         """
         Constructor of the class.
 
@@ -3102,6 +3582,8 @@ class PluginDependency(Dependency):
         @param plugin_id: The plugin id.
         @type plugin_version: String
         @param plugin_version: The plugin version.
+        @type diffusion_policy: int
+        @param diffusion_policy: The diffusion policy.
         @type mandatory: bool
         @param mandatory: The mandatory value.
         @type conditions_list: List
@@ -3111,6 +3593,7 @@ class PluginDependency(Dependency):
         Dependency.__init__(self, mandatory, conditions_list)
         self.plugin_id = plugin_id
         self.plugin_version = plugin_version
+        self.diffusion_policy = diffusion_policy
 
     def __repr__(self):
         """
@@ -3919,22 +4402,64 @@ class PluginThread(threading.Thread):
         self.load_complete = False
 
     def set_load_complete(self, value):
+        """
+        Sets the load complete.
+
+        @type value: bool
+        @param value: The load complete.
+        """
+
         self.load_complete = value
 
     def set_end_load_complete(self, value):
+        """
+        Sets the end load complete.
+
+        @type value: bool
+        @param value: The end load complete.
+        """
+
         self.end_load_complete = value
 
     def set_unload_complete(self, value):
+        """
+        Sets the unload complete.
+
+        @type value: bool
+        @param value: The unload complete.
+        """
+
         self.unload_complete = value
 
     def set_end_unload_complete(self, value):
+        """
+        Sets the end unload complete.
+
+        @type value: bool
+        @param value: The end unload complete.
+        """
+
         self.end_unload_complete = value
 
     def add_event(self, event):
+        """
+        Adds an event to the event queue.
+
+        @type event: String
+        @param event: The event to be added to the event queue.
+        """
+
+        # adds the event to the event queue
         self.event_queue.append(event)
+
+        # releases the semaphore
         self.semaphore.release()
 
     def flush_queue(self):
+        """
+        Flushes the queue processing an event.
+        """
+
         if len(self.event_queue):
             event = self.event_queue.pop(0)
             if event.event_name == "exit":
@@ -3969,6 +4494,10 @@ class PluginThread(threading.Thread):
                 self.end_unload_complete = True
 
     def run(self):
+        """
+        Starts running the thread.
+        """
+
         # loops continuously
         while True:
             # acquires the semaphore
