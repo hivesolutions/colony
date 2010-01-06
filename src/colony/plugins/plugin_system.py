@@ -983,11 +983,11 @@ class PluginManager:
     main_loop_active = True
     """ The boolean value for the main loop activation """
 
-    layout_mode = True
+    layout_mode = "default"
     """ The layout mode used in the plugin loading """
 
-    run_mode = True
-    """ The layout mode used in the plugin loading """
+    run_mode = "default"
+    """ The run mode used in the plugin loading """
 
     container = "default"
     """ The name of the plugin manager container """
