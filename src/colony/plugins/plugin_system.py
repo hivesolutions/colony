@@ -1016,8 +1016,8 @@ class PluginManager:
     plugin_paths = None
     """ The set of paths for the loaded plugins """
 
-    refered_modules = []
-    """ The refered modules """
+    referred_modules = []
+    """ The referred modules """
 
     loaded_plugins = []
     """ The loaded plugins """
@@ -1121,7 +1121,7 @@ class PluginManager:
 
         self.current_id = 0
         self.event_queue = []
-        self.refered_modules = []
+        self.referred_modules = []
         self.loaded_plugins = []
         self.loaded_plugins_map = {}
         self.loaded_plugins_id_map = {}
@@ -1343,10 +1343,10 @@ class PluginManager:
 
         # gets all modules from all plugin paths
         for plugin_path in self.plugin_paths:
-            self.refered_modules.extend(self.get_all_modules(plugin_path))
+            self.referred_modules.extend(self.get_all_modules(plugin_path))
 
         # starts the plugin loading process
-        self.init_plugin_system({"plugin_paths": self.plugin_paths, "plugins": self.refered_modules})
+        self.init_plugin_system({"plugin_paths": self.plugin_paths, "plugins": self.referred_modules})
 
         # starts the main loop
         self.main_loop()

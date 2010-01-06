@@ -810,7 +810,7 @@ def unregister_plugin_decorators(plugin_id, plugin_version):
     @param plugin_version: The version of the plugin to unregister the decorators.
     """
 
-    # creates the plugin tuple for the refered plugin
+    # creates the plugin tuple for the referred plugin
     plugin_tuple = (plugin_id, plugin_version)
 
     if load_allowed.load_allowed_map and plugin_tuple in load_allowed.load_allowed_map:
