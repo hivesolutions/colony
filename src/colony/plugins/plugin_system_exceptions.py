@@ -79,7 +79,7 @@ class PluginClassNotAvailable(PluginSystemException):
         @param message: The message to be printed.
         """
 
-        PluginSystemException.__init__(self)
+        PluginSystemException.__init__(self, message)
         self.message = message
 
     def __str__(self):
