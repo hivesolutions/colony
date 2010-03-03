@@ -932,7 +932,7 @@ class Plugin(object):
         """
 
         # the default formatting message
-        formatting_message = ""
+        formatting_message = str()
 
         # in case the plugin id logging option is activated
         if plugin_manager_configuration.get("plugin_id_logging", False):
@@ -1013,6 +1013,9 @@ class PluginManager:
     manager_path = None
     """ The manager base path for execution """
 
+    library_paths = None
+    """ The set of paths for the external libraries plugins """
+
     plugin_paths = None
     """ The set of paths for the loaded plugins """
 
@@ -1079,12 +1082,14 @@ class PluginManager:
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
-    def __init__(self, manager_path = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", attributes_map = {}):
+    def __init__(self, manager_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", attributes_map = {}):
         """
         Constructor of the class.
 
         @type manager_path: List
         @param manager_path: The manager base path for execution.
+        @type library_paths: List
+        @param library_paths: The list of directory paths for the loading of the external libraries.
         @type plugin_paths: List
         @param plugin_paths: The list of directory paths for the loading of the plugins.
         @type platform: int
@@ -1106,6 +1111,7 @@ class PluginManager:
         """
 
         self.manager_path = manager_path
+        self.library_paths = library_paths
         self.plugin_paths = plugin_paths
         self.platform = platform
         self.init_complete_handlers = init_complete_handlers
@@ -1346,7 +1352,7 @@ class PluginManager:
             self.referred_modules.extend(self.get_all_modules(plugin_path))
 
         # starts the plugin loading process
-        self.init_plugin_system({"plugin_paths": self.plugin_paths, "plugins": self.referred_modules})
+        self.init_plugin_system({"library_paths": self.library_paths, "plugin_paths": self.plugin_paths, "plugins": self.referred_modules})
 
         # starts the main loop
         self.main_loop()
@@ -1485,8 +1491,8 @@ class PluginManager:
         @param configuration: The configuration structure.
         """
 
-        # adds the defined plugin paths to the system python path
-        self.set_python_path(configuration["plugin_paths"])
+        # adds the defined library and plugin paths to the system python path
+        self.set_python_path(configuration["library_paths"], configuration["plugin_paths"])
 
         # loads the plugin files into memory
         self.load_plugins(configuration["plugins"])
@@ -1518,13 +1524,23 @@ class PluginManager:
         # notifies all the init complete handlers about the init load complete
         self.notify_load_complete_handlers()
 
-    def set_python_path(self, plugin_paths):
+    def set_python_path(self, library_paths, plugin_paths):
         """
-        Updates the python path adding the defined list of plugin paths.
+        Updates the python path adding the defined list of library and plugin paths.
 
+        @type library_paths: List
+        @param library_paths: The list of library paths to add to the python path.
         @type plugin_paths: List
-        @param plugin_paths: The list of python paths to add to the python path.
+        @param plugin_paths: The list of plugin paths to add to the python path.
         """
+
+        # iterates over all the library paths in library paths
+        for library_path in library_paths:
+            # if the path is not in the python lib
+            # path inserts the path into it
+            if not library_path in sys.path:
+                # inserts the library path in the system path
+                sys.path.insert(0, library_path)
 
         # iterates over all the plugin paths in plugin paths
         for plugin_path in plugin_paths:

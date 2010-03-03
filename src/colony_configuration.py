@@ -57,6 +57,9 @@ debug = False
 stop_on_cycle_error = True
 """ The stop on cycle error flag """
 
+library_path_list = ["%colony_prefix_path%/pt.hive.colony.language.wiki/src"]
+""" The list of library paths """
+
 plugin_path_list = ["colony/plugins",
                     "%colony_demo_prefix_path%/pt.hive.colony.demo.plugins.twitter/src/colony/plugins",
                     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation/src/colony/plugins",

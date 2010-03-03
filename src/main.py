@@ -55,6 +55,7 @@ USAGE = "Help:\n\
 --container[-c]=default - sets the container to be used\n\
 --attributes[-a]=... - sets the attributes to be used\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the manager\n\
+--library_dir[-i]=(LIBRARY_DIR_1;LIBRARY_DIR_2;...) - sets the series of library directories to use\n\
 --plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use"
 """ The usage string for the command line arguments """
 
@@ -124,12 +125,14 @@ def print_information():
     # prints some help information
     print HELP_TEXT
 
-def run(manager_path, plugin_path, verbose = False, debug = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, attributes_map = {}):
+def run(manager_path, library_path, plugin_path, verbose = False, debug = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
     @type manager_path: String
     @param manager_path: The manager base path for execution.
+    @type library_path: String
+    @param library_path: The set of paths to the various library locations separated by a semi-column.
     @type plugin_path: String
     @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
     @type verbose: bool
@@ -153,7 +156,13 @@ def run(manager_path, plugin_path, verbose = False, debug = False, layout_mode =
     # print the branding information text
     print_information()
 
-    # checks if the path is not empty
+    # checks if the library path is not empty
+    if not library_path == None:
+        library_paths = library_path.split(";")
+    else:
+        library_paths = []
+
+    # checks if the plugin path is not empty
     if not plugin_path == None:
         plugin_paths = plugin_path.split(";")
     else:
@@ -166,7 +175,7 @@ def run(manager_path, plugin_path, verbose = False, debug = False, layout_mode =
     platform = colony.plugins.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.plugins.plugin_system.PluginManager(manager_path, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, attributes_map)
+    plugin_manager = colony.plugins.plugin_system.PluginManager(manager_path, library_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, attributes_map)
 
     # conditional logging import (depending on the current environment)
     if platform == colony.plugins.util.CPYTHON_ENVIRONMENT:
@@ -193,7 +202,7 @@ def main():
     """
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hvdnl:r:c:a:m:p:", ["help", "verbose", "debug", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "plugin_dir="])
+        opts, _args = getopt.getopt(sys.argv[1:], "hvdnl:r:c:a:m:i:p:", ["help", "verbose", "debug", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "library_dir=", "plugin_dir="])
     except getopt.GetoptError, error:
         # prints help information and exit
         # will print something like "option -a not recognized"
@@ -208,6 +217,7 @@ def main():
     container = DEFAULT_STRING_VALUE
     attributes_map = None
     manager_path = DEFAULT_MANAGER_PATH_VALUE
+    library_path = None
     plugin_path = None
     for option, value in opts:
         if option in ("-h", "--help"):
@@ -229,6 +239,8 @@ def main():
             attributes_map = parse_attributes(value)
         elif option in ("-m", "--manager_dir"):
             manager_path = value
+        elif option in ("-i", "--library_dir"):
+            library_path = value
         elif option in ("-p", "--plugin_dir"):
             plugin_path = value
         else:
@@ -238,13 +250,16 @@ def main():
     configure_path(manager_path)
 
     # parses the configuration options
-    verbose, debug, layout_mode, run_mode, stop_on_cycle_error, plugin_path = parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, manager_path)
+    verbose, debug, layout_mode, run_mode, stop_on_cycle_error, library_path, plugin_path = parse_configuration(verbose, debug, layout_mode, run_mode, library_path, plugin_path, manager_path)
+
+    # strips the library path around the semi-colon character
+    library_path_striped = library_path.strip(";")
 
     # strips the plugin path around the semi-colon character
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(manager_path, plugin_path_striped, verbose, debug, layout_mode, run_mode, stop_on_cycle_error, noloop, container, attributes_map)
+    run(manager_path, library_path_striped, plugin_path_striped, verbose, debug, layout_mode, run_mode, stop_on_cycle_error, noloop, container, attributes_map)
 
 def parse_attributes(attributes_string):
     # creates an attributes map
@@ -270,7 +285,7 @@ def parse_attributes(attributes_string):
 
     return attributes_map
 
-def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, manager_path):
+def parse_configuration(verbose, debug, layout_mode, run_mode, library_path, plugin_path, manager_path):
     """
     Parses the configuration using the given values as default values.
 
@@ -282,6 +297,8 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, mana
     @param layout_mode: The layout mode to be used by the plugin system.
     @type run_mode: String
     @param run_mode: The run mode to be used by the plugin system.
+    @type library_path: String
+    @param library_path: The set of paths to the various library locations separated by a semi-column.
     @type plugin_path: String
     @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
     @type manager_path: String
@@ -289,9 +306,6 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, mana
     @rtype: Tuple
     @return: The tuple with the values parsed value.
     """
-
-    # retrieves the colony configuration contents
-    colony_configuration_contents = dir(colony_configuration)
 
     # in case the verbose variable is defined in the colony configuration
     if not debug and VERBOSE_VALUE in dir(colony_configuration):
@@ -317,6 +331,14 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, mana
     if STOP_ON_CYCLE_ERROR_VALUE in dir(colony_configuration):
         stop_on_cycle_error = colony_configuration.stop_on_cycle_error
 
+    # in case the library path is defined
+    if library_path:
+        # appends a separator to the library path
+        library_path += ";"
+    else:
+        # creates a new library path string
+        library_path = ""
+
     # in case the plugin path is defined
     if plugin_path:
         # appends a separator to the plugin path
@@ -328,10 +350,46 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, mana
     # retrieves the current prefix paths
     current_prefix_paths = prefix_paths[layout_mode]
 
-    # iterates over all the colony configuration plugin paths
-    for plugin_path_item in colony_configuration.plugin_path_list:
-        # sets the initial parsed plugin path
-        parsed_plugin_path = manager_path + "/" + plugin_path_item
+    # retrieves the extra library path as the dereferenced values from the colony
+    # configuration library path list
+    extra_library_path = convert_reference_path_list(manager_path, current_prefix_paths, colony_configuration.library_path_list)
+
+    # adds the extra library path to the library path
+    library_path += extra_library_path
+
+    # retrieves the extra plugin path as the dereferenced values from the colony
+    # configuration plugin path list
+    extra_plugin_path = convert_reference_path_list(manager_path, current_prefix_paths, colony_configuration.plugin_path_list)
+
+    # adds the extra plugin path to the plugin path
+    plugin_path += extra_plugin_path
+
+    return (verbose, debug, layout_mode, run_mode, stop_on_cycle_error, library_path, plugin_path)
+
+def convert_reference_path_list(manager_path, current_prefix_paths, reference_path_list):
+    """
+    Converts the given list of reference paths. The reference
+    paths include references of type %reference_name% to include
+    base paths that are dereferenced at runtime based in the current
+    layout configuration or other variables.
+
+    @type manager_path: String
+    @param manager_path: The path to the manager.
+    @type current_prefix_paths: List
+    @param current_prefix_paths: The prefix paths currently in use.
+    @type reference_path_list: List
+    @param reference_path_list: The list of reference paths.
+    @rtype: String
+    @return: A stringconverted_reference_path containing all the dereferenced paths
+    """
+
+    # initializes the converted reference path
+    converted_reference_path = str()
+
+    # iterates over all the reference paths
+    for reference_path in reference_path_list:
+        # sets the initial dereferenced path
+        dereferenced_path = manager_path + "/" + reference_path
 
         # iterates over all the current prefix paths
         for current_prefix_path in current_prefix_paths:
@@ -342,12 +400,13 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, plugin_path, mana
             current_prefix_path_value = current_prefix_paths[current_prefix_path]
 
             # replaces the current prefix path name with the current prefix path value
-            parsed_plugin_path = parsed_plugin_path.replace(current_prefix_path_name, current_prefix_path_value)
+            dereferenced_path = dereferenced_path.replace(current_prefix_path_name, current_prefix_path_value)
 
-        # adds the parsed plugin path to the plugin path
-        plugin_path += parsed_plugin_path + ";"
+        # adds the dereferenced path to the converted reference path
+        converted_reference_path += dereferenced_path + ";"
 
-    return (verbose, debug, layout_mode, run_mode, stop_on_cycle_error, plugin_path)
+    # returns the converted reference path
+    return converted_reference_path
 
 def configure_path(manager_path):
     """

@@ -59,7 +59,7 @@ class StringBuffer:
         """
 
         self.string_list = []
-        self.current_value = ""
+        self.current_value = str()
         self.dirty = False
         self.current_position = 0
         self.current_size = 0
@@ -122,7 +122,7 @@ class StringBuffer:
         """
 
         self.string_list = []
-        self.current_value = ""
+        self.current_value = str()
         self.dirty = False
         self.current_position = 0
         self.current_size = 0
