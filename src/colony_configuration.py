@@ -57,7 +57,8 @@ debug = False
 stop_on_cycle_error = True
 """ The stop on cycle error flag """
 
-library_path_list = ["%colony_prefix_path%/pt.hive.colony.language.settler/src/colony",
+library_path_list = ["%colony_prefix_path%/pt.hive.colony.language.generator/src/colony",
+                     "%colony_prefix_path%/pt.hive.colony.language.settler/src/colony",
                      "%colony_prefix_path%/pt.hive.colony.language.wiki/src/colony"]
 """ The list of library paths """
 
