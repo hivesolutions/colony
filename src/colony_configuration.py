@@ -43,9 +43,9 @@ layout_mode = "production"
 run_mode = "production"
 """ The project run mode """
 
-prefix_paths = {"development" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../"},
-                "repository_svn" : {"colony" : "../../", "omni" : "../../../../pt.hive.omni/trunk", "colony_demo" : "../../../../pt.hive.colony.demo/trunk"},
-                "production" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../"}}
+prefix_paths = {"development" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../", "hive_site" : "../../"},
+                "repository_svn" : {"colony" : "../../", "omni" : "../../../../pt.hive.omni/trunk", "colony_demo" : "../../../../pt.hive.colony.demo/trunk", "hive_site" : "../../../../pt.hive.colony.hive_site/trunk"},
+                "production" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../", "hive_site" : "../../"}}
 """ The prefix path maps """
 
 verbose = False
@@ -149,5 +149,6 @@ plugin_path_list = ["colony/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration/src/omni/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration.demo_data/src/omni/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration.diamante/src/omni/plugins",
-                    "%omni_prefix_path%/pt.hive.omni.plugins.migration.saft_pt/src/omni/plugins"]
+                    "%omni_prefix_path%/pt.hive.omni.plugins.migration.saft_pt/src/omni/plugins",
+                    "%hive_site_prefix_path%/pt.hive.hive_site.plugins.main/src/hive_site/plugins"]
 """ The list of plugin paths """
