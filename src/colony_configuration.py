@@ -44,7 +44,7 @@ run_mode = "production"
 """ The project run mode """
 
 prefix_paths = {"development" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../", "hive_site" : "../../"},
-                "repository_svn" : {"colony" : "../../", "omni" : "../../../../pt.hive.omni/trunk", "colony_demo" : "../../../../pt.hive.colony.demo/trunk", "hive_site" : "../../../../pt.hive.colony.hive_site/trunk"},
+                "repository_svn" : {"colony" : "../../", "omni" : "../../../../pt.hive.omni/trunk", "colony_demo" : "../../../../pt.hive.colony.demo/trunk", "hive_site" : "../../../../pt.hive.hive_site/trunk"},
                 "production" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../", "hive_site" : "../../"}}
 """ The prefix path maps """
 
