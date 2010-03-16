@@ -945,7 +945,38 @@ class Plugin(object):
         # appends the formatting message to the logging message
         logger_message = formatting_message + message
 
+        # returns the logger message
         return logger_message
+
+    def _get_capabilities_allowed_names(self):
+        """
+        Retrieves the names of all the allowed capabilities
+        from this plugin.
+
+        @rtype: List
+        @return: The names of all the allowed capabilities
+        from this plugin.
+        """
+
+        # starts the capabilities allowed names
+        capabilities_allowed_names = []
+
+        # iterates over all the capability allowed
+        for capability_allowed in self.capabilities_allowed:
+            # retrieves the capability allowed type
+            capability_allowed_type = type(capability_allowed)
+
+            if capability_allowed_type == types.TupleType:
+                capability_allowed_name = capability_allowed[0]
+            else:
+                capability_allowed_name = capability_allowed
+
+            # adds the capability allowed name to the capabilities
+            # allowed names
+            capabilities_allowed_names.append(capability_allowed_name)
+
+        # returns the capabilities allowed names
+        return capabilities_allowed_names
 
 class PluginManagerPlugin(Plugin):
     """
@@ -1243,6 +1274,9 @@ class PluginManager:
         self.plugin_instances.append(plugin_instance)
         self.plugin_instances_map[plugin_instance_id] = plugin_instance
         self.plugin_dirs_map[plugin_instance_id] = plugin_dir
+
+        # sets the plugin instance in the diffusion scope loaded plugins map
+        self.set_plugin_instance_diffusion_scope_loaded_plugins_map(diffusion_scope_id, plugin_id, plugin_instance)
 
         # registers the plugin capabilities in the plugin manager
         self.register_plugin_capabilities(plugin_instance)
@@ -1646,6 +1680,9 @@ class PluginManager:
         self.plugin_instances.append(plugin_instance)
         self.plugin_instances_map[plugin_id] = plugin_instance
         self.plugin_dirs_map[plugin_id] = plugin_dir
+
+        # sets the plugin instance in the diffusion scope loaded plugins map
+        self.set_plugin_instance_diffusion_scope_loaded_plugins_map(None, plugin_id, plugin_instance)
 
         # registers the plugin capabilities in the plugin manager
         self.register_plugin_capabilities(plugin_instance)
@@ -2534,11 +2571,15 @@ class PluginManager:
 
                 # in case the diffusion policy is same diffusion scope
                 if diffusion_policy == SAME_DIFFUSION_SCOPE:
-                    # prints an info message
-                    self.logger.info("Creating allowed plugin '%s' v%s as same diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
+                    # in case the allowed plugin id already exists in the diffusion scope
+                    if allowed_plugin.id in self.diffusion_scope_loaded_plugins_map[plugin.diffusion_scope]:
+                        allowed_plugin = self.diffusion_scope_loaded_plugins_map[plugin.diffusion_scope][allowed_plugin.id]
+                    else:
+                        # prints an info message
+                        self.logger.info("Creating allowed plugin '%s' v%s as same diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
 
-                    # creates a new allowed plugin (in a the same diffusion scope as the plugin)
-                    allowed_plugin = self._create_plugin(allowed_plugin.id, allowed_plugin.version, plugin.diffusion_scope)
+                        # creates a new allowed plugin (in a the same diffusion scope as the plugin)
+                        allowed_plugin = self._create_plugin(allowed_plugin.id, allowed_plugin.version, plugin.diffusion_scope)
 
                     # loads the allowed plugin (if necessary) with allowed type
                     self.__load_plugin(allowed_plugin, ALLOWED_TYPE)
@@ -2578,6 +2619,42 @@ class PluginManager:
             for capability_plugin in capability_plugins:
                 if capability_plugin.is_loaded():
                     self._inject_allowed(capability_plugin, plugin, plugin_capability)
+
+    def set_plugin_instance_diffusion_scope_loaded_plugins_map(self, diffusion_scope_id, plugin_id, plugin_instance):
+        """
+        Sets the given plugin instance in the diffusion scope loaded plugins map.
+
+        @type diffusion_scope_id: int
+        @param diffusion_scope_id: The diffusion scope id to be used.
+        @type plugin_id: String
+        @param plugin_id: The plugin id to be used.
+        @type plugin_instance: Plugin
+        @param plugin_instance: The plugin instance to be set.
+        """
+
+        # in case the diffusion scope id does not exist in the diffusion scope loaded plugins map
+        if not diffusion_scope_id in self.diffusion_scope_loaded_plugins_map:
+            # sets the diffusion scope id in the diffusion scope
+            # loaded plugins map as an empty map
+            self.diffusion_scope_loaded_plugins_map[diffusion_scope_id] = {}
+
+        # sets the plugin instance in the diffusion scope loaded plugins map for the diffusion scope id
+        # and plugin id
+        self.diffusion_scope_loaded_plugins_map[diffusion_scope_id][plugin_id] = plugin_instance
+
+    def unset_plugin_instance_diffusion_scope_loaded_plugins_map(self, diffusion_scope_id, plugin_id):
+        """
+        Unsets the given plugin instance in the diffusion scope loaded plugins map.
+
+        @type diffusion_scope_id: int
+        @param diffusion_scope_id: The diffusion scope id to be used.
+        @type plugin_id: String
+        @param plugin_id: The plugin id to be used.
+        """
+
+        # unsets the plugin instance in the diffusion scope loaded plugins map for the diffusion scope id
+        # and plugin id
+        del self.diffusion_scope_loaded_plugins_map[diffusion_scope_id][plugin_id]
 
     def add_plugin_dependent_plugins_map(self, plugin_id, dependency_plugin_instance):
         if not plugin_id in self.plugin_dependent_plugins_map:
@@ -4210,9 +4287,20 @@ def convert_to_capability_list(capability_list):
 
     # iterates over all the capabilities in the capability list
     for capability in capability_list:
+        # retrieves the capability type
+        capability_type = type(capability)
+
+        # in case the capability type is tuple
+        if capability_type == types.TupleType:
+            # retrieves the capability value and diffusion policy
+            capability_value, _diffusion_policy = capability
+        else:
+            # sets the capability values as the capability itself
+            capability_value = capability
+
         # creates the capability structure from the
         # capability string
-        capability_structure = Capability(capability)
+        capability_structure = Capability(capability_value)
 
         # adds the capability structure to the list
         # of capability structures
