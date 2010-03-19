@@ -169,6 +169,9 @@ class Plugin(object):
     platforms = []
     """ The compatible platforms of the plugin """
 
+    attributes = {}
+    """ The attributes of the plugin """
+
     capabilities = []
     """ The capabilities of the plugin """
 
@@ -701,6 +704,18 @@ class Plugin(object):
         """
 
         return (self.loaded or self.lazy_loaded) and not self.error_state
+
+    def get_attribute(self, attribute_name):
+        """
+        Retrieves the attribute for the given attribute name.
+
+        @type attribute_name: String
+        @param attribute_name: The name of the attribute name to retrieve.
+        @rtype: Object
+        @return: The attribute for the given attribute name.
+        """
+
+        return self.attributes.get(attribute_name, None)
 
     def contains_metadata(self):
         """
