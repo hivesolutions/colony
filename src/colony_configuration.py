@@ -43,9 +43,9 @@ layout_mode = "production"
 run_mode = "production"
 """ The project run mode """
 
-prefix_paths = {"development" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../", "hive_site" : "../../"},
-                "repository_svn" : {"colony" : "../../", "omni" : "../../../../pt.hive.omni/trunk", "colony_demo" : "../../../../pt.hive.colony.demo/trunk", "hive_site" : "../../../../pt.hive.hive_site/trunk"},
-                "production" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../", "hive_site" : "../../"}}
+prefix_paths = {"development" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../", "hive_site" : "../../", "hive_blog" : "../../"},
+                "repository_svn" : {"colony" : "../../", "omni" : "../../../../pt.hive.omni/trunk", "colony_demo" : "../../../../pt.hive.colony.demo/trunk", "hive_site" : "../../../../pt.hive.hive_site/trunk", "hive_blog" : "../../../../pt.hive.hive_blog/trunk"},
+                "production" : {"colony" : "../../", "omni" : "../../", "colony_demo" : "../../", "hive_site" : "../../", "hive_blog" : "../../"}}
 """ The prefix path maps """
 
 verbose = False
@@ -152,5 +152,6 @@ plugin_path_list = ["colony/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration.demo_data/src/omni/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration.diamante/src/omni/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration.saft_pt/src/omni/plugins",
-                    "%hive_site_prefix_path%/pt.hive.hive_site.plugins.main/src/hive_site/plugins"]
+                    "%hive_site_prefix_path%/pt.hive.hive_site.plugins.main/src/hive_site/plugins",
+                    "%hive_blog_prefix_path%/pt.hive.hive_blog.plugins.main/src/hive_blog/plugins"]
 """ The list of plugin paths """
