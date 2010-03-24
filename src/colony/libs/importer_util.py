@@ -40,5 +40,26 @@ __license__ = "GNU General Public License (GPL), Version 3"
 GLOBALS_REFERENCE_VALUE = "_globals"
 """ The globals reference value """
 
-def __importer__(scope, name):
-    return scope[GLOBALS_REFERENCE_VALUE][name]
+import sys
+
+def __importer__(module_name):
+    """
+    Importer function to be used in the process of importing
+    a module referred in inverted way.
+    This function should be used in cases where the inversion injection
+    was made using the data helper.
+
+    @type module_name: String
+    @param module_name: The name of the module to be imported.
+    @rtype: Module
+    @return: The imported module.
+    """
+
+    # retrieves the caller
+    caller = sys._getframe(1)
+
+    # retrieves the module
+    module = caller.f_globals[GLOBALS_REFERENCE_VALUE][module_name]
+
+    # returns the module
+    return module
