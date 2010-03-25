@@ -37,10 +37,13 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import sys
+
 GLOBALS_REFERENCE_VALUE = "_globals"
 """ The globals reference value """
 
-import sys
+LOCALS_REFERENCE_VALUE = "_locals"
+""" The locals reference value """
 
 def __importer__(module_name):
     """
@@ -58,8 +61,10 @@ def __importer__(module_name):
     # retrieves the caller
     caller = sys._getframe(1)
 
-    # retrieves the module
-    module = caller.f_globals[GLOBALS_REFERENCE_VALUE][module_name]
+    if module_name in caller.f_globals[GLOBALS_REFERENCE_VALUE]:
+        module = caller.f_globals[GLOBALS_REFERENCE_VALUE][module_name]
+    elif module_name in caller.f_globals[LOCALS_REFERENCE_VALUE]:
+        module = caller.f_globals[LOCALS_REFERENCE_VALUE][module_name]
 
     # returns the module
     return module
