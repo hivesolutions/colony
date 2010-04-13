@@ -174,5 +174,6 @@ plugin_path_list = ["colony/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration.saft_pt/src/omni/plugins",
                     "%hive_site_prefix_path%/pt.hive.hive_site.plugins.main/src/hive_site/plugins",
                     "%hive_blog_prefix_path%/pt.hive.hive_blog.plugins.main/src/hive_blog/plugins",
+                    "%take_the_bill_prefix_path%/pt.hive.take_the_bill.plugins.demo_data/src/take_the_bill/plugins",
                     "%take_the_bill_prefix_path%/pt.hive.take_the_bill.plugins.main/src/take_the_bill/plugins"]
 """ The list of plugin paths """
