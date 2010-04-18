@@ -1207,6 +1207,8 @@ class PluginManager:
         @rtype: Plugin
         @return: The created plugin instance.
         """
+
+        # @todo: important diffusion scope
         # tenho de pensar em como posso obter as classes para criar novas instancias
         # tenho de pensar como e ke as classes vao ser updatadas de modo a gerir autoloaders e afins
 
@@ -1335,11 +1337,6 @@ class PluginManager:
 
         # returns the current diffusion scope
         return diffusion_scope_id
-
-
-
-
-
 
     def start_logger(self, log_level = DEFAULT_LOGGING_LEVEL):
         """
