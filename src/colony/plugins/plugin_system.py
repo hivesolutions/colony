@@ -47,7 +47,6 @@ import logging
 import threading
 import traceback
 
-import os.path
 import logging.handlers
 
 import colony.plugins.util
