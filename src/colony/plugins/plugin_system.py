@@ -1213,7 +1213,7 @@ class PluginManager:
 
         # tenho de criar novas estruturas: esta estrutura serve para associar o origianl id com todas as instances do tipo replica
         # para depois quando se faze o reload do modulo tb fazemos reload das replicas
-        # originalModuleIdClassHash.get(moduleOriginalId);
+        # originalModuleIdClassHash.get(moduleOriginalId)
 
         # tenho de as manter actualizadas .... quando descarrego modulos, etc....
         # tenho de actualizar sempre que faco start_plugins (porque e neste momento que vai ser feito o refresh)
