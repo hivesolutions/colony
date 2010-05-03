@@ -3337,6 +3337,30 @@ class PluginManager:
 
         return result
 
+    def resolve_file_path(self, file_path):
+        """
+        Resolves the given file path, substituting the given commands
+        in the file path for the "real" values, and returning the best
+        file path of the possible file paths.
+
+        @type file_path: String
+        @param file_path: The base file path to be used as substitution
+        base.
+        @rtype: String
+        @return: The best file path of the possible file paths.
+        """
+
+        # retrieves the string values list from the file path
+        string_values_list = self.resolve_string_value(file_path)
+
+        # iterates over all the string values in
+        # the string values list
+        for string_value in string_values_list:
+            # in case the paths exists
+            if os.path.exists(string_value):
+                # returns the string value
+                return string_value
+
     def resolve_string_value(self, string_value):
         """
         Resolves the given string value, substituting the given commands
@@ -3347,7 +3371,7 @@ class PluginManager:
         @param string_value: The base string value to be used as substitution
         base.
         @rtype: List
-        @return: The list of possible string values, order by priority.
+        @return: The list of possible string values, ordered by priority.
         """
 
         # finds all the matches using the special value regex
@@ -3435,6 +3459,7 @@ class PluginManager:
                         new_string_buffer.write(current_value)
                         new_string_buffers_list.append(new_string_buffer)
 
+                    # writes the first value into the string buffer
                     string_buffer.write(first_value)
 
             # extends the string buffers list with the "new" string
