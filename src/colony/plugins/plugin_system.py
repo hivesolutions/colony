@@ -38,6 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import os
+import re
 import sys
 import stat
 import types
@@ -48,6 +49,8 @@ import threading
 import traceback
 
 import logging.handlers
+
+import colony.libs.string_buffer_util
 
 import colony.plugins.util
 import colony.plugins.decorators
@@ -144,6 +147,21 @@ PLUGIN_MANAGER_TYPE = "plugin_manager"
 
 PLUGIN_MANAGER_PLUGIN_VALIDATION_PREFIX = "is_valid_"
 """ The prefix for the plugin manager plugin validation prefix """
+
+PROCESS_COMMAND_METHOD_PREFIX = "process_command_"
+""" The prefix for the process command method """
+
+COMMAND_VALUE = "command"
+""" The command value """
+
+ARGUMENTS_VALUE = "arguments"
+""" The arguments value """
+
+SPECIAL_VALUE_REGEX_VALUE = "%(?P<command>[a-zA-Z0-0_]*)(:(?P<arguments>[a-zA-Z0-0_.]*))?%"
+""" The special value regex value """
+
+SPECIAL_VALUE_REGEX = re.compile(SPECIAL_VALUE_REGEX_VALUE)
+""" The special value regex """
 
 class Plugin(object):
     """
@@ -3319,6 +3337,130 @@ class PluginManager:
 
         return result
 
+    def resolve_string_value(self, string_value):
+        """
+        Resolves the given string value, substituting the given commands
+        in the file path for the "real" values, and returning the list
+        of possible string values, ordered by priority.
+
+        @type string_value: String
+        @param string_value: The base string value to be used as substitution
+        base.
+        @rtype: List
+        @return: The list of possible string values, order by priority.
+        """
+
+        # finds all the matches using the special value regex
+        # over the string value
+        special_value_matches = SPECIAL_VALUE_REGEX.finditer(string_value)
+
+        # creates the value tuples list
+        values_tuples_list = []
+
+        # iterates over all the special values matches
+        for special_value_match in special_value_matches:
+            # retrieves the command and the argument for the current match
+            command = special_value_match.group(COMMAND_VALUE)
+            arguments = special_value_match.group(ARGUMENTS_VALUE)
+
+            # retrieves the process method for the current command
+            process_method = getattr(self, PROCESS_COMMAND_METHOD_PREFIX + command)
+
+            # runs the process method with the arguments
+            # retrieving the values
+            values = process_method(arguments)
+
+            # retrieves the start and end position of the match
+            start_position = special_value_match.start()
+            end_position = special_value_match.end()
+
+            # creates the values tuple with the start and end position
+            # and with the values
+            values_tuple = (start_position, end_position, values)
+
+            # adds the value tuple to the value tuples list
+            values_tuples_list.append(values_tuple)
+
+        # creates the string buffers list with the initial string
+        # buffer in it
+        string_buffers_list = [colony.libs.string_buffer_util.StringBuffer()]
+
+        # initializes the current index
+        current_index = 0
+
+        # iterates over all the value tuples in
+        # the value tuples list
+        for values_tuple in values_tuples_list:
+            # unpacks the tuple retrieving the start position
+            # the end position and the values
+            start_position, end_position, values = values_tuple
+
+            # retrieves the previous value (the value before the the substitution)
+            previous_value = string_value[current_index:start_position]
+
+            # retrieves the values type
+            values_type = type(values)
+
+            # creates the new string buffers list
+            new_string_buffers_list = []
+
+            # iterates over all the string buffers in
+            # the string buffers list
+            for string_buffer in string_buffers_list:
+                # writes the previous value into
+                # the string buffer
+                string_buffer.write(previous_value)
+
+                # in case the values is a string
+                if values_type in types.StringTypes:
+                    # writes the values (simple string) into
+                    # the string buffer
+                    string_buffer.write(values)
+                # otherwise it must be a list and must be processed
+                # as such
+                else:
+                    # retrieves the values length
+                    values_length = len(values)
+
+                    # retrieves the first value
+                    first_value = values[0]
+
+                    # iterates over the range of values minus one
+                    for index in range(values_length - 1):
+                        # retrieves the current value
+                        current_value = values[index + 1]
+
+                        # creates the new string buffer as a duplicate
+                        new_string_buffer = string_buffer.duplicate()
+                        new_string_buffer.write(current_value)
+                        new_string_buffers_list.append(new_string_buffer)
+
+                    string_buffer.write(first_value)
+
+            # extends the string buffers list with the "new" string
+            # buffers list
+            string_buffers_list.extend(new_string_buffers_list)
+
+            # updates the current index with the end position
+            current_index = end_position
+
+        # retrieves the next value
+        next_value = string_value[current_index:]
+
+        # iterates over all the string buffer in the
+        # string buffers list
+        for string_buffer in string_buffers_list:
+            # writes the next value into
+            # the string buffer
+            string_buffer.write(next_value)
+
+        # converts the various string buffers into values to create
+        # the string values list
+        string_values_list = [value.get_value() for value in string_buffers_list]
+
+        # returns the string values list
+        return string_values_list
+
     def get_plugin_path_by_id(self, plugin_id):
         """
         Retrieves the plugin execution path for the given plugin id.
@@ -3747,6 +3889,18 @@ class PluginManager:
         """
 
         return value
+
+    def process_command_configuration(self, arguments):
+        """
+        The process command method for the configuration command.
+
+        @type arguments: String
+        @param arguments: The argument to the process command method.
+        @rtype: Object
+        @return: The result of the command processing.
+        """
+
+        return self.get_plugin_configuration_paths_by_id(arguments)
 
 class Dependency:
     """

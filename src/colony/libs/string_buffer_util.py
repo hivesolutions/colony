@@ -38,6 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import os
+import copy
 
 class StringBuffer:
     """
@@ -252,6 +253,45 @@ class StringBuffer:
         if self.dirty or self.fast:
             # regenerates the current value
             self._regenerate()
+
+    def duplicate(self):
+        """
+        Duplicates the string buffer, returning the
+        duplicated value.
+
+        @rtype: StringBuffer
+        @return: The duplicated string buffer.
+        """
+
+        # creates the new string buffer instance
+        duplicated_string_buffer = StringBuffer()
+
+        # sets the duplicated string buffer values
+        duplicated_string_buffer.string_list = copy.copy(self.string_list)
+        duplicated_string_buffer.current_value = copy.copy(self.current_value)
+        duplicated_string_buffer.dirty = self.dirty
+        duplicated_string_buffer.current_position = self.current_position
+        duplicated_string_buffer.fast = self.fast
+
+        # returns the duplicated string buffer
+        return duplicated_string_buffer
+
+    def rollback_last(self):
+        """
+        Rollsback the last write.
+        """
+
+        return self.string_list.pop()
+
+    def get_last(self):
+        """
+        Retrieves the last write.
+
+        @rtype: String
+        @return: The last write.
+        """
+
+        return self.string_list[-1]
 
     def _write_fast(self, string_value):
         """
