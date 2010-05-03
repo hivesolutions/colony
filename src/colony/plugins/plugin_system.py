@@ -94,6 +94,12 @@ DEFAULT_LOGGING_FILE_SIZE = 10485760
 DEFAULT_LOGGING_FILE_BACKUP_COUNT = 5
 """ The default logging file backup count """
 
+DEFAULT_CONFIGURATION_PATH = "configuration"
+""" The default configuration path """
+
+DEFAULT_WORKSPACE_PATH = "~/.colony_workspace"
+""" The default workspace path """
+
 EAGER_LOADING_TYPE = "eager_loading"
 """ The eager loading plugin loading type """
 
@@ -998,8 +1004,16 @@ class PluginManagerPlugin(Plugin):
     """
 
     valid = False
+    """ The valid flag of the plugin """
 
     def __init__(self, manager = None):
+        """
+        Constructor of the class.
+
+        @type manager: PluginManager
+        @param manager: The plugin manager of the system.
+        """
+
         Plugin.__init__(self, manager)
 
 class PluginManager:
@@ -1036,6 +1050,12 @@ class PluginManager:
 
     container = "default"
     """ The name of the plugin manager container """
+
+    configuration_path = DEFAULT_CONFIGURATION_PATH
+    """ The current configuration path """
+
+    workspace_path = DEFAULT_WORKSPACE_PATH
+    """ The current workspace path """
 
     attributes_map = {}
     """ The attributes map """
@@ -1392,8 +1412,12 @@ class PluginManager:
         # prints an info message
         self.logger.info("Starting plugin manager...")
 
+        # updates the workspace path
+        self.update_workspace_path()
+
         # gets all modules from all plugin paths
         for plugin_path in self.plugin_paths:
+            # extends the refferred modules with all the plugin modules
             self.referred_modules.extend(self.get_all_modules(plugin_path))
 
         # starts the plugin loading process
@@ -1475,6 +1499,40 @@ class PluginManager:
 
         self.event_queue.append(event)
         self.semaphore.release()
+
+    def expand_workspace_path(self):
+        """
+        Expands the workspace path, in order to
+        avoid possible problems when accessing the colony
+        workspace.
+        """
+
+        # expands the workspace path
+        self.workspace_path = os.path.expanduser(self.workspace_path)
+
+    def create_workspace_path(self):
+        """
+        Creates the workspace path, in case it does
+        not exists already.
+        """
+
+        # in case the workspace path does not exists
+        if not os.path.exists(self.workspace_path):
+            # creates the workspace path as a directory
+            os.mkdir(self.workspace_path)
+
+    def update_workspace_path(self):
+        """
+        Updates the workspace path, expanding the workspace
+        path and creating the workspace path if necessary.
+        """
+
+        # expands the workspace path
+        self.expand_workspace_path()
+
+        # creates the workspace path directory
+        # if necessary
+        self.create_workspace_path()
 
     def get_all_modules(self, path):
         """
@@ -3274,6 +3332,57 @@ class PluginManager:
         if plugin_id in self.plugin_dirs_map:
             return self.plugin_dirs_map[plugin_id]
 
+    def get_plugin_configuration_paths_by_id(self, plugin_id):
+        """
+        Retrieves the plugin configuration paths for the given plugin id.
+
+        @type plugin_id: String
+        @param plugin_id: The id of the plugin to retrieve the configuration paths.
+        @rtype: List
+        @return: The plugin configuration paths for the plugin with the given id.
+        """
+
+        # retrieves the current configuration path
+        configuration_path = self.get_configuration_path()
+
+        # retrieves the current workspace path
+        workspace_path = self.get_workspace_path()
+
+        return (configuration_path + "/" + plugin_id, workspace_path + "/" + plugin_id)
+
+    def get_plugin_configuration_file_by_id(self, plugin_id, configuration_file_path):
+        """
+        Retrieves the plugin configuration file for the given plugin id
+        and configuration file path.
+
+        @type plugin_id: String
+        @param plugin_id: The plugin id to be used in the configuration
+        file retrieval.
+        @type configuration_file_path: String
+        @param configuration_file_path: The path of the configuration file (relative to
+        the base of the plugin configuration path).
+        @rtype: File
+        @return: The configuration file retrieved.
+        """
+
+        # retrieves the configuration paths for the plugin
+        plugin_configuration_paths = self.get_plugin_configuration_paths_by_id(plugin_id)
+
+        # iterates over all the plugin configuration paths, to check
+        # if the configuration file exists in any of the paths
+        for plugin_configuration_path in plugin_configuration_paths:
+            # creates the configuration file full path from the configuration
+            # file and the configuration file path
+            configuration_file_full_path = plugin_configuration_path + "/" + configuration_file_path
+
+            # in case the configuration file full path exists
+            if os.path.exists(configuration_file_full_path):
+                # opens the configuration file
+                configuration_file = open(configuration_file_full_path)
+
+                # returns the configuration file
+                return configuration_file
+
     def get_plugin_module_name_by_id(self, plugin_id):
         """
         Retrieves the plugin module name for the given plugin id.
@@ -3540,6 +3649,42 @@ class PluginManager:
         for plugin in self.plugin_instances:
             # prints the plugin
             print plugin
+
+    def get_configuration_path(self):
+        """
+        Retrieves the current configuration path.
+
+        @rtype: String
+        @return: The current configuration path.
+        """
+
+        return self.manager_path + "/" + self.configuration_path
+
+    def get_workspace_path(self):
+        """
+        Retrieves the workspace path.
+
+        @rtype: String
+        @param: The workspace path.
+        """
+
+        # retrieves the workspace path
+        return self.workspace_path
+
+    def set_workspace_path(self, workspace_path):
+        """
+        Sets the workspace path, updating the workspace
+        path after the setting.
+
+        @type workspace_path: String
+        @param workspace_path: The workspace path.
+        """
+
+        # sets the workspace path
+        self.workspace_path = workspace_path
+
+        # updates the workspace path
+        self.update_workspace_path()
 
     def set_plugin_manager_plugins_loaded(self, value = True):
         """
