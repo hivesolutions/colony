@@ -48,19 +48,22 @@ prefix_paths = {"development" : {"colony" : "../../",
                                  "colony_demo" : "../../",
                                  "hive_site" : "../../",
                                  "hive_blog" : "../../",
-                                 "take_the_bill" : "../../"},
+                                 "take_the_bill" : "../../",
+                                 "a_la_carte" : "../../"},
                 "repository_svn" : {"colony" : "../../",
                                     "omni" : "../../../../pt.hive.omni/trunk",
                                     "colony_demo" : "../../../../pt.hive.colony.demo/trunk",
                                     "hive_site" : "../../../../pt.hive.hive_site/trunk",
                                     "hive_blog" : "../../../../pt.hive.hive_blog/trunk",
-                                    "take_the_bill" : "../../../../pt.hive.take_the_bill/trunk"},
+                                    "take_the_bill" : "../../../../pt.hive.take_the_bill/trunk",
+                                    "a_la_carte" : "../../../../pt.hive.a_la_carte/trunk"},
                 "production" : {"colony" : "../../",
                                 "omni" : "../../",
                                 "colony_demo" : "../../",
                                 "hive_site" : "../../",
                                 "hive_blog" : "../../",
-                                "take_the_bill" : "../../"}}
+                                "take_the_bill" : "../../",
+                                "a_la_carte" : "../../"}}
 """ The prefix path maps """
 
 verbose = False
@@ -185,5 +188,7 @@ plugin_path_list = ["colony/plugins",
                     "%hive_site_prefix_path%/pt.hive.hive_site.plugins.main/src/hive_site/plugins",
                     "%hive_blog_prefix_path%/pt.hive.hive_blog.plugins.main/src/hive_blog/plugins",
                     "%take_the_bill_prefix_path%/pt.hive.take_the_bill.plugins.demo_data/src/take_the_bill/plugins",
-                    "%take_the_bill_prefix_path%/pt.hive.take_the_bill.plugins.main/src/take_the_bill/plugins"]
+                    "%take_the_bill_prefix_path%/pt.hive.take_the_bill.plugins.main/src/take_the_bill/plugins",
+                    "%a_la_carte_prefix_path%/pt.hive.a_la_carte.plugins.demo_data/src/a_la_carte/plugins",
+                    "%a_la_carte_prefix_path%/pt.hive.a_la_carte.plugins.main/src/a_la_carte/plugins"]
 """ The list of plugin paths """
