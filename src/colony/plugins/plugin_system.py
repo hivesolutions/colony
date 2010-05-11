@@ -3337,7 +3337,7 @@ class PluginManager:
 
         return result
 
-    def resolve_file_path(self, file_path):
+    def resolve_file_path(self, file_path, not_found_valid = False, create_path = False):
         """
         Resolves the given file path, substituting the given commands
         in the file path for the "real" values, and returning the best
@@ -3346,6 +3346,12 @@ class PluginManager:
         @type file_path: String
         @param file_path: The base file path to be used as substitution
         base.
+        @type not_found_valid: bool
+        @param not_found_valid: If a file path should be returned even if
+        the path is not found.
+        @type create_path: bool
+        @param create_path: If the file path should be created in case it
+        does not exists.
         @rtype: String
         @return: The best file path of the possible file paths.
         """
@@ -3360,6 +3366,26 @@ class PluginManager:
             if os.path.exists(string_value):
                 # returns the string value
                 return string_value
+
+        # in case the not found valid flag is
+        # active, the first result should be returned
+        if not_found_valid:
+            # sets the string value as the first
+            # string value
+            string_value = string_values_list[0]
+
+            # in case the create path flag is set
+            if create_path:
+                # retrieves the string value directory
+                string_value_directory = os.path.dirname(string_value)
+
+                # in case the path does not exists
+                if not os.path.exists(string_value_directory):
+                    # creates the directories
+                    os.makedirs(string_value_directory)
+
+            # returns the string value
+            return string_value
 
     def resolve_string_value(self, string_value):
         """
