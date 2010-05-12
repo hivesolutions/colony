@@ -97,10 +97,10 @@ DEFAULT_LOGGING_FILE_SIZE = 10485760
 DEFAULT_LOGGING_FILE_BACKUP_COUNT = 5
 """ The default logging file backup count """
 
-DEFAULT_CONFIGURATION_PATH = "colony/configuration"
+DEFAULT_CONFIGURATION_PATH = u"colony/configuration"
 """ The default configuration path """
 
-DEFAULT_WORKSPACE_PATH = "~/.colony_workspace"
+DEFAULT_WORKSPACE_PATH = u"~/.colony_workspace"
 """ The default workspace path """
 
 EAGER_LOADING_TYPE = "eager_loading"
