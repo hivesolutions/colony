@@ -41,6 +41,7 @@ import os
 import re
 import sys
 import stat
+import time
 import types
 import thread
 import inspect
@@ -1078,6 +1079,9 @@ class PluginManager:
     attributes_map = {}
     """ The attributes map """
 
+    plugin_manager_timestamp = 0
+    """ The plugin manager timestamp """
+
     plugin_manager_plugins_loaded = False
     """ The plugin manager plugins loaded flag """
 
@@ -1623,6 +1627,9 @@ class PluginManager:
 
         # loads the plugin manager plugins
         self.load_plugin_manager_plugins()
+
+        # sets the plugin manager timestamp
+        self.set_plugin_manager_timestamp()
 
         # sets the plugin manager plugins loaded to true
         self.set_plugin_manager_plugins_loaded(True)
@@ -3878,6 +3885,23 @@ class PluginManager:
 
         # updates the workspace path
         self.update_workspace_path()
+
+    def set_plugin_manager_timestamp(self, plugin_manager_timestamp = None):
+        """
+        Sets the timestamp value for the plugin manager.
+
+        @type plugin_manager_timestamp: float
+        @param plugin_manager_timestamp: The value to set in the plugin manager as the timestamp,
+        used for loading time purposes.
+        """
+
+        # in case no plugin manager timestamp is defined
+        if not plugin_manager_timestamp:
+            # sets the plugin manager timestamp as the current time
+            plugin_manager_timestamp = time.time()
+
+        # sets the timestamp
+        self.plugin_manager_timestamp = plugin_manager_timestamp
 
     def set_plugin_manager_plugins_loaded(self, value = True):
         """
