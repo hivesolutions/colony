@@ -642,6 +642,7 @@ class Plugin(object):
         # prints an info message
         self.info("Event '%s' generated in '%s' v%s" % (event_name, self.short_name, self.version))
 
+        # notifies the event handlers
         self.notify_handlers(event_name, event_args)
 
     def event_handler(self, event_name, *event_args):
