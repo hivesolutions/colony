@@ -10,8 +10,14 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>pt.hive.eclipse.plugins.nature.hiveNatureBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.python.pydev.pythonNature</nature>
+		<nature>pt.hive.eclipse.plugins.nature.hiveNature</nature>
 	</natures>
 </projectDescription>
