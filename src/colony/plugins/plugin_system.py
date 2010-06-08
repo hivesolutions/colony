@@ -1444,7 +1444,7 @@ class PluginManager:
             self.referred_modules.extend(self.get_all_modules(plugin_path))
 
         # starts the plugin loading process
-        self.init_plugin_system({"library_paths": self.library_paths, "plugin_paths": self.plugin_paths, "plugins": self.referred_modules})
+        self.init_plugin_system({"library_paths" : self.library_paths, "plugin_paths" : self.plugin_paths, "plugins" : self.referred_modules})
 
         # starts the main loop
         self.main_loop()
