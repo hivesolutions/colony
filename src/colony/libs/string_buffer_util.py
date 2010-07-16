@@ -149,6 +149,16 @@ class StringBuffer:
             else:
                 self.current_position = self.current_size
 
+    def eof(self):
+        """
+        Returns if the end of file (eof) has been reached.
+
+        @rtype: bool
+        @return: If the end of file has been reached.
+        """
+
+        return self.current_position == self.current_size
+
     def next(self):
         """
         Retrieves the next string item from the string buffer.
@@ -243,6 +253,16 @@ class StringBuffer:
         # returns the current value
         return self.current_value
 
+    def is_empty(self):
+        """
+        Returns if the current buffer is empty.
+
+        @rtype: bool
+        @return: If the current buffer is empty
+        """
+
+        return not self.current_size > 0
+
     def regenerate(self):
         """
         Regenerates the current value.
@@ -323,6 +343,9 @@ class StringBuffer:
 
         # joins all the string list elements
         self.current_value = "".join(self.string_list)
+
+        # recreates the string list with the current value
+        self.string_list = [self.current_value]
 
         # unsets the dirty flag
         self.dirty = False
