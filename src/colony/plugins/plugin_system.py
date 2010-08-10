@@ -104,6 +104,9 @@ DEFAULT_CONFIGURATION_PATH = u"colony/configuration"
 DEFAULT_WORKSPACE_PATH = u"~/.colony_workspace"
 """ The default workspace path """
 
+DEFAULT_EXECUTION_HANDLING_METHOD = "handle_execution"
+""" The default execution handling method """
+
 EAGER_LOADING_TYPE = "eager_loading"
 """ The eager loading plugin loading type """
 
@@ -2119,19 +2122,36 @@ class PluginManager:
             # returns immediately
             return
 
-        # splits the execution command
-        execution_command_splitted = self.execution_command.split("/")
+        # splits the execution command stripping every value
+        execution_command_splitted = [value.strip() for value in self.execution_command.split()]
+
+        # retrieves both the base and arguments values
+        base = execution_command_splitted[0]
+        arguments = execution_command_splitted[1:]
+
+        # splits the base value
+        base_splitted = base.split("/")
+
+        # retrieves the length of the base splitted
+        base_splitted_length = len(base_splitted)
 
         # retrieves the plugin id from the execution command
         plugin_id = execution_command_splitted[0]
 
-        # retrieves the plugin for the plugin id
-        plugin = self.get_plugin_by_id(plugin_id)
+        # retrieves the name of the method to be called
+        method_name = base_splitted_length > 1 and base_splitted[1] or DEFAULT_EXECUTION_HANDLING_METHOD
 
-        method = getattr(plugin, execution_command_splitted[1])
+        # retrieves the plugin for the plugin id
+        plugin = self._get_plugin_by_id(plugin_id)
+
+        # loads the plugin
+        self.__load_plugin(plugin)
+
+        # retrieves the method from the plugin
+        method = getattr(plugin, method_name)
 
         # calls the method with the given arguments
-        method()
+        method(*arguments)
 
         # unsets the main loop (disables the loop)
         self.main_loop_active = False
