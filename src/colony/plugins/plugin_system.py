@@ -1688,7 +1688,7 @@ class PluginManager:
         """
 
         # print an info message
-        self.logger.info("Loading plugins (importing main module files)...")
+        self.logger.info("Loading plugins (importing %d main module files)..." % len(plugins))
 
         # iterates over all the available plugins
         for plugin in plugins:
