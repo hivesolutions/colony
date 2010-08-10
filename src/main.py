@@ -202,13 +202,15 @@ def main():
     """
 
     try:
-        opts, _args = getopt.getopt(sys.argv[1:], "hvdnl:r:c:a:m:i:p:", ["help", "verbose", "debug", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "library_dir=", "plugin_dir="])
+        options, _args = getopt.getopt(sys.argv[1:], "hvdnl:r:c:a:m:i:p:", ["help", "verbose", "debug", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "library_dir=", "plugin_dir="])
     except getopt.GetoptError, error:
         # prints help information and exit
         # will print something like "option -a not recognized"
         print str(error)
         usage()
         sys.exit(2)
+
+    # starts the options values
     verbose = False
     debug = False
     noloop = False
@@ -219,7 +221,9 @@ def main():
     manager_path = DEFAULT_MANAGER_PATH_VALUE
     library_path = None
     plugin_path = None
-    for option, value in opts:
+
+    # iterates over all the options
+    for option, value in options:
         if option in ("-h", "--help"):
             usage()
             sys.exit()
@@ -283,6 +287,7 @@ def parse_attributes(attributes_string):
             attribute_key, attribute_value = attributes_string_item_splitted
             attributes_map[attribute_key] = attribute_value
 
+    # returns the attributes map
     return attributes_map
 
 def parse_configuration(verbose, debug, layout_mode, run_mode, library_path, plugin_path, manager_path):
