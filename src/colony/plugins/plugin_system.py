@@ -1071,6 +1071,9 @@ class PluginManager:
     container = "default"
     """ The name of the plugin manager container """
 
+    execution_command = None
+    """ The command to be executed on start (script mode) """
+
     configuration_path = DEFAULT_CONFIGURATION_PATH
     """ The current configuration path """
 
@@ -1170,7 +1173,7 @@ class PluginManager:
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
-    def __init__(self, manager_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", attributes_map = {}):
+    def __init__(self, manager_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", execution_command = None, attributes_map = {}):
         """
         Constructor of the class.
 
@@ -1194,6 +1197,8 @@ class PluginManager:
         @param run_mode: The run mode used in the plugin loading.
         @type container: String
         @param container: The name of the plugin manager container.
+        @type execution_command: String
+        @param execution_command: The command to be executed on start (script mode).
         @type attributes_map: Dictionary
         @param attributes_map: The map associating the attribute key and the attribute value.
         """
@@ -1208,6 +1213,7 @@ class PluginManager:
         self.layout_mode = layout_mode
         self.run_mode = run_mode
         self.container = container
+        self.execution_command = execution_command
         self.attributes_map = attributes_map
 
         self.uid = colony.plugins.util.get_timestamp_uid()
@@ -1449,9 +1455,13 @@ class PluginManager:
         # starts the main loop
         self.main_loop()
 
-    def unload_system(self):
+    def unload_system(self, thread_safe = True):
         """
         Unloads the plugin system from memory, exiting the system.
+
+        @type thread_safe: bool
+        @param thread_safe: If the unloading should use the event mechanism
+        to provide thread safety.
         """
 
         # iterates over all the plugin instances
@@ -1471,11 +1481,16 @@ class PluginManager:
                     # unloads the plugin normally
                     self._unload_plugin(plugin_instance, None)
 
-        # creates the exit event
-        exit_event = colony.plugins.util.Event("exit")
+        # in case thread safety is requested
+        if thread_safe:
+            # creates the exit event
+            exit_event = colony.plugins.util.Event("exit")
 
-        # adds the exist event to the event queue
-        self.add_event(exit_event)
+            # adds the exit event to the event queue
+            self.add_event(exit_event)
+        else:
+            # unloads the thread based plugins
+            self._unload_thread_plugins()
 
     def main_loop(self):
         """
@@ -1497,17 +1512,8 @@ class PluginManager:
                     execution_arguments = event.event_args[1:]
                     execution_method(*execution_arguments)
                 elif event.event_name == "exit":
-                    # creates the exit event
-                    exit_event = colony.plugins.util.Event("exit")
-
-                    # iterates over all the available plugin threads
-                    # joining all the threads
-                    for plugin_thread in self.plugin_threads:
-                        # sends the exit event to the plugin thread
-                        plugin_thread.add_event(exit_event)
-
-                        # joins the plugin thread (waiting for the end of it)
-                        plugin_thread.join()
+                    # unloads the thread based plugins
+                    self._unload_thread_plugins()
 
                     # returns the method exiting the plugin system
                     return
@@ -1652,6 +1658,9 @@ class PluginManager:
 
         # notifies all the init complete handlers about the init load complete
         self.notify_load_complete_handlers()
+
+        # executes the execution command
+        self.execute_command()
 
     def set_python_path(self, library_paths, plugin_paths):
         """
@@ -2049,6 +2058,11 @@ class PluginManager:
         Loads the set of startup plugins, starting the system bootup process.
         """
 
+        # in case an execution command is defined
+        if self.execution_command:
+            # returns immediately
+            return
+
         # iterates over all the plugin instances
         for plugin in self.plugin_instances:
             # searches for the startup type in the plugin capabilities
@@ -2060,6 +2074,11 @@ class PluginManager:
         """
         Loads the set of main plugins, starting the system bootup process.
         """
+
+        # in case an execution command is defined
+        if self.execution_command:
+            # returns immediately
+            return
 
         # iterates over all the plugin instances
         for plugin in self.plugin_instances:
@@ -2089,6 +2108,36 @@ class PluginManager:
         # iterates over all the init complete handlers
         for init_complete_handler in self.init_complete_handlers:
             init_complete_handler()
+
+    def execute_command(self):
+        """
+        Executes the currently defined execution command (if any).
+        """
+
+        # in case an execution command is not defined
+        if not self.execution_command:
+            # returns immediately
+            return
+
+        # splits the execution command
+        execution_command_splitted = self.execution_command.split("/")
+
+        # retrieves the plugin id from the execution command
+        plugin_id = execution_command_splitted[0]
+
+        # retrieves the plugin for the plugin id
+        plugin = self.get_plugin_by_id(plugin_id)
+
+        method = getattr(plugin, execution_command_splitted[1])
+
+        # calls the method with the given arguments
+        method()
+
+        # unsets the main loop (disables the loop)
+        self.main_loop_active = False
+
+        # unloads the system using no thread safety
+        self.unload_system(False)
 
     def __load_plugin(self, plugin, type = None, loading_type = None):
         """
@@ -2452,6 +2501,23 @@ class PluginManager:
 
         # returns true
         return True
+
+    def _unload_thread_plugins(self):
+        """
+        Unloads all the thread based plugins.
+        """
+
+        # creates the exit event
+        exit_event = colony.plugins.util.Event("exit")
+
+        # iterates over all the available plugin threads
+        # joining all the threads
+        for plugin_thread in self.plugin_threads:
+            # sends the exit event to the plugin thread
+            plugin_thread.add_event(exit_event)
+
+            # joins the plugin thread (waiting for the end of it)
+            plugin_thread.join()
 
     def test_plugin_load(self, plugin):
         """

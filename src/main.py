@@ -125,7 +125,7 @@ def print_information():
     # prints some help information
     print HELP_TEXT
 
-def run(manager_path, library_path, plugin_path, verbose = False, debug = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, attributes_map = {}):
+def run(manager_path, library_path, plugin_path, verbose = False, debug = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, execution_command = None, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -149,8 +149,10 @@ def run(manager_path, library_path, plugin_path, verbose = False, debug = False,
     @param noloop: If the plugin manager is going to run in a loop.
     @type container: String
     @param container: The name of the plugin manager container.
-    @type container: Dictionary
-    @param container: The name of the plugin manager container.
+    @type execution_command: String
+    @param execution_command: The command to be executed by the plugin manager (script mode).
+    @type attributes_map: Dictionary
+    @param attributes_map: The name of the plugin manager container.
     """
 
     # print the branding information text
@@ -175,7 +177,7 @@ def run(manager_path, library_path, plugin_path, verbose = False, debug = False,
     platform = colony.plugins.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.plugins.plugin_system.PluginManager(manager_path, library_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, attributes_map)
+    plugin_manager = colony.plugins.plugin_system.PluginManager(manager_path, library_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, execution_command, attributes_map)
 
     # conditional logging import (depending on the current environment)
     if platform == colony.plugins.util.CPYTHON_ENVIRONMENT:
@@ -202,12 +204,14 @@ def main():
     """
 
     try:
-        options, _args = getopt.getopt(sys.argv[1:], "hvdnl:r:c:a:m:i:p:", ["help", "verbose", "debug", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "library_dir=", "plugin_dir="])
+        options, _args = getopt.getopt(sys.argv[1:], "hvdnl:r:c:a:m:i:p:e:", ["help", "verbose", "debug", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
     except getopt.GetoptError, error:
         # prints help information and exit
         # will print something like "option -a not recognized"
         print str(error)
         usage()
+
+        # exits in error
         sys.exit(2)
 
     # starts the options values
@@ -221,6 +225,7 @@ def main():
     manager_path = DEFAULT_MANAGER_PATH_VALUE
     library_path = None
     plugin_path = None
+    execution_command = None
 
     # iterates over all the options
     for option, value in options:
@@ -247,6 +252,8 @@ def main():
             library_path = value
         elif option in ("-p", "--plugin_dir"):
             plugin_path = value
+        elif option in ("-e", "--execution_command"):
+            execution_command = value
         else:
             assert False, "unhandled option"
 
@@ -263,7 +270,7 @@ def main():
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(manager_path, library_path_striped, plugin_path_striped, verbose, debug, layout_mode, run_mode, stop_on_cycle_error, noloop, container, attributes_map)
+    run(manager_path, library_path_striped, plugin_path_striped, verbose, debug, layout_mode, run_mode, stop_on_cycle_error, noloop, container, execution_command, attributes_map)
 
 def parse_attributes(attributes_string):
     # creates an attributes map
@@ -283,8 +290,12 @@ def parse_attributes(attributes_string):
         # splits the attributes string item
         attributes_string_item_splitted = attributes_string_item_stripped.split(":")
 
+        # in case the length of the tuple is two (is valid)
         if len(attributes_string_item_splitted) == 2:
+            # unpacks the attribute tuple
             attribute_key, attribute_value = attributes_string_item_splitted
+
+            # sets the attribute in the attributes map
             attributes_map[attribute_key] = attribute_value
 
     # returns the attributes map
