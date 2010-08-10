@@ -1687,6 +1687,9 @@ class PluginManager:
         @param plugins: The list of plugins to be loaded.
         """
 
+        # print an info message
+        self.logger.info("Loading plugins (importing main files)...")
+
         # iterates over all the available plugins
         for plugin in plugins:
             # in case the plugin module is not currently loaded
@@ -1697,6 +1700,9 @@ class PluginManager:
                 except:
                     # prints an error message
                     self.logger.error("Problem importing module %s" % plugin)
+
+        # prints an info message
+        self.logger.info("Finished loading plugins")
 
     def start_plugin_manager_plugins(self):
         """
