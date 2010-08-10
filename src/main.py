@@ -49,6 +49,7 @@ USAGE = "Help:\n\
 --help[-h] - prints this message\n\
 --verbose[-v] - starts the program in verbose mode\n\
 --debug[-d] - starts the program in debug mode\n\
+--silent[-s] - starts the program in silent mode\n\
 --noloop[-n] - sets the manager to not use the loop mode\n\
 --layout_mode[-l]=development/repository_svn/production - sets the layout mode to be used\n\
 --run_mode[-r]=development/test/production - sets the run mode to be used\n\
@@ -56,7 +57,8 @@ USAGE = "Help:\n\
 --attributes[-a]=... - sets the attributes to be used\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the manager\n\
 --library_dir[-i]=(LIBRARY_DIR_1;LIBRARY_DIR_2;...) - sets the series of library directories to use\n\
---plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use"
+--plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use\r\
+--execution_command[-e]=plugin_id:method/arguments - executes the given execution command at the end of loading"
 """ The usage string for the command line arguments """
 
 BRANDING_TEXT = "Hive Colony %s (Hive Solutions Lda. r1:Mar 19 2008)"
@@ -92,6 +94,9 @@ VERBOSE_VALUE = "verbose"
 DEBUG_VALUE = "debug"
 """ The debug value """
 
+SILENT_VALUE = "silent"
+""" The silent value """
+
 LAYOUT_MODE_VALUE = "layout_mode"
 """ The layout mode value """
 
@@ -125,7 +130,7 @@ def print_information():
     # prints some help information
     print HELP_TEXT
 
-def run(manager_path, library_path, plugin_path, verbose = False, debug = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, execution_command = None, attributes_map = {}):
+def run(manager_path, library_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, execution_command = None, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -139,6 +144,8 @@ def run(manager_path, library_path, plugin_path, verbose = False, debug = False,
     @param verbose: If the log is going to be of type verbose.
     @type debug: bool
     @param debug: If the log is going to be of type debug.
+    @type silent: bool
+    @param silent: If the log is going to be of type silent.
     @type layout_mode: String
     @param layout_mode: The layout mode to be used by the plugin system.
     @type run_mode: String
@@ -192,6 +199,8 @@ def run(manager_path, library_path, plugin_path, verbose = False, debug = False,
         plugin_manager.start_logger(logging.DEBUG)
     elif verbose:
         plugin_manager.start_logger(logging.INFO)
+    elif silent:
+        plugin_manager.start_logger(logging.ERROR)
     else:
         plugin_manager.start_logger(logging.WARN)
 
@@ -204,7 +213,7 @@ def main():
     """
 
     try:
-        options, _args = getopt.getopt(sys.argv[1:], "hvdnl:r:c:a:m:i:p:e:", ["help", "verbose", "debug", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
+        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:a:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
     except getopt.GetoptError, error:
         # prints help information and exit
         # will print something like "option -a not recognized"
@@ -217,6 +226,7 @@ def main():
     # starts the options values
     verbose = False
     debug = False
+    silent = False
     noloop = False
     layout_mode = DEFAULT_STRING_VALUE
     run_mode = DEFAULT_STRING_VALUE
@@ -236,6 +246,8 @@ def main():
             verbose = True
         elif option in ("-d", "--debug"):
             debug = True
+        elif option in ("-s", "--silent"):
+            silent = True
         elif option in ("-n", "--noloop"):
             noloop = True
         elif option in ("-l", "--layout_mode"):
@@ -261,7 +273,7 @@ def main():
     configure_path(manager_path)
 
     # parses the configuration options
-    verbose, debug, layout_mode, run_mode, stop_on_cycle_error, library_path, plugin_path = parse_configuration(verbose, debug, layout_mode, run_mode, library_path, plugin_path, manager_path)
+    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, library_path, plugin_path = parse_configuration(verbose, debug, silent, layout_mode, run_mode, library_path, plugin_path, manager_path)
 
     # strips the library path around the semi-colon character
     library_path_striped = library_path.strip(";")
@@ -270,7 +282,7 @@ def main():
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(manager_path, library_path_striped, plugin_path_striped, verbose, debug, layout_mode, run_mode, stop_on_cycle_error, noloop, container, execution_command, attributes_map)
+    run(manager_path, library_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, execution_command, attributes_map)
 
 def parse_attributes(attributes_string):
     # creates an attributes map
@@ -301,7 +313,7 @@ def parse_attributes(attributes_string):
     # returns the attributes map
     return attributes_map
 
-def parse_configuration(verbose, debug, layout_mode, run_mode, library_path, plugin_path, manager_path):
+def parse_configuration(verbose, debug, silent, layout_mode, run_mode, library_path, plugin_path, manager_path):
     """
     Parses the configuration using the given values as default values.
 
@@ -309,6 +321,8 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, library_path, plu
     @param verbose: If the log is going to be of type verbose.
     @type debug: bool
     @param debug: If the log is going to be of type debug.
+    @type silent: bool
+    @param silent: If the log is going to be of type silent.
     @type layout_mode: String
     @param layout_mode: The layout mode to be used by the plugin system.
     @type run_mode: String
@@ -324,12 +338,16 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, library_path, plu
     """
 
     # in case the verbose variable is defined in the colony configuration
-    if not debug and VERBOSE_VALUE in dir(colony_configuration):
+    if not verbose and VERBOSE_VALUE in dir(colony_configuration):
         verbose = colony_configuration.verbose
 
     # in case the debug variable is defined in the colony configuration
     if not debug and DEBUG_VALUE in dir(colony_configuration):
         debug = colony_configuration.debug
+
+    # in case the silent variable is defined in the colony configuration
+    if not silent and SILENT_VALUE in dir(colony_configuration):
+        silent = colony_configuration.silent
 
     # in case the layout mode variable is defined in the colony configuration
     if layout_mode == DEFAULT_STRING_VALUE and LAYOUT_MODE_VALUE in dir(colony_configuration):
@@ -380,7 +398,7 @@ def parse_configuration(verbose, debug, layout_mode, run_mode, library_path, plu
     # adds the extra plugin path to the plugin path
     plugin_path += extra_plugin_path
 
-    return (verbose, debug, layout_mode, run_mode, stop_on_cycle_error, library_path, plugin_path)
+    return (verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, library_path, plugin_path)
 
 def convert_reference_path_list(manager_path, current_prefix_paths, reference_path_list):
     """

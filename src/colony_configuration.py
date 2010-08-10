@@ -72,6 +72,9 @@ verbose = False
 debug = False
 """ The debug flag """
 
+silent = False
+""" The silent flag """
+
 stop_on_cycle_error = True
 """ The stop on cycle error flag """
 
