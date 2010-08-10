@@ -2135,8 +2135,8 @@ class PluginManager:
         # retrieves the length of the base splitted
         base_splitted_length = len(base_splitted)
 
-        # retrieves the plugin id from the execution command
-        plugin_id = execution_command_splitted[0]
+        # retrieves the plugin id from the base value
+        plugin_id = base_splitted[0]
 
         # retrieves the name of the method to be called
         method_name = base_splitted_length > 1 and base_splitted[1] or DEFAULT_EXECUTION_HANDLING_METHOD
