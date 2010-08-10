@@ -1273,7 +1273,7 @@ class PluginManager:
     def _create_plugin(self, plugin_id, plugin_version, diffusion_scope_id):
         """
         Creates a new instance of the plugin with the given id
-        and version for the given difussion scope id.
+        and version for the given diffusion scope id.
 
         @type plugin_id: String
         @param plugin_id: The id of the plugin to create an instance.
@@ -1688,7 +1688,7 @@ class PluginManager:
         """
 
         # print an info message
-        self.logger.info("Loading plugins (importing main files)...")
+        self.logger.info("Loading plugins (importing main module files)...")
 
         # iterates over all the available plugins
         for plugin in plugins:
