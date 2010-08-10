@@ -58,7 +58,7 @@ USAGE = "Help:\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the manager\n\
 --library_dir[-i]=(LIBRARY_DIR_1;LIBRARY_DIR_2;...) - sets the series of library directories to use\n\
 --plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use\r\
---execution_command[-e]=plugin_id:method/arguments - executes the given execution command at the end of loading"
+--execution_command[-e]=plugin_id:method [argument1 argument2 ...] - executes the given execution command at the end of loading"
 """ The usage string for the command line arguments """
 
 BRANDING_TEXT = "Hive Colony %s (Hive Solutions Lda. r1:Mar 19 2008)"
