@@ -1680,6 +1680,9 @@ class PluginManager:
             # if the path is not in the python lib
             # path inserts the path into it
             if not library_path in sys.path:
+                # normalizes the library path
+                library_path = os.path.normpath(library_path)
+
                 # inserts the library path in the system path
                 sys.path.insert(0, library_path)
 
@@ -1688,6 +1691,9 @@ class PluginManager:
             # if the path is not in the python lib
             # path inserts the path into it
             if not plugin_path in sys.path:
+                # normalizes the library path
+                plugin_path = os.path.normpath(plugin_path)
+
                 # inserts the plugin path in the system path
                 sys.path.insert(0, plugin_path)
 
