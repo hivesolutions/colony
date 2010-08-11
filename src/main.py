@@ -37,6 +37,7 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import os
 import sys
 import getopt
 
@@ -60,6 +61,9 @@ USAGE = "Help:\n\
 --plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use\r\
 --execution_command[-e]=plugin_id:method [argument1 argument2 ...] - executes the given execution command at the end of loading"
 """ The usage string for the command line arguments """
+
+COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
+""" The colony home environment variable name """
 
 BRANDING_TEXT = "Hive Colony %s (Hive Solutions Lda. r1:Mar 19 2008)"
 """ The branding text value """
@@ -233,7 +237,7 @@ def main():
     run_mode = DEFAULT_STRING_VALUE
     container = DEFAULT_STRING_VALUE
     attributes_map = None
-    manager_path = DEFAULT_MANAGER_PATH_VALUE
+    manager_path = os.environ.get(COLONY_HOME_ENVIRONMENT, DEFAULT_MANAGER_PATH_VALUE)
     library_path = None
     plugin_path = None
     execution_command = None
