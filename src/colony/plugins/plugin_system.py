@@ -2141,17 +2141,46 @@ class PluginManager:
         # retrieves the name of the method to be called
         method_name = base_splitted_length > 1 and base_splitted[1] or DEFAULT_EXECUTION_HANDLING_METHOD
 
+        # creates the full method name with the plugin id and the method name
+        full_method_name = plugin_id + "/" + method_name
+
         # retrieves the plugin for the plugin id
         plugin = self._get_plugin_by_id(plugin_id)
 
-        # loads the plugin
-        self.__load_plugin(plugin)
+        try:
+            # in case the plugin was not retrieved successfully
+            if not plugin:
+                # raises the invalid command exception
+                raise colony.plugins.plugin_system_exceptions.InvalidCommand("plugin not found '%s'" % plugin_id)
 
-        # retrieves the method from the plugin
-        method = getattr(plugin, method_name)
+            # loads the plugin
+            self.__load_plugin(plugin)
 
-        # calls the method with the given arguments
-        method(*arguments)
+            # in case the plugin does not have a method with the given name
+            if not hasattr(plugin, method_name):
+                # raises the invalid command exception
+                raise colony.plugins.plugin_system_exceptions.InvalidCommand("method not found '%s' for plugin '%s'" % (method_name, plugin_id))
+
+            # retrieves the method from the plugin
+            method = getattr(plugin, method_name)
+
+            # retrieves the length of the arguments
+            argments_length = len(arguments)
+
+            # calculates the expected arguments length
+            expected_arguments_length = method.func_code.co_argcount - 1
+
+            # in case the length of the arguments list is different
+            # than the expected arguments length
+            if not argments_length == expected_arguments_length:
+                # raises the invalid command exception
+                raise colony.plugins.plugin_system_exceptions.InvalidCommand("invalid number of arguments for method '%s' (expected %d given %d)" % (full_method_name, expected_arguments_length, argments_length))
+
+            # calls the method with the given arguments
+            method(*arguments)
+        except Exception, exception:
+            # prints an error message
+            self.logger.error(str(exception))
 
         # unsets the main loop (disables the loop)
         self.main_loop_active = False

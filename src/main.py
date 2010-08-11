@@ -215,9 +215,10 @@ def main():
     try:
         options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:a:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
     except getopt.GetoptError, error:
-        # prints help information and exit
-        # will print something like "option -a not recognized"
+        # prints the error description
         print str(error)
+
+        # prints usage information
         usage()
 
         # exits in error
