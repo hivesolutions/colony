@@ -4152,7 +4152,7 @@ class PluginManager:
         """
 
         # prints an error message
-        self.logger.error("Unloading timeout (%d seconds) reached, killing the system..." % DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
+        self.logger.error("Unloading timeout (%.2f seconds) reached, killing the system..." % DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
 
         # exits in error
         exit(2)
