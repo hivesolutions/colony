@@ -110,6 +110,9 @@ DEFAULT_EXECUTION_HANDLING_METHOD = "handle_execution"
 DEFAULT_LOOP_WAIT_TIMEOUT = 1.0
 """ The default loop wait timeout """
 
+DEFAULT_UNLOAD_SYSTEM_TIMEOUT = 600.0
+""" The default unload system timeout """
+
 EAGER_LOADING_TYPE = "eager_loading"
 """ The eager loading plugin loading type """
 
@@ -1444,22 +1447,26 @@ class PluginManager:
         Starts the process of loading the plugin system.
         """
 
-        # prints an info message
-        self.logger.info("Starting plugin manager...")
+        try:
+            # prints an info message
+            self.logger.info("Starting plugin manager...")
 
-        # updates the workspace path
-        self.update_workspace_path()
+            # updates the workspace path
+            self.update_workspace_path()
 
-        # gets all modules from all plugin paths
-        for plugin_path in self.plugin_paths:
-            # extends the refferred modules with all the plugin modules
-            self.referred_modules.extend(self.get_all_modules(plugin_path))
+            # gets all modules from all plugin paths
+            for plugin_path in self.plugin_paths:
+                # extends the refferred modules with all the plugin modules
+                self.referred_modules.extend(self.get_all_modules(plugin_path))
 
-        # starts the plugin loading process
-        self.init_plugin_system({"library_paths" : self.library_paths, "plugin_paths" : self.plugin_paths, "plugins" : self.referred_modules})
+            # starts the plugin loading process
+            self.init_plugin_system({"library_paths" : self.library_paths, "plugin_paths" : self.plugin_paths, "plugins" : self.referred_modules})
 
-        # starts the main loop
-        self.main_loop()
+            # starts the main loop
+            self.main_loop()
+        except BaseException, exception:
+            # handles the system exception
+            self._handle_system_exception(exception)
 
     def unload_system(self, thread_safe = True):
         """
@@ -1469,6 +1476,13 @@ class PluginManager:
         @param thread_safe: If the unloading should use the event mechanism
         to provide thread safety.
         """
+
+        # creates the kill system timer, to kill the system
+        # if it hangs in shutdown
+        kill_system_timer = threading.Timer(DEFAULT_UNLOAD_SYSTEM_TIMEOUT, self._kill_system_timeout)
+
+        # starts the kill system timer
+        kill_system_timer.start()
 
         # iterates over all the plugin instances
         for plugin_instance in self.plugin_instances:
@@ -1498,63 +1512,46 @@ class PluginManager:
             # unloads the thread based plugins
             self._unload_thread_plugins()
 
+        # cancels the kill system timer
+        kill_system_timer.cancel()
+
     def main_loop(self):
         """
         The main loop for the plugin manager.
         """
 
-        try:
-            # main loop cycle
-            while self.main_loop_active:
-                # acquires the condition
-                self.condition.acquire()
+        # main loop cycle
+        while self.main_loop_active:
+            # acquires the condition
+            self.condition.acquire()
 
-                # iterates while the event queue has no items
-                while not len(self.event_queue):
-                    try:
-                        # waits for the condition to be notified
-                        # this wait releases after the defined timeout
-                        # in order to provide a away to process external interrupts
-                        self.condition.wait(DEFAULT_LOOP_WAIT_TIMEOUT)
-                    except RuntimeError:
-                        # timeout occurred (ignores it)
-                        pass
+            # iterates while the event queue has no items
+            while not len(self.event_queue):
+                try:
+                    # waits for the condition to be notified
+                    # this wait releases after the defined timeout
+                    # in order to provide a away to process external interrupts
+                    self.condition.wait(DEFAULT_LOOP_WAIT_TIMEOUT)
+                except RuntimeError:
+                    # timeout occurred (ignores it)
+                    pass
 
-                # pops the top item
-                event = self.event_queue.pop(0)
+            # pops the top item
+            event = self.event_queue.pop(0)
 
-                if event.event_name == "execute":
-                    execution_method = event.event_args[0]
-                    execution_arguments = event.event_args[1:]
-                    execution_method(*execution_arguments)
-                elif event.event_name == "exit":
-                    # unloads the thread based plugins
-                    self._unload_thread_plugins()
+            if event.event_name == "execute":
+                execution_method = event.event_args[0]
+                execution_arguments = event.event_args[1:]
+                execution_method(*execution_arguments)
+            elif event.event_name == "exit":
+                # unloads the thread based plugins
+                self._unload_thread_plugins()
 
-                    # returns the method exiting the plugin system
-                    return
+                # returns the method exiting the plugin system
+                return
 
-                # releases the condition
-                self.condition.release()
-        except BaseException, exception:
-            try:
-                # retrieves the exception type
-                exception_type = exception.__class__.__name__
-
-                # print a warning message
-                self.logger.warning("Unloading system due to exception: '%s' of type '%s'" % (str(exception), exception_type))
-
-                # unloads the system
-                self.unload_system(False)
-
-                # print a warning message
-                self.logger.warning("Unloaded system due to exception: '%s' of type '%s'" % (str(exception), exception_type))
-            except KeyboardInterrupt, exception:
-                # prints an error message
-                self.logger.error("Problem unloading the system: " + str(exception))
-
-                # exits in error
-                exit(2)
+            # releases the condition
+            self.condition.release()
 
     def add_event(self, event):
         """
@@ -1955,7 +1952,7 @@ class PluginManager:
             plugin_thread.add_event(event)
 
             # joins the plugin thread
-            plugin_thread.join()
+            plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
 
             # removes the plugin thread from the plugin threads map
             del self.plugin_threads_map[plugin_id]
@@ -2616,7 +2613,7 @@ class PluginManager:
             plugin_thread.add_event(exit_event)
 
             # joins the plugin thread (waiting for the end of it)
-            plugin_thread.join()
+            plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
 
     def test_plugin_load(self, plugin):
         """
@@ -4149,6 +4146,47 @@ class PluginManager:
 
         return self.get_plugin_configuration_paths_by_id(arguments)
 
+    def _kill_system_timeout(self):
+        """
+        Kills the system, due to unload timeout occurrence.
+        """
+
+        # prints an error message
+        self.logger.error("Unloading timeout (%d seconds) reached, killing the system..." % DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
+
+        # exits in error
+        exit(2)
+
+    def _handle_system_exception(self, exception):
+        """
+        Handles the given system base exception.
+        These exception occur at the highest level of the plugin framework.
+        The handling is sever and culminates in the unloading of the
+        plugin framework.
+
+        @type exception: BaseException
+        @param exception: The exception to be handled.
+        """
+
+        try:
+            # retrieves the exception type
+            exception_type = exception.__class__.__name__
+
+            # print a warning message
+            self.logger.warning("Unloading system due to exception: '%s' of type '%s'" % (str(exception), exception_type))
+
+            # unloads the system
+            self.unload_system(False)
+
+            # print a warning message
+            self.logger.warning("Unloaded system due to exception: '%s' of type '%s'" % (str(exception), exception_type))
+        except KeyboardInterrupt, exception:
+            # prints an error message
+            self.logger.error("Problem unloading the system '%s', killing the system..." % str(exception))
+
+            # exits in error
+            exit(2)
+
 class Dependency:
     """
     The dependency class.
@@ -5134,13 +5172,13 @@ class PluginThread(threading.Thread):
 
         if event.event_name == "exit":
             if self.load_plugin_thread and self.load_plugin_thread.isAlive():
-                self.load_plugin_thread.join()
+                self.load_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
             if self.end_load_plugin_thread and self.end_load_plugin_thread.isAlive():
-                self.end_load_plugin_thread.join()
+                self.end_load_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
             if self.unload_plugin_thread and self.unload_plugin_thread.isAlive():
-                self.unload_plugin_thread.join()
+                self.unload_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
             if self.end_unload_plugin_thread and self.end_unload_plugin_thread.isAlive():
-                self.end_unload_plugin_thread.join()
+                self.end_unload_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
             return True
         elif event.event_name == "load":
             self.load_plugin_thread = PluginEventThread(self.plugin, self.plugin.load_plugin)
