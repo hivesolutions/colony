@@ -228,6 +228,9 @@ def main():
         # exits in error
         sys.exit(2)
 
+    # retrieves the file system encoding
+    file_system_encoding = sys.getfilesystemencoding()
+
     # starts the options values
     verbose = False
     debug = False
@@ -237,13 +240,10 @@ def main():
     run_mode = DEFAULT_STRING_VALUE
     container = DEFAULT_STRING_VALUE
     attributes_map = None
-    manager_path = os.environ.get(COLONY_HOME_ENVIRONMENT, DEFAULT_MANAGER_PATH_VALUE)
+    manager_path = os.environ.get(COLONY_HOME_ENVIRONMENT, DEFAULT_MANAGER_PATH_VALUE).decode(file_system_encoding)
     library_path = None
     plugin_path = None
     execution_command = None
-
-    # retrieves the file system encoding
-    file_system_encoding = sys.getfilesystemencoding()
 
     # iterates over all the options
     for option, value in options:
