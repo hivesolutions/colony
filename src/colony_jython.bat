@@ -33,3 +33,6 @@ SET WORKSPACE_HOME=../../
 :: executes the initial python script with
 :: the provided arguments
 jython %~dp0/main.py %*
+
+:: pauses the execution
+pause

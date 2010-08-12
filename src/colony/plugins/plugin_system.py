@@ -107,12 +107,6 @@ DEFAULT_WORKSPACE_PATH = u"~/.colony_workspace"
 DEFAULT_EXECUTION_HANDLING_METHOD = "handle_execution"
 """ The default execution handling method """
 
-DEFAULT_LOOP_WAIT_TIMEOUT = 1.0
-""" The default loop wait timeout """
-
-DEFAULT_UNLOAD_SYSTEM_TIMEOUT = 600.0
-""" The default unload system timeout """
-
 EAGER_LOADING_TYPE = "eager_loading"
 """ The eager loading plugin loading type """
 
@@ -1059,8 +1053,8 @@ class PluginManager:
     platform = None
     """ The current executing platform """
 
-    condition = None
-    """ The condition used in the event queue """
+    semaphore = None
+    """ The semaphore used in the event queue """
 
     init_complete = False
     """ The initialization complete flag """
@@ -1226,7 +1220,7 @@ class PluginManager:
         self.attributes_map = attributes_map
 
         self.uid = colony.plugins.util.get_timestamp_uid()
-        self.condition = threading.Condition()
+        self.semaphore = threading.BoundedSemaphore()
 
         self.current_id = 0
         self.event_queue = []
@@ -1333,12 +1327,6 @@ class PluginManager:
 
         # retrieves the path to the plugin file
         plugin_path = inspect.getfile(plugin_class)
-
-        # retrieves the file system encoding
-        file_system_encoding = sys.getfilesystemencoding()
-
-        # decodes the plugin path using the file system encoding
-        plugin_path = plugin_path.decode(file_system_encoding)
 
         # retrieves the absolute path to the plugin file
         absolute_plugin_path = os.path.abspath(plugin_path)
@@ -1453,26 +1441,22 @@ class PluginManager:
         Starts the process of loading the plugin system.
         """
 
-        try:
-            # prints an info message
-            self.logger.info("Starting plugin manager...")
+        # prints an info message
+        self.logger.info("Starting plugin manager...")
 
-            # updates the workspace path
-            self.update_workspace_path()
+        # updates the workspace path
+        self.update_workspace_path()
 
-            # gets all modules from all plugin paths
-            for plugin_path in self.plugin_paths:
-                # extends the refferred modules with all the plugin modules
-                self.referred_modules.extend(self.get_all_modules(plugin_path))
+        # gets all modules from all plugin paths
+        for plugin_path in self.plugin_paths:
+            # extends the refferred modules with all the plugin modules
+            self.referred_modules.extend(self.get_all_modules(plugin_path))
 
-            # starts the plugin loading process
-            self.init_plugin_system({"library_paths" : self.library_paths, "plugin_paths" : self.plugin_paths, "plugins" : self.referred_modules})
+        # starts the plugin loading process
+        self.init_plugin_system({"library_paths" : self.library_paths, "plugin_paths" : self.plugin_paths, "plugins" : self.referred_modules})
 
-            # starts the main loop
-            self.main_loop()
-        except BaseException, exception:
-            # handles the system exception
-            self._handle_system_exception(exception)
+        # starts the main loop
+        self.main_loop()
 
     def unload_system(self, thread_safe = True):
         """
@@ -1482,13 +1466,6 @@ class PluginManager:
         @param thread_safe: If the unloading should use the event mechanism
         to provide thread safety.
         """
-
-        # creates the kill system timer, to kill the system
-        # if it hangs in shutdown
-        kill_system_timer = threading.Timer(DEFAULT_UNLOAD_SYSTEM_TIMEOUT, self._kill_system_timeout)
-
-        # starts the kill system timer
-        kill_system_timer.start()
 
         # iterates over all the plugin instances
         for plugin_instance in self.plugin_instances:
@@ -1518,9 +1495,6 @@ class PluginManager:
             # unloads the thread based plugins
             self._unload_thread_plugins()
 
-        # cancels the kill system timer
-        kill_system_timer.cancel()
-
     def main_loop(self):
         """
         The main loop for the plugin manager.
@@ -1528,36 +1502,24 @@ class PluginManager:
 
         # main loop cycle
         while self.main_loop_active:
-            # acquires the condition
-            self.condition.acquire()
+            # acquires the semaphoere
+            self.semaphore.acquire()
 
-            # iterates while the event queue has no items
-            while not len(self.event_queue):
-                try:
-                    # waits for the condition to be notified
-                    # this wait releases after the defined timeout
-                    # in order to provide a away to process external interrupts
-                    self.condition.wait(DEFAULT_LOOP_WAIT_TIMEOUT)
-                except RuntimeError:
-                    # timeout occurred (ignores it)
-                    pass
+            # iterates while the event queue has items
+            while len(self.event_queue):
+                # pops the top item
+                event = self.event_queue.pop(0)
 
-            # pops the top item
-            event = self.event_queue.pop(0)
+                if event.event_name == "execute":
+                    execution_method = event.event_args[0]
+                    execution_arguments = event.event_args[1:]
+                    execution_method(*execution_arguments)
+                elif event.event_name == "exit":
+                    # unloads the thread based plugins
+                    self._unload_thread_plugins()
 
-            if event.event_name == "execute":
-                execution_method = event.event_args[0]
-                execution_arguments = event.event_args[1:]
-                execution_method(*execution_arguments)
-            elif event.event_name == "exit":
-                # unloads the thread based plugins
-                self._unload_thread_plugins()
-
-                # returns the method exiting the plugin system
-                return
-
-            # releases the condition
-            self.condition.release()
+                    # returns the method exiting the plugin system
+                    return
 
     def add_event(self, event):
         """
@@ -1567,17 +1529,8 @@ class PluginManager:
         @param event: The event to add to the list of events in the plugin manager.
         """
 
-        # acquires the condition
-        self.condition.acquire()
-
-        # adds the event to the event queue
         self.event_queue.append(event)
-
-        # notifies the condition
-        self.condition.notify()
-
-        # releases the condition
-        self.condition.release()
+        self.semaphore.release()
 
     def expand_workspace_path(self):
         """
@@ -1831,12 +1784,6 @@ class PluginManager:
         # retrieves the path to the plugin file
         plugin_path = inspect.getfile(plugin)
 
-        # retrieves the file system encoding
-        file_system_encoding = sys.getfilesystemencoding()
-
-        # decodes the plugin path using the file system encoding
-        plugin_path = plugin_path.decode(file_system_encoding)
-
         # retrieves the absolute path to the plugin file
         absolute_plugin_path = os.path.abspath(plugin_path)
 
@@ -1964,7 +1911,7 @@ class PluginManager:
             plugin_thread.add_event(event)
 
             # joins the plugin thread
-            plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
+            plugin_thread.join()
 
             # removes the plugin thread from the plugin threads map
             del self.plugin_threads_map[plugin_id]
@@ -2625,7 +2572,7 @@ class PluginManager:
             plugin_thread.add_event(exit_event)
 
             # joins the plugin thread (waiting for the end of it)
-            plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
+            plugin_thread.join()
 
     def test_plugin_load(self, plugin):
         """
@@ -4158,47 +4105,6 @@ class PluginManager:
 
         return self.get_plugin_configuration_paths_by_id(arguments)
 
-    def _kill_system_timeout(self):
-        """
-        Kills the system, due to unload timeout occurrence.
-        """
-
-        # prints an error message
-        self.logger.error("Unloading timeout (%.2f seconds) reached, killing the system..." % DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
-
-        # exits in error
-        exit(2)
-
-    def _handle_system_exception(self, exception):
-        """
-        Handles the given system base exception.
-        These exception occur at the highest level of the plugin framework.
-        The handling is sever and culminates in the unloading of the
-        plugin framework.
-
-        @type exception: BaseException
-        @param exception: The exception to be handled.
-        """
-
-        try:
-            # retrieves the exception type
-            exception_type = exception.__class__.__name__
-
-            # print a warning message
-            self.logger.warning("Unloading system due to exception: '%s' of type '%s'" % (str(exception), exception_type))
-
-            # unloads the system
-            self.unload_system(False)
-
-            # print a warning message
-            self.logger.warning("Unloaded system due to exception: '%s' of type '%s'" % (str(exception), exception_type))
-        except KeyboardInterrupt, exception:
-            # prints an error message
-            self.logger.error("Problem unloading the system '%s', killing the system..." % str(exception))
-
-            # exits in error
-            exit(2)
-
 class Dependency:
     """
     The dependency class.
@@ -5094,8 +5000,8 @@ class PluginThread(threading.Thread):
     event_queue = []
     """ The queue of events to be processed """
 
-    condition = None
-    """ The plugin thread condition """
+    semaphore = None
+    """ The plugin thread semaphore """
 
     def __init__ (self, plugin):
         """
@@ -5107,7 +5013,7 @@ class PluginThread(threading.Thread):
 
         threading.Thread.__init__(self)
         self.plugin = plugin
-        self.condition = threading.Condition()
+        self.semaphore = threading.Semaphore()
 
         self.event_queue = []
         self.load_complete = False
@@ -5160,58 +5066,49 @@ class PluginThread(threading.Thread):
         @param event: The event to be added to the event queue.
         """
 
-        # acquires the condition
-        self.condition.acquire()
-
         # adds the event to the event queue
         self.event_queue.append(event)
 
-        # notifies the condition
-        self.condition.notify()
+        # releases the semaphore
+        self.semaphore.release()
 
-        # releases the condition
-        self.condition.release()
-
-    def process_event(self, event):
+    def flush_queue(self):
         """
-        Processes the given queue event.
-
-        @type event: Event
-        @param event: The event to be processed.
-        @rtype: bool
-        @return: If the upper loop should be terminated.
+        Flushes the queue processing an event.
         """
 
-        if event.event_name == "exit":
-            if self.load_plugin_thread and self.load_plugin_thread.isAlive():
-                self.load_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
-            if self.end_load_plugin_thread and self.end_load_plugin_thread.isAlive():
-                self.end_load_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
-            if self.unload_plugin_thread and self.unload_plugin_thread.isAlive():
-                self.unload_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
-            if self.end_unload_plugin_thread and self.end_unload_plugin_thread.isAlive():
-                self.end_unload_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
-            return True
-        elif event.event_name == "load":
-            self.load_plugin_thread = PluginEventThread(self.plugin, self.plugin.load_plugin)
-            self.load_plugin_thread.start()
-            self.load_complete = True
-        elif event.event_name == "lazy_load":
-            self.lazy_load_plugin_thread = PluginEventThread(self.plugin, self.plugin.lazy_load_plugin)
-            self.lazy_load_plugin_thread.start()
-            self.load_complete = True
-        elif event.event_name == "end_load":
-            self.end_load_plugin_thread = PluginEventThread(self.plugin, self.plugin.end_load_plugin)
-            self.end_load_plugin_thread.start()
-            self.end_load_complete = True
-        elif event.event_name == "unload":
-            self.unload_plugin_thread = PluginEventThread(self.plugin, self.plugin.unload_plugin)
-            self.unload_plugin_thread.start()
-            self.unload_complete = True
-        elif event.event_name == "end_unload":
-            self.end_unload_plugin_thread = PluginEventThread(self.plugin, self.plugin.end_unload_plugin)
-            self.end_unload_plugin_thread.start()
-            self.end_unload_complete = True
+        if len(self.event_queue):
+            event = self.event_queue.pop(0)
+            if event.event_name == "exit":
+                if self.load_plugin_thread and self.load_plugin_thread.isAlive():
+                    self.load_plugin_thread.join()
+                if self.end_load_plugin_thread and self.end_load_plugin_thread.isAlive():
+                    self.end_load_plugin_thread.join()
+                if self.unload_plugin_thread and self.unload_plugin_thread.isAlive():
+                    self.unload_plugin_thread.join()
+                if self.end_unload_plugin_thread and self.end_unload_plugin_thread.isAlive():
+                    self.end_unload_plugin_thread.join()
+                return True
+            elif event.event_name == "load":
+                self.load_plugin_thread = PluginEventThread(self.plugin, self.plugin.load_plugin)
+                self.load_plugin_thread.start()
+                self.load_complete = True
+            elif event.event_name == "lazy_load":
+                self.lazy_load_plugin_thread = PluginEventThread(self.plugin, self.plugin.lazy_load_plugin)
+                self.lazy_load_plugin_thread.start()
+                self.load_complete = True
+            elif event.event_name == "end_load":
+                self.end_load_plugin_thread = PluginEventThread(self.plugin, self.plugin.end_load_plugin)
+                self.end_load_plugin_thread.start()
+                self.end_load_complete = True
+            elif event.event_name == "unload":
+                self.unload_plugin_thread = PluginEventThread(self.plugin, self.plugin.unload_plugin)
+                self.unload_plugin_thread.start()
+                self.unload_complete = True
+            elif event.event_name == "end_unload":
+                self.end_unload_plugin_thread = PluginEventThread(self.plugin, self.plugin.end_unload_plugin)
+                self.end_unload_plugin_thread.start()
+                self.end_unload_complete = True
 
     def run(self):
         """
@@ -5220,27 +5117,13 @@ class PluginThread(threading.Thread):
 
         # loops continuously
         while True:
-            # acquires the condition
-            self.condition.acquire()
+            # acquires the semaphore
+            self.semaphore.acquire()
 
-            # iterates while the event queue is empty
-            while not len(self.event_queue):
-                # waits for the condition
-                self.condition.wait()
-
-            # retrieves the event
-            event = self.event_queue.pop(0)
-
-            # processes the event
-            if self.process_event(event):
-                # releases the condition
-                self.condition.release()
-
+            # flushes the queue
+            if self.flush_queue():
                 # returns immediately
                 return
-
-            # releases the condition
-            self.condition.release()
 
 class PluginEventThread(threading.Thread):
     """
