@@ -37,7 +37,22 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-class PluginSystemException(Exception):
+class ColonyException(Exception):
+    """
+    The top level colony exception.
+    """
+
+    def __unicode__(self):
+        """
+        Returns the unicode representation of the class.
+
+        @rtype: String
+        @return: The unicode representation of the class.
+        """
+
+        return self.__str__()
+
+class PluginSystemException(ColonyException):
     """
     The plugin system exception class.
     """
@@ -53,7 +68,7 @@ class PluginSystemException(Exception):
         @param message: The message to be printed.
         """
 
-        Exception.__init__(self)
+        ColonyException.__init__(self)
         self.message = message
 
     def __str__(self):
