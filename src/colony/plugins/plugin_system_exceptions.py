@@ -56,7 +56,7 @@ class PluginSystemException(Exception):
         Exception.__init__(self)
         self.message = message
 
-    def __str__(self):
+    def __repr__(self):
         """
         Returns the string representation of the class.
 
@@ -82,7 +82,7 @@ class PluginClassNotAvailable(PluginSystemException):
         PluginSystemException.__init__(self, message)
         self.message = message
 
-    def __str__(self):
+    def __repr__(self):
         """
         Returns the string representation of the class.
 
@@ -108,7 +108,7 @@ class InvalidCommand(PluginSystemException):
         PluginSystemException.__init__(self, message)
         self.message = message
 
-    def __str__(self):
+    def __repr__(self):
         """
         Returns the string representation of the class.
 
