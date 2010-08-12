@@ -1334,6 +1334,12 @@ class PluginManager:
         # retrieves the path to the plugin file
         plugin_path = inspect.getfile(plugin_class)
 
+        # retrieves the file system encoding
+        file_system_encoding = sys.getfilesystemencoding()
+
+        # decodes the plugin path using the file system encoding
+        plugin_path = plugin_path.decode(file_system_encoding)
+
         # retrieves the absolute path to the plugin file
         absolute_plugin_path = os.path.abspath(plugin_path)
 
@@ -1824,6 +1830,12 @@ class PluginManager:
 
         # retrieves the path to the plugin file
         plugin_path = inspect.getfile(plugin)
+
+        # retrieves the file system encoding
+        file_system_encoding = sys.getfilesystemencoding()
+
+        # decodes the plugin path using the file system encoding
+        plugin_path = plugin_path.decode(file_system_encoding)
 
         # retrieves the absolute path to the plugin file
         absolute_plugin_path = os.path.abspath(plugin_path)
