@@ -33,6 +33,3 @@ SET WORKSPACE_HOME=../../
 :: executes the initial python script with
 :: the provided arguments
 ipy %~dp0/main.py %*
-
-:: pauses the execution
-pause

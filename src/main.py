@@ -242,6 +242,9 @@ def main():
     plugin_path = None
     execution_command = None
 
+    # retrieves the file system encoding
+    file_system_encoding = sys.getfilesystemencoding()
+
     # iterates over all the options
     for option, value in options:
         if option in ("-h", "--help"):
@@ -264,13 +267,13 @@ def main():
         elif option in ("-a", "--attributes"):
             attributes_map = parse_attributes(value)
         elif option in ("-m", "--manager_dir"):
-            manager_path = value
+            manager_path = value.decode(file_system_encoding)
         elif option in ("-i", "--library_dir"):
-            library_path = value
+            library_path = value.decode(file_system_encoding)
         elif option in ("-p", "--plugin_dir"):
-            plugin_path = value
+            plugin_path = value.decode(file_system_encoding)
         elif option in ("-e", "--execution_command"):
-            execution_command = value
+            execution_command = value.decode(file_system_encoding)
         else:
             assert False, "unhandled option"
 
