@@ -41,9 +41,8 @@ import sys
 
 import main
 
-USAGE = "Help:\n\
---help - prints this message\n\
-[--execution_command] plugin_id:method [argument1 argument2 ...] -  executes the execution command"
+USAGE = "Usage: plugin_id:method [argument1 argument2 ...]\n\
+Executes an execution command in the colony plugin manager"
 """ The usage string for the command line arguments """
 
 def usage():
@@ -58,13 +57,6 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         # prints the description of the error
         print str("Error: Invalid number of arguments (see --help)")
-
-        # exits in error
-        sys.exit(2)
-
-    if sys.argv[1] == "--help":
-        # prints usage information
-        usage()
 
         # exits in error
         sys.exit(2)
