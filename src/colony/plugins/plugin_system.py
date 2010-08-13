@@ -44,6 +44,7 @@ import stat
 import time
 import types
 import thread
+import signal
 import inspect
 import logging
 import threading
@@ -1464,6 +1465,9 @@ class PluginManager:
             for plugin_path in self.plugin_paths:
                 # extends the refferred modules with all the plugin modules
                 self.referred_modules.extend(self.get_all_modules(plugin_path))
+
+            # installs the sigterm handler for plugin manager kill
+            signal.signal(signal.SIGTERM, self._kill_system_timeout)
 
             # starts the plugin loading process
             self.init_plugin_system({"library_paths" : self.library_paths, "plugin_paths" : self.plugin_paths, "plugins" : self.referred_modules})
