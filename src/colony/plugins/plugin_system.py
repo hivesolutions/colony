@@ -1466,9 +1466,6 @@ class PluginManager:
                 # extends the refferred modules with all the plugin modules
                 self.referred_modules.extend(self.get_all_modules(plugin_path))
 
-            # installs the sigterm handler for plugin manager kill
-            signal.signal(signal.SIGTERM, self._kill_system_timeout)
-
             # starts the plugin loading process
             self.init_plugin_system({"library_paths" : self.library_paths, "plugin_paths" : self.plugin_paths, "plugins" : self.referred_modules})
 
@@ -1703,6 +1700,9 @@ class PluginManager:
 
         # loads the main plugins
         self.load_main_plugins()
+
+        # installs the signal handlers
+        self.install_signal_handlers()
 
         # sets the init flag to true
         self.set_init_complete(True)
@@ -2152,6 +2152,15 @@ class PluginManager:
             if MAIN_TYPE in plugin.capabilities:
                 # loads the plugin
                 self._load_plugin(plugin, None, MAIN_TYPE)
+
+    def install_signal_handlers(self):
+        """
+        Installs the signal handlers for the plugin
+        manager.
+        """
+
+        # installs the sigterm handler for plugin manager kill
+        signal.signal(signal.SIGTERM, self._kill_system_timeout)
 
     def notify_load_complete_loaded_plugins(self):
         """
