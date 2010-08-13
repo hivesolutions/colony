@@ -2239,7 +2239,7 @@ class PluginManager:
             method(*arguments)
         except Exception, exception:
             # prints an error message
-            self.logger.error(str(exception))
+            self.logger.error(unicode(exception))
 
         # unsets the main loop (disables the loop)
         self.main_loop_active = False
@@ -4185,16 +4185,16 @@ class PluginManager:
             exception_type = exception.__class__.__name__
 
             # print a warning message
-            self.logger.warning("Unloading system due to exception: '%s' of type '%s'" % (str(exception), exception_type))
+            self.logger.warning("Unloading system due to exception: '%s' of type '%s'" % (unicode(exception), exception_type))
 
             # unloads the system
             self.unload_system(False)
 
             # print a warning message
-            self.logger.warning("Unloaded system due to exception: '%s' of type '%s'" % (str(exception), exception_type))
+            self.logger.warning("Unloaded system due to exception: '%s' of type '%s'" % (unicode(exception), exception_type))
         except KeyboardInterrupt, exception:
             # prints an error message
-            self.logger.error("Problem unloading the system '%s', killing the system..." % str(exception))
+            self.logger.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
 
             # exits in error
             exit(2)
