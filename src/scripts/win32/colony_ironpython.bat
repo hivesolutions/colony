@@ -26,10 +26,13 @@
 :: turns off the echo
 @echo off
 
+:: sets the temporary variables
+set RELATIVE_PATH=../../
+
 :: sets the environment variables
-SET HOME=C:\Users\joamag
-SET WORKSPACE_HOME=../../
+set HOME=C:\Users\joamag
+set WORKSPACE_HOME=../../
 
 :: executes the initial python script with
 :: the provided arguments
-jython %~dp0/main.py %*
+ipy %~dp0/%RELATIVE_PATH%/main.py %*

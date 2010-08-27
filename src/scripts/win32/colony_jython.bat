@@ -18,18 +18,21 @@
 
 :: __author__    = João Magalhães <joamag@hive.pt>
 :: __version__   = 1.0.0
-:: __revision__  = $LastChangedRevision: 7693 $
-:: __date__      = $LastChangedDate: 2010-03-25 08:40:31 +0000 (qui, 25 Mar 2010) $
+:: __revision__  = $LastChangedRevision$
+:: __date__      = $LastChangedDate$
 :: __copyright__ = Copyright (c) 2008 Hive Solutions Lda.
 :: __license__   = GNU General Public License (GPL), Version 3
 
 :: turns off the echo
 @echo off
 
+:: sets the temporary variables
+set RELATIVE_PATH=../../
+
 :: sets the environment variables
-SET HOME=C:\Users\joamag
-SET WORKSPACE_HOME=../../
+set HOME=C:\Users\joamag
+set WORKSPACE_HOME=../../
 
 :: executes the initial python script with
 :: the provided arguments
-python %~dp0/script.py %*
+jython %~dp0/%RELATIVE_PATH%/main.py %*
