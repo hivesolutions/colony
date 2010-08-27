@@ -79,7 +79,7 @@ HELP_TEXT = "Type \"help\" for more information."
 DEFAULT_STRING_VALUE = "default"
 """ The default string value """
 
-DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "config/colony_configuration.py"
+DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "config/configuration_production.py"
 """ The default configuration file path """
 
 DEFAULT_MANAGER_PATH_VALUE = "."
@@ -355,6 +355,11 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     # retrieves the configuration directory from the configuration
     # file path (the directory is going to be used to include the module)
     configuration_directory_path = os.path.dirname(configuration_file_path)
+
+    # in case the configuration directory path is not an absolute path
+    if not os.path.isabs(configuration_directory_path):
+        # creates the (complete) configuration directory path prepending the manager path
+        configuration_directory_path = manager_path + "/" + configuration_directory_path
 
     # in case the configuration directory path is valid inserts it into the system path
     configuration_directory_path and sys.path.insert(0, configuration_directory_path)

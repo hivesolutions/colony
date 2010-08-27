@@ -37,12 +37,6 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-layout_mode = "production"
-""" The project layout mode """
-
-run_mode = "production"
-""" The project run mode """
-
 prefix_paths = {"development" : {"colony" : "../../",
                                  "omni" : "../../",
                                  "colony_demo" : "../../",
@@ -65,18 +59,6 @@ prefix_paths = {"development" : {"colony" : "../../",
                                 "take_the_bill" : "../../",
                                 "a_la_carte" : "../../"}}
 """ The prefix path maps """
-
-verbose = False
-""" The verbose flag """
-
-debug = False
-""" The debug flag """
-
-silent = False
-""" The silent flag """
-
-stop_on_cycle_error = True
-""" The stop on cycle error flag """
 
 library_path_list = ["%colony_prefix_path%/pt.hive.colony.language.generator/src/colony",
                      "%colony_prefix_path%/pt.hive.colony.language.settler/src/colony",
