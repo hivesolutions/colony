@@ -219,7 +219,7 @@ def main():
     """
 
     try:
-        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:a:f:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "configuration_file=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
+        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:a:f:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "configuration_path=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
     except getopt.GetoptError, error:
         # prints the error description
         print str(error)
