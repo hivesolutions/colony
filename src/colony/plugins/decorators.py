@@ -791,7 +791,7 @@ def create_load_plugin_interceptor(func):
             plugin_manager = original_plugin.manager
             original_plugin_id = original_plugin.id
 
-            # in case the plugin load was unsucessfull
+            # in case the plugin load was unsuccessful
             if not plugin_manager.load_plugin(original_plugin_id, plugin_system.FULL_LOAD_TYPE):
                 return None
 
