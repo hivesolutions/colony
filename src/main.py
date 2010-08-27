@@ -41,8 +41,6 @@ import os
 import sys
 import getopt
 
-import colony_configuration
-
 import colony.plugins.plugin_system
 import colony.plugins.util
 
@@ -56,6 +54,7 @@ USAGE = "Help:\n\
 --run_mode[-r]=development/test/production - sets the run mode to be used\n\
 --container[-c]=default - sets the container to be used\n\
 --attributes[-a]=... - sets the attributes to be used\n\
+--configuration_path[-f]=(CONFIGURATION_FILE_PATH) - sets the path to the configuration file\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the manager\n\
 --library_dir[-i]=(LIBRARY_DIR_1;LIBRARY_DIR_2;...) - sets the series of library directories to use\n\
 --plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use\r\
@@ -79,6 +78,9 @@ HELP_TEXT = "Type \"help\" for more information."
 
 DEFAULT_STRING_VALUE = "default"
 """ The default string value """
+
+DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "colony_configuration.py"
+""" The default configuration file path """
 
 DEFAULT_MANAGER_PATH_VALUE = "."
 """ The default manager path """
@@ -217,7 +219,7 @@ def main():
     """
 
     try:
-        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:a:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
+        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:a:f:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "configuration_file=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
     except getopt.GetoptError, error:
         # prints the error description
         print str(error)
@@ -240,6 +242,7 @@ def main():
     run_mode = DEFAULT_STRING_VALUE
     container = DEFAULT_STRING_VALUE
     attributes_map = None
+    configuration_file_path = DEFAULT_CONFIGURATION_FILE_PATH_VALUE
     manager_path = os.environ.get(COLONY_HOME_ENVIRONMENT, DEFAULT_MANAGER_PATH_VALUE).decode(file_system_encoding)
     library_path = None
     plugin_path = None
@@ -266,6 +269,8 @@ def main():
             container = value
         elif option in ("-a", "--attributes"):
             attributes_map = parse_attributes(value)
+        elif option in ("-f", "--configuration_path"):
+            configuration_file_path = value.decode(file_system_encoding)
         elif option in ("-m", "--manager_dir"):
             manager_path = value.decode(file_system_encoding)
         elif option in ("-i", "--library_dir"):
@@ -281,7 +286,7 @@ def main():
     configure_path(manager_path)
 
     # parses the configuration options
-    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, library_path, plugin_path = parse_configuration(verbose, debug, silent, layout_mode, run_mode, library_path, plugin_path, manager_path)
+    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, library_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, library_path, plugin_path, manager_path)
 
     # strips the library path around the semi-colon character
     library_path_striped = library_path.strip(";")
@@ -321,10 +326,12 @@ def parse_attributes(attributes_string):
     # returns the attributes map
     return attributes_map
 
-def parse_configuration(verbose, debug, silent, layout_mode, run_mode, library_path, plugin_path, manager_path):
+def parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, library_path, plugin_path, manager_path):
     """
     Parses the configuration using the given values as default values.
 
+    @type configuration_file_path: Sting
+    @param configuration_file_path: The path to the configuration file.
     @type verbose: bool
     @param verbose: If the log is going to be of type verbose.
     @type debug: bool
@@ -344,6 +351,23 @@ def parse_configuration(verbose, debug, silent, layout_mode, run_mode, library_p
     @rtype: Tuple
     @return: The tuple with the values parsed value.
     """
+
+    # retrieves the configuration directory from the configuration
+    # file path (the directory is going to be used to include the module)
+    configuration_directory_path = os.path.dirname(configuration_file_path)
+
+    # in case the configuration directory path is valid inserts it into the system path
+    configuration_directory_path and sys.path.insert(0, configuration_directory_path)
+
+    # retrieves the configuration file base path from the configuration file path
+    configuration_file_base_path = os.path.basename(configuration_file_path)
+
+    # retrieves the configuration module name and the configuration module extension by spliting the
+    # configuration base path into base name and extension
+    configuration_module_name, _configuration_module_extension = os.path.splitext(configuration_file_base_path)
+
+    # imports the colony configuration module
+    colony_configuration = __import__(configuration_module_name)
 
     # in case the verbose variable is defined in the colony configuration
     if not verbose and VERBOSE_VALUE in dir(colony_configuration):
