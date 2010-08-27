@@ -48,7 +48,7 @@ run_mode = "development"
 verbose = False
 """ The verbose flag """
 
-debug = False
+debug = True
 """ The debug flag """
 
 silent = False
