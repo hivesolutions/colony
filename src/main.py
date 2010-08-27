@@ -79,7 +79,7 @@ HELP_TEXT = "Type \"help\" for more information."
 DEFAULT_STRING_VALUE = "default"
 """ The default string value """
 
-DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "colony_configuration.py"
+DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "config/colony_configuration.py"
 """ The default configuration file path """
 
 DEFAULT_MANAGER_PATH_VALUE = "."
