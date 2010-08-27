@@ -362,7 +362,7 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     # retrieves the configuration file base path from the configuration file path
     configuration_file_base_path = os.path.basename(configuration_file_path)
 
-    # retrieves the configuration module name and the configuration module extension by spliting the
+    # retrieves the configuration module name and the configuration module extension by splitting the
     # configuration base path into base name and extension
     configuration_module_name, _configuration_module_extension = os.path.splitext(configuration_file_base_path)
 
