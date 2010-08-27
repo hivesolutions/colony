@@ -329,6 +329,7 @@ def parse_attributes(attributes_string):
 def parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, library_path, plugin_path, manager_path):
     """
     Parses the configuration using the given values as default values.
+    The configuration file used is given as a parameter to the function.
 
     @type configuration_file_path: Sting
     @param configuration_file_path: The path to the configuration file.
