@@ -54,7 +54,7 @@ USAGE = "Help:\n\
 --run_mode[-r]=development/test/production - sets the run mode to be used\n\
 --container[-c]=default - sets the container to be used\n\
 --attributes[-a]=... - sets the attributes to be used\n\
---configuration_path[-f]=(CONFIGURATION_FILE_PATH) - sets the path to the configuration file\n\
+--configuration_file[-f]=(CONFIGURATION_FILE) - sets the file path to the configuration file\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the manager\n\
 --library_dir[-i]=(LIBRARY_DIR_1;LIBRARY_DIR_2;...) - sets the series of library directories to use\n\
 --plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use\r\
@@ -219,7 +219,7 @@ def main():
     """
 
     try:
-        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:a:f:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "configuration_path=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
+        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:a:f:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "configuration_file=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
     except getopt.GetoptError, error:
         # prints the error description
         print str(error)
@@ -269,7 +269,7 @@ def main():
             container = value
         elif option in ("-a", "--attributes"):
             attributes_map = parse_attributes(value)
-        elif option in ("-f", "--configuration_path"):
+        elif option in ("-f", "--configuration_file"):
             configuration_file_path = value.decode(file_system_encoding)
         elif option in ("-m", "--manager_dir"):
             manager_path = value.decode(file_system_encoding)
