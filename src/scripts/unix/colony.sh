@@ -26,10 +26,14 @@
 # __copyright__ = Copyright (c) 2008 Hive Solutions Lda.
 # __license__   = GNU General Public License (GPL), Version 3
 
+# sets the temporary variables
+BIN_PATH=/usr/bin
+PYTHON_PATH=$BIN_PATH/python
+
 # sets the environment variables
 export HOME=/home/joamag
 export WORKSPACE_HOME=../../
 
 # executes the initial python script with
 # the provided arguments
-python $(dirname $0)/main.py $*
+$PYTHON_PATH $(dirname $0)/main.py $*
