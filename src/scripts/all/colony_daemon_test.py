@@ -129,6 +129,9 @@ def main():
                 # removes the daemon file
                 os.remove(daemon_file_path)
 
+                # prints a message
+                print "Exiting"
+
                 # exits in success
                 exit(0)
 
