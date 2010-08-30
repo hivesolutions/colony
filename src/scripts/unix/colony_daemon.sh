@@ -67,9 +67,12 @@ RELATIVE_PATH=../../
 export HOME=/home/joamag
 export WORKSPACE_HOME=../../
 
+# retrieves the daemon pid
+DAEMON_PID=$$
+
 # executes the initial python script with
 # the provided arguments
-$PYTHON_PATH $(dirname $(readlink -f $0))/$RELATIVE_PATH/main.py $* &
+$PYTHON_PATH $(dirname $(readlink -f $0))/$RELATIVE_PATH/main.py $* --daemon_pid=$DAEMON_PID &
 
 # saves the pid value
 PID=$!

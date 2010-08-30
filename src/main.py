@@ -53,6 +53,7 @@ USAGE = "Help:\n\
 --layout_mode[-l]=development/repository_svn/production - sets the layout mode to be used\n\
 --run_mode[-r]=development/test/production - sets the run mode to be used\n\
 --container[-c]=default - sets the container to be used\n\
+--daemon_pid[-o]=(DAEMON_PID) - sets the pid of the parent daemon\n\
 --attributes[-a]=... - sets the attributes to be used\n\
 --configuration_file[-f]=(CONFIGURATION_FILE) - sets the file path to the configuration file\n\
 --daemon_file[-d]=(DAEMON_FILE) - sets the file path to the daemon file\n\
@@ -140,7 +141,7 @@ def print_information():
     # prints some help information
     print HELP_TEXT
 
-def run(manager_path, library_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, daemon_file_path = None, execution_command = None, attributes_map = {}):
+def run(manager_path, library_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -166,6 +167,8 @@ def run(manager_path, library_path, plugin_path, verbose = False, debug = False,
     @param noloop: If the plugin manager is going to run in a loop.
     @type container: String
     @param container: The name of the plugin manager container.
+    @type daemon_pid: int
+    @param daemon_pid: The pid of the daemon process running the instance of plugin manager.
     @type daemon_file_path: String
     @param daemon_file_path: The file path to the daemon file, for information control.
     @type execution_command: String
@@ -196,7 +199,7 @@ def run(manager_path, library_path, plugin_path, verbose = False, debug = False,
     platform = colony.plugins.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.plugins.plugin_system.PluginManager(manager_path, library_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, daemon_file_path, execution_command, attributes_map)
+    plugin_manager = colony.plugins.plugin_system.PluginManager(manager_path, library_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
 
     # conditional logging import (depending on the current environment)
     if platform == colony.plugins.util.CPYTHON_ENVIRONMENT:
@@ -225,7 +228,7 @@ def main():
     """
 
     try:
-        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:a:f:d:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "attributes=", "configuration_file=", "daemon_file=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
+        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:o:a:f:d:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "daemon_pid=", "attributes=", "configuration_file=", "daemon_file=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
     except getopt.GetoptError, error:
         # prints the error description
         print str(error)
@@ -247,6 +250,7 @@ def main():
     layout_mode = DEFAULT_STRING_VALUE
     run_mode = DEFAULT_STRING_VALUE
     container = DEFAULT_STRING_VALUE
+    daemon_pid = None
     attributes_map = None
     configuration_file_path = DEFAULT_CONFIGURATION_FILE_PATH_VALUE
     daemon_file_path = None
@@ -274,6 +278,8 @@ def main():
             run_mode = value
         elif option in ("-c", "--container"):
             container = value
+        elif option in ("-o", "--daemon_pid"):
+            daemon_pid = int(value)
         elif option in ("-a", "--attributes"):
             attributes_map = parse_attributes(value)
         elif option in ("-f", "--configuration_file"):
@@ -304,7 +310,7 @@ def main():
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(manager_path, library_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, daemon_file_path, execution_command, attributes_map)
+    run(manager_path, library_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
 
 def parse_attributes(attributes_string):
     # creates an attributes map

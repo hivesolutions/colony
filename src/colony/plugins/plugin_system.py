@@ -1081,6 +1081,9 @@ class PluginManager:
     container = "default"
     """ The name of the plugin manager container """
 
+    daemon_pid = None
+    """ The pid of the daemon process running the instance of plugin manager  """
+
     daemon_file_path = None
     """ The file path to the daemon file, for information control """
 
@@ -1186,7 +1189,7 @@ class PluginManager:
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
-    def __init__(self, manager_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", daemon_file_path = None, execution_command = None, attributes_map = {}):
+    def __init__(self, manager_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
         """
         Constructor of the class.
 
@@ -1210,6 +1213,8 @@ class PluginManager:
         @param run_mode: The run mode used in the plugin loading.
         @type container: String
         @param container: The name of the plugin manager container.
+        @type daemon_pid: int
+        @param daemon_pid: The pid of the daemon process running the instance of plugin manager.
         @type daemon_file_path: String
         @param daemon_file_path: The file path to the daemon file, for information control.
         @type execution_command: String
@@ -1228,6 +1233,7 @@ class PluginManager:
         self.layout_mode = layout_mode
         self.run_mode = run_mode
         self.container = container
+        self.daemon_pid = daemon_pid
         self.daemon_file_path = daemon_file_path
         self.execution_command = execution_command
         self.attributes_map = attributes_map
@@ -2208,8 +2214,13 @@ class PluginManager:
         file = open(self.daemon_file_path, "wb")
 
         try:
-            # retrieves the current process pid
-            pid = os.getpid()
+            # in case the daemon pid is defined
+            if self.daemon_pid:
+                # sets the pid as the daemon pid
+                pid = self.daemon_pid
+            else:
+                # retrieves the current process pid
+                pid = os.getpid()
 
             # converts the pid to string
             pid_string = str(pid)
