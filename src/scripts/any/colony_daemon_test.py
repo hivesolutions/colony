@@ -106,8 +106,8 @@ def main():
 
     # in case the number of arguments is bigger than three
     if arguments_length > 3:
-        # retrieves the target timeout
-        target_timeout = sys.argv[3]
+        # retrieves the target timeout (converting to integer)
+        target_timeout = int(sys.argv[3])
     else:
         # sets the default timeout as the target timeout
         target_timeout = DEFAULT_TIMEOUT
