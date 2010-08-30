@@ -2160,7 +2160,7 @@ class PluginManager:
         """
 
         # installs the sigterm handler for plugin manager kill
-        signal.signal(signal.SIGTERM, self._kill_system_timeout)
+        signal.signal(signal.SIGTERM, self._kill_system_signal_handler)
 
     def notify_load_complete_loaded_plugins(self):
         """
@@ -4170,6 +4170,32 @@ class PluginManager:
         """
 
         return self.get_plugin_configuration_paths_by_id(arguments)
+
+    def _kill_system_signal_handler(self, signum, frame):
+        """
+        Kills the system, due to signal occurrence.
+
+        @type signum: int
+        @param signum: The signal number.
+        @type frame: Frame
+        @type frame: The frame value.
+        """
+
+        try:
+            # print a warning message
+            self.logger.warning("Unloading system due to signal: '%s'" % signum)
+
+            # unloads the system
+            self.unload_system(False)
+
+            # print a warning message
+            self.logger.warning("Unloaded system due to signal: '%s'" % signum)
+        except Exception, exception:
+            # prints an error message
+            self.logger.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
+
+            # exits in error
+            exit(2)
 
     def _kill_system_timeout(self):
         """
