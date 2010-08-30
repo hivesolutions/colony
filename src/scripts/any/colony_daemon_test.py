@@ -45,6 +45,9 @@ import threading
 DEFAULT_TIMEOUT = 60
 """ The default timeout value """
 
+DEFAULT_SLEEP_TIME = 0.5
+""" The default sleep time """
+
 loop_flag = True
 """ The flag that controls the loop """
 
@@ -130,7 +133,7 @@ def main():
                 exit(0)
 
             # sleeps for a while
-            time.sleep(0.25)
+            time.sleep(DEFAULT_SLEEP_TIME)
 
         # prints a message
         print "Timeout (%ss) reached without valid daemon file" % str(target_timeout)
