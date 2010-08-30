@@ -27,8 +27,7 @@
 # __license__   = GNU General Public License (GPL), Version 3
 
 # Function called uppon process term signal received
-on_term()
-{
+on_term() {
     # kills the child process
     kill -TERM $PID
 
@@ -40,8 +39,7 @@ on_term()
 }
 
 # Function called uppon process kill signal received
-on_kill()
-{
+on_kill() {
     # kills the child process
     kill -KILL $PID
 
