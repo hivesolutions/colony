@@ -132,6 +132,9 @@ def main():
                 # prints a message
                 print "Exiting"
 
+                # cancels the timer
+                timer.cancel()
+
                 # exits in success
                 exit(0)
 
@@ -141,11 +144,17 @@ def main():
         # prints a message
         print "Timeout (%ss) reached without valid daemon file" % str(target_timeout)
 
+        # cancels the timer
+        timer.cancel()
+
         # exits in error
         exit(2)
     except Exception, exception:
         # prints a message
         print "Exception raised (%s), exiting in error" % unicode(exception)
+
+        # cancels the timer
+        timer.cancel()
 
         # exits in error
         exit(1)
