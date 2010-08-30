@@ -4186,7 +4186,7 @@ class PluginManager:
             self.logger.warning("Unloading system due to signal: '%s'" % signum)
 
             # unloads the system
-            self.unload_system(False)
+            self.unload_system(True)
 
             # print a warning message
             self.logger.warning("Unloaded system due to signal: '%s'" % signum)
