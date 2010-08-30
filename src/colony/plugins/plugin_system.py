@@ -1126,6 +1126,9 @@ class PluginManager:
     plugin_paths = None
     """ The set of paths for the loaded plugins """
 
+    kill_system_timer = None
+    """ The timer used to kill the system in extreme situations """
+
     referred_modules = []
     """ The referred modules """
 
@@ -1498,10 +1501,10 @@ class PluginManager:
 
         # creates the kill system timer, to kill the system
         # if it hangs in shutdown
-        kill_system_timer = threading.Timer(DEFAULT_UNLOAD_SYSTEM_TIMEOUT, self._kill_system_timeout)
+        self.kill_system_timer = threading.Timer(DEFAULT_UNLOAD_SYSTEM_TIMEOUT, self._kill_system_timeout)
 
         # starts the kill system timer
-        kill_system_timer.start()
+        self.kill_system_timer.start()
 
         # iterates over all the plugin instances
         for plugin_instance in self.plugin_instances:
@@ -1532,7 +1535,7 @@ class PluginManager:
             self._unload_thread_plugins()
 
         # cancels the kill system timer
-        kill_system_timer.cancel()
+        self.kill_system_timer.cancel()
 
     def main_loop(self):
         """
@@ -4241,8 +4244,35 @@ class PluginManager:
             # prints an error message
             self.logger.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
 
+            # stops the blocking system structures
+            self._stop_blocking_system_structures()
+
             # exits in error
             exit(2)
+
+    def _stop_blocking_system_structures(self):
+        """
+        Stops all the blocking system structures.
+        These blocking structures could create a situation
+        where a lock would block the system.
+        """
+
+        # stops the kill system timer
+        self._stop_kill_system_timer()
+
+    def _stop_kill_system_timer(self):
+        """
+        Stops the kill system timer, avoiding possible
+        locking problems.
+        """
+
+        # in case the kill system timer is not defined
+        if not self.kill_system_timer:
+            # returns immediatly
+            return
+
+        # cancels the kill system timer
+        self.kill_system_timer.cancel()
 
     def _kill_system_timeout(self):
         """
@@ -4281,6 +4311,9 @@ class PluginManager:
         except KeyboardInterrupt, exception:
             # prints an error message
             self.logger.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
+
+            # stops the blocking system structures
+            self._stop_blocking_system_structures()
 
             # exits in error
             exit(2)
