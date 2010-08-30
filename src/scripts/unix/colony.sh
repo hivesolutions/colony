@@ -29,6 +29,7 @@
 # sets the temporary variables
 BIN_PATH=/usr/bin
 PYTHON_PATH=$BIN_PATH/python
+RELATIVE_PATH=../../
 
 # sets the environment variables
 export HOME=/home/joamag
@@ -36,4 +37,4 @@ export WORKSPACE_HOME=../../
 
 # executes the initial python script with
 # the provided arguments
-$PYTHON_PATH $(dirname $0)/main.py $*
+$PYTHON_PATH $(dirname $(readlink -f $0))/$RELATIVE_PATH/main.py $*
