@@ -57,5 +57,5 @@ silent = False
 stop_on_cycle_error = False
 """ The stop on cycle error flag """
 
-daemon_file_path = None
+daemon_file_path = "/var/colony/colony.daemon"
 """ The daemon file path """

@@ -1081,6 +1081,9 @@ class PluginManager:
     container = "default"
     """ The name of the plugin manager container """
 
+    daemon_file_path = None
+    """ The file path to the daemon file, for information control """
+
     execution_command = None
     """ The command to be executed on start (script mode) """
 
@@ -1183,7 +1186,7 @@ class PluginManager:
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
-    def __init__(self, manager_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", execution_command = None, attributes_map = {}):
+    def __init__(self, manager_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", daemon_file_path = None, execution_command = None, attributes_map = {}):
         """
         Constructor of the class.
 
@@ -1207,6 +1210,8 @@ class PluginManager:
         @param run_mode: The run mode used in the plugin loading.
         @type container: String
         @param container: The name of the plugin manager container.
+        @type daemon_file_path: String
+        @param daemon_file_path: The file path to the daemon file, for information control.
         @type execution_command: String
         @param execution_command: The command to be executed on start (script mode).
         @type attributes_map: Dictionary
@@ -1223,6 +1228,7 @@ class PluginManager:
         self.layout_mode = layout_mode
         self.run_mode = run_mode
         self.container = container
+        self.daemon_file_path = daemon_file_path
         self.execution_command = execution_command
         self.attributes_map = attributes_map
 
@@ -1713,6 +1719,9 @@ class PluginManager:
         # notifies all the init complete handlers about the init load complete
         self.notify_load_complete_handlers()
 
+        # notifies the daemon file
+        self.notify_daemon_file()
+
         # executes the execution command
         self.execute_command()
 
@@ -2183,6 +2192,33 @@ class PluginManager:
         # iterates over all the init complete handlers
         for init_complete_handler in self.init_complete_handlers:
             init_complete_handler()
+
+    def notify_daemon_file(self):
+        """
+        Notifies the daemon file, about the finalization
+        of the loading of the plugin system.
+        """
+
+        # in case the daemon file path is not defined
+        if not self.daemon_file_path:
+            # returns immediately
+            return
+
+        # opens the file in write mode
+        file = open(self.daemon_file_path, "wb")
+
+        try:
+            # retrieves the current process pid
+            pid = os.getpid()
+
+            # converts the pid to string
+            pid_string = str(pid)
+
+            # writes the pid string to the file
+            file.write(pid_string)
+        finally:
+            # closest the file
+            file.close()
 
     def execute_command(self):
         """

@@ -56,3 +56,6 @@ silent = False
 
 stop_on_cycle_error = True
 """ The stop on cycle error flag """
+
+daemon_file_path = None
+""" The daemon file path """
