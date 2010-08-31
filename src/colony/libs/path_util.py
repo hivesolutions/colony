@@ -69,11 +69,39 @@ def normalize_path(path):
     # retrieves the current os name
     os_name = os.name
 
-    # in case the current operative system is windows based
-    if os_name in WINDOWS_PLATFORMS_VALUE:
+    # in case the current operative system is windows based and
+    # the normalized path does not start with the long path prefix
+    if os_name in WINDOWS_PLATFORMS_VALUE and not normalized_path.startswith(LONG_PATH_PREFIX):
         # creates the path in the windows mode, adds
         # the support for long path names with the prefix token
         normalized_path = LONG_PATH_PREFIX + normalized_path
 
     # returns the normalized path
     return normalized_path
+
+def remove_directory(directory_path):
+    """
+    Removes the given directory path recursively.
+    Directories containing files will have their contents removed
+    before being removed.
+
+    @type directory_path: String
+    @param directory_path: The path to the directory to be removed.
+    """
+
+    # creates the list of paths for the directory path
+    paths_list = [os.path.join(directory_path, file_path) for file_path in os.listdir(directory_path)]
+
+    # iterates over all the paths in the paths
+    # list to remove them
+    for path in paths_list:
+        # in case the path is a directory
+        if os.path.isdir(path):
+            # removes the directory
+            remove_directory(path)
+        else:
+            # removes the path
+            os.remove(path)
+
+    # removes the directory
+    os.rmdir(directory_path)

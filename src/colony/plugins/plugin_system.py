@@ -47,11 +47,13 @@ import thread
 import signal
 import inspect
 import logging
+import tempfile
 import threading
 import traceback
 
 import logging.handlers
 
+import colony.libs.path_util
 import colony.libs.string_buffer_util
 
 import colony.plugins.util
@@ -173,6 +175,9 @@ SPECIAL_VALUE_REGEX_VALUE = "%(?P<command>[a-zA-Z0-0_]*)(:(?P<arguments>[a-zA-Z0
 
 SPECIAL_VALUE_REGEX = re.compile(SPECIAL_VALUE_REGEX_VALUE)
 """ The special value regex """
+
+COLONY_VALUE = "colony"
+""" The colony value """
 
 class Plugin(object):
     """
@@ -3775,6 +3780,27 @@ class PluginManager:
 
         if plugin_id in self.plugin_dirs_map:
             return self.plugin_dirs_map[plugin_id]
+
+    def get_temporary_plugin_path_by_id(self, plugin_id):
+        """
+        Retrieves the temporary plugin path for the given plugin id.
+        The path may refer a directory that is not created.
+
+        @rtype: String
+        @return: The temporary plugin path for the given plugin id.
+        """
+
+        # retrieves the current temporary directory
+        temporary_directory = tempfile.gettempdir()
+
+        # creates the temporary plugin path
+        temporary_plugin_path = temporary_directory + "/" + COLONY_VALUE + "/" + plugin_id
+
+        # normalizes the temporary plugin path
+        normalized_temporary_plugin_path = colony.libs.path_util.normalize_path(temporary_plugin_path)
+
+        # returns the normalized temporary plugin path
+        return normalized_temporary_plugin_path
 
     def get_plugin_configuration_paths_by_id(self, plugin_id):
         """
