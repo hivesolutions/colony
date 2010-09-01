@@ -3786,6 +3786,9 @@ class PluginManager:
         Retrieves the temporary plugin path for the given plugin id.
         The path may refer a directory that is not created.
 
+        @type plugin_id: String
+        @param plugin_id: The id of the plugin to retrieve the temporary
+        plugin path.
         @rtype: String
         @return: The temporary plugin path for the given plugin id.
         """
@@ -3801,6 +3804,35 @@ class PluginManager:
 
         # returns the normalized temporary plugin path
         return normalized_temporary_plugin_path
+
+    def get_temporary_plugin_generated_path_by_id(self, plugin_id):
+        """
+        Retrieves the temporary plugin generated path for the given plugin id.
+        The path may refer a directory that is not created.
+        The generated path is affected by a random value and should be unique.
+
+        @type plugin_id: String
+        @param plugin_id: The id of the plugin to retrieve the temporary
+        plugin generated path.
+        @rtype: String
+        @return: The temporary plugin generated path for the given plugin id.
+        """
+
+        # retrieves the temporary plugin path
+        temporary_plugin_path = self.get_temporary_plugin_path_by_id(plugin_id)
+
+        # retrieves the current time value (current time multiplied by a
+        # factor of four) in integer
+        current_time_value = int(time.time() * 10000)
+
+        # creates the (final) temporary plugin path generated for the current time value
+        temporary_plugin_generated_path = temporary_plugin_path + "/" + str(current_time_value)
+
+        # normalizes the temporary plugin generated path
+        normalized_temporary_plugin_generated_path = colony.libs.path_util.normalize_path(temporary_plugin_generated_path)
+
+        # returns the normalized temporary plugin generated path
+        return normalized_temporary_plugin_generated_path
 
     def get_plugin_configuration_paths_by_id(self, plugin_id):
         """

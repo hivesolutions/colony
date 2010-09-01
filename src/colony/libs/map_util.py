@@ -65,3 +65,24 @@ def map_extend(base_map, extension_map):
 
     # returns the result map
     return result_map
+
+def map_check_parameters(map, parameters_list, exception = Exception):
+    """
+    Checks if the parameters in the parameters list are defined
+    in the given map.
+    In case a check fails an exception is raised.
+
+    @type map: Dictionary
+    @param map: The dictionary to be checked.
+    @type parameters_list: List
+    @param parameters_list: The list of parameters to be checked.
+    @type exception: Exception
+    @param exception: The exception to be raised in case check fails.
+    """
+
+    # iterates over all the parameters in the parameters list
+    for parameter in parameters_list:
+        # in case the parameter is not in the map
+        if not parameter in map:
+            # raises the exception
+            raise exception(parameter)
