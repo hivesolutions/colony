@@ -37,25 +37,10 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from configuration_base import * #@UnusedWildImport
+from configuration_daemon import * #@UnusedWildImport
 
-layout_mode = "production"
-""" The project layout mode """
-
-run_mode = "production"
-""" The project run mode """
-
-verbose = False
-""" The verbose flag """
-
-debug = False
-""" The debug flag """
-
-silent = False
-""" The silent flag """
-
-stop_on_cycle_error = False
-""" The stop on cycle error flag """
-
-daemon_file_path = "tmp/colony.daemon"
+daemon_file_path = "/var/colony/colony.daemon"
 """ The daemon file path """
+
+logger_path = "/var/log/colony"
+""" The path to the logger directory """

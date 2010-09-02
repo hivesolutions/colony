@@ -315,6 +315,11 @@ def main():
     # parses the configuration options
     verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, logger_path, library_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, plugin_path, manager_path)
 
+    # in case the daemon file path is valid and not an absolute path
+    if daemon_file_path and not os.path.isabs(daemon_file_path):
+        # creates the (complete) daemon file path prepending the manager path
+        daemon_file_path = manager_path + "/" + daemon_file_path
+
     # in case the logger path is not an absolute path
     if not os.path.isabs(logger_path):
         # creates the (complete) logger path prepending the manager path
