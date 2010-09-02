@@ -1125,6 +1125,9 @@ class PluginManager:
     manager_path = None
     """ The manager base path for execution """
 
+    logger_path = None
+    """ The manager base path for logger """
+
     library_paths = None
     """ The set of paths for the external libraries plugins """
 
@@ -1197,12 +1200,14 @@ class PluginManager:
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
-    def __init__(self, manager_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+    def __init__(self, manager_path = None, logger_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
         """
         Constructor of the class.
 
         @type manager_path: List
         @param manager_path: The manager base path for execution.
+        @type logger_path: String
+        @param logger_path: The manager base path for logger.
         @type library_paths: List
         @param library_paths: The list of directory paths for the loading of the external libraries.
         @type plugin_paths: List
@@ -1232,6 +1237,7 @@ class PluginManager:
         """
 
         self.manager_path = manager_path
+        self.logger_path = logger_path
         self.library_paths = library_paths
         self.plugin_paths = plugin_paths
         self.platform = platform
@@ -1433,6 +1439,9 @@ class PluginManager:
         # creates the logger file name
         logger_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX + DEFAULT_LOGGING_FILE_NAME_SEPARATOR + self.run_mode + DEFAULT_LOGGING_FILE_NAME_EXTENSION
 
+        # creates the logger file path
+        logger_file_path = self.logger_path + "/" + logger_file_name
+
         # retrieves the logger
         logger = logging.getLogger(DEFAULT_LOGGER)
 
@@ -1446,7 +1455,7 @@ class PluginManager:
         stream_handler = logging.StreamHandler()
 
         # creates the rotating file handler
-        rotating_file_handler = logging.handlers.RotatingFileHandler(logger_file_name, DEFAULT_LOGGING_FILE_MODE, DEFAULT_LOGGING_FILE_SIZE, DEFAULT_LOGGING_FILE_BACKUP_COUNT)
+        rotating_file_handler = logging.handlers.RotatingFileHandler(logger_file_path, DEFAULT_LOGGING_FILE_MODE, DEFAULT_LOGGING_FILE_SIZE, DEFAULT_LOGGING_FILE_BACKUP_COUNT)
 
         # retrieves the logging format
         logging_format = plugin_manager_configuration.get("logging_format", DEFAULT_LOGGING_FORMAT)

@@ -67,3 +67,6 @@ library_path_list = ["%colony_prefix_path%/pt.hive.colony.language.generator/src
 
 plugin_path_list = ["colony/plugins"]
 """ The list of plugin paths """
+
+logger_path = "log"
+""" The path to the logger directory """

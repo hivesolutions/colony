@@ -58,6 +58,7 @@ USAGE = "Help:\n\
 --configuration_file[-f]=(CONFIGURATION_FILE) - sets the file path to the configuration file\n\
 --daemon_file[-d]=(DAEMON_FILE) - sets the file path to the daemon file\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the manager\n\
+--logger_dir[-g]=(LOGGER_DIR) - sets the logger directory to be used by the manager for the logger\n\
 --library_dir[-i]=(LIBRARY_DIR_1;LIBRARY_DIR_2;...) - sets the series of library directories to use\n\
 --plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use\r\
 --execution_command[-e]=plugin_id:method [argument1 argument2 ...] - executes the given execution command at the end of loading"
@@ -86,6 +87,9 @@ DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "config/configuration_production.py"
 
 DEFAULT_MANAGER_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
 """ The default manager path """
+
+DEFAULT_LOGGER_PATH_VALUE = "log"
+""" The default logger path """
 
 PREFIX_PATH_PREFIX_VALUE = "%"
 """ The prefix path prefix value """
@@ -120,6 +124,9 @@ STOP_ON_CYCLE_ERROR_VALUE = "stop_on_cycle_error"
 DAEMON_FILE_PATH_VALUE = "daemon_file_path"
 """ The daemon file path value """
 
+LOGGER_PATH_VALUE = "logger_path"
+""" The logger path value """
+
 def usage():
     """
     Prints the usage for the command line.
@@ -141,12 +148,14 @@ def print_information():
     # prints some help information
     print HELP_TEXT
 
-def run(manager_path, library_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+def run(manager_path, logger_path, library_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
     @type manager_path: String
     @param manager_path: The manager base path for execution.
+    @type logger_path: String
+    @param logger_path: The manager base path for logger.
     @type library_path: String
     @param library_path: The set of paths to the various library locations separated by a semi-column.
     @type plugin_path: String
@@ -199,7 +208,7 @@ def run(manager_path, library_path, plugin_path, verbose = False, debug = False,
     platform = colony.base.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.base.plugin_system.PluginManager(manager_path, library_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
+    plugin_manager = colony.base.plugin_system.PluginManager(manager_path, logger_path, library_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
 
     # conditional logging import (depending on the current environment)
     if platform == colony.base.util.CPYTHON_ENVIRONMENT:
@@ -228,7 +237,7 @@ def main():
     """
 
     try:
-        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:o:a:f:d:m:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "daemon_pid=", "attributes=", "configuration_file=", "daemon_file=", "manager_dir=", "library_dir=", "plugin_dir=", "execution_command="])
+        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:o:a:f:d:m:g:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "daemon_pid=", "attributes=", "configuration_file=", "daemon_file=", "manager_dir=", "logger_dir=", "library_dir=", "plugin_dir=", "execution_command="])
     except getopt.GetoptError, error:
         # prints the error description
         print str(error)
@@ -255,6 +264,7 @@ def main():
     configuration_file_path = DEFAULT_CONFIGURATION_FILE_PATH_VALUE
     daemon_file_path = None
     manager_path = os.environ.get(COLONY_HOME_ENVIRONMENT, DEFAULT_MANAGER_PATH_VALUE).decode(file_system_encoding)
+    logger_path = DEFAULT_LOGGER_PATH_VALUE
     library_path = None
     plugin_path = None
     execution_command = None
@@ -288,6 +298,8 @@ def main():
             daemon_file_path = value.decode(file_system_encoding)
         elif option in ("-m", "--manager_dir"):
             manager_path = value.decode(file_system_encoding)
+        elif option in ("-g", "--logger_dir"):
+            logger_path = value.decode(file_system_encoding)
         elif option in ("-i", "--library_dir"):
             library_path = value.decode(file_system_encoding)
         elif option in ("-p", "--plugin_dir"):
@@ -301,7 +313,12 @@ def main():
     configure_path(manager_path)
 
     # parses the configuration options
-    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, library_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, library_path, plugin_path, manager_path)
+    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, logger_path, library_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, plugin_path, manager_path)
+
+    # in case the logger path is not an absolute path
+    if not os.path.isabs(logger_path):
+        # creates the (complete) logger path prepending the manager path
+        logger_path = manager_path + "/" + logger_path
 
     # strips the library path around the semi-colon character
     library_path_striped = library_path.strip(";")
@@ -310,7 +327,7 @@ def main():
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(manager_path, library_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
+    run(manager_path, logger_path, library_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
 
 def parse_attributes(attributes_string):
     # creates an attributes map
@@ -341,7 +358,7 @@ def parse_attributes(attributes_string):
     # returns the attributes map
     return attributes_map
 
-def parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, library_path, plugin_path, manager_path):
+def parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, plugin_path, manager_path):
     """
     Parses the configuration using the given values as default values.
     The configuration file used is given as a parameter to the function.
@@ -360,6 +377,8 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     @param run_mode: The run mode to be used by the plugin system.
     @type daemon_file_path: String
     @param daemon_file_path: The file path to the daemon file, for information control.
+    @type logger_path: String
+    @param logger_path: The path to the logger.
     @type library_path: String
     @param library_path: The set of paths to the various library locations separated by a semi-column.
     @type plugin_path: String
@@ -392,37 +411,44 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     # imports the colony configuration module
     colony_configuration = __import__(configuration_module_name)
 
+    # retrieves the colony configuration contents
+    colony_configuration_contents = dir(colony_configuration)
+
     # in case the verbose variable is defined in the colony configuration
-    if not verbose and VERBOSE_VALUE in dir(colony_configuration):
+    if not verbose and VERBOSE_VALUE in colony_configuration_contents:
         verbose = colony_configuration.verbose
 
     # in case the debug variable is defined in the colony configuration
-    if not debug and DEBUG_VALUE in dir(colony_configuration):
+    if not debug and DEBUG_VALUE in colony_configuration_contents:
         debug = colony_configuration.debug
 
     # in case the silent variable is defined in the colony configuration
-    if not silent and SILENT_VALUE in dir(colony_configuration):
+    if not silent and SILENT_VALUE in colony_configuration_contents:
         silent = colony_configuration.silent
 
     # in case the layout mode variable is defined in the colony configuration
-    if layout_mode == DEFAULT_STRING_VALUE and LAYOUT_MODE_VALUE in dir(colony_configuration):
+    if layout_mode == DEFAULT_STRING_VALUE and LAYOUT_MODE_VALUE in colony_configuration_contents:
         layout_mode = colony_configuration.layout_mode
 
     # in case the run mode variable is defined in the colony configuration
-    if run_mode == DEFAULT_STRING_VALUE and RUN_MODE_VALUE in dir(colony_configuration):
+    if run_mode == DEFAULT_STRING_VALUE and RUN_MODE_VALUE in colony_configuration_contents:
         run_mode = colony_configuration.run_mode
 
     # in case the prefix paths variable is defined in the colony configuration
-    if PREFIX_PATHS_VALUE in dir(colony_configuration):
+    if PREFIX_PATHS_VALUE in colony_configuration_contents:
         prefix_paths = colony_configuration.prefix_paths
 
     # in case the stop on cycle error variable is defined in the colony configuration
-    if STOP_ON_CYCLE_ERROR_VALUE in dir(colony_configuration):
+    if STOP_ON_CYCLE_ERROR_VALUE in colony_configuration_contents:
         stop_on_cycle_error = colony_configuration.stop_on_cycle_error
 
     # in case the daemon file path variable is defined in the colony configuration
-    if DAEMON_FILE_PATH_VALUE in dir(colony_configuration):
+    if DAEMON_FILE_PATH_VALUE in colony_configuration_contents:
         daemon_file_path = colony_configuration.daemon_file_path
+
+    # in case the logger path variable is defined in the colony configuration
+    if LOGGER_PATH_VALUE in colony_configuration_contents:
+        logger_path = colony_configuration.logger_path
 
     # in case the library path is defined
     if library_path:
@@ -457,7 +483,7 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     # adds the extra plugin path to the plugin path
     plugin_path += extra_plugin_path
 
-    return (verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, library_path, plugin_path)
+    return (verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, logger_path, library_path, plugin_path)
 
 def convert_reference_path_list(manager_path, current_prefix_paths, reference_path_list):
     """
