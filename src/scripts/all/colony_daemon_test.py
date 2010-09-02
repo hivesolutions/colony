@@ -64,14 +64,14 @@ def check_daemon_file(daemon_file_path, target_pid):
         try:
             # reads the file contents
             contents = file.read()
-
-            # in case the contents of the file are
-            # the target pid contents
-            if contents == target_pid:
-                return True
         finally:
             # closes the file
             file.close()
+
+        # in case the contents of the file are
+        # the target pid contents
+        if contents == target_pid:
+            return True
 
         # returns false (invalid)
         return False
