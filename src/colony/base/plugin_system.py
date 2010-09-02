@@ -25,10 +25,10 @@ __author__ = "João Magalhães <joamag@hive.pt>"
 __version__ = "1.0.0"
 """ The version of the module """
 
-__revision__ = "$LastChangedRevision$"
+__revision__ = "$LastChangedRevision: 9958 $"
 """ The revision number of the module """
 
-__date__ = "$LastChangedDate$"
+__date__ = "$LastChangedDate: 2010-09-01 10:45:10 +0100 (qua, 01 Set 2010) $"
 """ The last change date of the module """
 
 __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
@@ -56,22 +56,22 @@ import logging.handlers
 import colony.libs.path_util
 import colony.libs.string_buffer_util
 
-import colony.plugins.util
-import colony.plugins.decorators
+import colony.base.util
+import colony.base.decorators
 
-import colony.plugins.plugin_system_configuration
-import colony.plugins.plugin_system_exceptions
+import colony.base.plugin_system_configuration
+import colony.base.plugin_system_exceptions
 
-plugin_manager_configuration = colony.plugins.plugin_system_configuration.plugin_manager_configuration
+plugin_manager_configuration = colony.base.plugin_system_configuration.plugin_manager_configuration
 """ The plugin manager configuration """
 
-CPYTHON_ENVIRONMENT = colony.plugins.util.CPYTHON_ENVIRONMENT
+CPYTHON_ENVIRONMENT = colony.base.util.CPYTHON_ENVIRONMENT
 """ CPython environment value """
 
-JYTHON_ENVIRONMENT = colony.plugins.util.JYTHON_ENVIRONMENT
+JYTHON_ENVIRONMENT = colony.base.util.JYTHON_ENVIRONMENT
 """ Jython environment value """
 
-IRON_PYTHON_ENVIRONMENT = colony.plugins.util.IRON_PYTHON_ENVIRONMENT
+IRON_PYTHON_ENVIRONMENT = colony.base.util.IRON_PYTHON_ENVIRONMENT
 """ IronPython environment value """
 
 DEFAULT_LOGGER = "default_messages"
@@ -1246,7 +1246,7 @@ class PluginManager:
         self.execution_command = execution_command
         self.attributes_map = attributes_map
 
-        self.uid = colony.plugins.util.get_timestamp_uid()
+        self.uid = colony.base.util.get_timestamp_uid()
         self.condition = threading.Condition()
 
         self.current_id = 0
@@ -1324,7 +1324,7 @@ class PluginManager:
         # in case the plugin id does not exist in the plugin classes map
         if not plugin_id in self.plugin_classes_map:
             # raises the plugin class not available exception
-            raise colony.plugins.plugin_system_exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
+            raise colony.base.plugin_system_exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
 
         # retrieves the plugin class
         plugin_class = self.plugin_classes_map[plugin_id]
@@ -1332,7 +1332,7 @@ class PluginManager:
         # in case the plugin version is not the same
         if not plugin_class.version == plugin_version:
             # raises the plugin class not available exception
-            raise colony.plugins.plugin_system_exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
+            raise colony.base.plugin_system_exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
 
         # retrieves the generated replica id
         replica_id = self.generate_replica_id()
@@ -1531,7 +1531,7 @@ class PluginManager:
         # in case thread safety is requested
         if thread_safe:
             # creates the exit event
-            exit_event = colony.plugins.util.Event("exit")
+            exit_event = colony.base.util.Event("exit")
 
             # adds the exit event to the event queue
             self.add_event(exit_event)
@@ -1977,7 +1977,7 @@ class PluginManager:
         self.unregister_plugin_capabilities(plugin_instance)
 
         # unregisters the decorator information associated with the plugin
-        colony.plugins.decorators.unregister_plugin_decorators(plugin_id, plugin_version)
+        colony.base.decorators.unregister_plugin_decorators(plugin_id, plugin_version)
 
         # in case the plugin exists in the plugin threads map
         if plugin_id in self.plugin_threads_map:
@@ -1985,7 +1985,7 @@ class PluginManager:
             plugin_thread = self.plugin_threads_map[plugin_id]
 
             # creates the plugin exit event
-            event = colony.plugins.util.Event("exit")
+            event = colony.base.util.Event("exit")
 
             # adds the load event to the thread queue
             plugin_thread.add_event(event)
@@ -2278,7 +2278,7 @@ class PluginManager:
             # in case the plugin was not retrieved successfully
             if not plugin:
                 # raises the invalid command exception
-                raise colony.plugins.plugin_system_exceptions.InvalidCommand("plugin not found '%s'" % plugin_id)
+                raise colony.base.plugin_system_exceptions.InvalidCommand("plugin not found '%s'" % plugin_id)
 
             # loads the plugin
             self.__load_plugin(plugin)
@@ -2286,7 +2286,7 @@ class PluginManager:
             # in case the plugin does not have a method with the given name
             if not hasattr(plugin, method_name):
                 # raises the invalid command exception
-                raise colony.plugins.plugin_system_exceptions.InvalidCommand("method not found '%s' for plugin '%s'" % (method_name, plugin_id))
+                raise colony.base.plugin_system_exceptions.InvalidCommand("method not found '%s' for plugin '%s'" % (method_name, plugin_id))
 
             # retrieves the method from the plugin
             method = getattr(plugin, method_name)
@@ -2301,7 +2301,7 @@ class PluginManager:
             # than the expected arguments length
             if not argments_length == expected_arguments_length:
                 # raises the invalid command exception
-                raise colony.plugins.plugin_system_exceptions.InvalidCommand("invalid number of arguments for method '%s' (expected %d given %d)" % (full_method_name, expected_arguments_length, argments_length))
+                raise colony.base.plugin_system_exceptions.InvalidCommand("invalid number of arguments for method '%s' (expected %d given %d)" % (full_method_name, expected_arguments_length, argments_length))
 
             # calls the method with the given arguments
             method(*arguments)
@@ -2449,10 +2449,10 @@ class PluginManager:
             # in case the loading type of the plugin is eager
             if plugin.loading_type == EAGER_LOADING_TYPE or type == FULL_LOAD_TYPE:
                 # creates the plugin load event
-                event = colony.plugins.util.Event("load")
+                event = colony.base.util.Event("load")
             else:
                 # creates the plugin lazy load event
-                event = colony.plugins.util.Event("lazy_load")
+                event = colony.base.util.Event("lazy_load")
 
             # adds the load event to the thread queue
             plugin_thread.add_event(event)
@@ -2507,7 +2507,7 @@ class PluginManager:
             plugin_thread.set_end_load_complete(False)
 
             # creates the plugin end load event
-            event = colony.plugins.util.Event("end_load")
+            event = colony.base.util.Event("end_load")
 
             # adds the end load event to the thread queue
             plugin_thread.add_event(event)
@@ -2617,7 +2617,7 @@ class PluginManager:
             plugin_thread.set_unload_complete(False)
 
             # creates the plugin unload event
-            event = colony.plugins.util.Event("unload")
+            event = colony.base.util.Event("unload")
 
             # adds the unload event to the thread queue
             plugin_thread.add_event(event)
@@ -2652,7 +2652,7 @@ class PluginManager:
             plugin_thread.set_end_unload_complete(False)
 
             # creates the plugin end unload event
-            event = colony.plugins.util.Event("end_unload")
+            event = colony.base.util.Event("end_unload")
 
             # adds the end unload event to the thread queue
             plugin_thread.add_event(event)
@@ -2684,7 +2684,7 @@ class PluginManager:
         """
 
         # creates the exit event
-        exit_event = colony.plugins.util.Event("exit")
+        exit_event = colony.base.util.Event("exit")
 
         # iterates over all the available plugin threads
         # joining all the threads
@@ -4704,7 +4704,7 @@ class OperativeSystemCondition(Condition):
             return False
 
         # retrieves the current operative system name
-        current_operative_system_name = colony.plugins.util.get_operative_system()
+        current_operative_system_name = colony.base.util.get_operative_system()
 
         # in case the current operative system is the same as the defined in the condition
         if current_operative_system_name == self.operative_system_name:

@@ -25,10 +25,10 @@ __author__ = "João Magalhães <joamag@hive.pt>"
 __version__ = "1.0.0"
 """ The version of the module """
 
-__revision__ = "$LastChangedRevision$"
+__revision__ = "$LastChangedRevision: 2294 $"
 """ The revision number of the module """
 
-__date__ = "$LastChangedDate$"
+__date__ = "$LastChangedDate: 2009-04-01 17:00:18 +0100 (qua, 01 Abr 2009) $"
 """ The last change date of the module """
 
 __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
