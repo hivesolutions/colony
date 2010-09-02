@@ -2251,7 +2251,7 @@ class PluginManager:
             # writes the pid string to the file
             file.write(pid_string)
         finally:
-            # closest the file
+            # closes the file
             file.close()
 
     def execute_command(self):
