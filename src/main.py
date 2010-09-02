@@ -84,7 +84,7 @@ DEFAULT_STRING_VALUE = "default"
 DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "config/configuration_production.py"
 """ The default configuration file path """
 
-DEFAULT_MANAGER_PATH_VALUE = os.path.dirname(__file__)
+DEFAULT_MANAGER_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
 """ The default manager path """
 
 PREFIX_PATH_PREFIX_VALUE = "%"
