@@ -77,7 +77,7 @@ IRON_PYTHON_ENVIRONMENT = colony.base.util.IRON_PYTHON_ENVIRONMENT
 DEFAULT_LOGGER = "default_messages"
 """ The default logger name """
 
-DEFAULT_LOGGING_LEVEL = logging.WARN
+DEFAULT_LOGGING_LEVEL = logging.INFO
 """ The default logging level """
 
 DEFAULT_LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
@@ -1436,6 +1436,9 @@ class PluginManager:
         @param log_level: The log level of the logger.
         """
 
+        # retrieves the minimal log level between the current log level and the default one
+        minimal_log_level = DEFAULT_LOGGING_LEVEL < log_level and DEFAULT_LOGGING_LEVEL or log_level
+
         # creates the logger file name
         logger_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX + DEFAULT_LOGGING_FILE_NAME_SEPARATOR + self.run_mode + DEFAULT_LOGGING_FILE_NAME_EXTENSION
 
@@ -1448,11 +1451,14 @@ class PluginManager:
         # sets the logger propagation to avoid propagation
         logger.propagate = 0
 
-        # sets the logger level
-        logger.setLevel(log_level)
+        # sets the logger level to the minimal log level
+        logger.setLevel(minimal_log_level)
 
         # creates the stream handler
         stream_handler = logging.StreamHandler()
+
+        # sets the logger level for the stream handler (the currently selected log level)
+        stream_handler.setLevel(log_level)
 
         # creates the rotating file handler
         rotating_file_handler = logging.handlers.RotatingFileHandler(logger_file_path, DEFAULT_LOGGING_FILE_MODE, DEFAULT_LOGGING_FILE_SIZE, DEFAULT_LOGGING_FILE_BACKUP_COUNT)
