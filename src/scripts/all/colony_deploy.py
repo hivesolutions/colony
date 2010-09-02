@@ -44,42 +44,55 @@ import json
 DEFAULT_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
 """ The default path """
 
-def main():
+def update_path():
     # adds the default path to the system path
     sys.path.insert(0, os.path.normpath(os.path.realpath(DEFAULT_PATH_VALUE + "/../lib")))
 
-    target_path = os.path.normpath(os.path.realpath(DEFAULT_PATH_VALUE + "/../../colony/plugins"))
-
+def main():
     import colony_zip
 
+    # creates the target path
+    target_path = os.path.normpath(os.path.realpath(DEFAULT_PATH_VALUE + "/../../colony/plugins"))
+
+    # creates the specification file path
+    specification_file_path = target_path + "/specification.json"
+
+    # retrieves the package path
+    package_path = sys.argv[1]
+
+    # creates a new zip (manager)
     zip = colony_zip.Zip()
 
-    zip.unzip(sys.argv[1], target_path)
+    # unzips the package to the target path
+    zip.unzip(package_path, target_path)
 
     try:
-        specification_file = open(target_path + "/specification.json")
+        # opens the specification file
+        specification_file = open(specification_file_path)
 
         try:
-            specification_contents = specification_file.read()
+            # reads the specification file, retrieving the contents
+            specification_file_contents = specification_file.read()
         finally:
             # closes the specification file
             specification_file.close()
 
-        # loads the json specification file
-        specification = json.loads(specification_contents)
+        # loads the json specification file contents
+        specification = json.loads(specification_file_contents)
 
         # retrieves the main file
         main_file = specification["main_file"]
 
-        i, _b = os.path.splitext(main_file)
+        # splits the main file name into name and extension
+        main_file_name, _mail_file_extension = os.path.splitext(main_file)
 
-        new_specification_file = target_path + "/" + i + ".json"
+        # creates the new specification file path
+        new_specification_file_path = target_path + "/" + main_file_name + ".json"
 
         # renames the specification file
-        os.rename(target_path + "/specification.json", new_specification_file)
-
-    except Exception, exception:
-        print str(exception)
+        os.rename(specification_file_path, new_specification_file_path)
+    except:
+        # removes the specification file
         os.remove(target_path + "/specification.json")
 
     # 1. vejo qual e o manager path a ter respeito
