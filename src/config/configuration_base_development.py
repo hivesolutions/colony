@@ -37,7 +37,7 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-plugin_path_list = ["colony/plugins",
+plugin_path_list = ["plugins",
                     "%colony_demo_prefix_path%/pt.hive.colony.demo.plugins.twitter/src/colony/plugins",
                     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation/src/colony/plugins",
                     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation.extensions/src/colony/plugins",
