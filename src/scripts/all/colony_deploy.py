@@ -256,12 +256,12 @@ def printa(key, value):
     # retrieves the type of the value
     value_type = type(value)
 
+    # in case the value is a string
     if value_type in types.StringTypes:
         print key + ": " + value
+    # in case the value is a list (of strings)
     elif value_type == types.ListType:
         print key,
-
-        #str =
 
         print ":" + str(value)
 
