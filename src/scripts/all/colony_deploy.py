@@ -46,7 +46,7 @@ import getopt
 USAGE = "Help:\n\
 --help[-h] - prints this message\n\
 --verbose[-v] - starts the program in verbose mode\n\
---manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the deployer\n"
+--manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the deployer"
 """ The usage string for the command line arguments """
 
 BRANDING_TEXT = "Hive Colony Deployer %s (Hive Solutions Lda. r1:Mar 19 2008)"
@@ -70,6 +70,9 @@ COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
 SEPCIFICATION_FILE_NAME = "specification.json"
 """ The specification file name """
 
+RELATIVE_DEPLOYMENT_PATH = "plugins"
+""" The path relative to the manager path for the deployment """
+
 REQUIRED_VALUES = ("platform", "id", "version")
 """ The tuple of required values """
 
@@ -85,6 +88,10 @@ def print_information():
     print VERSION_PRE_TEXT + sys.version
 
 def usage():
+    """
+    Prints the usage for the command line.
+    """
+
     print USAGE
 
 def update_system_path():
@@ -105,25 +112,28 @@ def log(message, verbose):
 def main():
     import colony_zip
 
-    try:
-        if len(sys.argv) < 2:
-            raise Exception("Invalid number of arguments")
+    # in case the number of command line arguments
+    # is len than two
+    if len(sys.argv) < 2:
+        # raises an exception
+        raise Exception("Invalid number of arguments")
 
-        if sys.argv[1][0] in ("-", "--"):
-            a = sys.argv[1:]
-        else:
-            a = sys.argv[2:]
+    # retrieves the first argument
+    first_argument = sys.argv[1]
 
-        options, _args = getopt.getopt(a, "hvm:", ["help", "verbose", "manager_dir="])
-    except Exception, exception:
-        # prints the exception description
-        print str(exception)
+    # retrieves the first character of the first argument
+    first_argument_character = first_argument[0]
 
-        # prints usage information
-        usage()
+    # in case the first argument is an option
+    if first_argument_character in ("-", "--"):
+        # the option arguments are all the arguments
+        option_arguments = sys.argv[1:]
+    else:
+        # the first argument is the package file
+        option_arguments = sys.argv[2:]
 
-        # exits in error
-        sys.exit(2)
+    # processes the arguments options
+    options, _args = getopt.getopt(option_arguments, "hvm:", ["help", "verbose", "manager_dir="])
 
     # retrieves the file system encoding
     file_system_encoding = sys.getfilesystemencoding()
@@ -146,13 +156,18 @@ def main():
     print_information()
 
     # creates the target path
-    target_path = os.path.normpath(manager_path + "/plugins")
+    target_path = os.path.normpath(manager_path + "/" + RELATIVE_DEPLOYMENT_PATH)
 
     # creates the specification file path
     specification_file_path = target_path + "/" + SEPCIFICATION_FILE_NAME
 
     # retrieves the package path
     package_path = sys.argv[1]
+
+    # in case the package path does not exist
+    if not os.path.exists(package_path):
+        # raises an exception
+        raise Exception("The package path does not exist")
 
     # prints a log message
     log("Deploying '%s' to '%s'" % (package_path, manager_path), True)
@@ -203,16 +218,26 @@ def main():
 
         # prints a log message
         log("Renaming specification file '%s' to '%s'" % (SEPCIFICATION_FILE_NAME, new_specification_file_name), verbose)
-    except Exception, exception:
-        # prints a log message
-        log("Exception while renaming specification file '%s'" % unicode(exception), verbose)
-
+    except:
         # removes the specification file
         os.remove(target_path + "/specification.json")
+
+        # re-raises the exception
+        raise
 
     log("Finished deployment", True)
 
 def validate_specification(specification):
+    """
+    Validates the given specification map, checking if
+    all the required values are set.
+    In case the validation fails an exception is raised.
+
+    @type specification: Dictionary
+    @param specification: The map containing the specification
+    values.
+    """
+
     # iterates over all the required values in the required values list
     for required_value in REQUIRED_VALUES:
         # in case the required value is not in the specification
@@ -238,21 +263,21 @@ def print_specification(specification):
     main_file = specification.get("main_file", [])
     resources = specification.get("resources", [])
 
-    printa("Platform", platform)
-    printa("Sub-Platforms", sub_platforms)
-    printa("Id", id)
-    printa("Name", name)
-    printa("Short Name", short_name)
-    printa("Description", description)
-    printa("Version", version)
-    printa("Author", author)
-    printa("Capabilities", capabilities)
-    printa("Capabilities Allowed", capabilities_allowed)
-    printa("Dependencies", dependencies)
-    printa("Main File", main_file)
-    printa("Resources", resources)
+    print_value("Platform", platform)
+    print_value("Sub-Platforms", sub_platforms)
+    print_value("Id", id)
+    print_value("Name", name)
+    print_value("Short Name", short_name)
+    print_value("Description", description)
+    print_value("Version", version)
+    print_value("Author", author)
+    print_value("Capabilities", capabilities)
+    print_value("Capabilities Allowed", capabilities_allowed)
+    print_value("Dependencies", dependencies)
+    print_value("Main File", main_file)
+    print_value("Resources", resources)
 
-def printa(key, value):
+def print_value(key, value):
     # retrieves the type of the value
     value_type = type(value)
 
@@ -267,4 +292,12 @@ def printa(key, value):
 
 if __name__ == "__main__":
     update_system_path()
-    main()
+
+    try:
+        main()
+    except Exception, exception:
+        # prints the error information
+        print "Error: " + unicode(exception)
+
+        # exits in error
+        sys.exit(2)
