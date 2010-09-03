@@ -29,8 +29,8 @@
 # sets the temporary variables
 BIN_PATH=/usr/bin
 PYTHON_PATH=$BIN_PATH/python
-RELATIVE_PATH=../../
-SCRIPT_NAME=main.py
+RELATIVE_PATH=../all/
+SCRIPT_NAME=colony_deploy.py
 
 # executes the initial python script with
 # the provided arguments

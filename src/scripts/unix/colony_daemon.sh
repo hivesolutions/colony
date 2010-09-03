@@ -26,7 +26,7 @@
 # __copyright__ = Copyright (c) 2008 Hive Solutions Lda.
 # __license__   = GNU General Public License (GPL), Version 3
 
-# Function called uppon process term signal received
+# Function called upon process term signal received
 on_term() {
     # kills the child process
     kill -TERM $PID
@@ -38,7 +38,7 @@ on_term() {
     exit 0
 }
 
-# Function called uppon process kill signal received
+# Function called upon process kill signal received
 on_kill() {
     # kills the child process
     kill -KILL $PID
@@ -60,17 +60,14 @@ trap "on_kill" KILL
 BIN_PATH=/usr/bin
 PYTHON_PATH=$BIN_PATH/python
 RELATIVE_PATH=../../
-
-# sets the environment variables
-export HOME=/home/joamag
-export WORKSPACE_HOME=../../
+SCRIPT_NAME=main.py
 
 # retrieves the daemon pid
 DAEMON_PID=$$
 
 # executes the initial python script with
 # the provided arguments
-$PYTHON_PATH $(dirname $(readlink -f $0))/$RELATIVE_PATH/main.py $* --daemon_pid=$DAEMON_PID &
+$PYTHON_PATH $(dirname $(readlink -f $0))/$RELATIVE_PATH/$SCRIPT_NAME $* --daemon_pid=$DAEMON_PID &
 
 # saves the pid value
 PID=$!

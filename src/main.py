@@ -64,9 +64,6 @@ USAGE = "Help:\n\
 --execution_command[-e]=plugin_id:method [argument1 argument2 ...] - executes the given execution command at the end of loading"
 """ The usage string for the command line arguments """
 
-COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
-""" The colony home environment variable name """
-
 BRANDING_TEXT = "Hive Colony %s (Hive Solutions Lda. r1:Mar 19 2008)"
 """ The branding text value """
 
@@ -78,6 +75,9 @@ VERSION_PRE_TEXT = "Python "
 
 HELP_TEXT = "Type \"help\" for more information."
 """ The help text value """
+
+COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
+""" The colony home environment variable name """
 
 DEFAULT_STRING_VALUE = "default"
 """ The default string value """

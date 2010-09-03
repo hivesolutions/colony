@@ -28,11 +28,8 @@
 
 :: sets the temporary variables
 set RELATIVE_PATH=../../
-
-:: sets the environment variables
-set HOME=C:\Users\joamag
-set WORKSPACE_HOME=../../
+set SCRIPT_NAME=main.py
 
 :: executes the initial python script with
 :: the provided arguments
-ipy %~dp0/%RELATIVE_PATH%/main.py %*
+ipy %~dp0/%RELATIVE_PATH%/%SCRIPT_NAME% %*

@@ -28,7 +28,8 @@
 
 :: sets the temporary variables
 set RELATIVE_PATH=../all/
+set SCRIPT_NAME=colony_deploy.py
 
 :: executes the initial python script with
 :: the provided arguments
-python %~dp0/%RELATIVE_PATH%/colony_deploy.py %*
+python %~dp0/%RELATIVE_PATH%/%SCRIPT_NAME% %*
