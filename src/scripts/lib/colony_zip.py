@@ -40,7 +40,6 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import stat
 import zipfile
-
 import cStringIO
 
 BUFFER_LENGTH = 1024
