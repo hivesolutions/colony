@@ -246,6 +246,15 @@ def validate_specification(specification):
             raise Exception("Required value '%s' missing in specification file" % (required_value))
 
 def print_specification(specification):
+    """
+    Prints the specification map information to the
+    console.
+
+    @type specification: Dictionary
+    @param specification: The map containing the specification
+    values.
+    """
+
     # retrieves the required (mandatory) values
     platform = specification["platform"]
     id = specification["id"]
@@ -263,6 +272,7 @@ def print_specification(specification):
     main_file = specification.get("main_file", [])
     resources = specification.get("resources", [])
 
+    # prints the various values
     print_value("Platform", platform)
     print_value("Sub-Platforms", sub_platforms)
     print_value("Id", id)
