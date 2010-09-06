@@ -167,7 +167,7 @@ def main():
     # in case the package path does not exist
     if not os.path.exists(package_path):
         # raises an exception
-        raise Exception("The package path does not exist")
+        raise Exception("The package path '%s' does not exist" % package_path)
 
     # prints a log message
     log("Deploying '%s' to '%s'" % (package_path, manager_path), True)
