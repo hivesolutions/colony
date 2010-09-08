@@ -39,6 +39,9 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import os
 
+BUFFER_SIZE = 4096
+""" The size of the buffer for file operations """
+
 LONG_PATH_PREFIX = u"\\\\?\\"
 """ The windows long path prefix """
 
@@ -78,6 +81,45 @@ def normalize_path(path):
 
     # returns the normalized path
     return normalized_path
+
+def copy_file(source_path, target_path):
+    """
+    Copies a file in the given source path to the
+    target path.
+    The file in the target path is created if not existent
+    or overwritten if existent.
+
+    @type source_path: String
+    @param source_path: The path to the source file
+    @type target_path: String
+    @param target_path: The path to the target file.
+    """
+
+    # opens the source file
+    source_file = open(source_path, "rb")
+
+    # opens the target file
+    target_file = open(target_path, "wb")
+
+    try:
+        # iterates continuously
+        while True:
+            # reads contents from the source file
+            contents = source_file.read(BUFFER_SIZE)
+
+            # in case the contents are not valid
+            if not contents:
+                # breaks the cycle
+                break
+
+            # writes the contents in the target file
+            target_file.write(contents)
+    finally:
+        # closes the source file
+        source_file.close()
+
+        # closes the target file
+        target_file.close()
 
 def remove_directory(directory_path):
     """
