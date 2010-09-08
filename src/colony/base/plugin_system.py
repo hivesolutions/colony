@@ -262,6 +262,9 @@ class Plugin(object):
     error_state = False
     """ The error state flag """
 
+    exception = None
+    """ The exception associated with the error state """
+
     ready_semaphore = None
     """ The ready semaphore """
 
@@ -2492,14 +2495,17 @@ class PluginManager:
                     elif plugin.loading_type == LAZY_LOADING_TYPE:
                         # calls the lazy load plugin method in the plugin (plugin bootup process)
                         plugin.lazy_load_plugin()
-                except:
+                except BaseException, exception:
+                    # sets the exception in the plugin
+                    plugin.exception = exception
+
                     # sets the plugin error state flag
                     plugin.error_state = True
 
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.logger.error("Problem loading plugin '%s' v%s" % (plugin.short_name, plugin.version))
+            self.logger.error("Problem loading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the loading process
             return False
@@ -2537,14 +2543,17 @@ class PluginManager:
                 try:
                     # calls the end load plugin method in the plugin (plugin bootup process)
                     plugin.end_load_plugin()
-                except:
+                except BaseException, exception:
+                    # sets the exception in the plugin
+                    plugin.exception = exception
+
                     # sets the plugin error state flag
                     plugin.error_state = True
 
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.logger.error("Problem end loading plugin '%s' v%s" % (plugin.short_name, plugin.version))
+            self.logger.error("Problem end loading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the loading process
             return False
@@ -2643,9 +2652,12 @@ class PluginManager:
             try:
                 # calls the unload plugin method in the plugin (plugin shutdown process)
                 plugin.unload_plugin()
-            except Exception, exception:
+            except BaseException, exception:
                 # prints the error message
                 self.logger.error("There was an exception: %s" % exception)
+
+                # sets the exception in the plugin
+                plugin.exception = exception
 
                 # sets the plugin error state flag
                 plugin.error_state = True
@@ -2653,7 +2665,7 @@ class PluginManager:
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.logger.error("Problem unloading plugin '%s' v%s" % (plugin.short_name, plugin.version))
+            self.logger.error("Problem unloading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the unloading process
             return False
@@ -2678,14 +2690,17 @@ class PluginManager:
             try:
                 # calls the end unload plugin method in the plugin (plugin shutdown process)
                 plugin.end_unload_plugin()
-            except:
+            except BaseException, exception:
+                # sets the exception in the plugin
+                plugin.exception = exception
+
                 # sets the plugin error state flag
                 plugin.error_state = True
 
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.logger.error("Problem end unloading plugin '%s' v%s" % (plugin.short_name, plugin.version))
+            self.logger.error("Problem end unloading plugin '%s' v%s %s" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the unloading process
             return False
@@ -5478,7 +5493,10 @@ class PluginEventThread(threading.Thread):
 
                 # calls the event thread method
                 self.method()
-            except:
+            except BaseException, exception:
+                # sets the exception in the plugin
+                self.plugin.exception = exception
+
                 # sets the plugin error state flag
                 self.plugin.error_state = True
 
