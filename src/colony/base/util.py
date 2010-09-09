@@ -47,7 +47,7 @@ CPYTHON_ENVIRONMENT = "cpython"
 JYTHON_ENVIRONMENT = "jython"
 """ Jython environment value """
 
-IRON_PYTHON_ENVIRONMENT = "ironpython"
+IRON_PYTHON_ENVIRONMENT = "iron_python"
 """ IronPython environment value """
 
 WINDOWS_OS = "windows"
