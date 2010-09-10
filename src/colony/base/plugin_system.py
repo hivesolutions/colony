@@ -2276,7 +2276,7 @@ class PluginManager:
 
         # retrieves the arguments splitting them in case the arguments value
         # is not an invalid value
-        arguments = argument_values and argument_values.split("&") or []
+        arguments = argument_values and argument_values.split("$") or []
 
         # splits the base value
         base_splitted = base.split(":")
