@@ -164,7 +164,7 @@ def run(manager_path, logger_path, library_path, plugin_path, verbose = False, d
     @param verbose: If the log is going to be of type verbose.
     @type debug: bool
     @param debug: If the log is going to be of type debug.
-    @type silent: bool
+    @type silent: bools
     @param silent: If the log is going to be of type silent.
     @type layout_mode: String
     @param layout_mode: The layout mode to be used by the plugin system.
