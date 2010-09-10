@@ -1054,6 +1054,23 @@ class PluginManagerPlugin(Plugin):
 
         Plugin.__init__(self, manager)
 
+class DummyInput:
+    """
+    Dummy input file used to overcome the problem
+    with being stuck in the console input
+    """
+
+    def readline(self):
+        """
+        Reads a "line" from the dummy input.
+        """
+
+        # sleeps for a little bit
+        time.sleep(1.0)
+
+        # returns an empty (dummy string)
+        return ""
+
 class PluginManager:
     """
     The plugin manager class.
@@ -1254,6 +1271,9 @@ class PluginManager:
         self.daemon_file_path = daemon_file_path
         self.execution_command = execution_command
         self.attributes_map = attributes_map
+
+        if execution_command or daemon_pid or daemon_file_path:
+            sys.stdin = DummyInput()
 
         self.uid = colony.base.util.get_timestamp_uid()
         self.condition = threading.Condition()
