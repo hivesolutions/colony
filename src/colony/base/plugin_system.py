@@ -56,6 +56,8 @@ import logging.handlers
 import colony.libs.path_util
 import colony.libs.string_buffer_util
 
+import colony.base.dummy_input
+
 import colony.base.util
 import colony.base.decorators
 
@@ -1054,23 +1056,6 @@ class PluginManagerPlugin(Plugin):
 
         Plugin.__init__(self, manager)
 
-class DummyInput:
-    """
-    Dummy input file used to overcome the problem
-    with being stuck in the console input
-    """
-
-    def readline(self):
-        """
-        Reads a "line" from the dummy input.
-        """
-
-        # sleeps for a little bit
-        time.sleep(1.0)
-
-        # returns an empty (dummy string)
-        return ""
-
 class PluginManager:
     """
     The plugin manager class.
@@ -1271,9 +1256,6 @@ class PluginManager:
         self.daemon_file_path = daemon_file_path
         self.execution_command = execution_command
         self.attributes_map = attributes_map
-
-        if execution_command or daemon_pid or daemon_file_path:
-            sys.stdin = DummyInput()
 
         self.uid = colony.base.util.get_timestamp_uid()
         self.condition = threading.Condition()
@@ -1519,9 +1501,12 @@ class PluginManager:
             # updates the workspace path
             self.update_workspace_path()
 
+            # checks the standard input
+            self.check_standard_input()
+
             # gets all modules from all plugin paths
             for plugin_path in self.plugin_paths:
-                # extends the refferred modules with all the plugin modules
+                # extends the referred modules with all the plugin modules
                 self.referred_modules.extend(self.get_all_modules(plugin_path))
 
             # starts the plugin loading process
@@ -1671,6 +1656,18 @@ class PluginManager:
         # creates the workspace path directory
         # if necessary
         self.create_workspace_path()
+
+    def check_standard_input(self):
+        """
+        Checks if the standard input to be used should
+        be changed to a dummy one in order to avoid possible
+        blocking.
+        """
+
+        # in case there the execution of type script or is a daemon
+        if self.execution_command or self.daemon_pid or self.daemon_file_path:
+            # sets the standard input as a dummy input object (for no blocking)
+            sys.stdin = colony.base.dummy_input.DummyInput()
 
     def get_all_modules(self, path):
         """
