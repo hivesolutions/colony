@@ -38,6 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import os
+import stat
 
 BUFFER_SIZE = 4096
 """ The size of the buffer for file operations """
@@ -82,6 +83,58 @@ def normalize_path(path):
     # returns the normalized path
     return normalized_path
 
+def copy_directory(source_path, target_path):
+    """
+    Copies the directory in the given source path to the
+    target path.
+    The copy is recursive and so the sub directories are copied too.
+    The directory in the target path is created if not existent
+    or overwritten if existent.
+
+    @type source_path: String
+    @param source_path: The path to the source directory.
+    @type target_path: String
+    @param target_path: The path to the target directory.
+    """
+
+    # in case the source path is not a directory
+    if not os.path.isdir(source_path):
+        # raises an exception
+        raise Exception("Source path is not a directory: '%s" % source_path)
+
+    # in case the target path does not exist
+    if not os.path.exists(target_path):
+        # creates the target path directory
+        os.makedirs(target_path)
+
+    if not os.path.isdir(target_path):
+        # raises an exception
+        raise Exception("Target path is not a directory: '%s" % target_path)
+
+    # retrieves the directory list from the source path
+    directory_list = os.listdir(source_path)
+
+    # iterates over all the entry names in the
+    # directory list
+    for entry_name in directory_list:
+        # creates the entry full path from the source path
+        # and the entry name
+        entry_full_path = os.path.join(source_path, entry_name)
+
+        # creates the target full path
+        target_full_path = os.path.join(target_path, entry_name)
+
+        # retrieves the mode
+        mode = os.stat(entry_full_path)[stat.ST_MODE]
+
+        # in case it is a directory
+        if stat.S_ISDIR(mode):
+            # copies the (sub) directory
+            copy_directory(entry_full_path, target_full_path)
+        else:
+            # copies the entry to the target path
+            copy_file(entry_full_path, target_full_path)
+
 def copy_file(source_path, target_path):
     """
     Copies a file in the given source path to the
@@ -90,7 +143,7 @@ def copy_file(source_path, target_path):
     or overwritten if existent.
 
     @type source_path: String
-    @param source_path: The path to the source file
+    @param source_path: The path to the source file.
     @type target_path: String
     @param target_path: The path to the target file.
     """
