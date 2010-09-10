@@ -2268,14 +2268,18 @@ class PluginManager:
             return
 
         # splits the execution command stripping every value
-        execution_command_splitted = [value.strip() for value in self.execution_command.split()]
+        execution_command_splitted = [value.strip() for value in self.execution_command.split(" ", 1)]
 
-        # retrieves both the base and arguments values
+        # retrieves both the base and argument values
         base = execution_command_splitted[0]
-        arguments = execution_command_splitted[1:]
+        argument_values = len(execution_command_splitted) > 1 and execution_command_splitted[1] or None
+
+        # retrieves the arguments splitting them in case the arguments value
+        # is not an invalid value
+        arguments = argument_values and argument_values.split("&") or []
 
         # splits the base value
-        base_splitted = base.split("/")
+        base_splitted = base.split(":")
 
         # retrieves the length of the base splitted
         base_splitted_length = len(base_splitted)
@@ -2287,7 +2291,7 @@ class PluginManager:
         method_name = base_splitted_length > 1 and base_splitted[1] or DEFAULT_EXECUTION_HANDLING_METHOD
 
         # creates the full method name with the plugin id and the method name
-        full_method_name = plugin_id + "/" + method_name
+        full_method_name = plugin_id + ":" + method_name
 
         # retrieves the plugin for the plugin id
         plugin = self._get_plugin_by_id(plugin_id)

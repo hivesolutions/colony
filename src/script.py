@@ -41,7 +41,7 @@ import sys
 
 import main
 
-USAGE = "Usage: plugin_id:method [argument1 argument2 ...]\n\
+USAGE = "Usage: plugin_id:method [argument1&argument2&argument3 ...]\n\
 Executes an execution command in the colony plugin manager"
 """ The usage string for the command line arguments """
 
