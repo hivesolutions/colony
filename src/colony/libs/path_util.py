@@ -107,6 +107,7 @@ def copy_directory(source_path, target_path):
         # creates the target path directory
         os.makedirs(target_path)
 
+    # in case the target path is not a directory
     if not os.path.isdir(target_path):
         # raises an exception
         raise Exception("Target path is not a directory: '%s" % target_path)
