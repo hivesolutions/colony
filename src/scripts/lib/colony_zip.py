@@ -40,10 +40,9 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import stat
 import zipfile
+import cStringIO
 
-import colony.libs.string_buffer_util
-
-BUFFER_LENGTH = 1024
+BUFFER_LENGTH = 4096
 """ The length for the zip operation buffer """
 
 class Zip:
@@ -51,18 +50,12 @@ class Zip:
     Provides functions to interact with zip files.
     """
 
-    zip_plugin = None
-    """ The zip plugin """
-
-    def __init__(self, zip_plugin):
+    def __init__(self):
         """
         Constructor of the class.
-
-        @type zip_plugin: ZipPlugin
-        @param zip_plugin: The zip plugin.
         """
 
-        self.zip_plugin = zip_plugin
+        pass
 
     def get_directory_paths(self, file_path):
         """
@@ -182,7 +175,7 @@ class Zip:
             zip_file_contents = zip_file.read(file_name)
 
             # creates a new string buffer
-            string_buffer = colony.libs.string_buffer_util.StringBuffer(False)
+            string_buffer = cStringIO.StringIO()
 
             # writes the zip file contents into the string buffer
             string_buffer.write(zip_file_contents)
@@ -257,7 +250,7 @@ def get_file_paths(path, returned_path_list = None):
     """
 
     # retrieves the default returned path list
-    returned_path_list = returned_path_list or []
+    returned_path_list = not returned_path_list == None and returned_path_list or []
 
     # retrieves the directory list for the path
     dir_list = os.listdir(path)
