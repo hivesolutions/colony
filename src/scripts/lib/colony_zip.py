@@ -249,8 +249,10 @@ def get_file_paths(path, returned_path_list = None):
     @return: A list of absolute file paths.
     """
 
-    # retrieves the default returned path list
-    returned_path_list = not returned_path_list == None and returned_path_list or []
+    # in case the returned path list is not defined
+    if returned_path_list == None:
+        # sets the default returned path list
+        returned_path_list = []
 
     # retrieves the directory list for the path
     dir_list = os.listdir(path)
