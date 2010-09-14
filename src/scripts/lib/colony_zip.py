@@ -25,10 +25,10 @@ __author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
 __version__ = "1.0.0"
 """ The version of the module """
 
-__revision__ = "$LastChangedRevision: 7869 $"
+__revision__ = "$LastChangedRevision: 10411 $"
 """ The revision number of the module """
 
-__date__ = "$LastChangedDate: 2010-04-08 05:40:48 +0100 (qui, 08 Abr 2010) $"
+__date__ = "$LastChangedDate: 2010-09-14 19:26:03 +0100 (ter, 14 Set 2010) $"
 """ The last change date of the module """
 
 __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
@@ -40,7 +40,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import stat
 import zipfile
-import cStringIO
+
+import colony.libs.string_buffer_util
 
 BUFFER_LENGTH = 1024
 """ The length for the zip operation buffer """
@@ -50,12 +51,18 @@ class Zip:
     Provides functions to interact with zip files.
     """
 
-    def __init__(self):
+    zip_plugin = None
+    """ The zip plugin """
+
+    def __init__(self, zip_plugin):
         """
         Constructor of the class.
+
+        @type zip_plugin: ZipPlugin
+        @param zip_plugin: The zip plugin.
         """
 
-        pass
+        self.zip_plugin = zip_plugin
 
     def get_directory_paths(self, file_path):
         """
@@ -175,7 +182,7 @@ class Zip:
             zip_file_contents = zip_file.read(file_name)
 
             # creates a new string buffer
-            string_buffer = cStringIO.StringIO()
+            string_buffer = colony.libs.string_buffer_util.StringBuffer(False)
 
             # writes the zip file contents into the string buffer
             string_buffer.write(zip_file_contents)
@@ -252,14 +259,24 @@ def get_file_paths(path, returned_path_list = None):
     # retrieves the default returned path list
     returned_path_list = returned_path_list or []
 
+    # retrieves the directory list for the path
     dir_list = os.listdir(path)
-    for fname in dir_list:
-        full_path = os.path.join(path, fname)
+
+    # iterates over all the file in the directory
+    for file_name in dir_list:
+        # creates the full path by joining the path and the file name
+        full_path = os.path.join(path, file_name)
+
+        # retrieves the mode from the path
         mode = os.stat(full_path)[stat.ST_MODE]
-        if not stat.S_ISDIR(mode):
-            returned_path_list.append(full_path)
-        else:
+
+        # in case the path is a directory
+        if stat.S_ISDIR(mode):
+            # retrieves the file paths for the directory path
             get_file_paths(full_path, returned_path_list)
+        else:
+            # adds the full path to the returned path
+            returned_path_list.append(full_path)
 
     # returns the returned path list
     return returned_path_list
