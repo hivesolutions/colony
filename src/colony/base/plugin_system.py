@@ -2322,7 +2322,7 @@ class PluginManager:
                 # uses the type converter function to convert the
                 # argument value
                 argument_value = type_converter_function(argument_value)
-            else:
+            elif argument_split_length > 2:
                 # raises the invalid argument exception
                 raise colony.base.plugin_system_exceptions.InvalidArgument(argument)
 
