@@ -2293,7 +2293,44 @@ class PluginManager:
 
         # retrieves the arguments splitting them in case the arguments value
         # is not an invalid value
-        arguments = argument_values and argument_values.split("$") or []
+        arguments = argument_values and argument_values.rsplit("$", 1) or []
+
+        # creates the arguments list
+        arguments_list = []
+
+        # iterates over the arguments
+        for argument in arguments:
+            # splits the argument
+            argument_split = argument.rsplit("%", 1)
+
+            # retrieves the argument split length
+            argument_split_length = len(argument_split)
+
+            # retrieves the argument value from the first
+            # element of the argument split
+            argument_value = argument_split[0]
+
+            # in case the length of the argument split
+            # is two
+            if argument_split_length == 2:
+                # retrieves the argument type
+                argument_type = argument_split[1]
+
+                # retrieves the type converted function
+                type_converter_function = getattr(__builtins__, argument_type)
+
+                # uses the type converter function to convert the
+                # argument value
+                argument_value = type_converter_function(argument_value)
+            else:
+                # raises the invalid argument exception
+                raise colony.base.plugin_system_exceptions.InvalidArgument(argument)
+
+            # adds the argument value to the arguments list
+            arguments_list.append(argument_value)
+
+        # sets the arguments as the arguments list
+        arguments = arguments_list
 
         # splits the base value
         base_splitted = base.split(":")
