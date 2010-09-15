@@ -51,6 +51,8 @@ import tempfile
 import threading
 import traceback
 
+import __builtin__
+
 import logging.handlers
 
 import colony.libs.path_util
@@ -2315,8 +2317,6 @@ class PluginManager:
             if argument_split_length == 2:
                 # retrieves the argument type
                 argument_type = argument_split[1]
-
-                import __builtin__
 
                 # retrieves the type converted function
                 type_converter_function = getattr(__builtin__, argument_type)
