@@ -2293,7 +2293,7 @@ class PluginManager:
 
         # retrieves the arguments splitting them in case the arguments value
         # is not an invalid value
-        arguments = argument_values and argument_values.rsplit("$", 1) or []
+        arguments = argument_values and argument_values.split("$") or []
 
         # creates the arguments list
         arguments_list = []
