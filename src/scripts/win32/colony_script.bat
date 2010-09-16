@@ -28,7 +28,7 @@
 
 :: sets the temporary variables
 set RELATIVE_PATH=../../
-set SCRIPT_NAME=main.py
+set SCRIPT_NAME=script.py
 
 :: executes the initial python script with
 :: the provided arguments
