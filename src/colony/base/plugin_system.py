@@ -1126,8 +1126,8 @@ class PluginManager:
     diffusion_scope_id = 0
     """ The diffusion scope id for the replica plugins """
 
-    exit_code = 0
-    """ The exit code to be used on exit """
+    return_code = 0
+    """ The return code to be used on return """
 
     event_queue = []
     """ The queue of events to be processed """

@@ -35,3 +35,6 @@ SCRIPT_NAME=main.py
 # executes the initial python script with
 # the provided arguments
 $PYTHON_PATH $(dirname $(readlink -f $0))/$RELATIVE_PATH/$SCRIPT_NAME $*
+
+# exits the process
+exit $?

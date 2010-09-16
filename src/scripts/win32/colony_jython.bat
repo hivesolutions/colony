@@ -33,3 +33,6 @@ set SCRIPT_NAME=main.py
 :: executes the initial python script with
 :: the provided arguments
 jython %~dp0/%RELATIVE_PATH%/%SCRIPT_NAME% %*
+
+:: exits the process
+exit /b %ERRORLEVEL%
