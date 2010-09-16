@@ -184,6 +184,8 @@ def run(manager_path, logger_path, library_path, plugin_path, verbose = False, d
     @param execution_command: The command to be executed by the plugin manager (script mode).
     @type attributes_map: Dictionary
     @param attributes_map: The name of the plugin manager container.
+    @rtype: int
+    @return: The return code.
     """
 
     # print the branding information text
@@ -229,7 +231,10 @@ def run(manager_path, logger_path, library_path, plugin_path, verbose = False, d
         plugin_manager.start_logger(logging.WARN)
 
     # starts and loads the plugin system
-    plugin_manager.load_system()
+    return_code = plugin_manager.load_system()
+
+    # returns the return code
+    return return_code
 
 def main():
     """
@@ -332,7 +337,10 @@ def main():
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    run(manager_path, logger_path, library_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
+    return_code = run(manager_path, logger_path, library_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
+
+    # exits the process with return code
+    exit(return_code)
 
 def parse_attributes(attributes_string):
     # creates an attributes map

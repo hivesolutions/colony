@@ -1126,6 +1126,9 @@ class PluginManager:
     diffusion_scope_id = 0
     """ The diffusion scope id for the replica plugins """
 
+    exit_code = 0
+    """ The exit code to be used on exit """
+
     event_queue = []
     """ The queue of events to be processed """
 
@@ -1494,6 +1497,9 @@ class PluginManager:
     def load_system(self):
         """
         Starts the process of loading the plugin system.
+
+        @rtype: int
+        @return: The return code.
         """
 
         try:
@@ -1519,6 +1525,12 @@ class PluginManager:
         except BaseException, exception:
             # handles the system exception
             self._handle_system_exception(exception)
+
+            # sets the return code to error
+            self.return_code = 1
+
+        # returns the return code
+        return self.return_code
 
     def unload_system(self, thread_safe = True):
         """
@@ -2386,6 +2398,9 @@ class PluginManager:
         except Exception, exception:
             # prints an error message
             self.logger.error(unicode(exception))
+
+            # sets the return code to error
+            self.return_code = 1
 
         # unsets the main loop (disables the loop)
         self.main_loop_active = False
