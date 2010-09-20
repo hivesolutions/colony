@@ -2418,7 +2418,7 @@ class PluginManager:
             method(*arguments)
         except Exception, exception:
             # prints an error message
-            self.logger.error(unicode(exception))
+            self.logger.error("Error while executing command: " + unicode(exception))
 
             # sets the return code to error
             self.return_code = 1
