@@ -183,6 +183,27 @@ SPECIAL_VALUE_REGEX = re.compile(SPECIAL_VALUE_REGEX_VALUE)
 COLONY_VALUE = "colony"
 """ The colony value """
 
+EXECUTE_VALUE = "execute"
+""" The execute value """
+
+EXIT_VALUE = "exit"
+""" The exit value """
+
+LOAD_VALUE = "load"
+""" The load value """
+
+LAZY_LOAD_VALUE = "lazy_load"
+""" The lazy load value """
+
+END_LOAD_VALUE = "end_load"
+""" The end load value """
+
+UNLOAD_VALUE = "unload"
+""" The unload value """
+
+END_LOAD_VALUE = "end_unload"
+""" The end load value """
+
 class Plugin(object):
     """
     The abstract plugin class.
@@ -1568,7 +1589,7 @@ class PluginManager:
         # in case thread safety is requested
         if thread_safe:
             # creates the exit event
-            exit_event = colony.base.util.Event("exit")
+            exit_event = colony.base.util.Event(EXIT_VALUE)
 
             # adds the exit event to the event queue
             self.add_event(exit_event)
@@ -1603,11 +1624,11 @@ class PluginManager:
             # pops the top item
             event = self.event_queue.pop(0)
 
-            if event.event_name == "execute":
+            if event.event_name == EXECUTE_VALUE:
                 execution_method = event.event_args[0]
                 execution_arguments = event.event_args[1:]
                 execution_method(*execution_arguments)
-            elif event.event_name == "exit":
+            elif event.event_name == EXIT_VALUE:
                 # unloads the thread based plugins
                 self._unload_thread_plugins()
 
@@ -2034,7 +2055,7 @@ class PluginManager:
             plugin_thread = self.plugin_threads_map[plugin_id]
 
             # creates the plugin exit event
-            event = colony.base.util.Event("exit")
+            event = colony.base.util.Event(EXIT_VALUE)
 
             # adds the load event to the thread queue
             plugin_thread.add_event(event)
@@ -2542,10 +2563,10 @@ class PluginManager:
             # in case the loading type of the plugin is eager
             if plugin.loading_type == EAGER_LOADING_TYPE or type == FULL_LOAD_TYPE:
                 # creates the plugin load event
-                event = colony.base.util.Event("load")
+                event = colony.base.util.Event(LOAD_VALUE)
             else:
                 # creates the plugin lazy load event
-                event = colony.base.util.Event("lazy_load")
+                event = colony.base.util.Event(LAZY_LOAD_VALUE)
 
             # adds the load event to the thread queue
             plugin_thread.add_event(event)
@@ -2603,7 +2624,7 @@ class PluginManager:
             plugin_thread.set_end_load_complete(False)
 
             # creates the plugin end load event
-            event = colony.base.util.Event("end_load")
+            event = colony.base.util.Event(END_LOAD_VALUE)
 
             # adds the end load event to the thread queue
             plugin_thread.add_event(event)
@@ -2716,7 +2737,7 @@ class PluginManager:
             plugin_thread.set_unload_complete(False)
 
             # creates the plugin unload event
-            event = colony.base.util.Event("unload")
+            event = colony.base.util.Event(UNLOAD_VALUE)
 
             # adds the unload event to the thread queue
             plugin_thread.add_event(event)
@@ -2729,7 +2750,7 @@ class PluginManager:
                 plugin.unload_plugin()
             except BaseException, exception:
                 # prints the error message
-                self.logger.error("There was an exception: %s" % exception)
+                self.logger.error("There was an exception: %s" % unicode(exception))
 
                 # sets the exception in the plugin
                 plugin.exception = exception
@@ -2754,7 +2775,7 @@ class PluginManager:
             plugin_thread.set_end_unload_complete(False)
 
             # creates the plugin end unload event
-            event = colony.base.util.Event("end_unload")
+            event = colony.base.util.Event(END_LOAD_VALUE)
 
             # adds the end unload event to the thread queue
             plugin_thread.add_event(event)
@@ -2789,7 +2810,7 @@ class PluginManager:
         """
 
         # creates the exit event
-        exit_event = colony.base.util.Event("exit")
+        exit_event = colony.base.util.Event(EXIT_VALUE)
 
         # iterates over all the available plugin threads
         # joining all the threads
@@ -5464,7 +5485,7 @@ class PluginThread(threading.Thread):
         @return: If the upper loop should be terminated.
         """
 
-        if event.event_name == "exit":
+        if event.event_name == EXIT_VALUE:
             if self.load_plugin_thread and self.load_plugin_thread.isAlive():
                 self.load_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
             if self.end_load_plugin_thread and self.end_load_plugin_thread.isAlive():
@@ -5474,23 +5495,23 @@ class PluginThread(threading.Thread):
             if self.end_unload_plugin_thread and self.end_unload_plugin_thread.isAlive():
                 self.end_unload_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
             return True
-        elif event.event_name == "load":
+        elif event.event_name == LOAD_VALUE:
             self.load_plugin_thread = PluginEventThread(self.plugin, self.plugin.load_plugin)
             self.load_plugin_thread.start()
             self.load_complete = True
-        elif event.event_name == "lazy_load":
+        elif event.event_name == LAZY_LOAD_VALUE:
             self.lazy_load_plugin_thread = PluginEventThread(self.plugin, self.plugin.lazy_load_plugin)
             self.lazy_load_plugin_thread.start()
             self.load_complete = True
-        elif event.event_name == "end_load":
+        elif event.event_name == END_LOAD_VALUE:
             self.end_load_plugin_thread = PluginEventThread(self.plugin, self.plugin.end_load_plugin)
             self.end_load_plugin_thread.start()
             self.end_load_complete = True
-        elif event.event_name == "unload":
+        elif event.event_name == UNLOAD_VALUE:
             self.unload_plugin_thread = PluginEventThread(self.plugin, self.plugin.unload_plugin)
             self.unload_plugin_thread.start()
             self.unload_complete = True
-        elif event.event_name == "end_unload":
+        elif event.event_name == END_LOAD_VALUE:
             self.end_unload_plugin_thread = PluginEventThread(self.plugin, self.plugin.end_unload_plugin)
             self.end_unload_plugin_thread.start()
             self.end_unload_complete = True
@@ -5569,6 +5590,9 @@ class PluginEventThread(threading.Thread):
                 # calls the event thread method
                 self.method()
             except BaseException, exception:
+                # prints an error message
+                self.plugin.error("Problem starting thread plugin: " + unicode(exception))
+
                 # sets the exception in the plugin
                 self.plugin.exception = exception
 
