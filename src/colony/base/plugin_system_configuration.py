@@ -38,7 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 plugin_manager_configuration = {
-    "logging_format" : "%(asctime)s %(levelname)s %(message)s",
+    "logging_format" : "%(asctime)s [%(levelname)s] %(message)s",
     "plugin_id_logging" : True,
     "thread_id_logging" : True
 }

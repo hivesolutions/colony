@@ -46,7 +46,6 @@ import types
 import thread
 import signal
 import inspect
-import logging
 import tempfile
 import threading
 import traceback
@@ -84,7 +83,7 @@ DEFAULT_LOGGER = "default_messages"
 DEFAULT_LOGGING_LEVEL = logging.INFO
 """ The default logging level """
 
-DEFAULT_LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
+DEFAULT_LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
 """ The default logging format """
 
 DEFAULT_LOGGING_FILE_NAME_PREFIX = "colony"
