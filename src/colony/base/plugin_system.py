@@ -201,7 +201,7 @@ END_LOAD_VALUE = "end_load"
 UNLOAD_VALUE = "unload"
 """ The unload value """
 
-END_LOAD_VALUE = "end_unload"
+END_UNLOAD_VALUE = "end_unload"
 """ The end load value """
 
 class Plugin(object):
@@ -5511,7 +5511,7 @@ class PluginThread(threading.Thread):
             self.unload_plugin_thread = PluginEventThread(self.plugin, self.plugin.unload_plugin)
             self.unload_plugin_thread.start()
             self.unload_complete = True
-        elif event.event_name == END_LOAD_VALUE:
+        elif event.event_name == END_UNLOAD_VALUE:
             self.end_unload_plugin_thread = PluginEventThread(self.plugin, self.plugin.end_unload_plugin)
             self.end_unload_plugin_thread.start()
             self.end_unload_complete = True
