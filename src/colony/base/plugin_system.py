@@ -1342,6 +1342,24 @@ class PluginManager:
         # returns the created plugin instance
         return plugin_instance
 
+    def log_stack_trace(self):
+        """
+        Logs the current stack trace to the logger.
+        """
+
+        # retrieves the execution information
+        _type, _value, traceback_list = sys.exc_info()
+
+        # in case the traceback list is valid
+        if traceback_list:
+            formated_traceback = traceback.format_tb(traceback_list)
+        else:
+            formated_traceback = ()
+
+        # iterates over the traceback lines
+        for formated_traceback_line in formated_traceback:
+            self.logger.debug(formated_traceback_line)
+
     def _create_plugin(self, plugin_id, plugin_version, diffusion_scope_id):
         """
         Creates a new instance of the plugin with the given id
@@ -2418,6 +2436,9 @@ class PluginManager:
         except Exception, exception:
             # prints an error message
             self.logger.error("Error while executing command: " + unicode(exception))
+
+            # logs the stack trace
+            self.log_stack_trace()
 
             # sets the return code to error
             self.return_code = 1
