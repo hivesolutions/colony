@@ -40,6 +40,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import sys
 import getopt
+import logging
 
 import colony.base.plugin_system
 import colony.base.util
@@ -211,14 +212,6 @@ def run(manager_path, logger_path, library_path, plugin_path, verbose = False, d
 
     # creates the plugin manager with the given plugin paths
     plugin_manager = colony.base.plugin_system.PluginManager(manager_path, logger_path, library_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
-
-    # conditional logging import (depending on the current environment)
-    if platform == colony.base.util.CPYTHON_ENVIRONMENT:
-        import logging
-    elif platform == colony.base.util.JYTHON_ENVIRONMENT:
-        import colony.base.dummy_logging as logging
-    elif platform == colony.base.util.IRON_PYTHON_ENVIRONMENT:
-        import colony.base.dummy_logging as logging
 
     # sets the logging level for the plugin manager logger
     if debug:
