@@ -2775,7 +2775,7 @@ class PluginManager:
             plugin_thread.set_end_unload_complete(False)
 
             # creates the plugin end unload event
-            event = colony.base.util.Event(END_LOAD_VALUE)
+            event = colony.base.util.Event(END_UNLOAD_VALUE)
 
             # adds the end unload event to the thread queue
             plugin_thread.add_event(event)
