@@ -946,7 +946,11 @@ class Plugin(object):
 
         # iterates over the traceback lines
         for formated_traceback_line in formated_traceback:
-            self.debug(formated_traceback_line)
+            # strips the formated traceback line
+            formated_traceback_line_stripped = formated_traceback_line.strip()
+
+            # prints an debug message with the formated traceback line
+            self.logger.debug(formated_traceback_line_stripped)
 
     def debug(self, message):
         """
@@ -4286,7 +4290,11 @@ class PluginManager:
 
         # iterates over the traceback lines
         for formated_traceback_line in formated_traceback:
-            self.logger.error(formated_traceback_line)
+            # strips the formated traceback line
+            formated_traceback_line_stripped = formated_traceback_line.strip()
+
+            # prints an error message with the formated traceback line
+            self.logger.error(formated_traceback_line_stripped)
 
     def print_all_plugins(self):
         """
