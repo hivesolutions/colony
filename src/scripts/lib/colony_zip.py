@@ -39,11 +39,15 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import os
 import stat
+import types
 import zipfile
 import cStringIO
 
 BUFFER_LENGTH = 4096
 """ The length for the zip operation buffer """
+
+DEFAULT_ENCODING = "utf-8"
+""" The default encoding """
 
 class Zip:
     """
@@ -216,9 +220,24 @@ class Zip:
             if not file_path_list:
                 file_path_list = get_file_paths(input_directory)
             for file_path in file_path_list:
+                # retrieves the file path by joining the path
                 file_path = os.path.join(input_directory, file_path)
+
+                # retrieves the output file path
                 output_file_path = file_path[len(input_directory):len(file_path)]
-                zip_file.write(file_path, output_file_path)
+
+                # retrieves the output file path type
+                output_file_path_type = type(output_file_path)
+
+                # in case the output file path type is unicode
+                if output_file_path_type == types.UnicodeType:
+                    # encodes the output file path with the default encoding
+                    output_file_path_encoded = output_file_path.encode(DEFAULT_ENCODING)
+
+                # writes the file in the path to the zip file
+                zip_file.write(file_path, output_file_path_encoded)
+
+            # closes the zip file
             zip_file.close()
 
     def unzip(self, zip_file_path, output_directory):
@@ -231,6 +250,7 @@ class Zip:
         @param output_directory: Full path to the directory where one wants to extract the zip file to.
         """
 
+        # retrieves the zip file absolute path
         zip_file_path = os.path.abspath(zip_file_path)
         output_directory = os.path.abspath(output_directory)
         if os.path.isfile(zip_file_path):
