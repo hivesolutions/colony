@@ -201,3 +201,55 @@ def remove_directory(directory_path):
 
     # removes the directory
     os.rmdir(directory_path)
+
+def link(target_path, link_path, link_name = True):
+    """
+    Creates a link between the target path and the link
+    path given.
+    In case the link name flag is set the link is relative
+    and only the base name of the link path is used.
+
+    @type target_path: String
+    @param target_path: The target path to the link.
+    @type link_path: String
+    @param link_path: The path to the link.
+    @type link_name: bool
+    @param link_name: If the link base name should be used
+    instead of the full path.
+    """
+
+    # in case the current platform is windows
+    if os.name == NT_PLATFORM_VALUE:
+        # copies the directory (copy link)
+        copy_link(target_path, link_path)
+    else:
+        # retrieves the base name of the target path
+        # as the target path name
+        target_path_name = os.path.basename(target_path)
+
+        # selects the correct target path based in the link name flag
+        target_path = link_name and target_path_name or target_path
+
+        # creates the symbolic link to the target path
+        # using the link path
+        os.symlink(target_path, link_path) #@UndefinedVariable
+
+def copy_link(target_path, link_path):
+    """
+    Copies the target path into the path defined
+    in the link path.
+    This function acts as a stub for the symlink function.
+
+    @type target_path: String
+    @param target_path: The target path to the link.
+    @type link_path: String
+    @param link_path: The path to the "link".
+    """
+
+    # in case the directory exists
+    if os.path.exists(link_path):
+        # removes the directory in the link path
+        remove_directory(link_path)
+
+    # copies the directory in the target path to the link path
+    copy_directory(target_path, link_path)
