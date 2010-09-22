@@ -39,6 +39,26 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import copy
 
+def map_copy(source_map, destiny_map):
+    """
+    Copies the contains of the source map to the destiny map.
+
+    @type source_map: Dictionary
+    @param source_map: The source map of the copy.
+    @type destiny_map: Dictionary
+    @param destiny_map: The destiny map of the copy.
+    """
+
+    # iterates over all the source map keys
+    for source_map_key in source_map:
+        # retrieves the source map value
+        source_map_value = source_map[source_map_key]
+
+        # in case the key is not present in the destiny map
+        if not source_map_key in destiny_map or destiny_map[source_map_key] == None or destiny_map[source_map_key] == "none":
+            # adds the value to the destiny map
+            destiny_map[source_map_key] = source_map_value
+
 def map_extend(base_map, extension_map):
     """
     Extends the given map with the extension map,
