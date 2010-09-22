@@ -71,24 +71,72 @@ class Zip:
         @return: List of directory paths.
         """
 
-        def length_sorter(string1, string2):
-            return [-1, 1][len(string1) > len(string2)]
+        def length_sorter(first_string, second_string):
+            """
+            Sorter function that takes into account the
+            length of the string.
 
+            @type first_string: String
+            @param first_string: The first string to be compared.
+            @type second_string: String
+            @param second_string: The second string to be compared.
+            @rtype: int
+            @return: The result of the comparison.
+            """
+
+            # returns the result of the comparison of string
+            # lengths (bigger or smaller)
+            return [-1, 1][len(first_string) > len(second_string)]
+
+        # creates the zip file from the file path
         zip_file = zipfile.ZipFile(file_path)
+
+        # retrieves the name list from the zip file
         name_list = zip_file.namelist()
+
+        # creates the directories list
         directories_list = []
+
+        # iterates over the names in the
+        # name list
         for name in name_list:
+            # retrieves the
             tokens_list = name.split("/")
+
+            # creates the paths list
             paths_list = []
-            for token in tokens_list[0:-1]:
+
+            # iterates over all the token in the tokens
+            # sublist (all except the last token)
+            for token in tokens_list[:-1]:
+                # sets the previous path
                 previous_path = ""
+
+                # in case the paths list is not empty
                 if len(paths_list) > 0:
+                    # sets the previous paths as the last
+                    # element of the paths list
                     previous_path = paths_list[-1]
+
+                # in case the token is not empty
                 if not token == "":
+                    # adds the complete path (previous path and the token)
+                    # to the paths list
                     paths_list.append(previous_path + "/" + token)
+
+            # extends the directories list with the
+            # paths list
             directories_list.extend(paths_list)
+
+        # creates a dictionary from the keys
+        # and retrieves the keys (directories list)
         directories_list = dict.fromkeys(directories_list).keys()
+
+        # sorts the directories list according to
+        # the length sorter
         directories_list.sort(length_sorter)
+
+        # returns the directories list
         return directories_list
 
     def is_file_path(self, path):
@@ -96,12 +144,15 @@ class Zip:
         Indicates if the path is pointing to a file.
 
         @type path: String
-        @param path: Filesystem path.
-        @rtype: String
+        @param path: File system path.
+        @rtype: bool
         @return: Boolean indicating if the path is pointing to a file.
         """
 
+        # splits the path over the slash token
         tokens_list = path.split("/")
+
+        # returns if the last token is empty
         return not tokens_list[-1] == ""
 
     def get_file_paths(self, file_path):
@@ -114,18 +165,51 @@ class Zip:
         @return: List of file paths.
         """
 
-        def length_sorter(string1, string2):
-            return [-1, 1][len(string1) > len(string2)]
+        def length_sorter(first_string, second_string):
+            """
+            Sorter function that takes into account the
+            length of the string.
 
+            @type first_string: String
+            @param first_string: The first string to be compared.
+            @type second_string: String
+            @param second_string: The second string to be compared.
+            @rtype: int
+            @return: The result of the comparison.
+            """
+
+            # returns the result of the comparison of string
+            # lengths (bigger or smaller)
+            return [-1, 1][len(first_string) > len(second_string)]
+
+        # creates the zip file from the file path
         zip_file = zipfile.ZipFile(file_path)
+
+        # retrieves the name list from the zip file
         name_list = zip_file.namelist()
+
+        # creates the files list
         files_list = []
+
+        # iterates over all the names in the names list
         for name in name_list:
+            # creates the file name in case it is a file
             file_name = [None, name][self.is_file_path(name)]
+
+            # in case the file name is defined
             if file_name:
+                # adds the file name to the files list
                 files_list.append(file_name)
+
+        # creates a dictionary from the keys
+        # and retrieves the keys (files list)
         files_list = dict.fromkeys(files_list).keys()
+
+        # sorts the files list according to
+        # the length sorter
         files_list.sort(length_sorter)
+
+        # returns the files list
         return files_list
 
     def create_directories(self, file_path, root_directory_path):
@@ -138,17 +222,40 @@ class Zip:
         @param root_directory_path: Full path to the place where the directory structure will be created.
         """
 
+        # retrieves the directory paths list from the file path
         directory_paths_list = self.get_directory_paths(file_path)
+
+        # in case the root directory path does not exist
         if not os.path.isdir(root_directory_path):
+            # creates the root directory path
             os.mkdir(root_directory_path)
+
+        # iterates over the the directories in the directory
+        # paths list
         for directories in directory_paths_list:
+            # splits the directories in the slash token
             directories = directories.split("/")
+
+            # starts the prefix value
             prefix = ""
+
+            # iterates over the directories
             for directory in directories:
+                # retrieves the directory name joining the prefix and
+                # the directory name
                 directory_name = os.path.join(prefix, directory)
+
+                # joins the directory name with the root directory path
+                # to creates the current directory path
                 directory_path = os.path.join(root_directory_path, directory_name)
+
+                # in case the directory is defined and the path does not
+                # exist
                 if directory and not os.path.isdir(directory_path):
+                    # creates the directory for the directory path
                     os.mkdir(directory_path)
+
+                # sets the prefix as the directory name
                 prefix = directory_name
 
     def create_files(self, file_path, root_directory_path):
@@ -213,12 +320,24 @@ class Zip:
         @param file_path_list: Optional list of paths to the files one wants to zip.
         """
 
+        # retrieves the absolute paths for both
+        # zip file and the input directory
         zip_file_path = os.path.abspath(zip_file_path)
         input_directory = os.path.abspath(input_directory)
+
+        # in case the input directory is valid and is a directory
         if input_directory and os.path.isdir(input_directory):
+            # creates a  new zip file for writing in deflated mode
             zip_file = zipfile.ZipFile(zip_file_path, "w", compression = zipfile.ZIP_DEFLATED)
+
+            # in case the file paths list does not exit
             if not file_path_list:
+                # retrieves the fule paths from the input directory
+                # as the file path list
                 file_path_list = get_file_paths(input_directory)
+
+            # iterates over all the file paths
+            # in the file path list
             for file_path in file_path_list:
                 # retrieves the file path by joining the path
                 file_path = os.path.join(input_directory, file_path)
