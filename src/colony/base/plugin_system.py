@@ -365,6 +365,9 @@ class Plugin(object):
         # sets the error state as false
         self.error_state = False
 
+        # generates the load plugin event
+        self.generate_event("plugin_manager.load_plugin", [self.id, self.version, self])
+
         self.info("Loading plugin '%s' v%s" % (self.short_name, self.version))
 
     def lazy_load_plugin(self):
@@ -384,6 +387,9 @@ class Plugin(object):
         # sets the error state as false
         self.error_state = False
 
+        # generates the lazy load plugin event
+        self.generate_event("plugin_manager.lazy_load_plugin", [self.id, self.version, self])
+
         # prints an info message
         self.info("Lazy loading plugin '%s' v%s" % (self.short_name, self.version))
 
@@ -391,6 +397,9 @@ class Plugin(object):
         """
         Method called at the end of the plugin loading process.
         """
+
+        # generates the end load plugin event
+        self.generate_event("plugin_manager.end_load_plugin", [self.id, self.version, self])
 
         self.info("Loading process for plugin '%s' v%s completed" % (self.short_name, self.version))
 
@@ -410,6 +419,10 @@ class Plugin(object):
 
         self.allowed_loaded = []
         self.dependencies_loaded = []
+
+        # generates the load plugin event
+        self.generate_event("plugin_manager.unloading_plugin", [self.id, self.version, self])
+
         self.info("Unloading plugin '%s' v%s" % (self.short_name, self.version))
 
     def end_unload_plugin(self):
@@ -419,6 +432,9 @@ class Plugin(object):
 
         # sets the error state as false
         self.error_state = False
+
+        # generates the load plugin event
+        self.generate_event("plugin_manager.end_unload_plugin", [self.id, self.version, self])
 
         self.info("Unloading process for plugin '%s' v%s completed" % (self.short_name, self.version))
 
@@ -741,6 +757,16 @@ class Plugin(object):
         """
 
         self.configuration_map[property_name] = property
+
+    def unset_configuration_property(self, property_name):
+        """
+        Unsets the configuration property for the given property name.
+
+        @type property_name: String
+        @param property_name: The property name to unset the property.
+        """
+
+        del self.configuration_map[property_name]
 
     def is_loaded(self):
         """
@@ -2510,19 +2536,16 @@ class PluginManager:
 
         # in case the return from the handler of the initialization of the plugin load returns false
         if not self.plugin_manager_plugin_execute("init_plugin_load", [plugin, type, loading_type]):
-
             # returns false
             return False
 
         # in case the plugin is loaded
         if plugin.is_loaded():
-
             # returns true
             return True
 
         # in case the plugin is lazy loaded
         if (plugin.loading_type == LAZY_LOADING_TYPE and not type == FULL_LOAD_TYPE) and plugin.is_lazy_loaded():
-
             # returns true
             return True
 
