@@ -366,7 +366,7 @@ class Plugin(object):
         self.error_state = False
 
         # generates the load plugin event
-        self.generate_event("plugin_manager.load_plugin", [self.id, self.version, self])
+        self.manager.generate_event("plugin_manager.plugin.load_plugin", [self.id, self.version, self])
 
         self.info("Loading plugin '%s' v%s" % (self.short_name, self.version))
 
@@ -388,7 +388,7 @@ class Plugin(object):
         self.error_state = False
 
         # generates the lazy load plugin event
-        self.generate_event("plugin_manager.lazy_load_plugin", [self.id, self.version, self])
+        self.manager.generate_event("plugin_manager.plugin.lazy_load_plugin", [self.id, self.version, self])
 
         # prints an info message
         self.info("Lazy loading plugin '%s' v%s" % (self.short_name, self.version))
@@ -399,7 +399,7 @@ class Plugin(object):
         """
 
         # generates the end load plugin event
-        self.generate_event("plugin_manager.end_load_plugin", [self.id, self.version, self])
+        self.manager.generate_event("plugin_manager.plugin.end_load_plugin", [self.id, self.version, self])
 
         self.info("Loading process for plugin '%s' v%s completed" % (self.short_name, self.version))
 
@@ -421,7 +421,7 @@ class Plugin(object):
         self.dependencies_loaded = []
 
         # generates the load plugin event
-        self.generate_event("plugin_manager.unload_plugin", [self.id, self.version, self])
+        self.manager.generate_event("plugin_manager.plugin.unload_plugin", [self.id, self.version, self])
 
         self.info("Unloading plugin '%s' v%s" % (self.short_name, self.version))
 
@@ -434,7 +434,7 @@ class Plugin(object):
         self.error_state = False
 
         # generates the load plugin event
-        self.generate_event("plugin_manager.end_unload_plugin", [self.id, self.version, self])
+        self.manager.generate_event("plugin_manager.plugin.end_unload_plugin", [self.id, self.version, self])
 
         self.info("Unloading process for plugin '%s' v%s completed" % (self.short_name, self.version))
 
@@ -873,7 +873,10 @@ class Plugin(object):
         @param exception: The exception object to be treated.
         """
 
+        # prints and info message
         self.info("Exception '%s' generated in '%s' v%s" % (str(exception), self.short_name, self.version))
+
+        # unloads the plugin
         self.manager.unload_plugin(self.id)
 
     def acquire_ready_semaphore(self):
