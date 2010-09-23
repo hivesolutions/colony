@@ -915,7 +915,6 @@ def unset_configuration_property(plugin_id, plugin_version, load_plugin = False)
 
             original_plugin = args[0]
             property_name = args[1]
-            property = args[2]
 
             original_plugin_tuple = (original_plugin.id, original_plugin.version)
 
@@ -933,7 +932,7 @@ def unset_configuration_property(plugin_id, plugin_version, load_plugin = False)
                     unset_configuration_property_method = getattr(original_plugin, unset_configuration_property_function_name)
 
                     # calls the unset configuration property method
-                    unset_configuration_property_method(property_name, property)
+                    unset_configuration_property_method(property_name)
 
         return decorator_interceptor
 
