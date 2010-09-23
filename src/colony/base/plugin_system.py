@@ -421,7 +421,7 @@ class Plugin(object):
         self.dependencies_loaded = []
 
         # generates the load plugin event
-        self.generate_event("plugin_manager.unloading_plugin", [self.id, self.version, self])
+        self.generate_event("plugin_manager.unload_plugin", [self.id, self.version, self])
 
         self.info("Unloading plugin '%s' v%s" % (self.short_name, self.version))
 
