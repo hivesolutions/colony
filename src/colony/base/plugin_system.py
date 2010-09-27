@@ -756,7 +756,10 @@ class Plugin(object):
         @param property: The property name to set.
         """
 
+        self.info("Setting configuration property '%s' in '%s' v%s" % (property_name, self.short_name, self.version))
+
         self.configuration_map[property_name] = property
+
 
     def unset_configuration_property(self, property_name):
         """
@@ -765,6 +768,8 @@ class Plugin(object):
         @type property_name: String
         @param property_name: The property name to unset the property.
         """
+
+        self.info("Unsetting configuration property '%s' from '%s' v%s" % (property_name, self.short_name, self.version))
 
         del self.configuration_map[property_name]
 
