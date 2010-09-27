@@ -39,6 +39,24 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import copy
 
+def map_clean(map):
+    """
+    Cleans the map from all of its entries.
+    The clean process is "slow" as it iterates over
+    all the map keys to remove its values.
+
+    @type map: Dictionary
+    @param map: The map to be cleaned.
+    """
+
+    # retrieves the map keys
+    map_keys = map.keys()
+
+    # iterates over all the map keys
+    for map_key in map_keys:
+        # removes the map entry
+        del map[map_key]
+
 def map_copy(source_map, destiny_map):
     """
     Copies the contains of the source map to the destiny map.
