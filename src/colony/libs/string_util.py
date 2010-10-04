@@ -37,7 +37,7 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-def xor_string_value(self, first_string, second_string):
+def xor_string_value(first_string, second_string):
     """
     Runs the xor bitwise operation over all the items
     of both strings, retrieving the result.
