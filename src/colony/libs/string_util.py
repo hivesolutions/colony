@@ -59,7 +59,7 @@ def xor_string_value(first_string, second_string):
     # in case the string have different length
     if not first_string_length == second_string_length:
         # raises the value erorr exception
-        raise ValueError("Inputs to string xor must have the same length")
+        raise ValueError("Arguments to xor string must have the same length")
 
     # creates the list to hold the resulting characters
     result_character_list = []
