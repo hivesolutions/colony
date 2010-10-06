@@ -85,7 +85,7 @@ def encode_long(long_value):
         njunkchars = 2 + long_value_hexadecial.endswith('L')
         nibbles = len(long_value_hexadecial) - njunkchars
         if nibbles & 1:
-            # Extend to a full byte.
+            # extends to a full byte.
             nibbles += 1
         nbits = nibbles * 4
         long_value += 1L << nbits
@@ -113,7 +113,11 @@ def encode_long(long_value):
 
     binary = binascii.unhexlify(long_value_hexadecial)
 
-    return binary[::-1]
+    # reverses the binary value
+    reversed_binary = binary[::-1]
+
+    # returns the reversed binary value
+    return reversed_binary
 
 def decode_long(data):
     """
@@ -140,8 +144,9 @@ def decode_long(data):
     # using base 16
     long_value = long(long_value_hexadecial, 16)
 
-    # in case the last digit is 0x80
+    # in case the last digit is 0x80 (negative)
     if data[-1] >= '\x80':
+        # puts the negative indication as the last digit
         long_value -= 1L << (data_length * 8)
 
     # returns the long value
