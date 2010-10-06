@@ -61,13 +61,15 @@ def encode_long(long_value):
         # converts the long value to the hexadecimal string value
         long_value_hexadecial = hex(long_value)
 
-        # assets that the hexadecimal starts with the hexadecimal
+        # asserts that the hexadecimal starts with the hexadecimal
         # initialization value
         assert long_value_hexadecial.startswith("0x")
 
         # calculates the number of "junk" characters
         number_junk_characters = 2 + long_value_hexadecial.endswith("L")
 
+        # calculates the nibles from the length of the long value string
+        # without the junk characters
         nibbles = len(long_value_hexadecial) - number_junk_characters
 
         if nibbles & 1:
@@ -81,15 +83,29 @@ def encode_long(long_value):
         # to find the number of bytes in linear time (although that should
         # really be a constant-time task)
         long_value_hexadecial = hex(-long_value)
+
+        # asserts that the hexadecimal starts with the hexadecimal
+        # initialization value
         assert long_value_hexadecial.startswith("0x")
-        njunkchars = 2 + long_value_hexadecial.endswith('L')
-        nibbles = len(long_value_hexadecial) - njunkchars
+
+        # calculates the nibles from the length of the long value string
+        # without the junk characters
+        number_junk_characters = 2 + long_value_hexadecial.endswith("L")
+
+        nibbles = len(long_value_hexadecial) - number_junk_characters
         if nibbles & 1:
             # extends to a full byte.
             nibbles += 1
-        nbits = nibbles * 4
-        long_value += 1L << nbits
+
+        # calculates the number of bits from the nibles
+        number_bits = nibbles * 4
+
+        # puts the negative indication as the last digit
+        long_value += 1L << number_bits
+
+        # asserts that the long value is non negative
         assert long_value > 0
+
         long_value_hexadecial = hex(long_value)
         njunkchars = 2 + long_value_hexadecial.endswith('L')
         newnibbles = len(long_value_hexadecial) - njunkchars
