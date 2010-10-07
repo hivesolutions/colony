@@ -42,7 +42,7 @@ import binascii
 def encode_two_complement_string(long_value):
     """
     Encode a long to a two's complement little-endian binary string.
-    Note that 0L is a special case, returning an empty string, to save a
+    Note that "0L" is a special case, returning an empty string, to save a
     byte.
 
     @type long_value: int
