@@ -46,16 +46,16 @@ layout_mode = "repository_svn"
 run_mode = "hive_site"
 """ The project run mode """
 
-verbose = True
+verbose = False
 """ The verbose flag """
 
-debug = False
+debug = True
 """ The debug flag """
 
 silent = False
 """ The silent flag """
 
-stop_on_cycle_error = False
+stop_on_cycle_error = True
 """ The stop on cycle error flag """
 
 daemon_file_path = None
