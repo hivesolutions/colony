@@ -151,7 +151,7 @@ def decode_two_complement_string(data):
     long_value = long(long_value_hexadecial, 16)
 
     # in case the last digit is 0x80 (negative)
-    if data[-1] >= '\x80':
+    if data[-1] >= "\x80":
         # puts the negative indication as the last digit
         long_value -= 1L << (data_length * 8)
 
