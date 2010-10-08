@@ -87,10 +87,10 @@ class OrderedMap:
         return self.map.__contains__(item)
 
     def keys(self):
-        pass
+        return self.map.keys()
 
     def values(self):
-        pass
+        return self.map.values()
 
     def items(self):
         return self.tuples_list
