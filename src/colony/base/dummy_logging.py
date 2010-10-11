@@ -59,19 +59,19 @@ WARN = WARNING
 """ Alias to WARNING log level """
 
 _levelNames = {
-    CRITICAL : 'CRITICAL',
-    ERROR : 'ERROR',
-    WARNING : 'WARNING',
-    INFO : 'INFO',
-    DEBUG : 'DEBUG',
-    NOTSET : 'NOTSET',
-    'CRITICAL' : CRITICAL,
-    'ERROR' : ERROR,
-    'WARN' : WARNING,
-    'WARNING' : WARNING,
-    'INFO' : INFO,
-    'DEBUG' : DEBUG,
-    'NOTSET' : NOTSET,
+    CRITICAL : "CRITICAL",
+    ERROR : "ERROR",
+    WARNING : "WARNING",
+    INFO : "INFO",
+    DEBUG : "DEBUG",
+    NOTSET : "NOTSET",
+    "CRITICAL" : CRITICAL,
+    "ERROR" : ERROR,
+    "WARN" : WARNING,
+    "WARNING" : WARNING,
+    "INFO" : INFO,
+    "DEBUG" : DEBUG,
+    "NOTSET" : NOTSET,
 }
 """ The map relating the log levels with the textual representation and vice-versa """
 
