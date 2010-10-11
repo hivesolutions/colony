@@ -203,6 +203,9 @@ UNLOAD_VALUE = "unload"
 END_UNLOAD_VALUE = "end_unload"
 """ The end load value """
 
+NULL_VALUE = "null"
+""" The null value """
+
 class Plugin(object):
     """
     The abstract plugin class.
@@ -2388,12 +2391,17 @@ class PluginManager:
                 # retrieves the argument type
                 argument_type = argument_split[1]
 
-                # retrieves the type converted function
-                type_converter_function = getattr(__builtin__, argument_type)
+                # in case the argument type is null
+                if argument_type == NULL_VALUE:
+                    # sets the argument value as none
+                    argument_value = None
+                else:
+                    # retrieves the type converted function
+                    type_converter_function = getattr(__builtin__, argument_type)
 
-                # uses the type converter function to convert the
-                # argument value
-                argument_value = type_converter_function(argument_value)
+                    # uses the type converter function to convert the
+                    # argument value
+                    argument_value = type_converter_function(argument_value)
             elif argument_split_length > 2:
                 # raises the invalid argument exception
                 raise colony.base.plugin_system_exceptions.InvalidArgument(argument)
