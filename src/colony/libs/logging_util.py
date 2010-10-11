@@ -230,3 +230,5 @@ class Formatter:
         @type format: String
         @param format: The formatter format.
         """
+
+        pass
