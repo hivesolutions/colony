@@ -3952,7 +3952,7 @@ class PluginManager:
         if plugin_id in self.plugin_dirs_map:
             return self.plugin_dirs_map[plugin_id]
 
-    def get_temporary_plugin_path_by_id(self, plugin_id):
+    def get_temporary_plugin_path_by_id(self, plugin_id, extra_path = ""):
         """
         Retrieves the temporary plugin path for the given plugin id.
         The path may refer a directory that is not created.
@@ -3960,6 +3960,8 @@ class PluginManager:
         @type plugin_id: String
         @param plugin_id: The id of the plugin to retrieve the temporary
         plugin path.
+        @type: extra_path
+        @param extra_path: The extra path to be appended.
         @rtype: String
         @return: The temporary plugin path for the given plugin id.
         """
@@ -3968,7 +3970,7 @@ class PluginManager:
         temporary_directory = tempfile.gettempdir()
 
         # creates the temporary plugin path
-        temporary_plugin_path = temporary_directory + "/" + COLONY_VALUE + "/" + plugin_id
+        temporary_plugin_path = temporary_directory + "/" + COLONY_VALUE + "/" + plugin_id + "/" + extra_path
 
         # normalizes the temporary plugin path
         normalized_temporary_plugin_path = colony.libs.path_util.normalize_path(temporary_plugin_path)
