@@ -49,10 +49,10 @@ run_mode = "hive_site"
 verbose = False
 """ The verbose flag """
 
-debug = True
+debug = False
 """ The debug flag """
 
-silent = False
+silent = True
 """ The silent flag """
 
 stop_on_cycle_error = False
