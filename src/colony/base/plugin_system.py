@@ -268,6 +268,9 @@ class Plugin(object):
     allowed_loaded = []
     """ The list of allowed plugins loaded """
 
+    allowed_loaded_capability = {}
+    """ The list of allowed plugins loaded with capability """
+
     event_plugins_handled_loaded_map = {}
     """ The map with the plugin associated with the name of the event handled """
 
@@ -328,6 +331,7 @@ class Plugin(object):
         self.logger = logging.getLogger(DEFAULT_LOGGER)
         self.dependencies_loaded = []
         self.allowed_loaded = []
+        self.allowed_loaded_capability = []
         self.event_plugins_handled_loaded_map = {}
         self.event_plugins_registered_loaded_map = {}
         self.event_plugin_manager_registered_loaded_list = []
@@ -452,6 +456,7 @@ class Plugin(object):
         """
 
         self.allowed_loaded.append(plugin)
+        self.allowed_loaded_capability.append((plugin, capability))
         self.register_all_registrable_events_plugin(plugin)
         self.info("Loading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
@@ -466,6 +471,7 @@ class Plugin(object):
         """
 
         self.allowed_loaded.remove(plugin)
+        self.allowed_loaded_capability.remove((plugin, capability))
         self.unregister_all_registrable_events_plugin(plugin)
         self.info("Unloading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
@@ -3074,7 +3080,8 @@ class PluginManager:
 
         # in case both the plugin and the allowed plugins are valid and
         # the allowed plugin is not already "allowed" in the plugin
-        if plugin and allowed_plugin and not allowed_plugin in plugin.allowed_loaded:
+        # for the current capability
+        if plugin and allowed_plugin and not (allowed_plugin, capability) in plugin.allowed_loaded_capability:
             # retrieves the capability type
             capability_type = type(capability)
 
