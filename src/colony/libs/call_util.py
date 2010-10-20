@@ -64,7 +64,7 @@ def execute_retries(callable, number_retries = DEFAULT_NUMBER_RETRIES, retry_sle
 
     # iterates over the range of the number retries (plus one)
     # the last iteration is used for exception re-raising
-    for index in range(number_retries) + 1:
+    for index in range(number_retries + 1):
         try:
             # calls the callable object, retrieving
             # and saving the return value
