@@ -46,13 +46,13 @@ layout_mode = "repository_svn"
 run_mode = "integration"
 """ The project run mode """
 
-verbose = True
+verbose = False
 """ The verbose flag """
 
 debug = False
 """ The debug flag """
 
-silent = False
+silent = True
 """ The silent flag """
 
 stop_on_cycle_error = False
