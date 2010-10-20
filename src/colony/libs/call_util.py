@@ -69,6 +69,10 @@ def execute_retries(callable, number_retries = DEFAULT_NUMBER_RETRIES, retry_sle
             # calls the callable object, retrieving
             # and saving the return value
             return_value = callable()
+
+            # breaks the loop, because there is
+            # no exception raised (successful call)
+            break
         except:
             # in case it's the last index position
             # the exception should be re-raised
