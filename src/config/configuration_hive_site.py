@@ -52,7 +52,7 @@ verbose = False
 debug = False
 """ The debug flag """
 
-silent = True
+silent = False
 """ The silent flag """
 
 stop_on_cycle_error = False
