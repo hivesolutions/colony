@@ -94,7 +94,7 @@ def kill_process_windows(pid):
         # crates a process to kill the process with the given pid
         subprocess.Popen(WINDOWS_KILL_COMMAND % pid, shell = True)
 
-def kill_process_unix(pid, signal):
+def kill_process_unix(pid, _signal = None):
     """
     Kills the process with the given pid (process identifier).
     This class focus in the strategy used in unix platforms.
@@ -103,6 +103,9 @@ def kill_process_unix(pid, signal):
     @param pid: The identifier of the process to be killed.
     """
 
+    # sets the signal value
+    _signal = _signal or signal.SIGKILL #@UndefinedVariable
+
     # kills the process with the given pid
     # and with the given signal
-    os.kill(pid, signal) #@UndefinedVariable
+    os.kill(pid, _signal) #@UndefinedVariable
