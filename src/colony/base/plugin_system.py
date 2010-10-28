@@ -173,7 +173,7 @@ COMMAND_VALUE = "command"
 ARGUMENTS_VALUE = "arguments"
 """ The arguments value """
 
-SPECIAL_VALUE_REGEX_VALUE = "%(?P<command>[a-zA-Z0-0_]*)(:(?P<arguments>[a-zA-Z0-0_.]*))?%"
+SPECIAL_VALUE_REGEX_VALUE = "%(?P<command>[a-zA-Z0-0_]*)(:(?P<arguments>[a-zA-Z0-9_.]*))?%"
 """ The special value regex value """
 
 SPECIAL_VALUE_REGEX = re.compile(SPECIAL_VALUE_REGEX_VALUE)
