@@ -818,6 +818,16 @@ class Plugin(object):
 
         return (self.loaded or self.lazy_loaded) and not self.error_state
 
+    def is_replica(self):
+        """
+        Returns the result of the replica test.
+
+        @rtype: bool
+        @return: The result of the replica test (if the plugin is a replica or not).
+        """
+
+        return not self.id == self.original_id
+
     def get_attribute(self, attribute_name):
         """
         Retrieves the attribute for the given attribute name.
