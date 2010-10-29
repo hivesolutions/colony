@@ -65,11 +65,8 @@ USAGE = "Help:\n\
 --execution_command[-e]=plugin_id:method [argument1 argument2 ...] - executes the given execution command at the end of loading"
 """ The usage string for the command line arguments """
 
-BRANDING_TEXT = "Hive Colony %s (Hive Solutions Lda. r1:Mar 19 2008)"
+BRANDING_TEXT = "Hive Colony %s (Hive Solutions Lda. r1:%s)"
 """ The branding text value """
-
-VERSION = "1.0.0"
-""" The version value """
 
 VERSION_PRE_TEXT = "Python "
 """ The version pre text value """
@@ -141,7 +138,7 @@ def print_information():
     """
 
     # print the branding information text
-    print BRANDING_TEXT % VERSION
+    print BRANDING_TEXT % (colony.base.plugin_system.VERSION, colony.base.plugin_system.RELEASE_DATE)
 
     # print the python information
     print VERSION_PRE_TEXT + sys.version
