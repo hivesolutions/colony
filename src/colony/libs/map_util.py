@@ -38,6 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import copy
+import types
 
 def map_clean(map):
     """
@@ -59,7 +60,7 @@ def map_clean(map):
 
 def map_copy(source_map, destiny_map):
     """
-    Copies the contains of the source map to the destiny map.
+    Copies the contents of the source map to the destiny map.
 
     @type source_map: Dictionary
     @param source_map: The source map of the copy.
@@ -76,6 +77,39 @@ def map_copy(source_map, destiny_map):
         if not source_map_key in destiny_map or destiny_map[source_map_key] == None or destiny_map[source_map_key] == "none":
             # adds the value to the destiny map
             destiny_map[source_map_key] = source_map_value
+
+def map_copy_deep(source_map, destiny_map):
+    """
+    Copies the contents of the source map to the destiny map.
+    This mode provides a deep copy, using a recursive approach.
+
+    @type source_map: Dictionary
+    @param source_map: The source map of the copy.
+    @type destiny_map: Dictionary
+    @param destiny_map: The destiny map of the copy.
+    """
+
+    # copies the current source map to the destiny map
+    map_copy(source_map, destiny_map)
+
+    # iterates over all the source map items
+    for source_key, source_value in source_map.items():
+        # retrieves the source value type
+        source_value_type = type(source_value)
+
+        # in case the source value type is dictionary
+        if not source_value_type == types.DictType:
+            # continues the loop
+            continue
+
+        # creates the destiny value map
+        destiny_value = {}
+
+        # sets the destiny value in the destiny map
+        destiny_map[source_key] = destiny_value
+
+        # copies the source value (map) to the destiny value
+        map_copy_deep(source_value, destiny_value)
 
 def map_extend(base_map, extension_map):
     """
