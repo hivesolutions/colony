@@ -176,5 +176,6 @@ plugin_path_list = ["plugins",
                     "%take_the_bill_prefix_path%/pt.hive.take_the_bill.plugins.demo_data/src/take_the_bill/plugins",
                     "%take_the_bill_prefix_path%/pt.hive.take_the_bill.plugins.main/src/take_the_bill/plugins",
                     "%a_la_carte_prefix_path%/pt.hive.a_la_carte.plugins.demo_data/src/a_la_carte/plugins",
-                    "%a_la_carte_prefix_path%/pt.hive.a_la_carte.plugins.main/src/a_la_carte/plugins"]
+                    "%a_la_carte_prefix_path%/pt.hive.a_la_carte.plugins.main/src/a_la_carte/plugins",
+                    "%escolinhas_prefix_path%/pt.escolinhas.apple_push.notification_handler/src/escolinhas/plugins"]
 """ The list of plugin paths """
