@@ -77,6 +77,12 @@ HELP_TEXT = "Type \"help\" for more information."
 COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
 """ The colony home environment variable name """
 
+COLONY_LAYOUT_MODE_ENVIRONMENT = "COLONY_LAYOUT_MODE"
+""" The colony layout mode environment variable name """
+
+COLONY_RUN_MODE_ENVIRONMENT = "COLONY_RUN_MODE"
+""" The colony run mode environment variable name """
+
 DEFAULT_STRING_VALUE = "default"
 """ The default string value """
 
@@ -304,11 +310,12 @@ def main():
         else:
             assert False, "unhandled option"
 
-    # configures the system path
-    configure_path(manager_path)
-
     # parses the configuration options
     verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, logger_path, library_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, plugin_path, manager_path)
+
+    # configures the system using the layout mode, the run mode
+    # and the  manager path
+    configure_system(layout_mode, run_mode, manager_path)
 
     # in case the daemon file path is valid and not an absolute path
     if daemon_file_path and not os.path.isabs(daemon_file_path):
@@ -530,13 +537,26 @@ def convert_reference_path_list(manager_path, current_prefix_paths, reference_pa
     # returns the converted reference path
     return converted_reference_path
 
-def configure_path(manager_path):
+def configure_system(layout_mode, run_mode, manager_path):
     """
-    Configures the system path for the given manager path.
+    Configures the system for the given attributes.
 
+    @type layout_mode: String
+    @param layout_mode: The layout mode to configure the system.
+    @type run_mode: String
+    @param run_mode: The run mode to configure the system.
     @type manager_path: String
-    @param manager_path: The manager path to configure the system path.
+    @param manager_path: The manager path to configure the system.
     """
+
+    # sets the layout mode as the colony layout mode
+    os.environ[COLONY_LAYOUT_MODE_ENVIRONMENT] = layout_mode
+
+    # sets the run mode as the colony run mode
+    os.environ[COLONY_RUN_MODE_ENVIRONMENT] = run_mode
+
+    # sets the manager path as the colony home
+    os.environ[COLONY_HOME_ENVIRONMENT] = manager_path
 
     # constructs the library path
     library_path = manager_path + "/" + LIBRARY_DIRECTORY

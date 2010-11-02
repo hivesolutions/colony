@@ -140,6 +140,8 @@ def main():
 
     # starts the options values
     verbose = False
+
+    # retrieves the manager path
     manager_path = os.environ.get(COLONY_HOME_ENVIRONMENT, DEFAULT_MANAGER_PATH_VALUE).decode(file_system_encoding)
 
     # iterates over all the options
