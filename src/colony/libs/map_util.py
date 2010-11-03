@@ -158,3 +158,33 @@ def map_check_parameters(map, parameters_list, exception = Exception):
         if not parameter in map:
             # raises the exception
             raise exception(parameter)
+
+def map_get_values(map, key):
+    """
+    Retrieves the value of the map for the given key.
+    The value is validated for type and in case it's not
+    a list a list is created with the value.
+    This way the method return value is always a list
+    independently from the type of the original value.
+
+    @type map: Dictionary
+    @param map: The dictionary to be used.
+    @type key: String
+    @param key: The key to the value(s) to be retrieved.
+    @rtype: List
+    @return: The values(s) for the key.
+    """
+
+    # retrieves the values from the map
+    values = map.get(key, [])
+
+    # retrieves the values type
+    values_type = type(values)
+
+    # in case the values element is not a list
+    if not values_type == types.ListType:
+        # creates the list with the values element
+        values = [values]
+
+    # returns the values
+    return values
