@@ -62,8 +62,9 @@ import colony.base.dummy_input
 import colony.base.util
 import colony.base.decorators
 
-import colony.base.plugin_system_configuration
 import colony.base.plugin_system_exceptions
+import colony.base.plugin_system_information
+import colony.base.plugin_system_configuration
 
 plugin_manager_configuration = colony.base.plugin_system_configuration.plugin_manager_configuration
 """ The plugin manager configuration """
@@ -76,12 +77,6 @@ JYTHON_ENVIRONMENT = colony.base.util.JYTHON_ENVIRONMENT
 
 IRON_PYTHON_ENVIRONMENT = colony.base.util.IRON_PYTHON_ENVIRONMENT
 """ IronPython environment value """
-
-VERSION = "1.0.0"
-""" The version value """
-
-RELEASE_DATE = "Jun 12 2010"
-"""" The release date value """
 
 DEFAULT_LOGGER = "default_messages"
 """ The default logger name """
@@ -4498,7 +4493,17 @@ class PluginManager:
         @return: The current base (plugin manager) version.
         """
 
-        return VERSION
+        return colony.base.plugin_system_information.VERSION
+
+    def get_release(self):
+        """
+        Retrieves the current base (plugin manager) release.
+
+        @rtype: String
+        @return: The current base (plugin manager) release.
+        """
+
+        return colony.base.plugin_system_information.RELEASE
 
     def get_release_date(self):
         """
@@ -4508,7 +4513,17 @@ class PluginManager:
         @return: The current base (plugin manager) release date.
         """
 
-        return RELEASE_DATE
+        return colony.base.plugin_system_information.RELEASE_DATE
+
+    def get_environment(self):
+        """
+        Retrieves the current base (plugin manager) environment.
+
+        @rtype: String
+        @return: The current base (plugin manager) environment.
+        """
+
+        return colony.base.plugin_system_information.ENVIRONMENT
 
     def echo(self, value = "echo"):
         """
