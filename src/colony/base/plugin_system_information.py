@@ -42,10 +42,10 @@ import sys
 VERSION = "1.0.0"
 """ The version value """
 
-RELEASE = "${out=release_version /}"
+RELEASE = "${out value=release_version /}"
 """ The release value """
 
-RELEASE_DATE = "${out=date /}"
+RELEASE_DATE = "${out value=date /}"
 """" The release date value """
 
 ENVIRONMENT_VERSION = str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "." + str(sys.version_info[2]) + "-" + str(sys.version_info[3])
