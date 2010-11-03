@@ -179,7 +179,7 @@ COMMAND_VALUE = "command"
 ARGUMENTS_VALUE = "arguments"
 """ The arguments value """
 
-SPECIAL_VALUE_REGEX_VALUE = "%(?P<command>[a-zA-Z0-0_]*)(:(?P<arguments>[a-zA-Z0-9_.]*))?%"
+SPECIAL_VALUE_REGEX_VALUE = "%(?P<command>[a-zA-Z0-0_]*)(:(?P<arguments>[a-zA-Z0-9_.,]*))?%"
 """ The special value regex value """
 
 SPECIAL_VALUE_REGEX = re.compile(SPECIAL_VALUE_REGEX_VALUE)
@@ -3863,12 +3863,15 @@ class PluginManager:
             command = special_value_match.group(COMMAND_VALUE)
             arguments = special_value_match.group(ARGUMENTS_VALUE)
 
+            # splits the arguments value
+            arguments_splitted = arguments.split(",")
+
             # retrieves the process method for the current command
             process_method = getattr(self, PROCESS_COMMAND_METHOD_PREFIX + command)
 
             # runs the process method with the arguments
             # retrieving the values
-            values = process_method(arguments)
+            values = process_method(arguments_splitted)
 
             # retrieves the start and end position of the match
             start_position = special_value_match.start()
@@ -4370,6 +4373,20 @@ class PluginManager:
             # prints the plugin
             print plugin
 
+    def get_environment_variable(self, environment_variable_name):
+        """
+        Retrieves the environment variable for the given
+        environment variable name.
+
+        @type environment_variable_name: String
+        @param environment_variable_name: The name of the environment
+        variable to be retrieved.
+        @rtype: String
+        @return: The retrieves environment variable value.
+        """
+
+        return (os.environ.get(environment_variable_name, ""),)
+
     def get_configuration_path(self):
         """
         Retrieves the current configuration path.
@@ -4510,12 +4527,24 @@ class PluginManager:
         The process command method for the configuration command.
 
         @type arguments: String
-        @param arguments: The argument to the process command method.
+        @param arguments: The arguments to the process command method.
         @rtype: Object
         @return: The result of the command processing.
         """
 
-        return self.get_plugin_configuration_paths_by_id(arguments)
+        return self.get_plugin_configuration_paths_by_id(*arguments)
+
+    def process_command_environment(self, arguments):
+        """
+        The process command method for the configuration command.
+
+        @type arguments: String
+        @param arguments: The arguments to the process command method.
+        @rtype: Object
+        @return: The result of the command processing.
+        """
+
+        return self.get_environment_variable(*arguments)
 
     def _kill_system_signal_handler(self, signum, frame):
         """
