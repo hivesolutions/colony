@@ -4505,6 +4505,16 @@ class PluginManager:
 
         return colony.base.plugin_system_information.RELEASE
 
+    def get_build(self):
+        """
+        Retrieves the current base (plugin manager) build.
+
+        @rtype: String
+        @return: The current base (plugin manager) build.
+        """
+
+        return colony.base.plugin_system_information.BUILD
+
     def get_release_date(self):
         """
         Retrieves the current base (plugin manager) release date.

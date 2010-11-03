@@ -39,11 +39,14 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import sys
 
-VERSION = "1.0.0"
+VERSION = "${out value=colony.version /}"
 """ The version value """
 
 RELEASE = "${out value=release_version /}"
 """ The release value """
+
+BUILD = "${out value=build_version /}"
+""" The build value """
 
 RELEASE_DATE = "${out value=date /}"
 """" The release date value """

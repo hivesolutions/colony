@@ -43,17 +43,26 @@ import json
 import types
 import getopt
 
+VERSION = "${out value=colony_deploy.version /}"
+""" The version value """
+
+RELEASE = "${out value=release_version /}"
+""" The release value """
+
+BUILD = "${out value=build_version /}"
+""" The build value """
+
+RELEASE_DATE = "${out value=date /}"
+"""" The release date value """
+
 USAGE = "Help:\n\
 --help[-h] - prints this message\n\
 --verbose[-v] - starts the program in verbose mode\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the deployer"
 """ The usage string for the command line arguments """
 
-BRANDING_TEXT = "Hive Colony Deployer %s (Hive Solutions Lda. r1:Mar 19 2008)"
+BRANDING_TEXT = "Hive Colony Deployer %s (Hive Solutions Lda. r%s:%s %s)"
 """ The branding text value """
-
-VERSION = "1.0.0"
-""" The version value """
 
 VERSION_PRE_TEXT = "Python "
 """ The version pre text value """
@@ -82,7 +91,7 @@ def print_information():
     """
 
     # print the branding information text
-    print BRANDING_TEXT % VERSION
+    print BRANDING_TEXT % (VERSION, RELEASE, BUILD, RELEASE_DATE)
 
     # print the python information
     print VERSION_PRE_TEXT + sys.version
