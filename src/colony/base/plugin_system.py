@@ -4545,6 +4545,16 @@ class PluginManager:
 
         return colony.base.plugin_system_information.RELEASE_DATE
 
+    def get_release_date_time(self):
+        """
+        Retrieves the current base (plugin manager) release date time.
+
+        @rtype: String
+        @return: The current base (plugin manager) release date time.
+        """
+
+        return colony.base.plugin_system_information.RELEASE_DATE_TIME
+
     def get_environment(self):
         """
         Retrieves the current base (plugin manager) environment.

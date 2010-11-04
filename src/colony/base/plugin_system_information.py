@@ -51,6 +51,9 @@ BUILD = "${out value=build_version /}"
 RELEASE_DATE = "${out value=date /}"
 """" The release date value """
 
+RELEASE_DATE_TIME = "${out value=date_time /}"
+"""" The release date time value """
+
 ENVIRONMENT_VERSION = str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "." + str(sys.version_info[2]) + "-" + str(sys.version_info[3])
 """ The environment version """
 
