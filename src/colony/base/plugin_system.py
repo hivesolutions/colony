@@ -4485,6 +4485,26 @@ class PluginManager:
 
         return self.manager_path
 
+    def get_layout_mode(self):
+        """
+        Retrieves the current base (plugin manager) layout mode.
+
+        @rtype: String
+        @return: The current base (plugin manager) layout mode.
+        """
+
+        return self.layout_mode
+
+    def get_run_mode(self):
+        """
+        Retrieves the current base (plugin manager) run mode.
+
+        @rtype: String
+        @return: The current base (plugin manager) run mode.
+        """
+
+        return self.run_mode
+
     def get_version(self):
         """
         Retrieves the current base (plugin manager) version.
