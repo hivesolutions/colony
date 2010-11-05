@@ -105,6 +105,12 @@ DEFAULT_LOGGING_FILE_SIZE = 10485760
 DEFAULT_LOGGING_FILE_BACKUP_COUNT = 5
 """ The default logging file backup count """
 
+DEFAULT_TEMPORARY_PATH = u"tmp"
+""" The default temporary path """
+
+DEFAULT_PLUGIN_PATH = u"plugins"
+""" The default plugin path """
+
 DEFAULT_CONFIGURATION_PATH = u"meta"
 """ The default configuration path """
 
@@ -4498,6 +4504,56 @@ class PluginManager:
         """
 
         return self.plugin_paths
+
+    def get_main_plugin_path(self):
+        """
+        Retrieves the manager main plugin path for execution.
+
+        @rtype: String
+        @return: The manager main plugin path for execution.
+        """
+
+        # retrieves the manager path
+        manager_path = self.get_manager_path()
+
+        # retrieves the plugin paths
+        plugin_paths = self.get_plugin_paths()
+
+        # in case the list of plugin paths is
+        # valid (contains paths)
+        if plugin_paths:
+            # retrieves the main plugin path as the first
+            # path in the plugin paths
+            main_plugin_path = plugin_paths[0]
+        else:
+            # retrieves the main plugin path
+            # as the default plugin path
+            main_plugin_path = DEFAULT_PLUGIN_PATH
+
+        # creates the main plugin full path joining the manager path and the
+        # main plugin path
+        main_plugin_full_path = os.path.join(manager_path, main_plugin_path)
+
+        # returns the main plugin (full) path
+        return main_plugin_full_path
+
+    def get_temporary_path(self):
+        """
+        Retrieves the manager temporary path for execution.
+
+        @rtype: String
+        @return: The manager temporary path for execution.
+        """
+
+        # retrieves the manager path
+        manager_path = self.get_manager_path()
+
+        # creates the main plugin full path joining the manager path and the
+        # default temporary path
+        temporary_path = os.path.join(manager_path, DEFAULT_TEMPORARY_PATH)
+
+        # returns the temporary path
+        return temporary_path
 
     def get_layout_mode(self):
         """
