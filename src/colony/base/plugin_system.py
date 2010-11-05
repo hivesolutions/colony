@@ -3970,7 +3970,11 @@ class PluginManager:
         @return: The plugin execution path for the plugin with the given id.
         """
 
+        # in case the plugin id exists in the
+        # plugin dirs map
         if plugin_id in self.plugin_dirs_map:
+            # returns the value of the plugin id
+            # in the plugin dirs map (plugin path)
             return self.plugin_dirs_map[plugin_id]
 
     def get_temporary_plugin_path_by_id(self, plugin_id, extra_path = ""):
