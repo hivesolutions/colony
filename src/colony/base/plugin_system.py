@@ -4489,6 +4489,16 @@ class PluginManager:
 
         return self.manager_path
 
+    def get_plugin_paths(self):
+        """
+        Retrieves the manager plugin paths for execution.
+
+        @rtype: List
+        @return: The manager plugin paths for execution.
+        """
+
+        return self.plugin_paths
+
     def get_layout_mode(self):
         """
         Retrieves the current base (plugin manager) layout mode.
