@@ -39,6 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 plugin_path_list = ["plugins",
                     "%colony_demo_prefix_path%/pt.hive.colony.demo.plugins.twitter/src/colony/plugins",
+                    "%colony_prefix_path%/pt.hive.colony.plugins.base.bundles/src/colony/plugins",
                     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation/src/colony/plugins",
                     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation.extensions/src/colony/plugins",
                     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation.generator/src/colony/plugins",
