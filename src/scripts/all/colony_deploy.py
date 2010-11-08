@@ -41,7 +41,9 @@ import os
 import sys
 import json
 import types
+import shutil
 import getopt
+import tempfile
 
 VERSION = "${out value=colony_deploy.version /}"
 """ The version value """
@@ -72,6 +74,12 @@ DEFAULT_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
 
 DEFAULT_MANAGER_PATH_VALUE = os.path.normpath(os.path.realpath(DEFAULT_PATH_VALUE + "/../.."))
 """ The default manager path """
+
+MAIN_FILE_VALUE = "main_file"
+""" The main file value """
+
+RESOURCES_VALUE = "resources"
+""" The resources value """
 
 COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
 """ The colony home environment variable name """
@@ -169,8 +177,11 @@ def main():
     # creates the target path
     target_path = os.path.normpath(manager_path + "/" + RELATIVE_DEPLOYMENT_PATH)
 
+    # creates a new temporary path
+    temporary_path = tempfile.mkdtemp()
+
     # creates the specification file path
-    specification_file_path = target_path + "/" + SEPCIFICATION_FILE_NAME
+    specification_file_path = os.path.normpath(temporary_path + "/" + SEPCIFICATION_FILE_NAME)
 
     # retrieves the package path
     package_path = sys.argv[1]
@@ -189,8 +200,8 @@ def main():
     # creates a new zip (manager)
     zip = colony_zip.Zip()
 
-    # unzips the package to the target path
-    zip.unzip(package_path, target_path)
+    # unzips the package to the temporary path
+    zip.unzip(package_path, temporary_path)
 
     try:
         # prints a log message
@@ -209,11 +220,39 @@ def main():
         # loads the json specification file contents
         specification = json.loads(specification_file_contents)
 
-        # prints the specification
-        #print_specification(specification)
-
         # retrieves the main file
-        main_file = specification["main_file"]
+        main_file = specification[MAIN_FILE_VALUE]
+
+        # retrieves the resources
+        resources = specification[RESOURCES_VALUE]
+
+        # prints a log message
+        log("Moving resources from '%s' to '%s'" % (temporary_path, target_path), verbose)
+
+        # iterates over all the resources
+        for resource in resources:
+            # retrieves the resource file path
+            resource_file_path = os.path.normpath(temporary_path + "/resources/" + resource)
+
+            # creates the new resource file path
+            new_resource_file_path = os.path.normpath(target_path + "/" + resource)
+
+            # retrieves the new resource directory path
+            new_resource_directory_path = os.path.dirname(new_resource_file_path)
+
+            # prints a log message
+            log("Moving resource file '%s' to '%s'" % (resource_file_path, new_resource_file_path), verbose)
+
+            # in case the new resource directory path does not exist
+            if not os.path.exists(new_resource_directory_path):
+                # creates the new resource directory path (directories)
+                os.makedirs(new_resource_directory_path)
+
+            # copies the resource file as the new resource file
+            shutil.copy(resource_file_path, new_resource_file_path)
+
+        # prints a log message
+        log("Moving main file '%s' to '%s'" % (resource_file_path, new_resource_file_path), verbose)
 
         # splits the main file name into name and extension
         main_file_name, _mail_file_extension = os.path.splitext(main_file)
@@ -222,21 +261,22 @@ def main():
         new_specification_file_name = main_file_name + ".json"
 
         # creates the new specification file path
-        new_specification_file_path = target_path + "/" + new_specification_file_name
+        new_specification_file_path = os.path.normpath(target_path + "/" + new_specification_file_name)
 
-        # renames the specification file
-        os.rename(specification_file_path, new_specification_file_path)
-
-        # prints a log message
-        log("Renaming specification file '%s' to '%s'" % (SEPCIFICATION_FILE_NAME, new_specification_file_name), verbose)
+        # copies the specification file as the new specification file
+        shutil.copy(specification_file_path, new_specification_file_path)
     except:
-        # removes the specification file
-        os.remove(target_path + "/specification.json")
-
         # re-raises the exception
         raise
+    finally:
+        # prints a log message
+        log("Removing temporary path '%s'" % temporary_path, verbose)
 
-    log("Finished deployment", True)
+        # removes the temporary path (directory)
+        remove_directory(temporary_path)
+
+    # prints a log message
+    log("Finished deployment", verbose)
 
 def validate_specification(specification):
     """
@@ -310,6 +350,33 @@ def print_value(key, value):
         print key,
 
         print ":" + str(value)
+
+def remove_directory(directory_path):
+    """
+    Removes the given directory path recursively.
+    Directories containing files will have their contents removed
+    before being removed.
+
+    @type directory_path: String
+    @param directory_path: The path to the directory to be removed.
+    """
+
+    # creates the list of paths for the directory path
+    paths_list = [os.path.join(directory_path, file_path) for file_path in os.listdir(directory_path)]
+
+    # iterates over all the paths in the paths
+    # list to remove them
+    for path in paths_list:
+        # in case the path is a directory
+        if os.path.isdir(path):
+            # removes the directory
+            remove_directory(path)
+        else:
+            # removes the path
+            os.remove(path)
+
+    # removes the directory
+    os.rmdir(directory_path)
 
 if __name__ == "__main__":
     update_system_path()
