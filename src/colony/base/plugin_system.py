@@ -4647,6 +4647,18 @@ class PluginManager:
 
         return value
 
+    def process_command_plugin_path(self, arguments):
+        """
+        The process command method for the plugin path command.
+
+        @type arguments: String
+        @param arguments: The arguments to the process command method.
+        @rtype: Object
+        @return: The result of the command processing.
+        """
+
+        return self.get_plugin_path_by_id(*arguments)
+
     def process_command_configuration(self, arguments):
         """
         The process command method for the configuration command.
