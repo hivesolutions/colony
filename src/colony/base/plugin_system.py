@@ -3864,8 +3864,14 @@ class PluginManager:
             command = special_value_match.group(COMMAND_VALUE)
             arguments = special_value_match.group(ARGUMENTS_VALUE)
 
-            # splits the arguments value
-            arguments_splitted = arguments.split(",")
+            # in case the arguments are defined
+            if arguments:
+                # splits the arguments value
+                arguments_splitted = arguments.split(",")
+            # otherwise
+            else:
+                # sets the arguments splitted as an empty list
+                arguments_splitted = []
 
             # retrieves the process method for the current command
             process_method = getattr(self, PROCESS_COMMAND_METHOD_PREFIX + command)
@@ -4387,10 +4393,10 @@ class PluginManager:
         @param environment_variable_name: The name of the environment
         variable to be retrieved.
         @rtype: String
-        @return: The retrieves environment variable value.
+        @return: The retrieved environment variable value.
         """
 
-        return (os.environ.get(environment_variable_name, ""),)
+        return os.environ.get(environment_variable_name, "")
 
     def get_configuration_path(self):
         """
@@ -4647,7 +4653,7 @@ class PluginManager:
 
         return value
 
-    def process_manager_path(self, arguments):
+    def process_command_manager_path(self, arguments):
         """
         The process command method for the manager path command.
 
@@ -4657,7 +4663,7 @@ class PluginManager:
         @return: The result of the command processing.
         """
 
-        return self.manager_path
+        return (self.manager_path,)
 
     def process_command_plugin_path(self, arguments):
         """
@@ -4669,7 +4675,7 @@ class PluginManager:
         @return: The result of the command processing.
         """
 
-        return self.get_plugin_path_by_id(*arguments)
+        return (self.get_plugin_path_by_id(*arguments),)
 
     def process_command_configuration(self, arguments):
         """
@@ -4693,7 +4699,7 @@ class PluginManager:
         @return: The result of the command processing.
         """
 
-        return self.get_environment_variable(*arguments)
+        return (self.get_environment_variable(*arguments),)
 
     def _kill_system_signal_handler(self, signum, frame):
         """
