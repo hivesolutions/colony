@@ -175,6 +175,7 @@ plugin_path_list = ["plugins",
                     "%take_the_bill_prefix_path%/pt.hive.take_the_bill.plugins.main/src/take_the_bill/plugins",
                     "%a_la_carte_prefix_path%/pt.hive.a_la_carte.plugins.demo_data/src/a_la_carte/plugins",
                     "%a_la_carte_prefix_path%/pt.hive.a_la_carte.plugins.main/src/a_la_carte/plugins",
+                    "%panzerini_prefix_path%/pt.hive.panzerini.plugins.dummy/src/panzerini/plugins",
                     "%panzerini_prefix_path%/pt.hive.panzerini.plugins.main.logic/src/panzerini/plugins",
                     "%panzerini_prefix_path%/pt.hive.panzerini.plugins.main.websocket_handler/src/panzerini/plugins",
                     "%escolinhas_prefix_path%/pt.escolinhas.apple_push.notification_handler/src/escolinhas/plugins"]
