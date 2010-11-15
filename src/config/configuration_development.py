@@ -46,10 +46,10 @@ layout_mode = "development"
 run_mode = "development"
 """ The project run mode """
 
-verbose = True
+verbose = False
 """ The verbose flag """
 
-debug = False
+debug = True
 """ The debug flag """
 
 silent = False
