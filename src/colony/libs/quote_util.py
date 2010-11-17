@@ -106,6 +106,9 @@ def quote_plus(string_value, safe = ""):
 
     @type string_value: String
     @param string_value: The string value to be quoted.
+    @type safe: String
+    @param safe: The string containing the characters considered
+    safe for quoting.
     @rtype: String
     @return: The quoted string value.
     """
