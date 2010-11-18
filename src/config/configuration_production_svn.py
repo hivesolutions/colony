@@ -37,8 +37,8 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from configuration_base_development import * #@UnusedWildImport
 from configuration_production import * #@UnusedWildImport
+from configuration_base_development import * #@UnusedWildImport
 
 layout_mode = "repository_svn"
 """ The project layout mode """
