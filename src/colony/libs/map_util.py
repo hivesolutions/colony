@@ -159,6 +159,40 @@ def map_check_parameters(map, parameters_list, exception = Exception):
             # raises the exception
             raise exception(parameter)
 
+def map_get_value_cast(map, key, type = str, default_value = None):
+    """
+    Retrieves the value of the map for the given key.
+    The value is casted to the given type.
+    In case something wrong (exception raised) occurs
+    the default value is returned.
+
+    @type map: Dictionary
+    @param map: The dictionary to be used.
+    @type key: String
+    @param key: The key to the value to be retrieved.
+    @type type: Type
+    @param type: The type to be used to cast the retrieved
+    value (this should be a valid type, with constructor).
+    @type default_value: Object
+    @param default_value: The default value to be used
+    when something wrong (exception raised) occurs.
+    @rtype: Object
+    @return: The retrieved value casted to the defined type.
+    """
+
+    try:
+        # retrieves the value for the map
+        value = map[key]
+
+        # casts the value for the type
+        value_casted = type(value)
+
+        # returns the value casted
+        return value_casted
+    except:
+        # returns the default value
+        return default_value
+
 def map_get_values(map, key):
     """
     Retrieves the value of the map for the given key.
