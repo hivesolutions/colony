@@ -37,26 +37,7 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from configuration_base import * #@UnusedWildImport
-from configuration_base_development import * #@UnusedWildImport
+from configuration_production import * #@UnusedWildImport
 
 layout_mode = "repository_svn"
 """ The project layout mode """
-
-run_mode = "production"
-""" The project run mode """
-
-verbose = False
-""" The verbose flag """
-
-debug = False
-""" The debug flag """
-
-silent = False
-""" The silent flag """
-
-stop_on_cycle_error = False
-""" The stop on cycle error flag """
-
-daemon_file_path = None
-""" The daemon file path """
