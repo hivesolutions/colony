@@ -58,12 +58,18 @@ def __importer__(module_name):
     @return: The imported module.
     """
 
-    # retrieves the caller
+    # retrieves the caller of the importer method
     caller = sys._getframe(1)
 
+    # in case the module name exists in the globals map
+    # of the caller
     if module_name in caller.f_globals[GLOBALS_REFERENCE_VALUE]:
+        # retrieves the module from the globals map of the caller
         module = caller.f_globals[GLOBALS_REFERENCE_VALUE][module_name]
+    # in case the module name exists in the locals map
+    # of the caller
     elif module_name in caller.f_globals[LOCALS_REFERENCE_VALUE]:
+        # retrieves the module from the locals map of the caller
         module = caller.f_globals[LOCALS_REFERENCE_VALUE][module_name]
 
     # returns the module
