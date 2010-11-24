@@ -1912,7 +1912,7 @@ class PluginManager:
         @param plugins: The list of plugins to be loaded.
         """
 
-        # print an info message
+        # prints an info message
         self.logger.info("Loading plugins (importing %d main module files)..." % len(plugins))
 
         # iterates over all the available plugins
