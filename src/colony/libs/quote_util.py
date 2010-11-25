@@ -39,7 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import colony.libs.string_buffer_util
 
-QUOTE_SAFE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' '_.-"
+QUOTE_SAFE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.-"
 """ The string containing all the safe characters to be quoted """
 
 QUOTE_SAFE_MAPS = {}
@@ -197,8 +197,8 @@ def url_encode(attributes_map):
     # iterates over all the attribute keys and values
     for attribute_key, attribute_value in attributes_map.items():
         # quotes both the attribute key and value
-        attribute_key_quoted = quote_plus(attribute_key)
-        attribute_value_quoted = quote_plus(attribute_value)
+        attribute_key_quoted = quote(attribute_key)
+        attribute_value_quoted = quote(attribute_value)
 
         # in case it's is the first iteration
         if is_first:
