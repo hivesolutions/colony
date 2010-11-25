@@ -177,16 +177,21 @@ def unquote_plus(string_value):
     # returns the unquoted string value
     return unquote(string_value)
 
-def url_encode(attributes_map):
+def url_encode(attributes_map, plus_encoding = False):
     """
     Encodes the given attributes into url encoding.
 
     @type attributes_map: Dictionary.
     @param attributes_map: The map of attributes to be encoded
     using url encoding.
+    @type plus_encoding: bool
+    @param plus_encoding: If the plus encoding should be used.
     @rtype: String
     @return: The encoded attributes string.
     """
+
+    # retrieves the quote method to be used
+    quote_method = plus_encoding and quote_plus or quote
 
     # creates a string buffer to hold the encoded attribute values
     string_buffer = colony.libs.string_buffer_util.StringBuffer()
@@ -197,8 +202,8 @@ def url_encode(attributes_map):
     # iterates over all the attribute keys and values
     for attribute_key, attribute_value in attributes_map.items():
         # quotes both the attribute key and value
-        attribute_key_quoted = quote(attribute_key)
-        attribute_value_quoted = quote(attribute_value)
+        attribute_key_quoted = quote_method(attribute_key)
+        attribute_value_quoted = quote_method(attribute_value)
 
         # in case it's is the first iteration
         if is_first:
