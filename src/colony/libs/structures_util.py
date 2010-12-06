@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import types
+
 class OrderedMap:
     """
     Structure that allow the usage of a map
@@ -167,3 +169,32 @@ class OrderedMapIterator:
 
         # returns the current key value
         return key
+
+def is_dictionary(object):
+    """
+    Validates if the given object is a valid
+    dictionary object.
+
+    @type object: Object
+    @param object: The object to be validated.
+    @rtype: bool
+    @return: If the given object is a valid
+    dictionary object.
+    """
+
+    # retrieves the object type
+    object_type = type(object)
+
+    # in case the object type is dictionary
+    if object_type == types.DictType:
+        # returns true
+        return True
+
+    # in case the object type is instance and
+    # the class is ordered map
+    if object_type == types.InstanceType and object.__class__ == OrderedMap:
+        # returns true
+        return True
+
+    # returns false
+    return False
