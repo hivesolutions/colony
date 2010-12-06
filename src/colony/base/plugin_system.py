@@ -1922,9 +1922,9 @@ class PluginManager:
                 try:
                     # imports the plugin module file
                     __import__(plugin)
-                except:
+                except BaseException, exception:
                     # prints an error message
-                    self.logger.error("Problem importing module %s" % plugin)
+                    self.logger.error("Problem importing module %s: %s" % (plugin, unicode(exception)))
 
         # prints an info message
         self.logger.info("Finished loading plugins")
