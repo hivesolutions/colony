@@ -71,6 +71,7 @@ def check_daemon_file(daemon_file_path, target_pid):
         # in case the contents of the file are
         # the target pid contents
         if contents == target_pid:
+            # returns true (valid)
             return True
 
         # returns false (invalid)
