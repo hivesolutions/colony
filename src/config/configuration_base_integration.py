@@ -167,5 +167,10 @@ plugin_path_list = ["plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration/src/omni/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration.demo_data/src/omni/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration.diamante/src/omni/plugins",
-                    "%omni_prefix_path%/pt.hive.omni.plugins.migration.saft_pt/src/omni/plugins"]
+                    "%omni_prefix_path%/pt.hive.omni.plugins.migration.saft_pt/src/omni/plugins",
+                    "%hive_development_prefix_path%/pt.hive.hive_development.plugins.media_dashboard/src/hive_development/plugins",
+                    "%hive_development_prefix_path%/pt.hive.hive_development.plugins.media_dashboard.updater/src/hive_development/plugins",
+                    "%hive_development_prefix_path%/pt.hive.hive_development.plugins.revision_control_analyzer/src/hive_development/plugins",
+                    "%hive_development_prefix_path%/pt.hive.hive_development.plugins.service.media_dashboard/src/hive_development/plugins",
+                    "%hive_development_prefix_path%/pt.hive.hive_development.plugins.task_registry/src/hive_development/plugins"]
 """ The list of plugin paths """
