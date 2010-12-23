@@ -43,7 +43,11 @@ def ceil_integer(value):
     """
     Retrieves the ceil of a value and then converts it
     into an integer.
+    The conversion to integer ensures that the ceil
+    is compatible with certain operations.
 
+    @type value: int
+    @param value: The value to apply the ceil.
     @rtype: int
     @return: The ceil of the given value "casted" as an
     integer.
@@ -61,6 +65,7 @@ def ceil_integer(value):
 def greatest_common_divisor(p_value, q_value):
     """
     Calculates the greatest common divisor of p value and q value.
+    This method uses the classic euclidean algorithm.
 
     @type p_value: int
     @param p_value: The first prime number to obtain
@@ -94,7 +99,18 @@ def greatest_common_divisor(p_value, q_value):
 
 def fast_exponentiation(base, exponent, modulus):
     """
-    Calculates base ^ exponent mod modulus.
+    Applies a fast exponentiation algorithm to the
+    given value retrieving the exponentiation result.
+    The calculus may be defined by: base ^ exponent % modulus.
+
+    @type base: int
+    @param base: The base value for the exponentiation.
+    @type exponent: int
+    @param exponent: The exponent value for the exponentiation.
+    @type modulus: int
+    @param modulus: The modulus value for the exponentiation.
+    @rtype: int
+    @return: The result of the exponentiation.
     """
 
     # calculates the (initial) result
