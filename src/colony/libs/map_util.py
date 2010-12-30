@@ -111,10 +111,12 @@ def map_copy_deep(source_map, destiny_map):
         # copies the source value (map) to the destiny value
         map_copy_deep(source_value, destiny_value)
 
-def map_extend(base_map, extension_map):
+def map_extend(base_map, extension_map, override = True):
     """
     Extends the given map with the extension map,
     retrieving a map resulting of the merge of both maps.
+    In case the override flag is set the values are overridden
+    in case they already exist in the base map.
 
     @type base_map: Dictionary
     @param base_map: The map to be used as base for
@@ -122,6 +124,9 @@ def map_extend(base_map, extension_map):
     @type extension_map: Dictionary
     @param extension_map: The map to be used to extend the base
     one.
+    @type override: bool
+    @param override: If a value should be overridden in
+    case it already exists in the base map.
     @rtype: Dictionary
     @return: The map that result of the merge of both maps.
     """
@@ -132,6 +137,12 @@ def map_extend(base_map, extension_map):
     # iterates over all the keys and values
     # in the extension map
     for key, value in extension_map.items():
+        # in case the override flag is not set
+        # and the key already exists in the result map
+        if not override and key in result_map:
+            # continues the loop
+            continue
+
         # sets the extension value in the result map
         result_map[key] = value
 
