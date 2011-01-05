@@ -776,7 +776,6 @@ class Plugin(object):
 
         self.configuration_map[property_name] = property
 
-
     def unset_configuration_property(self, property_name):
         """
         Unsets the configuration property for the given property name.
