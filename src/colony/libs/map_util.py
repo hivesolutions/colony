@@ -111,6 +111,24 @@ def map_copy_deep(source_map, destiny_map):
         # copies the source value (map) to the destiny value
         map_copy_deep(source_value, destiny_value)
 
+def map_remove(removal_map, destiny_map):
+    """
+    Removes all the values with keys present in the
+    removal map from the destiny map.
+
+    @type removal_map: Dictionary
+    @param removal_map: The map to be used in reference
+    with the key values.
+    @type destiny_map: Dictionary
+    @param destiny_map: The "destiny" map to have the values removed.
+    """
+
+    # iterates over all the keys in
+    # the removal map
+    for key in removal_map:
+        # removes the key item from the destiny map
+        del destiny_map[key]
+
 def map_extend(base_map, extension_map, override = True):
     """
     Extends the given map with the extension map,
