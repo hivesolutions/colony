@@ -60,6 +60,8 @@ class Protected(object):
     """
     Base class of all classes that want to hide protected
     attributes from public access.
+    This class should be carefully used as it may
+    create unexpected side effects.
     """
 
     def __new__(cls, *args, **kwargs):
