@@ -49,7 +49,7 @@ run_mode = "integration"
 verbose = False
 """ The verbose flag """
 
-debug = False
+debug = True
 """ The debug flag """
 
 silent = False
