@@ -186,5 +186,6 @@ plugin_path_list = ["plugins",
                     "%panzerini_prefix_path%/pt.hive.panzerini.plugins.main.client.web_mvc/src/panzerini/plugins",
                     "%panzerini_prefix_path%/pt.hive.panzerini.plugins.main.logic/src/panzerini/plugins",
                     "%panzerini_prefix_path%/pt.hive.panzerini.plugins.main.websocket_handler/src/panzerini/plugins",
+                    "%bargania_prefix_path%/com.bargania.bargania_site.plugins.main/src/bargania_site/plugins",
                     "%escolinhas_prefix_path%/pt.escolinhas.apple_push.notification_handler/src/escolinhas/plugins"]
 """ The list of plugin paths """
