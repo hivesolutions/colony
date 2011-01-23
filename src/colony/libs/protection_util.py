@@ -143,5 +143,8 @@ class Protected(object):
         # creates a new proxy instance
         proxy_instance = Proxy()
 
+        # sets the proxy instance in the object reference
+        object_reference._proxy_instance = proxy_instance
+
         # returns the proxy instance
         return proxy_instance
