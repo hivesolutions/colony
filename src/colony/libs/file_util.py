@@ -73,7 +73,7 @@ class FileRotator:
         # stops the rotator
         self._stop_rotator()
 
-    def write(self, string_value):
+    def write(self, string_value, flush = True):
         # retrieves the string value length
         string_value_length = len(string_value)
 
@@ -85,6 +85,9 @@ class FileRotator:
         # writes the string value to the
         # current file
         self.current_file.write(string_value)
+
+        # flushes the data in the current file
+        flush and self.current_file.flush()
 
         # increments the current file size with
         # the string value length
