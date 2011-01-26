@@ -3833,6 +3833,12 @@ class PluginManager:
         # retrieves the string values list from the file path
         string_values_list = self.resolve_string_value(file_path)
 
+        # in case the string values list
+        # is invalid
+        if not string_values_list:
+            # returns invalid
+            return None
+
         # iterates over all the string values in
         # the string values list
         for string_value in string_values_list:
