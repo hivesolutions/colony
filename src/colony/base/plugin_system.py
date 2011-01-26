@@ -3874,6 +3874,12 @@ class PluginManager:
         @return: The list of possible string values, ordered by priority.
         """
 
+        # in case the string value is invalid
+        # (empty or none)
+        if not string_value:
+            # returns an empty list
+            return []
+
         # finds all the matches using the special value regex
         # over the string value
         special_value_matches = SPECIAL_VALUE_REGEX.finditer(string_value)
