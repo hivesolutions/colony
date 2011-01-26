@@ -111,8 +111,6 @@ class FileRotator:
         # sets the initial current file size
         self.current_file_size = self.current_file.tell()
 
-        print self.current_file_size
-
     def _close_current_file(self, rename = False):
         # flushes the current file
         self.current_file.flush()
