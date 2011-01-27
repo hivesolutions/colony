@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import datetime
+
 import colony.libs.list_util
 
 DAY_VALUE = "day"
@@ -205,6 +207,23 @@ def format_seconds(seconds, format_string = DEFAULT_FORMAT):
 
     # returns the formatted string
     return formatted_string
+
+def timestamp_datetime(timestamp_string):
+    """
+    Converts the provided timestamp string to a datetime object.
+
+    @type timestamp_string String.
+    @param timestamp_string The timestamp value as string.
+    """
+
+    # converts the timestamp string to float
+    timestamp_float = float(timestamp_string)
+
+    # converts to a datetime object
+    datetime_value = datetime.datetime.utcfromtimestamp(timestamp_float)
+
+    # returns the converted datetime
+    return datetime_value
 
 def _process_includes(seconds, includes):
     """
