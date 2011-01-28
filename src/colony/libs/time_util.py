@@ -62,6 +62,9 @@ BASIC_VALUE = "basic"
 EXTENDED_VALUE = "extended"
 """ The extended value """
 
+EXTENDED_SIMPLE_VALUE = "extended_simple"
+""" The extended simple value """
+
 DEFAULT_INCLUDES = (DAY_VALUE, HOUR_VALUE, MINUTE_VALUE, SECOND_VALUE)
 """ The default includes list (tuple) """
 
@@ -79,10 +82,14 @@ FORMATS = {SIMPLE_VALUE : {DAY_VALUE : "%(D)d",
            EXTENDED_VALUE : {DAY_VALUE : "%(D)d days",
                              HOUR_VALUE : "%(H)d hours",
                              MINUTE_VALUE : "%(M)d minutes",
-                             SECOND_VALUE : "%(S)d seconds"}}
+                             SECOND_VALUE : "%(S)d seconds"},
+           EXTENDED_SIMPLE_VALUE : {DAY_VALUE : "%(D)d days",
+                                    HOUR_VALUE : "%(H)d hours",
+                                    MINUTE_VALUE : "%(M)d minutes",
+                                    SECOND_VALUE : "%(S)d seconds"}}
 """ The formats map """
 
-SEPARATORS = {SIMPLE_VALUE : ":", BASIC_VALUE : ", ", EXTENDED_VALUE : ", "}
+SEPARATORS = {SIMPLE_VALUE : ":", BASIC_VALUE : ", ", EXTENDED_VALUE : ", ", EXTENDED_SIMPLE_VALUE : " "}
 """ The separators map """
 
 def format_seconds_smart(seconds, mode = SIMPLE_VALUE, includes = DEFAULT_INCLUDES, minimize = True):
