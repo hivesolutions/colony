@@ -37,6 +37,7 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import sys
 import copy
 import types
 
@@ -262,3 +263,45 @@ def map_get_values(map, key):
 
     # returns the values
     return values
+
+def map_output(self, map, output_method = sys.stdout.write, indentation = ""):
+    """
+    Outputs (pretty print) the given map, using the
+    defined output method.
+    The map is printed with the given indentation as a start
+    point from the line.
+
+    @type map: Dictionary
+    @param map: The map to be outputed (pretty print).
+    @type output_method: Function
+    @param output_method: The output function (method) to be
+    used for outputting the value.
+    @type indentation: String
+    @param indentation: The indentation level to be used.
+    """
+
+    # iterates over all the keys in the map
+    for key in map:
+        # retrieves the map value
+        map_value = map[key]
+
+        # outputs the map value
+        if type(map_value) == types.DictType:
+            # defines the key string
+            key_string = indentation + unicode(key) + ":"
+
+            # outputs the key string
+            output_method(key_string)
+
+            # defines the output map indentation
+            output_map_identation = indentation + "  "
+
+            # outputs the map value
+            map_output(map_value, output_method, output_map_identation)
+        # otherwise it must be a "simple" value
+        else:
+            # creates a string representation of the map value
+            map_value_string = indentation + unicode(key) + " = " + unicode(map_value)
+
+            # outputs the map value string
+            output_method(map_value_string)
