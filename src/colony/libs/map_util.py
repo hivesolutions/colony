@@ -264,7 +264,7 @@ def map_get_values(map, key):
     # returns the values
     return values
 
-def map_output(self, map, output_method = sys.stdout.write, indentation = ""):
+def map_output(map, output_method = sys.stdout.write, indentation = ""):
     """
     Outputs (pretty print) the given map, using the
     defined output method.
