@@ -39,6 +39,65 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import setuptools
 
+import os
+import glob
+
+def find_data_files(source_path, target_path, patterns):
+    # in case the source path or the target path contain
+    # a glob pattern
+    if glob.has_magic(source_path) or glob.has_magic(target_path):
+        # raises an exception
+        raise ValueError("Magic not allowed in source and target")
+
+    # creates the data files map
+    data_files_map = {}
+
+    # iterates over all the patterns
+    for pattern in patterns:
+        # joins the source path and the pattern
+        # to create the "complete" pattern
+        pattern = os.path.join(source_path, pattern)
+
+        for filename in glob.glob(pattern):
+            # in case there is no file
+            if not os.path.isfile(filename):
+                # continues the loop
+                continue
+
+            targetpath = os.path.join(target_path, os.path.relpath(filename, source_path))
+            path = os.path.dirname(targetpath)
+            data_files_map.setdefault(path, []).append(filename)
+
+    # retrieves the data files items
+    data_files_items = data_files_map.items()
+
+    # sorts the data files items
+    data_files_items = sorted(data_files_items)
+
+    # returns the data files items
+    return data_files_items
+
+BASE_DATA_FILES = [
+    ("config", ["src/config/README"]),
+    ("deploy", ["src/deploy/README"]),
+    ("log", ["src/log/README"]),
+    ("meta", ["src/meta/README"]),
+    ("plugins", ["src/plugins/README"]),
+    ("scripts", ["src/scripts/README"]),
+    ("tmp", ["src/tmp/README"]),
+    ("var", ["src/var/README"])
+]
+""" The base data files to be used """
+
+# finds the scripts data files
+scripts_data_files = find_data_files("scripts", "scripts", ["all/*", "lib/*", "unix/*", "win32/*"])
+
+# finds the config data files
+config_data_files = find_data_files("config", "config", ["*.py"])
+
+# creates the "complete" data files
+data_files = BASE_DATA_FILES + scripts_data_files + config_data_files
+
 setuptools.setup (
     name = "colony",
     version = "1.0.0",
@@ -59,18 +118,11 @@ setuptools.setup (
     ],
     test_suite = "colony.test.colony_test",
     package_dir = {
+        "" : "src"
     },
     package_data = {
     },
-    data_files = [
-        ("config", ["config/README", "config/configuration_production.py"]),
-        ("deploy", ["deploy/README"]),
-        ("log", ["log/README"]),
-        ("meta", ["meta/README"]),
-        ("plugins", ["plugins/README"]),
-        ("scripts", ["scripts/README"]),
-        ("scripts", ["scripts/README"]),
-    ],
+    data_files = data_files,
     classifiers = [
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
