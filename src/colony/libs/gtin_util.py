@@ -49,15 +49,6 @@ def calculate_control_value(number):
     @rtype: int
     @return: The control value for the given
     number.
-
-    >>> calculate_control_value(629104150021)
-    3L
-    >>> calculate_control_value(978097123458)
-    1L
-    >>> calculate_control_value(978097123456)
-    7L
-    >>> calculate_control_value(978097123457)
-    4L
     """
 
     # calculates the number of digits in the number
