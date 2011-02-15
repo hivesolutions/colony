@@ -37,10 +37,21 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import setuptools
-
 import os
 import glob
+import setuptools
+
+BASE_DATA_FILES = [
+    ("config", ["src/config/README"]),
+    ("deploy", ["src/deploy/README"]),
+    ("log", ["src/log/README"]),
+    ("meta", ["src/meta/README"]),
+    ("plugins", ["src/plugins/README"]),
+    ("scripts", ["src/scripts/README"]),
+    ("tmp", ["src/tmp/README"]),
+    ("var", ["src/var/README"])
+]
+""" The base data files to be used """
 
 def find_data_files(source_path, target_path, patterns):
     # in case the source path or the target path contain
@@ -89,18 +100,6 @@ def find_data_files(source_path, target_path, patterns):
     # returns the data files items
     return data_files_items
 
-BASE_DATA_FILES = [
-    ("config", ["src/config/README"]),
-    ("deploy", ["src/deploy/README"]),
-    ("log", ["src/log/README"]),
-    ("meta", ["src/meta/README"]),
-    ("plugins", ["src/plugins/README"]),
-    ("scripts", ["src/scripts/README"]),
-    ("tmp", ["src/tmp/README"]),
-    ("var", ["src/var/README"])
-]
-""" The base data files to be used """
-
 # finds the scripts data files
 scripts_data_files = find_data_files("src/scripts", "scripts", ["all/*", "lib/*", "unix/*", "win32/*"])
 
@@ -109,8 +108,6 @@ config_data_files = find_data_files("src/config", "config", ["*.py"])
 
 # creates the "complete" data files
 data_files = BASE_DATA_FILES + scripts_data_files + config_data_files
-
-print data_files
 
 setuptools.setup (
     name = "colony",
