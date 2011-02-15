@@ -58,15 +58,27 @@ def find_data_files(source_path, target_path, patterns):
         # to create the "complete" pattern
         pattern = os.path.join(source_path, pattern)
 
-        for filename in glob.glob(pattern):
+        # iterates over all the filenames in the
+        # glob pattern
+        for file_name in glob.glob(pattern):
             # in case there is no file
-            if not os.path.isfile(filename):
+            if not os.path.isfile(file_name):
                 # continues the loop
                 continue
 
-            targetpath = os.path.join(target_path, os.path.relpath(filename, source_path))
-            path = os.path.dirname(targetpath)
-            data_files_map.setdefault(path, []).append(filename)
+            # retrieves the relative file path between
+            # the source path and the file name
+            relative_file_path = os.path.relpath(file_name, source_path)
+
+            # creates the target file path using the
+            # target path and the relative path
+            target_file_path = os.path.join(target_path, relative_file_path)
+
+            # retrieves the directory name from the target path
+            path = os.path.dirname(target_file_path)
+
+            # adds the filename to the data files map
+            data_files_map.setdefault(path, []).append(file_name)
 
     # retrieves the data files items
     data_files_items = data_files_map.items()
@@ -90,13 +102,15 @@ BASE_DATA_FILES = [
 """ The base data files to be used """
 
 # finds the scripts data files
-scripts_data_files = find_data_files("scripts", "scripts", ["all/*", "lib/*", "unix/*", "win32/*"])
+scripts_data_files = find_data_files("src/scripts", "scripts", ["all/*", "lib/*", "unix/*", "win32/*"])
 
 # finds the config data files
-config_data_files = find_data_files("config", "config", ["*.py"])
+config_data_files = find_data_files("src/config", "config", ["*.py"])
 
 # creates the "complete" data files
 data_files = BASE_DATA_FILES + scripts_data_files + config_data_files
+
+print data_files
 
 setuptools.setup (
     name = "colony",
