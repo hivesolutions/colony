@@ -48,26 +48,29 @@ setuptools.setup (
     license = "GNU General Public License (GPL), Version 3",
     keywords = "colony plugin framework web",
     url = "http://getcolony.com",
-    packages = ["root", "colony", "colony.base", "colony.libs", "colony.test",
-                "colony.test.base", "colony.test.libs", "config", "deploy",
-                "log", "meta", "plugins", "scripts", "scripts.all", "scripts.lib",
-                "scripts.unix", "scripts.win32", "tmp", "var"],
+    py_modules = ["main", "script"],
+    packages = [
+        "colony",
+        "colony.base",
+        "colony.libs",
+        "colony.test",
+        "colony.test.base",
+        "colony.test.libs"
+    ],
     test_suite = "colony.test.colony_test",
     package_dir = {
-        "root" : ""
     },
     package_data = {
-        "config" : ["README"],
-        "deploy" : ["README"],
-        "log" : ["README"],
-        "meta" : ["README"],
-        "plugins" : ["README"],
-        "scripts" : ["README"],
-        "scripts.unix" : ["*.sh"],
-        "scripts.win32" : ["*.bat"],
-        "tmp" : ["README"],
-        "var" : ["README"]
     },
+    data_files = [
+        ("config", ["config/README", "config/configuration_production.py"]),
+        ("deploy", ["deploy/README"]),
+        ("log", ["log/README"]),
+        ("meta", ["meta/README"]),
+        ("plugins", ["plugins/README"]),
+        ("scripts", ["scripts/README"]),
+        ("scripts", ["scripts/README"]),
+    ],
     classifiers = [
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
