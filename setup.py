@@ -114,7 +114,7 @@ setuptools.setup (
     version = "1.0.0",
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
-    description = ("Hive Colony Framework",),
+    description = "Hive Colony Framework",
     license = "GNU General Public License (GPL), Version 3",
     keywords = "colony plugin framework web",
     url = "http://getcolony.com",
