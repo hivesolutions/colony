@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
+__author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
 __version__ = "1.0.0"
@@ -54,6 +54,21 @@ BASE_DATA_FILES = [
 """ The base data files to be used """
 
 def find_data_files(source_path, target_path, patterns):
+    """
+    Finds data files in the given source path and maps them
+    into the target path.
+    The list of patterns in glob format represents the filters.
+
+    @type source_path: String
+    @param source_path: The source path to find the data files.
+    @type target_path: String
+    @param target_path: The target path to the data files.
+    @type patterns: List
+    @param patterns: The list of patterns for file matching.
+    @rtype: List
+    @return: The list of data file references.
+    """
+
     # in case the source path or the target path contain
     # a glob pattern
     if glob.has_magic(source_path) or glob.has_magic(target_path):
