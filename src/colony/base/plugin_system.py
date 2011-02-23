@@ -272,9 +272,6 @@ class Plugin(object):
     dependencies_loaded = []
     """ The list of dependency plugins loaded """
 
-    allowed_loaded = []
-    """ The list of allowed plugins loaded """
-
     allowed_loaded_capability = {}
     """ The list of allowed plugins loaded with capability """
 
@@ -337,7 +334,6 @@ class Plugin(object):
 
         self.logger = logging.getLogger(DEFAULT_LOGGER)
         self.dependencies_loaded = []
-        self.allowed_loaded = []
         self.allowed_loaded_capability = []
         self.event_plugins_handled_loaded_map = {}
         self.event_plugins_registered_loaded_map = {}
@@ -431,7 +427,6 @@ class Plugin(object):
         # sets the error state as false
         self.error_state = False
 
-        self.allowed_loaded = []
         self.dependencies_loaded = []
 
         # generates the load plugin event
@@ -462,17 +457,17 @@ class Plugin(object):
         @param capability: Capability for which the plugin is being injected.
         """
 
-        # in case the plugin does already exists in
-        # the allowed loaded list
-        if plugin in self.allowed_loaded:
+        # creates the plugin capability tuple
+        publin_capability_tuple = (plugin, capability)
+
+        # in case the plugin capability tuple already exists in
+        # the allowed loaded capability list
+        if publin_capability_tuple in self.allowed_loaded_capability:
             # raises the plugin system exception
-            raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed loading '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+            raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
-        # adds the plugin to the allowed loaded
-        self.allowed_loaded.append(plugin)
-
-        # adds the plugin and the capability to the allowed loaded capability
-        self.allowed_loaded_capability.append((plugin, capability))
+        # adds the plugin capability tuple to the allowed loaded capability
+        self.allowed_loaded_capability.append(publin_capability_tuple)
 
         # registers for all registrable events
         self.register_all_registrable_events_plugin(plugin)
@@ -490,17 +485,17 @@ class Plugin(object):
         @param capability: Capability for which the plugin is being injected.
         """
 
-        # in case the plugin does not exist in
-        # the allowed loaded list
-        if not plugin in self.allowed_loaded:
+        # creates the plugin capability tuple
+        publin_capability_tuple = (plugin, capability)
+
+        # in case the plugin capability tuple does not exist in
+        # the allowed loaded capability list
+        if not publin_capability_tuple in self.allowed_loaded_capability:
             # raises the plugin system exception
-            raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed unloading '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+            raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
-        # removes the plugin from the allowed loaded
-        self.allowed_loaded.remove(plugin)
-
-        # removes the plugin and the capability to the allowed loaded capability
-        self.allowed_loaded_capability.remove((plugin, capability))
+        # removes the plugin capability tuple from the allowed loaded capability
+        self.allowed_loaded_capability.remove(publin_capability_tuple)
 
         # unregisters for all registrable events
         self.unregister_all_registrable_events_plugin(plugin)
