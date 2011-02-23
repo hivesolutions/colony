@@ -462,9 +462,9 @@ class Plugin(object):
         @param capability: Capability for which the plugin is being injected.
         """
 
-        # in case the plugin does not exist in
+        # in case the plugin does already exists in
         # the allowed loaded list
-        if not plugin in self.allowed_loaded:
+        if plugin in self.allowed_loaded:
             # raises the plugin system exception
             raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed loading '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
