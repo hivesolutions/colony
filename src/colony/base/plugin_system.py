@@ -378,6 +378,7 @@ class Plugin(object):
         # generates the load plugin event
         self.manager.generate_event("plugin_manager.plugin.load_plugin", [self.id, self.version, self])
 
+        # prints an info message
         self.info("Loading plugin '%s' v%s" % (self.short_name, self.version))
 
     def lazy_load_plugin(self):
