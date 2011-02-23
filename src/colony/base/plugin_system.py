@@ -462,9 +462,22 @@ class Plugin(object):
         @param capability: Capability for which the plugin is being injected.
         """
 
+        # in case the plugin does not exist in
+        # the allowed loaded list
+        if not plugin in self.allowed_loaded:
+            # raises the plugin system exception
+            raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed loading '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+
+        # adds the plugin to the allowed loaded
         self.allowed_loaded.append(plugin)
+
+        # adds the plugin and the capability to the allowed loaded capability
         self.allowed_loaded_capability.append((plugin, capability))
+
+        # registers for all registrable events
         self.register_all_registrable_events_plugin(plugin)
+
+        # prints an info message
         self.info("Loading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
     def unload_allowed(self, plugin, capability):
@@ -477,9 +490,22 @@ class Plugin(object):
         @param capability: Capability for which the plugin is being injected.
         """
 
+        # in case the plugin does not exist in
+        # the allowed loaded list
+        if not plugin in self.allowed_loaded:
+            # raises the plugin system exception
+            raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed unloading '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+
+        # removes the plugin from the allowed loaded
         self.allowed_loaded.remove(plugin)
+
+        # removes the plugin and the capability to the allowed loaded capability
         self.allowed_loaded_capability.remove((plugin, capability))
+
+        # unregisters for all registrable events
         self.unregister_all_registrable_events_plugin(plugin)
+
+        # prints an info message
         self.info("Unloading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
     def dependency_injected(self, plugin):
