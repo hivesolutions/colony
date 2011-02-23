@@ -432,6 +432,7 @@ class Plugin(object):
         # generates the load plugin event
         self.manager.generate_event("plugin_manager.plugin.unload_plugin", [self.id, self.version, self])
 
+        # prints an info message
         self.info("Unloading plugin '%s' v%s" % (self.short_name, self.version))
 
     def end_unload_plugin(self):
@@ -445,6 +446,7 @@ class Plugin(object):
         # generates the load plugin event
         self.manager.generate_event("plugin_manager.plugin.end_unload_plugin", [self.id, self.version, self])
 
+        # prints an info message
         self.info("Unloading process for plugin '%s' v%s completed" % (self.short_name, self.version))
 
     def load_allowed(self, plugin, capability):
@@ -717,8 +719,11 @@ class Plugin(object):
             if event_or_super_event in self.event_plugins_handled_loaded_map:
                 # iterates over all the plugins registered for notification
                 for event_plugin_loaded in self.event_plugins_handled_loaded_map[event_or_super_event]:
+                    # prints an info message
                     self.info("Notifying '%s' v%s about event '%s' generated in '%s' v%s" % (event_plugin_loaded.short_name, event_plugin_loaded.version, event_name, self.short_name, self.version))
 
+                    # calls the event handler for the event name with
+                    # the given event arguments
                     event_plugin_loaded.event_handler(event_name, *event_args)
 
     def generate_event(self, event_name, event_args):
