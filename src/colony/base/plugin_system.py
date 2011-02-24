@@ -1675,6 +1675,11 @@ class PluginManager:
         to provide thread safety.
         """
 
+        # in case the system initialization is not complete
+        if not self.init_complete:
+            # raises a colony exception
+            raise colony.base.plugin_system_exceptions.ColonyException("trying to unload uninitialized plugin system")
+
         # creates the kill system timer, to kill the system
         # if it hangs in shutdown
         self.kill_system_timer = threading.Timer(DEFAULT_UNLOAD_SYSTEM_TIMEOUT, self._kill_system_timeout)
