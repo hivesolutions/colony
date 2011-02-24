@@ -77,8 +77,8 @@ class ColonyTestCase(unittest.TestCase):
             # tests that the raised exception was the indicated one
             self.assertEquals(exception_class_name, exception_name)
         else:
-            # marks the test as failed
-            self.fail("%s exception was not raised" % exception_name)
+            # raises a failure exception
+            raise self.failureException("%s exception was not raised" % exception_name)
 
     def assert_type(self, value, expected_type):
         # retrieves the value's type
