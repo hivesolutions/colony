@@ -47,23 +47,26 @@ class ColonyTestCase(unittest.TestCase):
     based test cases.
     """
 
-    def assert_valid_xml(self, xml_data):
+    def assert_type(self, value, expected_type):
         """
-        Tests that the provided xml data is valid.
+        Tests that the provided value is of the specified type.
 
-        @type xml_data: String
-        @param xml_data: The string with the xml data.
+        @type value: Object
+        @param value: The value whose type will be compared
+        against the expected type.
+        @type expected_type: Type
+        @param expected_type: The type that is expected for
+        the provided value.
         """
 
-        # attempts to parse the xml data
-        # to check if its valid
-        try:
-            # parses the xml data
-            xml.dom.minidom.parseString(xml_data)
-        except:
+        # retrieves the value's type
+        value_type = type(value)
+
+        # raises an exception in case the
+        # value is not of the expected type
+        if not value_type == expected_type:
             # raises a failure exception
-            # in case the parse was unsuccessful
-            raise self.failureException("xml data is invalid")
+            raise self.failureException("value is of type %s instead of expected type %s" % (value_type, expected_type))
 
     def assert_raises(self, expected_exception_name, function, *args, **kwargs):
         """
@@ -94,27 +97,26 @@ class ColonyTestCase(unittest.TestCase):
             # raises a failure exception in case the
             # raised exception was not the expected one
             if not exception_class_name == expected_exception_name:
+                # raises a failure exception
                 raise self.failureException("raised exception %s instead of expected exception %s" % (exception_class_name, expected_exception_name))
         else:
             # raises a failure exception in case no exception was raised
             raise self.failureException("%s exception was not raised" % expected_exception_name)
 
-    def assert_type(self, value, expected_type):
+    def assert_valid_xml(self, xml_data):
         """
-        Tests that the provided value is of the specified type.
+        Tests that the provided xml data is valid.
 
-        @type value: Object
-        @param value: The value whose type will be compared
-        against the expected type.
-        @type expected_type: Type
-        @param expected_type: The type that is expected for
-        the provided value.
+        @type xml_data: String
+        @param xml_data: The string with the xml data.
         """
 
-        # retrieves the value's type
-        value_type = type(value)
-
-        # raises an exception in case the
-        # value is not of the expected type
-        if not value_type == expected_type:
-            raise self.failureException("value is of type %s instead of expected type %s" % (value_type, expected_type))
+        # attempts to parse the xml data
+        # to check if its valid
+        try:
+            # parses the xml data
+            xml.dom.minidom.parseString(xml_data)
+        except:
+            # raises a failure exception
+            # in case the parse was unsuccessful
+            raise self.failureException("xml data is invalid")
