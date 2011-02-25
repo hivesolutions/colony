@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "João Magalhães <joamag@hive.pt>"
+__author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
 """ The author(s) of the module """
 
 __version__ = "1.0.0"
@@ -54,16 +54,11 @@ class ColonyTestCase(unittest.TestCase):
             # parses the xml data
             xml.dom.minidom.parseString(xml_data)
         except:
-            # marks the xml as invalid
-            valid_xml = False
-        else:
-            # marks the xml as valid
-            valid_xml = True
+            # raises a failure exception
+            # in case the parse was unsuccessful
+            raise self.failureException("xml data is invalid")
 
-        # tests that the xml is valid
-        self.assertTrue(valid_xml)
-
-    def assert_raises(self, exception_name, function, *args, **kwargs):
+    def assert_raises(self, expected_exception_name, function, *args, **kwargs):
         try:
             # invokes the function
             function(*args, **kwargs)
@@ -74,15 +69,19 @@ class ColonyTestCase(unittest.TestCase):
             # retrieves the exception class name
             exception_class_name = exception_class.__name__
 
-            # tests that the raised exception was the indicated one
-            self.assertEquals(exception_class_name, exception_name)
+            # raises a failure exception in case the
+            # raised exception was not the expected one
+            if not exception_class_name == expected_exception_name:
+                raise self.failureException("raised exception %s instead of expected exception %s" % (exception_class_name, expected_exception_name))
         else:
-            # raises a failure exception
-            raise self.failureException("%s exception was not raised" % exception_name)
+            # raises a failure exception in case no exception was raised
+            raise self.failureException("%s exception was not raised" % expected_exception_name)
 
     def assert_type(self, value, expected_type):
         # retrieves the value's type
         value_type = type(value)
 
-        # tests that the value is of the expected type
-        self.assertEquals(value_type, expected_type)
+        # raises an exception in case the
+        # value is not of the expected type
+        if not value_type == expected_type:
+            raise self.failureException("value is of type %s instead of expected type %s" % (value_type, expected_type))
