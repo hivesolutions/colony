@@ -48,6 +48,13 @@ class ColonyTestCase(unittest.TestCase):
     """
 
     def assert_valid_xml(self, xml_data):
+        """
+        Tests that the provided xml data is valid.
+
+        @type xml_data: String
+        @param xml_data: The string with the xml data.
+        """
+
         # attempts to parse the xml data
         # to check if its valid
         try:
@@ -59,6 +66,21 @@ class ColonyTestCase(unittest.TestCase):
             raise self.failureException("xml data is invalid")
 
     def assert_raises(self, expected_exception_name, function, *args, **kwargs):
+        """
+        Tests that the specified exception is raised when invoking
+        the provided function with the respective arguments.
+
+        @type expected_exception_name: String
+        @param expected_exception_name: The name of the exception
+        that should be raised by the function.
+        @type function: Function
+        @param function: The function to be invoked.
+        @type args: pointer
+        @param args: The function arguments list.
+        @type kwargs: pointer pointer
+        @param kwargs: The function arguments map.
+        """
+
         try:
             # invokes the function
             function(*args, **kwargs)
@@ -78,6 +100,17 @@ class ColonyTestCase(unittest.TestCase):
             raise self.failureException("%s exception was not raised" % expected_exception_name)
 
     def assert_type(self, value, expected_type):
+        """
+        Tests that the provided value is of the specified type.
+
+        @type value: Object
+        @param value: The value whose type will be compared
+        against the expected type.
+        @type expected_type: Type
+        @param expected_type: The type that is expected for
+        the provided value.
+        """
+
         # retrieves the value's type
         value_type = type(value)
 
