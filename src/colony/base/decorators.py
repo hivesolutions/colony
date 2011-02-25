@@ -101,7 +101,7 @@ def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enable
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The decorator interceptor function.
+        @return: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -150,7 +150,7 @@ def plugin_meta_information(metadata_key, metadata_values = {}):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The decorator interceptor function.
+        @return: The decorator interceptor function.
         """
 
         # creates the load plugin tuple
@@ -240,7 +240,7 @@ def load_allowed(plugin_id, plugin_version, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The decorator interceptor function.
+        @return: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -288,7 +288,7 @@ def load_allowed_capability(capability, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The function to be decorated.
+        @return: The function to be decorated.
         """
 
         load_allowed.function = function
@@ -372,7 +372,7 @@ def unload_allowed(plugin_id, plugin_version, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The decorator interceptor function.
+        @return: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -420,7 +420,7 @@ def unload_allowed_capability(capability, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The function to be decorated.
+        @return: The function to be decorated.
         """
 
         unload_allowed.function = function
@@ -514,7 +514,7 @@ def inject_dependencies(plugin_id, plugin_version, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The decorator interceptor function.
+        @return: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -564,7 +564,7 @@ def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The function to be decorated.
+        @return: The function to be decorated.
         """
 
         plugin_inject.function = function
@@ -665,7 +665,7 @@ def event_handler(plugin_id, plugin_version, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The decorator interceptor function.
+        @return: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -713,7 +713,7 @@ def event_handler_method(event_name, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The function to be decorated.
+        @return: The function to be decorated.
         """
 
         event_handler_method.function = function
@@ -806,7 +806,7 @@ def set_configuration_property(plugin_id, plugin_version, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The decorator interceptor function.
+        @return: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -855,7 +855,7 @@ def set_configuration_property_method(property_name, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The function to be decorated.
+        @return: The function to be decorated.
         """
 
         set_configuration_property_method.function = function
@@ -947,7 +947,7 @@ def unset_configuration_property(plugin_id, plugin_version, load_plugin = False)
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The decorator interceptor function.
+        @return: The decorator interceptor function.
         """
 
         # creates the plugin tuple using the plugin id and version
@@ -996,7 +996,7 @@ def unset_configuration_property_method(property_name, load_plugin = False):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The function to be decorated.
+        @return: The function to be decorated.
         """
 
         unset_configuration_property_method.function = function
@@ -1038,7 +1038,7 @@ def plugin_call(load_plugin = True):
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
         @rtype: Function
-        @param: The decorator interceptor function.
+        @return: The decorator interceptor function.
         """
 
         if load_plugin:

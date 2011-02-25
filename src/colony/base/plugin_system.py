@@ -4064,7 +4064,7 @@ class PluginManager:
         @type plugin_id: String
         @param plugin_id: The id of the plugin to retrieve the temporary
         plugin path.
-        @type: extra_path
+        @type extra_path: String
         @param extra_path: The extra path to be appended.
         @rtype: String
         @return: The temporary plugin path for the given plugin id.
@@ -4480,7 +4480,7 @@ class PluginManager:
         Retrieves the workspace path.
 
         @rtype: String
-        @param: The workspace path.
+        @return: The workspace path.
         """
 
         # retrieves the workspace path
