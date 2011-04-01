@@ -175,7 +175,7 @@ plugin_path_list = ["plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.migration.diamante/src/omni/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.organization/src/omni/plugins",
                     "%omni_prefix_path%/pt.hive.omni.plugins.sales/src/omni/plugins",
-                    "%omni_prefix_path%/pt.hive.omni.plugins.users/src/omni/plugins"
+                    "%omni_prefix_path%/pt.hive.omni.plugins.users/src/omni/plugins",
                     "%hive_site_prefix_path%/pt.hive.hive_site.plugins.main/src/hive_site/plugins",
                     "%hive_blog_prefix_path%/pt.hive.hive_blog.plugins.main/src/hive_blog/plugins",
                     "%hive_development_prefix_path%/pt.hive.hive_development.plugins.media_dashboard/src/hive_development/plugins",
