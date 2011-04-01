@@ -37,56 +37,65 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-prefix_paths = {"development" : {"colony" : "../../",
-                                 "omni" : "../../",
-                                 "colony_demo" : "../../",
-                                 "hive_site" : "../../",
-                                 "hive_blog" : "../../",
-                                 "hive_development" : "../../",
-                                 "hive_openid" : "../../",
-                                 "take_the_bill" : "../../",
-                                 "a_la_carte" : "../../",
-                                 "pecway" : "../../",
-                                 "toolbox" : "../../",
-                                 "panzerini" : "../../",
-                                 "bargania" : "../../",
-                                 "escolinhas" : "../../",
-                                 "first_day" : "../../"},
-                "repository_svn" : {"colony" : "../../",
-                                    "omni" : "../../../../pt.hive.omni/trunk",
-                                    "colony_demo" : "../../../../pt.hive.colony.demo/trunk",
-                                    "hive_site" : "../../../../pt.hive.hive_site/trunk",
-                                    "hive_blog" : "../../../../pt.hive.hive_blog/trunk",
-                                    "hive_development" : "../../../../pt.hive.hive_development/trunk",
-                                    "hive_openid" : "../../../../pt.hive.hive_openid/trunk",
-                                    "take_the_bill" : "../../../../pt.hive.take_the_bill/trunk",
-                                    "a_la_carte" : "../../../../pt.hive.a_la_carte/trunk",
-                                    "pecway" : "../../../../pt.hive.pecway/trunk",
-                                    "toolbox" : "../../../../pt.hive.toolbox/trunk",
-                                    "panzerini" : "../../../../pt.hive.panzerini/trunk",
-                                    "bargania" : "../../../../com.bargania/trunk",
-                                    "escolinhas" : "../../../../pt.escolinhas/trunk",
-                                    "first_day" : "../../../../pt.first-day/trunk"},
-                "production" : {"colony" : "../../",
-                                "omni" : "../../",
-                                "colony_demo" : "../../",
-                                "hive_site" : "../../",
-                                "hive_blog" : "../../",
-                                "hive_development" : "../../",
-                                "hive_openid" : "../../",
-                                "take_the_bill" : "../../",
-                                "a_la_carte" : "../../",
-                                "pecway" : "../../",
-                                "toolbox" : "../../",
-                                "panzerini" : "../../",
-                                "bargania" : "../../",
-                                "escolinhas" : "../../",
-                                "first_day" : "../.."}}
+prefix_paths = {
+    "development" : {
+        "colony" : "../../",
+        "omni" : "../../",
+        "colony_demo" : "../../",
+        "hive_site" : "../../",
+        "hive_blog" : "../../",
+        "hive_development" : "../../",
+        "hive_openid" : "../../",
+        "take_the_bill" : "../../",
+        "a_la_carte" : "../../",
+        "pecway" : "../../",
+        "toolbox" : "../../",
+        "panzerini" : "../../",
+        "bargania" : "../../",
+        "escolinhas" : "../../",
+        "first_day" : "../../"
+    },
+    "repository_svn" : {
+        "colony" : "../../",
+        "omni" : "../../../../pt.hive.omni/trunk",
+        "colony_demo" : "../../../../pt.hive.colony.demo/trunk",
+        "hive_site" : "../../../../pt.hive.hive_site/trunk",
+        "hive_blog" : "../../../../pt.hive.hive_blog/trunk",
+        "hive_development" : "../../../../pt.hive.hive_development/trunk",
+        "hive_openid" : "../../../../pt.hive.hive_openid/trunk",
+        "take_the_bill" : "../../../../pt.hive.take_the_bill/trunk",
+        "a_la_carte" : "../../../../pt.hive.a_la_carte/trunk",
+        "pecway" : "../../../../pt.hive.pecway/trunk",
+        "toolbox" : "../../../../pt.hive.toolbox/trunk",
+        "panzerini" : "../../../../pt.hive.panzerini/trunk",
+        "bargania" : "../../../../com.bargania/trunk",
+        "escolinhas" : "../../../../pt.escolinhas/trunk",
+        "first_day" : "../../../../pt.first-day/trunk"},
+    "production" : {
+        "colony" : "../../",
+        "omni" : "../../",
+        "colony_demo" : "../../",
+        "hive_site" : "../../",
+        "hive_blog" : "../../",
+        "hive_development" : "../../",
+        "hive_openid" : "../../",
+        "take_the_bill" : "../../",
+        "a_la_carte" : "../../",
+        "pecway" : "../../",
+        "toolbox" : "../../",
+        "panzerini" : "../../",
+        "bargania" : "../../",
+        "escolinhas" : "../../",
+        "first_day" : "../.."
+    }
+}
 """ The prefix path maps """
 
-library_path_list = ["%colony_prefix_path%/pt.hive.colony.language.generator/src/colony",
-                     "%colony_prefix_path%/pt.hive.colony.language.settler/src/colony",
-                     "%colony_prefix_path%/pt.hive.colony.language.wiki/src/colony"]
+library_path_list = [
+    "%colony_prefix_path%/pt.hive.colony.language.generator/src/colony",
+    "%colony_prefix_path%/pt.hive.colony.language.settler/src/colony",
+    "%colony_prefix_path%/pt.hive.colony.language.wiki/src/colony"
+]
 """ The list of library paths """
 
 plugin_path_list = ["plugins"]
