@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import re
+
 def xor_string_value(first_string, second_string):
     """
     Runs the xor bitwise operation over all the items
@@ -78,3 +80,28 @@ def xor_string_value(first_string, second_string):
 
     # returns the xor result
     return xor_result
+
+def convert_underscore(string_value):
+    """
+    Converts the given camel cased string value into
+    the underscore notation.
+    This method is useful to treat class string values in python.
+
+    @type name: String
+    @param name: The camel cased string value to be converted
+    into underscore notation.
+    @rtype: String
+    @return: The converted underscore notation string value.
+    """
+
+    # converts the string value into the initial underscore notation
+    string_value_underscore = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", string_value)
+
+    # converts the string value underscore into the next underscore notation
+    string_value_underscore = re.sub("([a-z0-9])([A-Z])", r"\1_\2", string_value_underscore)
+
+    # converts the string value in underscore notation to lowecase
+    string_value_underscore = string_value_underscore.lower()
+
+    # returns the string value in underscore notation
+    return string_value_underscore
