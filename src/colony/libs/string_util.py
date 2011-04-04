@@ -39,6 +39,18 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import re
 
+UNDERSCORE_FIRST_VALUE = "(.)([A-Z][a-z]+)"
+""" The underscore first value """
+
+UNDERSCORE_FIRST_REGEX = re.compile(UNDERSCORE_FIRST_VALUE)
+""" The underscore first regex """
+
+UNDERSCORE_SECOND_VALUE = "([a-z0-9])([A-Z])"
+""" The underscore second value """
+
+UNDERSCORE_SECOND_REGEX = re.compile(UNDERSCORE_SECOND_VALUE)
+""" The underscore second regex """
+
 def xor_string_value(first_string, second_string):
     """
     Runs the xor bitwise operation over all the items
@@ -95,10 +107,10 @@ def convert_underscore(string_value):
     """
 
     # converts the string value into the initial underscore notation
-    string_value_underscore = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", string_value)
+    string_value_underscore = UNDERSCORE_FIRST_REGEX.sub(r"\1_\2", string_value)
 
     # converts the string value underscore into the next underscore notation
-    string_value_underscore = re.sub("([a-z0-9])([A-Z])", r"\1_\2", string_value_underscore)
+    string_value_underscore = UNDERSCORE_SECOND_REGEX.sub(r"\1_\2", string_value_underscore)
 
     # converts the string value in underscore notation to lowecase
     string_value_underscore = string_value_underscore.lower()
