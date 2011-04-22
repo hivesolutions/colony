@@ -32,8 +32,5 @@ set RELATIVE_PATH=../../
 :: updates the path variable with the scripts path
 set PATH=%PATH%;%RELATIVE_PATH%/scripts/win32
 
-:: turns on the echo
-@echo on
-
 :: executes the command prompt
 cmd
