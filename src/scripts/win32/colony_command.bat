@@ -30,7 +30,7 @@
 set RELATIVE_PATH=../../
 
 :: updates the path variable with the scripts path
-set PATH=%PATH%;%RELATIVE_PATH%/scripts/win32
+set PATH=%PATH%;%~dp0/%RELATIVE_PATH%/scripts/win32
 
 :: executes the command prompt
 cmd
