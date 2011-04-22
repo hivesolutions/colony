@@ -87,11 +87,17 @@ COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
 SEPCIFICATION_FILE_NAME = "specification.json"
 """ The specification file name """
 
+RELATIVE_DEPLOY_PATH = "deploy"
+""" The path relative to the manager path for the deploy source """
+
 RELATIVE_DEPLOYMENT_PATH = "plugins"
 """ The path relative to the manager path for the deployment """
 
 REQUIRED_VALUES = ("platform", "id", "version")
 """ The tuple of required values """
+
+COLONY_FILE_EXTENSIONS = (".cbx", ".cpx")
+""" The tuple containing all the colony file extensions """
 
 def print_information():
     """
@@ -127,8 +133,6 @@ def log(message, verbose):
     print message
 
 def main():
-    import colony_zip
-
     # in case the number of command line arguments
     # is len than two
     if len(sys.argv) < 2:
@@ -150,12 +154,13 @@ def main():
         option_arguments = sys.argv[2:]
 
     # processes the arguments options
-    options, _args = getopt.getopt(option_arguments, "hvm:", ["help", "verbose", "manager_dir="])
+    options, _args = getopt.getopt(option_arguments, "hvfm:", ["help", "flush", "verbose", "manager_dir="])
 
     # retrieves the file system encoding
     file_system_encoding = sys.getfilesystemencoding()
 
     # starts the options values
+    flush = False
     verbose = False
 
     # retrieves the manager path
@@ -166,6 +171,8 @@ def main():
         if option in ("-h", "--help"):
             usage()
             sys.exit()
+        elif option in ("-f", "--flush"):
+            flush = True
         elif option in ("-v", "--verbose"):
             verbose = True
         elif option in ("-m", "--manager_dir"):
@@ -173,6 +180,47 @@ def main():
 
     # prints the console information
     print_information()
+
+    # in case the flush flag is set, there is
+    # a flushing of the deploy directory
+    if flush:
+        # creates the deploy path
+        deploy_path = os.path.normpath(manager_path + "/" + RELATIVE_DEPLOY_PATH)
+
+        # list the deploy path
+        deploy_files = os.listdir(deploy_path)
+
+        # iterates over all the file to
+        # be deployed
+        for deploy_file in deploy_files:
+            # splits the deploy file into base and extension
+            _deploy_file_base, deploy_file_extension = os.path.splitext(deploy_file)
+
+            # in case the deploy file extension
+            # is not a colony valid file extension
+            if not deploy_file_extension in COLONY_FILE_EXTENSIONS:
+                # continues the loop
+                continue
+
+            # creates the deploy full path by joining
+            # the deploy path and the deploy file (name)
+            deploy_full_path = os.path.join(deploy_path, deploy_file)
+
+            # deploys the package in the given path to target
+            # manager path using the verbose level set
+            deploy_package(deploy_full_path, manager_path, verbose)
+    # otherwise it's a "normal" deployment
+    else:
+        # retrieves the package path
+        package_path = sys.argv[1]
+
+        # deploys the package in the given path to target
+        # manager path using the verbose level set
+        deploy_package(package_path, manager_path, verbose)
+
+def deploy_package(package_path, manager_path, verbose):
+    # imports the colony zip reference
+    import colony_zip
 
     # creates the target path
     target_path = os.path.normpath(manager_path + "/" + RELATIVE_DEPLOYMENT_PATH)
@@ -182,9 +230,6 @@ def main():
 
     # creates the specification file path
     specification_file_path = os.path.normpath(temporary_path + "/" + SEPCIFICATION_FILE_NAME)
-
-    # retrieves the package path
-    package_path = sys.argv[1]
 
     # in case the package path does not exist
     if not os.path.exists(package_path):
