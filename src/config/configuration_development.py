@@ -38,9 +38,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 from configuration_base import * #@UnusedWildImport
-from configuration_base_development import * #@UnusedWildImport
 
-layout_mode = "development"
+layout_mode = "default"
 """ The project layout mode """
 
 run_mode = "development"
@@ -49,13 +48,13 @@ run_mode = "development"
 verbose = False
 """ The verbose flag """
 
-debug = True
+debug = False
 """ The debug flag """
 
 silent = False
 """ The silent flag """
 
-stop_on_cycle_error = True
+stop_on_cycle_error = False
 """ The stop on cycle error flag """
 
 daemon_file_path = None

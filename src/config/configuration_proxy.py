@@ -40,7 +40,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 from configuration_base import * #@UnusedWildImport
 from configuration_base_development import * #@UnusedWildImport
 
-layout_mode = "development"
+layout_mode = "workspace_eclipse"
 """ The project layout mode """
 
 run_mode = "proxy"

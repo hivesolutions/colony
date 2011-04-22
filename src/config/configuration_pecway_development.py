@@ -40,5 +40,5 @@ __license__ = "GNU General Public License (GPL), Version 3"
 from configuration_pecway import * #@UnusedWildImport
 from configuration_base_development import * #@UnusedWildImport
 
-layout_mode = "development"
+layout_mode = "workspace_eclipse"
 """ The project layout mode """

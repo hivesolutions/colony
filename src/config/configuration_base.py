@@ -38,7 +38,9 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 prefix_paths = {
-    "development" : {
+    "default" : {
+    },
+    "workspace_eclipse" : {
         "colony" : "../../",
         "omni" : "../../",
         "colony_demo" : "../../",
@@ -70,23 +72,7 @@ prefix_paths = {
         "panzerini" : "../../../../pt.hive.panzerini/trunk",
         "bargania" : "../../../../com.bargania/trunk",
         "escolinhas" : "../../../../pt.escolinhas/trunk",
-        "first_day" : "../../../../pt.first-day/trunk"},
-    "production" : {
-        "colony" : "../../",
-        "omni" : "../../",
-        "colony_demo" : "../../",
-        "hive_site" : "../../",
-        "hive_blog" : "../../",
-        "hive_development" : "../../",
-        "hive_openid" : "../../",
-        "take_the_bill" : "../../",
-        "a_la_carte" : "../../",
-        "pecway" : "../../",
-        "toolbox" : "../../",
-        "panzerini" : "../../",
-        "bargania" : "../../",
-        "escolinhas" : "../../",
-        "first_day" : "../.."
+        "first_day" : "../../../../pt.first-day/trunk"
     }
 }
 """ The prefix path maps """
@@ -98,7 +84,9 @@ library_path_list = [
 ]
 """ The list of library paths """
 
-plugin_path_list = ["plugins"]
+plugin_path_list = [
+    "plugins"
+]
 """ The list of plugin paths """
 
 logger_path = "log"

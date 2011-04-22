@@ -39,7 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 from configuration_base import * #@UnusedWildImport
 
-layout_mode = "production"
+layout_mode = "default"
 """ The project layout mode """
 
 run_mode = "production"
