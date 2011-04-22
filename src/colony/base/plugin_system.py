@@ -4103,7 +4103,7 @@ class PluginManager:
         current_time_value = int(time.time() * 10000)
 
         # creates the (final) temporary plugin path generated for the current time value
-        temporary_plugin_generated_path = temporary_plugin_path + "/" + str(current_time_value)
+        temporary_plugin_generated_path = os.path.join(temporary_plugin_path, str(current_time_value))
 
         # normalizes the temporary plugin generated path
         normalized_temporary_plugin_generated_path = colony.libs.path_util.normalize_path(temporary_plugin_generated_path)
