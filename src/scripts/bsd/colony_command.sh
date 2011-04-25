@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-# __author__    = João Magalhães <joamag@hive.pt>
+# __author__    = Luís Martinho <lmartinho@hive.pt>
 # __version__   = 1.0.0
 # __revision__  = $LastChangedRevision: 9746 $
 # __date__      = $LastChangedDate: 2010-08-12 14:07:04 +0100 (qui, 12 Ago 2010) $
@@ -27,17 +27,24 @@
 # __license__   = GNU General Public License (GPL), Version 3
 
 # sets the temporary variables
-USR_BIN_PATH=/usr/bin
-PYTHON_PATH=$USR_BIN_PATH/python
-RELATIVE_PATH=../../
-SCRIPT_NAME=main.py
+BIN_PATH=/bin
+SHELL_PATH=$BIN_PATH/sh
+RELATIVE_PATH=../..
 
-# retrieves the script directory path
-SCRIPT_DIRECTORY_PATH=$(dirname $(readlink -f $0))
+# retrieves the script (relative) directory path
+SCRIPT_RELATIVE_DIRECTORY_PATH=$(dirname $0)
 
-# executes the initial python script with
-# the provided arguments
-$PYTHON_PATH $SCRIPT_DIRECTORY_PATH/$RELATIVE_PATH/$SCRIPT_NAME $*
+# changes to the script directory
+pushd "$SCRIPT_RELATIVE_DIRECTORY_PATH" > /dev/null
 
-# exits the process
-exit $?
+# retrieves the (real) script directory path
+SCRIPT_DIRECTORY_PATH=$(pwd)
+
+# returns to the previous directory
+popd > /dev/null
+
+# updates the path variable with the scripts path
+export PATH=$PATH:$SCRIPT_DIRECTORY_PATH/$RELATIVE_PATH/scripts/bsd
+
+# executes the command prompt
+$SHELL_PATH

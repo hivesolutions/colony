@@ -29,11 +29,20 @@
 # sets the temporary variables
 USR_BIN_PATH=/usr/bin
 PYTHON_PATH=$USR_BIN_PATH/python
-RELATIVE_PATH=../../
-SCRIPT_NAME=main.py
+RELATIVE_PATH=../all/
+SCRIPT_NAME=colony_deploy.py
 
-# retrieves the script directory path
-SCRIPT_DIRECTORY_PATH=$(dirname $(readlink -f $0))
+# retrieves the script (relative) directory path
+SCRIPT_RELATIVE_DIRECTORY_PATH=$(dirname $0)
+
+# changes to the script directory
+pushd "$SCRIPT_RELATIVE_DIRECTORY_PATH" > /dev/null
+
+# retrieves the (real) script directory path
+SCRIPT_DIRECTORY_PATH=$(pwd)
+
+# returns to the previous directory
+popd > /dev/null
 
 # executes the initial python script with
 # the provided arguments

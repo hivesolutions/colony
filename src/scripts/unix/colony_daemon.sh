@@ -57,20 +57,20 @@ trap "on_term" TERM
 trap "on_kill" KILL
 
 # sets the temporary variables
-BIN_PATH=/usr/bin
-PYTHON_PATH=$BIN_PATH/python
+USR_BIN_PATH=/usr/bin
+PYTHON_PATH=$USR_BIN_PATH/python
 RELATIVE_PATH=../../
 SCRIPT_NAME=main.py
 
 # retrieves the daemon pid
 DAEMON_PID=$$
 
-# retrieves the script directory
-SCRIPT_DIRECTORY=$(dirname $(readlink -f $0))
+# retrieves the script directory path
+SCRIPT_DIRECTORY_PATH=$(dirname $(readlink -f $0))
 
 # executes the initial python script with
 # the provided arguments
-$PYTHON_PATH $SCRIPT_DIRECTORY/$RELATIVE_PATH/$SCRIPT_NAME $* --daemon_pid=$DAEMON_PID &
+$PYTHON_PATH $SCRIPT_DIRECTORY_PATH/$RELATIVE_PATH/$SCRIPT_NAME $* --daemon_pid=$DAEMON_PID &
 
 # saves the pid value
 PID=$!
