@@ -33,7 +33,7 @@ RELATIVE_PATH=../all/
 SCRIPT_NAME=colony_deploy.py
 
 # retrieves the script directory path
-SCRIPT_DIRECTORY_PATH=$PYTHON_PATH -c "import os;print os.path.realpath(\"$0\")"
+SCRIPT_DIRECTORY_PATH=$($PYTHON_PATH -c "import os;print os.path.realpath(\"$0\")")
 
 # executes the initial python script with
 # the provided arguments
