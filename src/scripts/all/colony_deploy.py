@@ -424,6 +424,7 @@ def remove_directory(directory_path):
     os.rmdir(directory_path)
 
 if __name__ == "__main__":
+    # updates the system path
     update_system_path()
 
     try:
