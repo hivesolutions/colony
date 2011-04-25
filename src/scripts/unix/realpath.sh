@@ -27,14 +27,14 @@
 # __license__   = GNU General Public License (GPL), Version 3
 
 # sets the temporary variables
-BIN_PATH=/usr/bin
-PYTHON_PATH=$BIN_PATH/python
+USR_BIN_PATH=/usr/bin
+PYTHON_PATH=$USR_BIN_PATH/python
 
 # retrieves the current os name
 OS_NAME=$(uname)
 
 # in case the current os is darwin
-if [$OS_NAME -eq "Darwin"]; then
+if [$OS_NAME="Darwin"]; then
     # retrieves the current directory without following
     # symbolic links
     CURRENT_DIRECTORY=$(dirname $($PYTHON_PATH $(dirname $0)/realpath.py $0))
