@@ -34,7 +34,7 @@ PYTHON_PATH=$USR_BIN_PATH/python
 RELATIVE_PATH=../..
 
 # retrieves the script directory path
-SCRIPT_DIRECTORY_PATH=$($PYTHON_PATH -c "import os;print os.path.realpath(\"$0\")")
+SCRIPT_DIRECTORY_PATH=$(dirname $($PYTHON_PATH -c "import os;print os.path.realpath(\"$0\")"))
 
 # updates the path variable with the scripts path
 export PATH=$PATH:$SCRIPT_DIRECTORY_PATH/$RELATIVE_PATH/scripts/bsd
