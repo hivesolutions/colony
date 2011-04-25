@@ -34,7 +34,7 @@ PYTHON_PATH=$BIN_PATH/python
 OS_NAME=$(uname)
 
 # in case the current os is darwin
-if [[$OS_NAME -eq "Darwin"]]; then
+if [$OS_NAME -eq "Darwin"]; then
     # retrieves the current directory without following
     # symbolic links
     CURRENT_DIRECTORY=$(dirname $($PYTHON_PATH $(dirname $0)/realpath.py $0))
