@@ -32,9 +32,12 @@ PYTHON_PATH=$BIN_PATH/python
 RELATIVE_PATH=../../
 SCRIPT_NAME=main.py
 
+# retrieves the current directory
+CURRENT_DIRECTORY=sh $(dirname $0)/realpath.sh $0
+
 # executes the initial python script with
 # the provided arguments
-$PYTHON_PATH $(dirname $(readlink -f $0))/$RELATIVE_PATH/$SCRIPT_NAME $*
+$PYTHON_PATH $CURRENT_DIRECTORY/$RELATIVE_PATH/$SCRIPT_NAME $*
 
 # exits the process
 exit $?
