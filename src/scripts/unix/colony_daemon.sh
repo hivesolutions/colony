@@ -65,9 +65,12 @@ SCRIPT_NAME=main.py
 # retrieves the daemon pid
 DAEMON_PID=$$
 
+# retrieves the script directory
+SCRIPT_DIRECTORY=$(dirname $(readlink -f $0))
+
 # executes the initial python script with
 # the provided arguments
-$PYTHON_PATH $(dirname $(readlink -f $0))/$RELATIVE_PATH/$SCRIPT_NAME $* --daemon_pid=$DAEMON_PID &
+$PYTHON_PATH $SCRIPT_DIRECTORY/$RELATIVE_PATH/$SCRIPT_NAME $* --daemon_pid=$DAEMON_PID &
 
 # saves the pid value
 PID=$!

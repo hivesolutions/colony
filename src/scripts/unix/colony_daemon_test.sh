@@ -32,9 +32,12 @@ PYTHON_PATH=$BIN_PATH/python
 RELATIVE_PATH=../all/
 SCRIPT_NAME=colony_daemon_test.py
 
+# retrieves the script directory
+SCRIPT_DIRECTORY=$(dirname $(readlink -f $0))
+
 # executes the initial python script with
 # the provided arguments
-$PYTHON_PATH $(dirname $(readlink -f $0))/$RELATIVE_PATH/$SCRIPT_NAME $*
+$PYTHON_PATH $SCRIPT_DIRECTORY/$RELATIVE_PATH/$SCRIPT_NAME $*
 
 # exits the process
 exit $?
