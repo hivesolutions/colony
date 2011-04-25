@@ -26,56 +26,24 @@
 # __copyright__ = Copyright (c) 2008 Hive Solutions Lda.
 # __license__   = GNU General Public License (GPL), Version 3
 
-# Function called upon process term signal received
-on_term() {
-    # kills the child process
-    kill -TERM $PID
-
-    # waits for child process
-    wait
-
-    # exits the process
-    exit 0
-}
-
-# Function called upon process kill signal received
-on_kill() {
-    # kills the child process
-    kill -KILL $PID
-
-    # waits for child process
-    wait
-
-    # exits the process
-    exit 0
-}
-
-# traps the term signal
-trap "on_term" TERM
-
-# traps the kill signal
-trap "on_kill" KILL
-
 # sets the temporary variables
 BIN_PATH=/usr/bin
 PYTHON_PATH=$BIN_PATH/python
-RELATIVE_PATH=../../
-SCRIPT_NAME=main.py
 
-# retrieves the daemon pid
-DAEMON_PID=$$
+# retrieves the current os name
+OS_NAME=$(uname)
 
-# retrieves the current directory
-CURRENT_DIRECTORY=sh $(dirname $0)/realpath.sh $0
+# in case the current os is darwin
+if [[$OS_NAME == "Darwin"]]; then
+    # retrieves the current directory without following
+    # symbolic links
+    CURRENT_DIRECTORY=$(dirname $($PYTHON_PATH $(dirname $0)/realpath.py $0))
+# otherwise it's a "normal" unix os
+else
+    # retrieves the current directory following
+    # symbolic links
+    CURRENT_DIRECTORY=$(dirname $(readlink -f $0))
+fi
 
-# executes the initial python script with
-# the provided arguments
-$PYTHON_PATH $CURRENT_DIRECTORY/$RELATIVE_PATH/$SCRIPT_NAME $* --daemon_pid=$DAEMON_PID &
-
-# saves the pid value
-PID=$!
-
-# iterates continuously
-while true ; do
-    wait
-done
+# prints the current directory
+echo $CURRENT_DIRECTORY
