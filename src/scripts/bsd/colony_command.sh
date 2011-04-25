@@ -28,20 +28,13 @@
 
 # sets the temporary variables
 BIN_PATH=/bin
+USR_BIN_PATH=/usr/bin
 SHELL_PATH=$BIN_PATH/sh
+PYTHON_PATH=$USR_BIN_PATH/python
 RELATIVE_PATH=../..
 
-# retrieves the script (relative) directory path
-SCRIPT_RELATIVE_DIRECTORY_PATH=$(dirname $0)
-
-# changes to the script directory
-pushd "$SCRIPT_RELATIVE_DIRECTORY_PATH" > /dev/null
-
-# retrieves the (real) script directory path
-SCRIPT_DIRECTORY_PATH=$(pwd)
-
-# returns to the previous directory
-popd > /dev/null
+# retrieves the script directory path
+SCRIPT_DIRECTORY_PATH=$PYTHON_PATH -c "import os;print os.path.realpath(\"$0\")"
 
 # updates the path variable with the scripts path
 export PATH=$PATH:$SCRIPT_DIRECTORY_PATH/$RELATIVE_PATH/scripts/bsd
