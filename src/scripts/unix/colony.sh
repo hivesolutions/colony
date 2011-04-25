@@ -35,7 +35,7 @@ RELATIVE_PATH=../../
 SCRIPT_NAME=main.py
 
 # retrieves the current directory
-CURRENT_DIRECTORY=$($SHELL_PATH $(dirname $0)/realpath.sh $0)
+CURRENT_DIRECTORY=$($SHELL_PATH realpath.sh $0)
 
 # executes the initial python script with
 # the provided arguments
