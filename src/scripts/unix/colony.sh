@@ -27,19 +27,14 @@
 # __license__   = GNU General Public License (GPL), Version 3
 
 # sets the temporary variables
-BIN_PATH=/bin
-USR_BIN_PATH=/usr/bin
-SHELL_PATH=$BIN_PATH/sh
-PYTHON_PATH=$USR_BIN_PATH/python
+BIN_PATH=/usr/bin
+PYTHON_PATH=$BIN_PATH/python
 RELATIVE_PATH=../../
 SCRIPT_NAME=main.py
 
-# retrieves the current directory
-CURRENT_DIRECTORY=$($SHELL_PATH realpath.sh $0)
-
 # executes the initial python script with
 # the provided arguments
-$PYTHON_PATH $CURRENT_DIRECTORY/$RELATIVE_PATH/$SCRIPT_NAME $*
+$PYTHON_PATH $(dirname $(readlink -f $0))/$RELATIVE_PATH/$SCRIPT_NAME $*
 
 # exits the process
 exit $?
