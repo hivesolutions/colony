@@ -65,31 +65,51 @@ EXTENDED_VALUE = "extended"
 EXTENDED_SIMPLE_VALUE = "extended_simple"
 """ The extended simple value """
 
-DEFAULT_INCLUDES = (DAY_VALUE, HOUR_VALUE, MINUTE_VALUE, SECOND_VALUE)
+DEFAULT_INCLUDES = (
+    DAY_VALUE,
+    HOUR_VALUE,
+    MINUTE_VALUE,
+    SECOND_VALUE
+)
 """ The default includes list (tuple) """
 
 DEFAULT_FORMAT = "%(D)d days, %(H)d hours, %(M)d minutes"
 """ The default format """
 
-FORMATS = {SIMPLE_VALUE : {DAY_VALUE : "%(D)d",
-                           HOUR_VALUE : "%(H)d",
-                           MINUTE_VALUE : "%(M)d",
-                           SECOND_VALUE : "%(S)d"},
-           BASIC_VALUE : {DAY_VALUE : "%(D)dd",
-                          HOUR_VALUE : "%(H)dh",
-                          MINUTE_VALUE : "%(M)dm",
-                          SECOND_VALUE : "%(S)ds"},
-           EXTENDED_VALUE : {DAY_VALUE : "%(D)d days",
-                             HOUR_VALUE : "%(H)d hours",
-                             MINUTE_VALUE : "%(M)d minutes",
-                             SECOND_VALUE : "%(S)d seconds"},
-           EXTENDED_SIMPLE_VALUE : {DAY_VALUE : "%(D)d days",
-                                    HOUR_VALUE : "%(H)d hours",
-                                    MINUTE_VALUE : "%(M)d minutes",
-                                    SECOND_VALUE : "%(S)d seconds"}}
+FORMATS = {
+    SIMPLE_VALUE : {
+        DAY_VALUE : "%(D)d",
+        HOUR_VALUE : "%(H)d",
+        MINUTE_VALUE : "%(M)d",
+        SECOND_VALUE : "%(S)d"
+    },
+    BASIC_VALUE : {
+        DAY_VALUE : "%(D)dd",
+        HOUR_VALUE : "%(H)dh",
+        MINUTE_VALUE : "%(M)dm",
+        SECOND_VALUE : "%(S)ds"
+    },
+    EXTENDED_VALUE : {
+        DAY_VALUE : "%(D)d days",
+        HOUR_VALUE : "%(H)d hours",
+        MINUTE_VALUE : "%(M)d minutes",
+        SECOND_VALUE : "%(S)d seconds"
+    },
+    EXTENDED_SIMPLE_VALUE : {
+        DAY_VALUE : "%(D)d days",
+        HOUR_VALUE : "%(H)d hours",
+        MINUTE_VALUE : "%(M)d minutes",
+        SECOND_VALUE : "%(S)d seconds"
+    }
+}
 """ The formats map """
 
-SEPARATORS = {SIMPLE_VALUE : ":", BASIC_VALUE : ", ", EXTENDED_VALUE : ", ", EXTENDED_SIMPLE_VALUE : " "}
+SEPARATORS = {
+    SIMPLE_VALUE : ":",
+    BASIC_VALUE : ", ",
+    EXTENDED_VALUE : ", ",
+    EXTENDED_SIMPLE_VALUE : " "
+}
 """ The separators map """
 
 def format_seconds_smart(seconds, mode = SIMPLE_VALUE, includes = DEFAULT_INCLUDES, minimize = True):
