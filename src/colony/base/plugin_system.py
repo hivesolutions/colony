@@ -1651,8 +1651,15 @@ class PluginManager:
                 # extends the referred modules with all the plugin modules
                 self.referred_modules.extend(self.get_all_modules(plugin_path))
 
+            # defines the plugin system configuration
+            plugin_system_configuration = {
+                "library_paths" : self.library_paths,
+                "plugin_paths" : self.plugin_paths,
+                "plugins" : self.referred_modules
+            }
+
             # starts the plugin loading process
-            self.init_plugin_system({"library_paths" : self.library_paths, "plugin_paths" : self.plugin_paths, "plugins" : self.referred_modules})
+            self.init_plugin_system(plugin_system_configuration)
 
             # starts the main loop
             self.main_loop()
