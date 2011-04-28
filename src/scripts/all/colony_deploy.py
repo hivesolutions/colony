@@ -61,6 +61,8 @@ RELEASE_DATE = "${out value=date /}"
 
 USAGE = "Help:\n\
 --help[-h] - prints this message\n\
+--flush[-f] - flushes the current deploy directory\n\
+--info[-i] - prints information about the package\n\
 --verbose[-v] - starts the program in verbose mode\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the deployer"
 """ The usage string for the command line arguments """
