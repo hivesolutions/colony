@@ -249,6 +249,9 @@ def main():
             # deploys the package in the given path to target
             # manager path using the verbose level set
             deploy_package(deploy_full_path, manager_path, verbose)
+
+            # removes the deploy file (using the full path)
+            os.remove(deploy_full_path)
     # otherwise it's a "normal" deployment
     else:
         # retrieves the package path
