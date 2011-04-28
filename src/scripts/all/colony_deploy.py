@@ -350,12 +350,8 @@ def deploy_package(package_path, manager_path, verbose):
     # creates a new zip (manager)
     zip = colony_zip.Zip()
 
-    try:
-        # unzips the package to the temporary path
-        zip.unzip(package_path, temporary_path)
-    finally:
-        # closes the zip file
-        zip.close()
+    # unzips the package to the temporary path
+    zip.unzip(package_path, temporary_path)
 
     try:
         # prints a log message
