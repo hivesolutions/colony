@@ -224,34 +224,9 @@ def main():
     # in case the flush flag is set, there is
     # a flushing of the deploy directory
     if flush:
-        # creates the deploy path
-        deploy_path = os.path.normpath(manager_path + "/" + RELATIVE_DEPLOY_PATH)
-
-        # list the deploy path
-        deploy_files = os.listdir(deploy_path)
-
-        # iterates over all the file to
-        # be deployed
-        for deploy_file in deploy_files:
-            # splits the deploy file into base and extension
-            _deploy_file_base, deploy_file_extension = os.path.splitext(deploy_file)
-
-            # in case the deploy file extension
-            # is not a colony valid file extension
-            if not deploy_file_extension in COLONY_FILE_EXTENSIONS:
-                # continues the loop
-                continue
-
-            # creates the deploy full path by joining
-            # the deploy path and the deploy file (name)
-            deploy_full_path = os.path.join(deploy_path, deploy_file)
-
-            # deploys the package in the given path to target
-            # manager path using the verbose level set
-            deploy_package(deploy_full_path, manager_path, verbose)
-
-            # removes the deploy file (using the full path)
-            os.remove(deploy_full_path)
+        # deploys the the items in the deploy path
+        # for flushing purposes
+        deploy_flush(manager_path, verbose)
     # otherwise it's a "normal" deployment
     else:
         # retrieves the package path
@@ -260,6 +235,36 @@ def main():
         # deploys the package in the given path to target
         # manager path using the verbose level set
         deploy_package(package_path, manager_path, verbose)
+
+def deploy_flush(manager_path, verbose):
+    # creates the deploy path
+    deploy_path = os.path.normpath(manager_path + "/" + RELATIVE_DEPLOY_PATH)
+
+    # list the deploy path
+    deploy_files = os.listdir(deploy_path)
+
+    # iterates over all the file to
+    # be deployed
+    for deploy_file in deploy_files:
+        # splits the deploy file into base and extension
+        _deploy_file_base, deploy_file_extension = os.path.splitext(deploy_file)
+
+        # in case the deploy file extension
+        # is not a colony valid file extension
+        if not deploy_file_extension in COLONY_FILE_EXTENSIONS:
+            # continues the loop
+            continue
+
+        # creates the deploy full path by joining
+        # the deploy path and the deploy file (name)
+        deploy_full_path = os.path.join(deploy_path, deploy_file)
+
+        # deploys the package in the given path to target
+        # manager path using the verbose level set
+        deploy_package(deploy_full_path, manager_path, verbose)
+
+        # removes the deploy file (using the full path)
+        os.remove(deploy_full_path)
 
 def deploy_package(package_path, manager_path, verbose):
     """
