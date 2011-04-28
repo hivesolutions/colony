@@ -500,8 +500,10 @@ def print_value(key, value):
         print key + ": " + value
     # in case the value is a list (of strings)
     elif value_type == types.ListType:
+        # prints the key
         print key,
 
+        # prints the value
         print ":" + str(value)
 
 def remove_directory(directory_path):
