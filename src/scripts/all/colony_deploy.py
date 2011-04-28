@@ -412,6 +412,9 @@ def deploy_package(package_path, manager_path, verbose):
 
         # writes the plugins file contents
         colony_file.write_file(registry_path + "/plugins.json", plugins_serialized)
+
+        # copies the package file to the registry
+        shutil.copy(package_path, registry_path + "/plugins")
     except Exception, exception:
         # prints a log message
         log("Problem deploying '%s' with error '%s'" % (package_path, str(exception)), verbose)
