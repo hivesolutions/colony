@@ -77,11 +77,11 @@ DEFAULT_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
 DEFAULT_MANAGER_PATH_VALUE = os.path.normpath(os.path.realpath(DEFAULT_PATH_VALUE + "/../.."))
 """ The default manager path """
 
-PLUGIN_ID = "plugin_id"
-""" The plugin id value """
+ID_VALUE = "id"
+""" The id value """
 
-PLUGIN_VERSION = "plugin_version"
-""" The plugin version value """
+VERSION_VALUE = "version"
+""" The version value """
 
 MAIN_FILE_VALUE = "main_file"
 """ The main file value """
@@ -323,11 +323,11 @@ def deploy_package(package_path, manager_path, verbose):
         # loads the json specification file contents
         specification = json.loads(specification_file_contents)
 
-        # retrieves the plugin id
-        plugin_id = specification[PLUGIN_ID]
+        # retrieves the id
+        id = specification[ID_VALUE]
 
-        # retrieves the plugin version
-        plugin_version = specification[PLUGIN_VERSION]
+        # retrieves the version
+        version = specification[VERSION_VALUE]
 
         # retrieves the main file
         main_file = specification[MAIN_FILE_VALUE]
@@ -394,8 +394,8 @@ def deploy_package(package_path, manager_path, verbose):
         current_date_time_formated = current_date_time.strftime("%d-%m-%Y %H:%M:%S")
 
         # sets the installed plugin map
-        installed_plugins[plugin_id] = {
-            VERSION_VALUE : plugin_version,
+        installed_plugins[id] = {
+            VERSION_VALUE : version,
             TIMESTAMP_VALUE : current_time
         }
 
@@ -411,7 +411,7 @@ def deploy_package(package_path, manager_path, verbose):
         colony_file.write_file(registry_path + "/plugins.json", plugins_serialized)
     except Exception, exception:
         # prints a log message
-        log("Problem deploying '%s' with error '%s'" % (package_path, str(exception)))
+        log("Problem deploying '%s' with error '%s'" % (package_path, str(exception)), verbose)
 
         # re-raises the exception
         raise

@@ -37,7 +37,7 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-def read_file(file_path, mode = "wb"):
+def read_file(file_path, mode = "rb"):
     """
     reads the file contents from the file
     in the given file path.
