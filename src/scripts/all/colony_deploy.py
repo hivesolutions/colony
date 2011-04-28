@@ -263,15 +263,11 @@ def deploy_info(package_path, manager_path, verbose):
     # creates a new zip (manager)
     zip = colony_zip.Zip()
 
-    try:
-        # prints a log message
-        log("Opening specification file", verbose)
+    # prints a log message
+    log("Opening specification file", verbose)
 
-        # reads the specification file contents from the zip file
-        specification_file_contents = zip.read(SPECIFICATION_FILE_NAME)
-    finally:
-        # closes the zip file
-        zip.close()
+    # reads the specification file contents from the zip file
+    specification_file_contents = zip.read(package_path, SPECIFICATION_FILE_NAME)
 
     # loads the json specification file contents
     specification = json.loads(specification_file_contents)

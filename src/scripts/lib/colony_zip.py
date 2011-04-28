@@ -91,8 +91,12 @@ class Zip:
         # creates the zip file from the file path
         zip_file = zipfile.ZipFile(file_path)
 
-        # retrieves the name list from the zip file
-        name_list = zip_file.namelist()
+        try:
+            # retrieves the name list from the zip file
+            name_list = zip_file.namelist()
+        finally:
+            # closes the zip file
+            zip_file.close()
 
         # creates the directories list
         directories_list = []
@@ -185,8 +189,12 @@ class Zip:
         # creates the zip file from the file path
         zip_file = zipfile.ZipFile(file_path)
 
-        # retrieves the name list from the zip file
-        name_list = zip_file.namelist()
+        try:
+            # retrieves the name list from the zip file
+            name_list = zip_file.namelist()
+        finally:
+            # closes the zip file
+            zip_file.close()
 
         # creates the files list
         files_list = []
@@ -271,42 +279,74 @@ class Zip:
         # opens the zip file for the given file path
         zip_file = zipfile.ZipFile(file_path)
 
-        # retrieves the file paths
-        file_paths_list = self.get_file_paths(file_path)
+        try:
+            # retrieves the file paths
+            file_paths_list = self.get_file_paths(file_path)
 
-        # iterates over all the file names in the file paths list
-        for file_name in file_paths_list:
-            # retrieves the complete file path of the file name
-            full_path = os.path.join(root_directory_path, file_name)
+            # iterates over all the file names in the file paths list
+            for file_name in file_paths_list:
+                # retrieves the complete file path of the file name
+                full_path = os.path.join(root_directory_path, file_name)
 
-            # opens the file in write mode
-            file = open(full_path, "wb")
+                # opens the file in write mode
+                file = open(full_path, "wb")
 
-            # reads the zip file contents
-            zip_file_contents = zip_file.read(file_name)
+                try:
+                    # reads the zip file contents
+                    zip_file_contents = zip_file.read(file_name)
 
-            # creates a new string buffer
-            string_buffer = cStringIO.StringIO()
+                    # creates a new string buffer
+                    string_buffer = cStringIO.StringIO()
 
-            # writes the zip file contents into the string buffer
-            string_buffer.write(zip_file_contents)
+                    # writes the zip file contents into the string buffer
+                    string_buffer.write(zip_file_contents)
 
-            # seeks to the beginning of the buffer
-            string_buffer.seek(0)
+                    # seeks to the beginning of the buffer
+                    string_buffer.seek(0)
 
-            # reads the data from the string buffer
-            data = string_buffer.read(BUFFER_LENGTH)
+                    # reads the data from the string buffer
+                    data = string_buffer.read(BUFFER_LENGTH)
 
-            # iterates while there is data available
-            while data:
-                # writes the data to the file
-                file.write(data)
+                    # iterates while there is data available
+                    while data:
+                        # writes the data to the file
+                        file.write(data)
 
-                # reads the data from the string buffer
-                data = string_buffer.read(BUFFER_LENGTH)
+                        # reads the data from the string buffer
+                        data = string_buffer.read(BUFFER_LENGTH)
+                finally:
+                    # closes the file
+                    file.close()
+        finally:
+            # closes the zip file
+            zip_file.close()
 
-            # closes the file
-            file.close()
+    def read(self, zip_file_path, file_name):
+        """
+        Reads a file from the zip file in the given path.
+        The contents of the file are returned.
+
+        @type zip_file_path: String
+        @param zip_file_path: Full path to the zip file.
+        @type file_name: String
+        @param file_name: The name of the file to retrieve
+        the contents.
+        @rtype: String
+        @return: The file that has been read.
+        """
+
+        # opens the zip file for the given file path
+        zip_file = zipfile.ZipFile(zip_file_path)
+
+        try:
+            # reads the file with the given name
+            file_contents = zip_file.read(file_name)
+        finally:
+            # closes the zip file
+            zip_file.close()
+
+        # returns the file contents
+        return file_contents
 
     def zip(self, zip_file_path, input_directory, file_path_list = None):
         """
@@ -325,11 +365,16 @@ class Zip:
         zip_file_path = os.path.abspath(zip_file_path)
         input_directory = os.path.abspath(input_directory)
 
-        # in case the input directory is valid and is a directory
-        if input_directory and os.path.isdir(input_directory):
-            # creates a  new zip file for writing in deflated mode
-            zip_file = zipfile.ZipFile(zip_file_path, "w", compression = zipfile.ZIP_DEFLATED)
+        # in case the input directory is not valid
+        # or in case it's not a directory
+        if not input_directory or not os.path.isdir(input_directory):
+            # returns immediately
+            return
 
+        # creates a  new zip file for writing in deflated mode
+        zip_file = zipfile.ZipFile(zip_file_path, "w", compression = zipfile.ZIP_DEFLATED)
+
+        try:
             # in case the file paths list does not exit
             if not file_path_list:
                 # retrieves the fule paths from the input directory
@@ -355,7 +400,7 @@ class Zip:
 
                 # writes the file in the path to the zip file
                 zip_file.write(file_path, output_file_path_encoded)
-
+        finally:
             # closes the zip file
             zip_file.close()
 
@@ -370,11 +415,21 @@ class Zip:
         """
 
         # retrieves the zip file absolute path
+        # and the output directory (absolute path)
         zip_file_path = os.path.abspath(zip_file_path)
         output_directory = os.path.abspath(output_directory)
-        if os.path.isfile(zip_file_path):
-            self.create_directories(zip_file_path, output_directory)
-            self.create_files(zip_file_path, output_directory)
+
+        # in case the path does not represent a valid
+        # zip file
+        if not os.path.isfile(zip_file_path):
+            # returns immediately
+            return
+
+        # creates the directories from the zip file to the output directory
+        self.create_directories(zip_file_path, output_directory)
+
+        # creates the files from the zip file to the output directory
+        self.create_files(zip_file_path, output_directory)
 
 def get_file_paths(path, returned_path_list = None):
     """
