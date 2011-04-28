@@ -194,13 +194,14 @@ def main():
         option_arguments = sys.argv[2:]
 
     # processes the arguments options
-    options, _args = getopt.getopt(option_arguments, "hvfm:", ["help", "flush", "verbose", "manager_dir="])
+    options, _args = getopt.getopt(option_arguments, "hfivm:", ["help", "flush", "info", "verbose", "manager_dir="])
 
     # retrieves the file system encoding
     file_system_encoding = sys.getfilesystemencoding()
 
     # starts the options values
     flush = False
+    info = False
     verbose = False
 
     # retrieves the manager path
@@ -213,6 +214,8 @@ def main():
             sys.exit()
         elif option in ("-f", "--flush"):
             flush = True
+        elif option in ("-i", "--info"):
+            info = True
         elif option in ("-v", "--verbose"):
             verbose = True
         elif option in ("-m", "--manager_dir"):
@@ -221,20 +224,77 @@ def main():
     # prints the console information
     print_information()
 
+    # retrieves the package path
+    package_path = sys.argv[1]
+
+    # in case the info flag is set
+    if info:
+        # prints the deploy info
+        deploy_info(package_path, manager_path, verbose)
+
+        # returns immediately
+        return
+
     # in case the flush flag is set, there is
     # a flushing of the deploy directory
     if flush:
         # deploys the the items in the deploy path
         # for flushing purposes
         deploy_flush(manager_path, verbose)
-    # otherwise it's a "normal" deployment
-    else:
-        # retrieves the package path
-        package_path = sys.argv[1]
 
-        # deploys the package in the given path to target
-        # manager path using the verbose level set
-        deploy_package(package_path, manager_path, verbose)
+        # returns immediately
+        return
+
+    # deploys the package in the given path to target
+    # manager path using the verbose level set
+    deploy_package(package_path, manager_path, verbose)
+
+def deploy_info(package_path, manager_path, verbose):
+    # imports the colony references
+    import colony_zip
+    import colony_file
+
+    # creates a new temporary path
+    temporary_path = tempfile.mkdtemp()
+
+    # creates the specification file path
+    specification_file_path = os.path.normpath(temporary_path + "/" + SEPCIFICATION_FILE_NAME)
+
+    # in case the package path does not exist
+    if not os.path.exists(package_path):
+        # raises an exception
+        raise Exception("The package path '%s' does not exist" % package_path)
+
+    # prints a log message
+    log("Deploying '%s' to '%s'" % (package_path, manager_path), True)
+
+    # prints a log message
+    log("Unpacking package file '%s' using zip decoder" % (package_path), verbose)
+
+    # creates a new zip (manager)
+    zip = colony_zip.Zip()
+
+    # unzips the package to the temporary path
+    zip.unzip(package_path, temporary_path)
+
+    try:
+        # prints a log message
+        log("Opening specification file '%s'" % (specification_file_path), verbose)
+
+        # reads the specification file contents
+        specification_file_contents = colony_file.read_file(specification_file_path)
+
+        # loads the json specification file contents
+        specification = json.loads(specification_file_contents)
+
+        # prints the specification
+        print_specification(specification)
+    finally:
+        # prints a log message
+        log("Removing temporary path '%s'" % temporary_path, verbose)
+
+        # removes the temporary path (directory)
+        remove_directory(temporary_path)
 
 def deploy_flush(manager_path, verbose):
     # creates the deploy path
@@ -318,15 +378,8 @@ def deploy_package(package_path, manager_path, verbose):
         # prints a log message
         log("Opening specification file '%s'" % (specification_file_path), verbose)
 
-        # opens the specification file
-        specification_file = open(specification_file_path)
-
-        try:
-            # reads the specification file, retrieving the contents
-            specification_file_contents = specification_file.read()
-        finally:
-            # closes the specification file
-            specification_file.close()
+        # reads the specification file contents
+        specification_file_contents = colony_file.read_file(specification_file_path)
 
         # loads the json specification file contents
         specification = json.loads(specification_file_contents)
