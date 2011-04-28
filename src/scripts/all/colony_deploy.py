@@ -109,7 +109,7 @@ LAST_MODIFIED_DATE_VALUE = "last_modified_date"
 COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
 """ The colony home environment variable name """
 
-SEPCIFICATION_FILE_NAME = "specification.json"
+SPECIFICATION_FILE_NAME = "specification.json"
 """ The specification file name """
 
 RELATIVE_DEPLOY_PATH = "deploy"
@@ -254,49 +254,30 @@ def main():
 def deploy_info(package_path, manager_path, verbose):
     # imports the colony references
     import colony_zip
-    import colony_file
-
-    # creates a new temporary path
-    temporary_path = tempfile.mkdtemp()
-
-    # creates the specification file path
-    specification_file_path = os.path.normpath(temporary_path + "/" + SEPCIFICATION_FILE_NAME)
 
     # in case the package path does not exist
     if not os.path.exists(package_path):
         # raises an exception
         raise Exception("The package path '%s' does not exist" % package_path)
 
-    # prints a log message
-    log("Deploying '%s' to '%s'" % (package_path, manager_path), True)
-
-    # prints a log message
-    log("Unpacking package file '%s' using zip decoder" % (package_path), verbose)
-
     # creates a new zip (manager)
     zip = colony_zip.Zip()
 
-    # unzips the package to the temporary path
-    zip.unzip(package_path, temporary_path)
-
     try:
         # prints a log message
-        log("Opening specification file '%s'" % (specification_file_path), verbose)
+        log("Opening specification file", verbose)
 
-        # reads the specification file contents
-        specification_file_contents = colony_file.read_file(specification_file_path)
-
-        # loads the json specification file contents
-        specification = json.loads(specification_file_contents)
-
-        # prints the specification
-        print_specification(specification)
+        # reads the specification file contents from the zip file
+        specification_file_contents = zip.read(SPECIFICATION_FILE_NAME)
     finally:
-        # prints a log message
-        log("Removing temporary path '%s'" % temporary_path, verbose)
+        # closes the zip file
+        zip.close()
 
-        # removes the temporary path (directory)
-        remove_directory(temporary_path)
+    # loads the json specification file contents
+    specification = json.loads(specification_file_contents)
+
+    # prints the specification
+    print_specification(specification)
 
 def deploy_flush(manager_path, verbose):
     # creates the deploy path
@@ -357,7 +338,7 @@ def deploy_package(package_path, manager_path, verbose):
     temporary_path = tempfile.mkdtemp()
 
     # creates the specification file path
-    specification_file_path = os.path.normpath(temporary_path + "/" + SEPCIFICATION_FILE_NAME)
+    specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
 
     # in case the package path does not exist
     if not os.path.exists(package_path):
@@ -373,8 +354,12 @@ def deploy_package(package_path, manager_path, verbose):
     # creates a new zip (manager)
     zip = colony_zip.Zip()
 
-    # unzips the package to the temporary path
-    zip.unzip(package_path, temporary_path)
+    try:
+        # unzips the package to the temporary path
+        zip.unzip(package_path, temporary_path)
+    finally:
+        # closes the zip file
+        zip.close()
 
     try:
         # prints a log message
