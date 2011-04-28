@@ -40,9 +40,11 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import sys
 import json
+import time
 import types
 import shutil
 import getopt
+import datetime
 import tempfile
 
 VERSION = "${out value=colony_deploy.version /}"
@@ -75,11 +77,32 @@ DEFAULT_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
 DEFAULT_MANAGER_PATH_VALUE = os.path.normpath(os.path.realpath(DEFAULT_PATH_VALUE + "/../.."))
 """ The default manager path """
 
+PLUGIN_ID = "plugin_id"
+""" The plugin id value """
+
+PLUGIN_VERSION = "plugin_version"
+""" The plugin version value """
+
 MAIN_FILE_VALUE = "main_file"
 """ The main file value """
 
 RESOURCES_VALUE = "resources"
 """ The resources value """
+
+INSTALLED_PLUGINS_VALUE = "installed_plugins"
+""" The installed plugins value """
+
+VERSION_VALUE = "version"
+""" The version value """
+
+TIMESTAMP_VALUE = "timestamp"
+""" The timestamp value """
+
+LAST_MODIFIED_TIMESTAMP_VALUE = "last_modified_timestamp"
+""" The last modified timestamp value """
+
+LAST_MODIFIED_DATE_VALUE = "last_modified_date"
+""" The last modified date value """
 
 COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
 """ The colony home environment variable name """
@@ -92,6 +115,9 @@ RELATIVE_DEPLOY_PATH = "deploy"
 
 RELATIVE_DEPLOYMENT_PATH = "plugins"
 """ The path relative to the manager path for the deployment """
+
+RELATIVE_REGISTRY_PATH = "var/registry"
+""" The path relative to the manager path for the registry """
 
 REQUIRED_VALUES = ("platform", "id", "version")
 """ The tuple of required values """
@@ -127,9 +153,23 @@ def update_system_path():
     sys.path.insert(0, os.path.normpath(os.path.realpath(DEFAULT_PATH_VALUE + "/../lib")))
 
 def log(message, verbose):
+    """
+    Logs the given message for the given
+    verbose setting.
+
+    @type message: String
+    @param message: The message to be logged.
+    @type verbose: bool
+    @param verbose: The verbose setting to be used.
+    """
+
+    # in case the verbose
+    # variable is not set
     if not verbose:
+        # returns immediately
         return
 
+    # pritns the message
     print message
 
 def main():
@@ -219,11 +259,29 @@ def main():
         deploy_package(package_path, manager_path, verbose)
 
 def deploy_package(package_path, manager_path, verbose):
-    # imports the colony zip reference
-    import colony_zip
+    """
+    Deploys the package in the given package path to the
+    appropriate targets in the given manager path.
+    The verbose level can be configured with the verbose value.
 
-    # creates the target path
+    @type package_path: String
+    @param package_path: The path to the package to be deployed.
+    @type manager_path: String
+    @param manager_path: The path to the manager to be used as
+    target.
+    @type verbose: bool
+    @param verbose: If the logging should be made in verbose.
+    """
+
+    # imports the colony references
+    import colony_zip
+    import colony_file
+
+    # retrieves the target path
     target_path = os.path.normpath(manager_path + "/" + RELATIVE_DEPLOYMENT_PATH)
+
+    # retrieves the registry path
+    registry_path = os.path.normpath(manager_path + "/" + RELATIVE_REGISTRY_PATH)
 
     # creates a new temporary path
     temporary_path = tempfile.mkdtemp()
@@ -264,6 +322,12 @@ def deploy_package(package_path, manager_path, verbose):
 
         # loads the json specification file contents
         specification = json.loads(specification_file_contents)
+
+        # retrieves the plugin id
+        plugin_id = specification[PLUGIN_ID]
+
+        # retrieves the plugin version
+        plugin_version = specification[PLUGIN_VERSION]
 
         # retrieves the main file
         main_file = specification[MAIN_FILE_VALUE]
@@ -310,7 +374,45 @@ def deploy_package(package_path, manager_path, verbose):
 
         # copies the specification file as the new specification file
         shutil.copy(specification_file_path, new_specification_file_path)
-    except:
+
+        # reads the plugins file contents
+        plugins_file_contents = colony_file.read_file(registry_path + "/plugins.json")
+
+        # loads the plugin file contents from json
+        plugins = json.loads(plugins_file_contents)
+
+        # retrieves the installed plugins
+        installed_plugins = plugins.get(INSTALLED_PLUGINS_VALUE, {})
+
+        # retrieves the current time
+        current_time = time.time()
+
+        # retrieves the current date time
+        current_date_time = datetime.datetime.utcnow()
+
+        # formats the current date time
+        current_date_time_formated = current_date_time.strftime("%d-%m-%Y %H:%M:%S")
+
+        # sets the installed plugin map
+        installed_plugins[plugin_id] = {
+            VERSION_VALUE : plugin_version,
+            TIMESTAMP_VALUE : current_time
+        }
+
+        # updates the plugins map with the current time
+        # and date time values
+        plugins[LAST_MODIFIED_TIMESTAMP_VALUE] = current_time
+        plugins[LAST_MODIFIED_DATE_VALUE] = current_date_time_formated
+
+        # serializes the plugins
+        plugins_serialized = json.dumps(plugins)
+
+        # writes the plugins file contents
+        colony_file.write_file(registry_path + "/plugins.json", plugins_serialized)
+    except Exception, exception:
+        # prints a log message
+        log("Problem deploying '%s' with error '%s'" % (package_path, str(exception)))
+
         # re-raises the exception
         raise
     finally:
