@@ -226,8 +226,8 @@ class Deployer:
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
 
         try:
-            # loads the specification from the specification file path
-            specification = self._load_specification(specification_file_path)
+            # opens the specification from the specification file path
+            specification = self._open_specification(specification_file_path)
 
             # retrieves the type
             type = specification[TYPE_VALUE]
@@ -267,8 +267,8 @@ class Deployer:
         # creates the specification file path
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
 
-        # loads the specification from the specification file path
-        specification = self._load_specification(specification_file_path)
+        # opens the specification from the specification file path
+        specification = self._open_specification(specification_file_path)
 
         # retrieves the id
         id = specification[ID_VALUE]
@@ -315,8 +315,8 @@ class Deployer:
         # creates the specification file path
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
 
-        # loads the specification from the specification file path
-        specification = self._load_specification(specification_file_path)
+        # opens the specification from the specification file path
+        specification = self._open_specification(specification_file_path)
 
         # retrieves the id
         id = specification[ID_VALUE]
@@ -517,7 +517,7 @@ class Deployer:
         # returns the temporary path
         return temporary_path
 
-    def _load_specification(self, specification_file_path):
+    def _open_specification(self, specification_file_path):
         # prints a log message
         self.log("Opening specification file '%s'" % (specification_file_path))
 
