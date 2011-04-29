@@ -208,40 +208,6 @@ class Deployer:
             # removes the deploy file (using the full path)
             os.remove(deploy_full_path)
 
-    def unzip_package(self, package_path):
-        # creates a new temporary path
-        temporary_path = tempfile.mkdtemp()
-
-        # in case the package path does not exist
-        if not os.path.exists(package_path):
-            # raises an exception
-            raise Exception("The package path '%s' does not exist" % package_path)
-
-        # prints a log message
-        self.log("Unpacking package file '%s' using zip decoder" % (package_path))
-
-        # creates a new zip (manager)
-        zip = colony_zip.Zip()
-
-        # unzips the package to the temporary path
-        zip.unzip(package_path, temporary_path)
-
-        # returns the temporary path
-        return temporary_path
-
-    def load_specification(self, specification_file_path):
-        # prints a log message
-        self.log("Opening specification file '%s'" % (specification_file_path))
-
-        # reads the specification file contents
-        specification_file_contents = colony_file.read_file(specification_file_path)
-
-        # loads the json specification file contents
-        specification = json.loads(specification_file_contents)
-
-        # returns the specification
-        return specification
-
     def deploy_package(self, package_path):
         """
         Deploys the package in the given package path to the
@@ -255,14 +221,14 @@ class Deployer:
         self.log("Deploying '%s' to '%s'" % (package_path, self.manager_path), logging.INFO)
 
         # unpacks the package to a temporary path
-        temporary_path = self.unzip_package(package_path)
+        temporary_path = self._unzip_package(package_path)
 
         # creates the specification file path
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
 
         try:
             # loads the specification from the specification file path
-            specification = self.load_specification(specification_file_path)
+            specification = self._load_specification(specification_file_path)
 
             # retrieves the type
             type = specification[TYPE_VALUE]
@@ -303,7 +269,7 @@ class Deployer:
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
 
         # loads the specification from the specification file path
-        specification = self.load_specification(specification_file_path)
+        specification = self._load_specification(specification_file_path)
 
         # retrieves the id
         id = specification[ID_VALUE]
@@ -332,7 +298,7 @@ class Deployer:
             plugin_file_path = os.path.normpath(temporary_path + "/plugins/" + plugin_file_name)
 
             # unpacks the package to a temporary path
-            temporary_path = self.unzip_package(plugin_file_path)
+            temporary_path = self._unzip_package(plugin_file_path)
 
             # deploys the plugin package, using the current paths
             self.deploy_plugin_package(plugin_file_path, temporary_path)
@@ -351,7 +317,7 @@ class Deployer:
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
 
         # loads the specification from the specification file path
-        specification = self.load_specification(specification_file_path)
+        specification = self._load_specification(specification_file_path)
 
         # retrieves the id
         id = specification[ID_VALUE]
@@ -557,3 +523,37 @@ class Deployer:
 
         # removes the directory
         os.rmdir(directory_path)
+
+    def _unzip_package(self, package_path):
+        # creates a new temporary path
+        temporary_path = tempfile.mkdtemp()
+
+        # in case the package path does not exist
+        if not os.path.exists(package_path):
+            # raises an exception
+            raise Exception("The package path '%s' does not exist" % package_path)
+
+        # prints a log message
+        self.log("Unpacking package file '%s' using zip decoder" % (package_path))
+
+        # creates a new zip (manager)
+        zip = colony_zip.Zip()
+
+        # unzips the package to the temporary path
+        zip.unzip(package_path, temporary_path)
+
+        # returns the temporary path
+        return temporary_path
+
+    def _load_specification(self, specification_file_path):
+        # prints a log message
+        self.log("Opening specification file '%s'" % (specification_file_path))
+
+        # reads the specification file contents
+        specification_file_contents = colony_file.read_file(specification_file_path)
+
+        # loads the json specification file contents
+        specification = json.loads(specification_file_contents)
+
+        # returns the specification
+        return specification
