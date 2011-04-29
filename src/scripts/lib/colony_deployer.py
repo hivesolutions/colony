@@ -308,11 +308,11 @@ class Deployer:
             # retrieves the plugin file path
             plugin_file_path = os.path.normpath(temporary_path + "/plugins/" + plugin_file_name)
 
-            # unpacks the package to a temporary path
-            temporary_path = self._unzip_package(plugin_file_path)
+            # unpacks the package to a temporary (plugin) path
+            temporary_plugin_path = self._unzip_package(plugin_file_path)
 
             # deploys the plugin package, using the current paths
-            self.deploy_plugin_package(plugin_file_path, temporary_path)
+            self.deploy_plugin_package(plugin_file_path, temporary_plugin_path)
 
         # reads the bundles file contents
         bundles_file_contents = colony_file.read_file(bundles_file_path)
