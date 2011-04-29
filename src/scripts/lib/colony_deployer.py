@@ -526,7 +526,7 @@ class Deployer:
         # in case the package id is not found in the installed plugins
         if not package_id in installed_bundles:
             # raises a deployer exception
-            raise colony_exceptions.DeployerException("Bundle '%s' v'%s' is not installed", (package_id, package_version))
+            raise colony_exceptions.DeployerException("Bundle '%s' v'%s' is not installed" % (package_id, package_version))
 
         # retrieves the bundle (information) from the
         # installed bundles
@@ -609,7 +609,7 @@ class Deployer:
         # in case the package id is not found in the installed plugins
         if not package_id in installed_plugins:
             # raises a deployer exception
-            raise colony_exceptions.DeployerException("Plugin '%s' v'%s' is not installed", (package_id, package_version))
+            raise colony_exceptions.DeployerException("Plugin '%s' v'%s' is not installed" % (package_id, package_version))
 
         # retrieves the plugin (information) from the
         # installed plugins
