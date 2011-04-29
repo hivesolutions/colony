@@ -201,9 +201,8 @@ class Deployer:
             # the deploy path and the deploy file (name)
             deploy_full_path = os.path.join(deploy_path, deploy_file)
 
-            # deploys the package in the given path to target
-            # manager path
-            self.deploy_package(deploy_full_path, self.manager_path)
+            # deploys the package in the given path
+            self.deploy_package(deploy_full_path)
 
             # removes the deploy file (using the full path)
             os.remove(deploy_full_path)
