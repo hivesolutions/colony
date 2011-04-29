@@ -562,8 +562,11 @@ class Deployer:
             # retrieves the plugin id
             plugin_id = plugin[ID_VALUE]
 
+            # retrieves the plugin version
+            plugin_version = plugin[VERSION_VALUE]
+
             # removes the plugin with the given id
-            self.remove_package(plugin_id)
+            self.remove_plugin_package(plugin_id, plugin_version)
 
         # prints a log message
         self.log("Removing bundle file '%s'" % bundle_path)
