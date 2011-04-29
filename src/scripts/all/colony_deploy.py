@@ -241,11 +241,8 @@ if __name__ == "__main__":
         # creates the (initial) formated traceback
         formated_traceback = traceback.format_tb(traceback_list)
 
-        # retrieves the logger
-        logger = logging.getLogger("default")
-
         # prints the error information
-        logger.error("Error: " + unicode(exception))
+        print "Error: " + unicode(exception)
 
         # prints the stack trace information
         for traceback_line in formated_traceback:
@@ -253,7 +250,7 @@ if __name__ == "__main__":
             traceback_line = traceback_line.strip()
 
             # prints the traceback line
-            logger.error(traceback_line)
+            print traceback_line
 
         # exits in error
         sys.exit(2)
