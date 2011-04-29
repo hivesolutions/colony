@@ -232,7 +232,7 @@ def main():
     # in case the info flag is set
     if info:
         # prints the deploy info
-        deploy_info(package_path, manager_path, verbose)
+        deploy_info(package_path, verbose)
 
         # returns immediately
         return
@@ -251,7 +251,18 @@ def main():
     # manager path using the verbose level set
     deploy_package(package_path, manager_path, verbose)
 
-def deploy_info(package_path, manager_path, verbose):
+def deploy_info(package_path, verbose):
+    """
+    Deploys the package by printing it's information.
+    This deployment is just virtual and only
+    prints information.
+
+    @type package_path: String
+    @param package_path: The path to the package to be "deployed".
+    @type verbose: bool
+    @param verbose: If the logging should be made in verbose.
+    """
+
     # imports the colony references
     import colony_zip
 
@@ -264,7 +275,7 @@ def deploy_info(package_path, manager_path, verbose):
     zip = colony_zip.Zip()
 
     # prints a log message
-    log("Opening specification file", verbose)
+    log("Reading specification file", verbose)
 
     # reads the specification file contents from the zip file
     specification_file_contents = zip.read(package_path, SPECIFICATION_FILE_NAME)
@@ -276,6 +287,18 @@ def deploy_info(package_path, manager_path, verbose):
     print_specification(specification)
 
 def deploy_flush(manager_path, verbose):
+    """
+    Deploys the package in flush mode.
+    The flush mode allows the multiple deployment of
+    all the files in the deploy directory.
+
+    @type manager_path: String
+    @param manager_path: The path to the manager to be used as
+    target.
+    @type verbose: bool
+    @param verbose: If the logging should be made in verbose.
+    """
+
     # creates the deploy path
     deploy_path = os.path.normpath(manager_path + "/" + RELATIVE_DEPLOY_PATH)
 
