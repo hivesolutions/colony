@@ -48,6 +48,7 @@ import tempfile
 
 import colony_zip
 import colony_file
+import colony_exceptions
 
 DEFAULT_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
 """ The default path """
@@ -163,8 +164,8 @@ class Deployer:
 
         # in case the package path does not exist
         if not os.path.exists(package_path):
-            # raises an exception
-            raise Exception("The package path '%s' does not exist" % package_path)
+            # raises a deployer exception
+            raise colony_exceptions.DeployerException("The package path '%s' does not exist" % package_path)
 
         # creates a new zip (manager)
         zip = colony_zip.Zip()
@@ -251,8 +252,8 @@ class Deployer:
                 self.deploy_plugin_package(package_path, temporary_path)
             # otherwise there is an error
             else:
-                # raises an exception
-                raise Exception("Invalid packaging type")
+                # raises a deployer exception
+                raise colony_exceptions.DeployerException("Invalid packaging type")
         except Exception, exception:
             # prints a log message
             self.log("Problem deploying '%s' with error '%s'" % (package_path, str(exception)))
@@ -344,22 +345,15 @@ class Deployer:
         # retrieves the current time
         current_time = time.time()
 
-        # retrieves the current date time
-        current_date_time = datetime.datetime.utcnow()
-
-        # formats the current date time
-        current_date_time_formated = current_date_time.strftime("%d-%m-%Y %H:%M:%S")
-
         # sets the installed bundles map
         installed_bundles[id] = {
             VERSION_VALUE : version,
             TIMESTAMP_VALUE : current_time
         }
 
-        # updates the bundles map with the current time
-        # and date time values
-        bundles[LAST_MODIFIED_TIMESTAMP_VALUE] = current_time
-        bundles[LAST_MODIFIED_DATE_VALUE] = current_date_time_formated
+        # touches the plugins (structure)
+        # updating the dates in it
+        self._touch_structure(plugins)
 
         # serializes the bundles
         bundles_serialized = json.dumps(bundles)
@@ -464,22 +458,15 @@ class Deployer:
         # retrieves the current time
         current_time = time.time()
 
-        # retrieves the current date time
-        current_date_time = datetime.datetime.utcnow()
-
-        # formats the current date time
-        current_date_time_formated = current_date_time.strftime("%d-%m-%Y %H:%M:%S")
-
         # sets the installed plugin map
         installed_plugins[id] = {
             VERSION_VALUE : version,
             TIMESTAMP_VALUE : current_time
         }
 
-        # updates the plugins map with the current time
-        # and date time values
-        plugins[LAST_MODIFIED_TIMESTAMP_VALUE] = current_time
-        plugins[LAST_MODIFIED_DATE_VALUE] = current_date_time_formated
+        # touches the plugins (structure)
+        # updating the dates in it
+        self._touch_structure(plugins)
 
         # serializes the plugins
         plugins_serialized = json.dumps(plugins)
@@ -502,7 +489,38 @@ class Deployer:
         @param package_version: The version of the package to be removed.
         """
 
-        pass
+        # retrieves the registry path
+        registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
+
+        # creates the plugins file path
+        plugins_file_path = os.path.normpath(registry_path + "/" + PLUGINS_FILE_NAME)
+
+        # reads the plugins file contents
+        plugins_file_contents = colony_file.read_file(plugins_file_path)
+
+        # loads the plugin file contents from json
+        plugins = json.loads(plugins_file_contents)
+
+        # retrieves the installed plugins
+        installed_plugins = plugins.get(INSTALLED_PLUGINS_VALUE, {})
+
+        # in case the package id is not found in the installed plugins
+        if not package_id in installed_plugins:
+            # raises a deployer exception
+            raise colony_exceptions.DeployerException("Plugin is not installed")
+
+        # deletes the package id from the installed plugins
+        del installed_plugins[package_id]
+
+        # touches the plugins (structure)
+        # updating the dates in it
+        self._touch_structure(plugins)
+
+        # serializes the plugins
+        plugins_serialized = json.dumps(plugins)
+
+        # writes the plugins file contents
+        colony_file.write_file(plugins_file_path, plugins_serialized)
 
     def validate_specification(self, specification):
         """
@@ -519,8 +537,8 @@ class Deployer:
         for required_value in REQUIRED_VALUES:
             # in case the required value is not in the specification
             if not required_value in specification:
-                # raises an exception
-                raise Exception("Required value '%s' missing in specification file" % (required_value))
+                # raises a deployer exception
+                raise colony_exceptions.DeployerException("Required value '%s' missing in specification file" % (required_value))
 
     def print_specification(self, specification):
         """
@@ -605,8 +623,8 @@ class Deployer:
 
         # in case the package path does not exist
         if not os.path.exists(package_path):
-            # raises an exception
-            raise Exception("The package path '%s' does not exist" % package_path)
+            # raises a deployer exception
+            raise colony_exceptions.DeployerException("The package path '%s' does not exist" % package_path)
 
         # prints a log message
         self.log("Unpacking package file '%s' using zip decoder" % (package_path))
@@ -643,3 +661,27 @@ class Deployer:
 
         # returns the specification
         return specification
+
+    def _touch_structure(self, structure):
+        """
+        Touches the structure, updating the timestamp
+        references present in it.
+
+        @type structure: Dictionary
+        @param structure: The structure to be update with with
+        new timestamps.
+        """
+
+        # retrieves the current time
+        current_time = time.time()
+
+        # retrieves the current date time
+        current_date_time = datetime.datetime.utcnow()
+
+        # formats the current date time
+        current_date_time_formated = current_date_time.strftime("%d-%m-%Y %H:%M:%S")
+
+        # updates the structure map with the current time
+        # and date time values
+        structure[LAST_MODIFIED_TIMESTAMP_VALUE] = current_time
+        structure[LAST_MODIFIED_DATE_VALUE] = current_date_time_formated

@@ -56,6 +56,7 @@ RELEASE_DATE = "${out value=date /}"
 
 USAGE = "Help:\n\
 --help[-h] - prints this message\n\
+--remove[-r] - removes the package with the given id\n\
 --flush[-f] - flushes the current deploy directory\n\
 --info[-i] - prints information about the package\n\
 --verbose[-v] - starts the program in verbose mode\n\
@@ -129,12 +130,13 @@ def main():
         option_arguments = sys.argv[2:]
 
     # processes the arguments options
-    options, _args = getopt.getopt(option_arguments, "hfivm:", ["help", "flush", "info", "verbose", "manager_dir="])
+    options, _args = getopt.getopt(option_arguments, "hrfivm:", ["help", "remove", "flush", "info", "verbose", "manager_dir="])
 
     # retrieves the file system encoding
     file_system_encoding = sys.getfilesystemencoding()
 
     # starts the options values
+    remove = False
     flush = False
     info = False
     verbose = False
@@ -147,6 +149,8 @@ def main():
         if option in ("-h", "--help"):
             usage()
             sys.exit()
+        elif option in ("-r", "--remove"):
+            remove = True
         elif option in ("-f", "--flush"):
             flush = True
         elif option in ("-i", "--info"):
@@ -181,6 +185,7 @@ def main():
 
         # sets the stream handler level to debug
         stream_handler.setLevel(logging.DEBUG)
+    # otherwise no verbose is required
     else:
         # sets the logger level to info
         logger.setLevel(logging.INFO)
@@ -202,6 +207,15 @@ def main():
         # deploys the the items in the deploy path
         # for flushing purposes
         deployer.deploy_flush()
+
+        # returns immediately
+        return
+
+    # in case the remove flag is set, there is
+    # a requirement for removal of the package
+    if remove:
+        # removes the package in the given path
+        deployer.remove_package(package_path)
 
         # returns immediately
         return
