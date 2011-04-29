@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import os
+
 def read_file(file_path, mode = "rb"):
     """
     reads the file contents from the file
@@ -85,3 +87,30 @@ def write_file(file_path, file_contents, mode = "wb"):
     finally:
         # closes the file
         file.close()
+
+def remove_directory(directory_path):
+    """
+    Removes the given directory path recursively.
+    Directories containing files will have their contents removed
+    before being removed.
+
+    @type directory_path: String
+    @param directory_path: The path to the directory to be removed.
+    """
+
+    # creates the list of paths for the directory path
+    paths_list = [os.path.join(directory_path, file_path) for file_path in os.listdir(directory_path)]
+
+    # iterates over all the paths in the paths
+    # list to remove them
+    for path in paths_list:
+        # in case the path is a directory
+        if os.path.isdir(path):
+            # removes the directory
+            remove_directory(path)
+        else:
+            # removes the path
+            os.remove(path)
+
+    # removes the directory
+    os.rmdir(directory_path)

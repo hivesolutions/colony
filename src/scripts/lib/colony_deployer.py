@@ -256,7 +256,7 @@ class Deployer:
             self.log("Removing temporary path '%s'" % temporary_path)
 
             # removes the temporary path (directory)
-            self.remove_directory(temporary_path)
+            colony_file.remove_directory(temporary_path)
 
         # prints a log message
         self.log("Finished deployment", logging.INFO)
@@ -496,33 +496,6 @@ class Deployer:
 
             # prints the value
             print ":" + str(value)
-
-    def remove_directory(self, directory_path):
-        """
-        Removes the given directory path recursively.
-        Directories containing files will have their contents removed
-        before being removed.
-
-        @type directory_path: String
-        @param directory_path: The path to the directory to be removed.
-        """
-
-        # creates the list of paths for the directory path
-        paths_list = [os.path.join(directory_path, file_path) for file_path in os.listdir(directory_path)]
-
-        # iterates over all the paths in the paths
-        # list to remove them
-        for path in paths_list:
-            # in case the path is a directory
-            if os.path.isdir(path):
-                # removes the directory
-                self.remove_directory(path)
-            else:
-                # removes the path
-                os.remove(path)
-
-        # removes the directory
-        os.rmdir(directory_path)
 
     def _unzip_package(self, package_path):
         # creates a new temporary path
