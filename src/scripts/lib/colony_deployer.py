@@ -104,6 +104,9 @@ SPECIFICATION_FILE_NAME = "specification.json"
 RELATIVE_DEPLOY_PATH = "deploy"
 """ The path relative to the manager path for the deploy source """
 
+RELATIVE_BUNDLES_PATH = "bundles"
+""" The path relative to the manager path for the bundles """
+
 RELATIVE_PLUGINS_PATH = "plugins"
 """ The path relative to the manager path for the plugins """
 
@@ -116,7 +119,7 @@ REQUIRED_VALUES = ("platform", "id", "version")
 JSON_FILE_EXTENSION = ".json"
 """ The json file extension """
 
-COLONY_BUNDLE_FILE_EXTENSION = ".cpx"
+COLONY_BUNDLE_FILE_EXTENSION = ".cbx"
 """ The colony bundle file extension """
 
 COLONY_PLUGIN_FILE_EXTENSION = ".cpx"
@@ -498,6 +501,93 @@ class Deployer:
         @param package_version: The version of the package to be removed.
         """
 
+        # removes the bundle package
+        self.remove_bundle_package(package_id, package_version)
+
+    def remove_bundle_package(self, package_id, package_version):
+        # prints a log message
+        self.log("Removing bundle package '%s' v'%s'" % (package_id, package_version))
+
+        # retrieves the registry path
+        registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
+
+        # creates the bundles file path
+        bundles_file_path = os.path.normpath(registry_path + "/" + BUNDLES_FILE_NAME)
+
+        # reads the bundles file contents
+        bundles_file_contents = colony_file.read_file(bundles_file_path)
+
+        # loads the bundles file contents from json
+        bundles = json.loads(bundles_file_contents)
+
+        # retrieves the installed bundles
+        installed_bundles = bundles.get(INSTALLED_BUNDLES_VALUE, {})
+
+        # in case the package id is not found in the installed plugins
+        if not package_id in installed_bundles:
+            # raises a deployer exception
+            raise colony_exceptions.DeployerException("Bundle '%s' v'%s' is not installed", (package_id, package_version))
+
+        # retrieves the bundle (information) from the
+        # installed bundles
+        bundle = installed_bundles[package_id]
+
+        # sets the bundle id as the package id
+        bundle_id = package_id
+
+        # retrieves the bundle version as the
+        bundle_version = package_version or bundle["version"]
+
+        # creates the bundle file name from the bundle
+        # id and version
+        bundle_file_name = bundle_id + "_" + bundle_version + COLONY_BUNDLE_FILE_EXTENSION
+
+        # creates the bundle path from the
+        bundle_path = os.path.normpath(registry_path + "/" + RELATIVE_BUNDLES_PATH + "/" + bundle_file_name)
+
+        # creates a new zip (manager)
+        zip = colony_zip.Zip()
+
+        # reads the specification file contents from the zip file
+        specification_file_contents = zip.read(bundle_path, SPECIFICATION_FILE_NAME)
+
+        # loads the json specification file contents
+        specification = json.loads(specification_file_contents)
+
+        # retrieves the plugins
+        plugins = specification[PLUGINS_VALUE]
+
+        # iterates over all the plugins
+        for plugin in plugins:
+            # retrieves the plugin id
+            plugin_id = plugin[ID_VALUE]
+
+            # removes the plugin with the given id
+            self.remove_package(plugin_id)
+
+        # prints a log message
+        self.log("Removing bundle file '%s'" % bundle_path)
+
+        # removes the bundle file
+        os.remove(bundle_path)
+
+        # deletes the package id from the installed bundles
+        del installed_bundles[package_id]
+
+        # touches the bundles (structure)
+        # updating the dates in it
+        self._touch_structure(bundles)
+
+        # serializes the bundles
+        bundles_serialized = json.dumps(bundles)
+
+        # writes the bundles file contents
+        colony_file.write_file(bundles_file_path, bundles_serialized)
+
+    def remove_plugin_package(self, package_id, package_version):
+        # prints a log message
+        self.log("Removing plugin package '%s' v'%s'" % (package_id, package_version))
+
         # retrieves the registry path
         registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
 
@@ -510,7 +600,7 @@ class Deployer:
         # reads the plugins file contents
         plugins_file_contents = colony_file.read_file(plugins_file_path)
 
-        # loads the plugin file contents from json
+        # loads the plugins file contents from json
         plugins = json.loads(plugins_file_contents)
 
         # retrieves the installed plugins
@@ -519,7 +609,7 @@ class Deployer:
         # in case the package id is not found in the installed plugins
         if not package_id in installed_plugins:
             # raises a deployer exception
-            raise colony_exceptions.DeployerException("Plugin is not installed")
+            raise colony_exceptions.DeployerException("Plugin '%s' v'%s' is not installed", (package_id, package_version))
 
         # retrieves the plugin (information) from the
         # installed plugins
@@ -545,7 +635,7 @@ class Deployer:
         plugin_file_names = zip.names(plugin_path)
 
         # reads the specification file contents from the zip file
-        specification_file_contents = zip.read(plugin_path, "specification.json")
+        specification_file_contents = zip.read(plugin_path, SPECIFICATION_FILE_NAME)
 
         # loads the json specification file contents
         specification = json.loads(specification_file_contents)
