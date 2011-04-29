@@ -268,7 +268,7 @@ class Deployer:
             colony_file.remove_directory(temporary_path)
 
         # prints a log message
-        self.log("Finished deploying '%s'" % package_path, logging.INFO)
+        self.log("Finished deploying '%s' to '%s'" % (package_path, self.manager_path), logging.INFO)
 
     def deploy_bundle_package(self, package_path, temporary_path):
         """
