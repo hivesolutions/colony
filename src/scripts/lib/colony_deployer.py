@@ -600,6 +600,9 @@ class Deployer:
                 # directory path list
                 directory_path_list.append(file_directory_path)
 
+        # prints a log message
+        self.log("Removing empty directories for plugin file '%s'" % plugin_path)
+
         # iterates over all the directory paths
         for directory_path in directory_path_list:
             # in case the directory path does not refers
@@ -610,6 +613,12 @@ class Deployer:
 
             # removes the directories in the directory path
             os.removedirs(directory_path)
+
+        # prints a log message
+        self.log("Removing plugin file '%s'" % plugin_path)
+
+        # removes the plugin file
+        os.remove(plugin_path)
 
         # deletes the package id from the installed plugins
         del installed_plugins[package_id]
