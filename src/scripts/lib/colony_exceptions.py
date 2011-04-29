@@ -37,51 +37,9 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-def read_file(file_path, mode = "rb"):
+class DeployerException(Exception):
     """
-    reads the file contents from the file
-    in the given file path.
-
-    @type file_path: String
-    @param file_path: The file path to be used.
-    @type mode: String
-    @param mode: The read mode to be used.
-    @rtype: String
-    @return: The read file contents.
+    The deployer exception.
     """
 
-    # opens the file in the current mode
-    file = open(file_path, mode)
-
-    try:
-        # rads the file contents from the file
-        file_contents = file.read()
-    finally:
-        # closes the file
-        file.close()
-
-    # returns the file contents
-    return file_contents
-
-def write_file(file_path, file_contents, mode = "wb"):
-    """
-    Writes the given file contents to the file
-    in the given file path.
-
-    @type file_path: String
-    @param file_path: The file path to be used.
-    @type file_contents: String
-    @param file_contents: The contents to be written.
-    @type mode: String
-    @param mode: The write mode to be used.
-    """
-
-    # opens the file in the current mode
-    file = open(file_path, mode)
-
-    try:
-        # writes the file contents to the file
-        file.write(file_contents)
-    finally:
-        # closes the file
-        file.close()
+    pass
