@@ -270,6 +270,17 @@ class Deployer:
         self.log("Finished deployment", logging.INFO)
 
     def deploy_bundle_package(self, package_path, temporary_path):
+        """
+        Deploys the given bundle package, using the contents of the
+        given temporary path.
+
+        @type package_path: String
+        @param package_path: The path to the package to be deployed.
+        @type temporary_path: String
+        @param temporary_path: The path to the temporary directory with
+        the contents of the package.
+        """
+
         # retrieves the registry path
         registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
 
@@ -360,6 +371,17 @@ class Deployer:
         shutil.copy(package_path, registry_path + "/bundles")
 
     def deploy_plugin_package(self, package_path, temporary_path):
+        """
+        Deploys the given plugin package, using the contents of the
+        given temporary path.
+
+        @type package_path: String
+        @param package_path: The path to the package to be deployed.
+        @type temporary_path: String
+        @param temporary_path: The path to the temporary directory with
+        the contents of the package.
+        """
+
         # retrieves the target path
         target_path = os.path.normpath(self.manager_path + "/" + RELATIVE_PLUGINS_PATH)
 
@@ -467,6 +489,20 @@ class Deployer:
 
         # copies the package file to the registry
         shutil.copy(package_path, registry_path + "/plugins")
+
+    def remove_package(self, package_id, package_version = None):
+        """
+        Removes the package with the given id and version.
+        The version is optional and may not be defined, in that
+        case all the versions of the package are removed.
+
+        @type package_id: String
+        @param package_id: The id of the package to be removed.
+        @type package_version: String
+        @param package_version: The version of the package to be removed.
+        """
+
+        pass
 
     def validate_specification(self, specification):
         """
