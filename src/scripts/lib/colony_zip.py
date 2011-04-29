@@ -371,7 +371,7 @@ class Zip:
             # returns immediately
             return
 
-        # creates a  new zip file for writing in deflated mode
+        # creates a new zip file for writing in deflated mode
         zip_file = zipfile.ZipFile(zip_file_path, "w", compression = zipfile.ZIP_DEFLATED)
 
         try:
@@ -430,6 +430,34 @@ class Zip:
 
         # creates the files from the zip file to the output directory
         self.create_files(zip_file_path, output_directory)
+
+    def names(self, zip_file_path):
+        """
+        Retrieves the names that exist in the specified
+        zip file.
+
+        @type zip_file_path: String
+        @param zip_file_path: Full path to the zip file.
+        @rtype: List
+        @return: The list of names for the specified zip file.
+        """
+
+        # retrieves the absolute paths for the
+        # zip file
+        zip_file_path = os.path.abspath(zip_file_path)
+
+        # creates a new zip file
+        zip_file = zipfile.ZipFile(zip_file_path)
+
+        try:
+            # retrieves the zip file names
+            zip_file_names = zip_file.namelist()
+        finally:
+            # closes the zip file
+            zip_file.close()
+
+        # returns the zip file names
+        return zip_file_names
 
 def get_file_paths(path, returned_path_list = None):
     """
