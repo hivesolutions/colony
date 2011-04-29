@@ -125,20 +125,22 @@ class Deployer:
 
         self.manager_path = manager_path
 
-    def log(self, message):
+    def log(self, message, level = logging.DEBUG):
         """
         Logs the given message for the given
-        verbose setting.
+        logging level setting.
 
         @type message: String
         @param message: The message to be logged.
+        @type level: Level
+        @param level: The level of logging to be used.
         """
 
         # retrieves the logger
         logger = logging.getLogger("default")
 
         # prints a debug message
-        logger.debug(message)
+        logger.log(level, message)
 
     def deploy_info(self, package_path):
         """
@@ -159,7 +161,7 @@ class Deployer:
         zip = colony_zip.Zip()
 
         # prints a log message
-        self.log("Reading specification file")
+        self.log("Reading specification file", logging.INFO)
 
         # reads the specification file contents from the zip file
         specification_file_contents = zip.read(package_path, SPECIFICATION_FILE_NAME)
@@ -250,7 +252,7 @@ class Deployer:
         """
 
         # prints a log message
-        self.log("Deploying '%s' to '%s'" % (package_path, self.manager_path))
+        self.log("Deploying '%s' to '%s'" % (package_path, self.manager_path), logging.INFO)
 
         # unpacks the package to a temporary path
         temporary_path = self.unzip_package(package_path)
@@ -291,7 +293,7 @@ class Deployer:
             self.remove_directory(temporary_path)
 
         # prints a log message
-        self.log("Finished deployment")
+        self.log("Finished deployment", logging.INFO)
 
     def deploy_bundle_package(self, package_path, temporary_path):
         # retrieves the registry path
