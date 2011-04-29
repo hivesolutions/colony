@@ -41,6 +41,7 @@ import os
 import sys
 import getopt
 import logging
+import traceback
 
 VERSION = "${out value=colony_deploy.version /}"
 """ The version value """
@@ -234,8 +235,25 @@ if __name__ == "__main__":
         # runs the main
         main()
     except Exception, exception:
+        # retrieves the execution information
+        _type, _value, traceback_list = sys.exc_info()
+
+        # creates the (initial) formated traceback
+        formated_traceback = traceback.format_tb(traceback_list)
+
+        # retrieves the logger
+        logger = logging.getLogger("default")
+
         # prints the error information
-        print "Error: " + unicode(exception)
+        logger.error("Error: " + unicode(exception))
+
+        # prints the stack trace information
+        for traceback_line in formated_traceback:
+            # strips the traceback line
+            traceback_line = traceback_line.strip()
+
+            # prints the traceback line
+            logger.error(traceback_line)
 
         # exits in error
         sys.exit(2)
