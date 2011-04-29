@@ -585,6 +585,17 @@ class Deployer:
         return temporary_path
 
     def _open_specification(self, specification_file_path):
+        """
+        Opens and interprets the specification file in the given
+        file path.
+        The returned value is a map containing the specification.
+
+        @type specification_file_path: String
+        @param specification_file_path: The specification file path.
+        @rtype: Dictionary
+        @return: The map containing the specification.
+        """
+
         # prints a log message
         self.log("Opening specification file '%s'" % (specification_file_path))
 
