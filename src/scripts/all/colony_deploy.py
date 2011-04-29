@@ -181,6 +181,12 @@ def main():
 
         # sets the stream handler level to debug
         stream_handler.setLevel(logging.DEBUG)
+    else:
+        # sets the logger level to info
+        logger.setLevel(logging.INFO)
+
+        # sets the stream handler level to info
+        stream_handler.setLevel(logging.INFO)
 
     # in case the info flag is set
     if info:
