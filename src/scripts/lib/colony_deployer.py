@@ -634,9 +634,6 @@ class Deployer:
         # creates a new zip (manager)
         zip = colony_zip.Zip()
 
-        # reads the plugin file names from the zip file
-        plugin_file_names = zip.names(plugin_path)
-
         # reads the specification file contents from the zip file
         specification_file_contents = zip.read(plugin_path, SPECIFICATION_FILE_NAME)
 
@@ -646,6 +643,9 @@ class Deployer:
         # retrieves the main file
         main_file = specification[MAIN_FILE_VALUE]
 
+        # retrieves the resources
+        resources = specification[RESOURCES_VALUE]
+
         # splits the main file name into name and extension
         main_file_name, _mail_file_extension = os.path.splitext(main_file)
 
@@ -653,45 +653,46 @@ class Deployer:
         # later removal
         directory_path_list = []
 
-        # iterates over all the plugin file names
-        for plugin_file_name in plugin_file_names:
-            # retrieves the plugin file name prefix
-            plugin_file_name_prefix = plugin_file_name[0:10]
+        # iterates over all the resources
+        for resource in resources:
+            # creates the (complete) resource file path
+            resource_file_path = os.path.normpath(plugins_path + "/" + resource)
 
-            # in case the plugin file name prefix is resources
-            if plugin_file_name_prefix == "resources/":
-                # removes the resources prefix
-                plugin_file_name = plugin_file_name.replace("resources/", "", 1)
+            # in case the resource file path exists
+            if not os.path.exists(resource_file_path):
+                # prints a log message
+                self.log("Skipping resource file '%s'" % resource_file_path)
 
-            # in case the current plugin file name is the
-            # specification file name
-            if plugin_file_name == SPECIFICATION_FILE_NAME:
-                # creates the new (specification) plugin file name
-                plugin_file_name = main_file_name + JSON_FILE_EXTENSION
-
-            # creates the (complete) file path
-            file_path = os.path.normpath(plugins_path + "/" + plugin_file_name)
-
-            # in case the file path exists
-            if not os.path.exists(file_path):
                 # continues the loop
                 continue
 
             # prints a log message
-            self.log("Removing resource file '%s'" % file_path)
+            self.log("Removing resource file '%s'" % resource_file_path)
 
-            # removes the file in the file path
-            os.remove(file_path)
+            # removes the resource file in the resource file path
+            os.remove(resource_file_path)
 
-            # retrieves the file directory path
-            file_directory_path = os.path.dirname(file_path)
+            # retrieves the resource file directory path
+            resource_file_directory_path = os.path.dirname(resource_file_path)
 
-            # in case the file directory path is not yet
+            # in case the resource file directory path is not yet
             # present in the directory path list
-            if not file_directory_path in directory_path_list:
+            if not resource_file_directory_path in directory_path_list:
                 # adds the file directory path to the
                 # directory path list
-                directory_path_list.append(file_directory_path)
+                directory_path_list.append(resource_file_directory_path)
+
+        # creates the (new) plugin file name
+        specification_file_name = main_file_name + JSON_FILE_EXTENSION
+
+        # creates the (complete) specification file path
+        specification_file_path = os.path.normpath(plugins_path + "/" + specification_file_name)
+
+        # prints a log message
+        self.log("Removing specification file '%s'" % specification_file_path)
+
+        # removes the specification file in the specification file path
+        os.remove(specification_file_path)
 
         # prints a log message
         self.log("Removing empty directories for plugin file '%s'" % plugin_path)
