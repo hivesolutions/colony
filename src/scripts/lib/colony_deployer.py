@@ -73,6 +73,9 @@ MAIN_FILE_VALUE = "main_file"
 RESOURCES_VALUE = "resources"
 """ The resources value """
 
+INSTALLED_BUNDLES_VALUE = "installed_bundles"
+""" The installed bundles value """
+
 INSTALLED_PLUGINS_VALUE = "installed_plugins"
 """ The installed plugins value """
 
@@ -87,6 +90,12 @@ LAST_MODIFIED_TIMESTAMP_VALUE = "last_modified_timestamp"
 
 LAST_MODIFIED_DATE_VALUE = "last_modified_date"
 """ The last modified date value """
+
+BUNDLES_FILE_NAME = "bundles.json"
+""" The bundles file name """
+
+PLUGINS_FILE_NAME = "plugins.json"
+""" The plugins file name """
 
 SPECIFICATION_FILE_NAME = "specification.json"
 """ The specification file name """
@@ -264,6 +273,9 @@ class Deployer:
         # retrieves the registry path
         registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
 
+        # creates the bundles file path
+        bundles_file_path = os.path.normpath(registry_path + "/" + BUNDLES_FILE_NAME)
+
         # creates the specification file path
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
 
@@ -302,6 +314,41 @@ class Deployer:
             # deploys the plugin package, using the current paths
             self.deploy_plugin_package(plugin_file_path, temporary_path)
 
+        # reads the bundles file contents
+        bundles_file_contents = colony_file.read_file(bundles_file_path)
+
+        # loads the bundles file contents from json
+        bundles = json.loads(bundles_file_contents)
+
+        # retrieves the installed bundles
+        installed_bundles = bundles.get(INSTALLED_BUNDLES_VALUE, {})
+
+        # retrieves the current time
+        current_time = time.time()
+
+        # retrieves the current date time
+        current_date_time = datetime.datetime.utcnow()
+
+        # formats the current date time
+        current_date_time_formated = current_date_time.strftime("%d-%m-%Y %H:%M:%S")
+
+        # sets the installed bundles map
+        installed_bundles[id] = {
+            VERSION_VALUE : version,
+            TIMESTAMP_VALUE : current_time
+        }
+
+        # updates the bundles map with the current time
+        # and date time values
+        bundles[LAST_MODIFIED_TIMESTAMP_VALUE] = current_time
+        bundles[LAST_MODIFIED_DATE_VALUE] = current_date_time_formated
+
+        # serializes the bundles
+        bundles_serialized = json.dumps(bundles)
+
+        # writes the bundles file contents
+        colony_file.write_file(bundles_file_path, bundles_serialized)
+
         # copies the package file to the registry
         shutil.copy(package_path, registry_path + "/bundles")
 
@@ -311,6 +358,9 @@ class Deployer:
 
         # retrieves the registry path
         registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
+
+        # creates the plugins file path
+        plugins_file_path = os.path.normpath(registry_path + "/" + PLUGINS_FILE_NAME)
 
         # creates the specification file path
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
@@ -374,7 +424,7 @@ class Deployer:
         shutil.copy(specification_file_path, new_specification_file_path)
 
         # reads the plugins file contents
-        plugins_file_contents = colony_file.read_file(registry_path + "/plugins.json")
+        plugins_file_contents = colony_file.read_file(plugins_file_path)
 
         # loads the plugin file contents from json
         plugins = json.loads(plugins_file_contents)
@@ -406,7 +456,7 @@ class Deployer:
         plugins_serialized = json.dumps(plugins)
 
         # writes the plugins file contents
-        colony_file.write_file(registry_path + "/plugins.json", plugins_serialized)
+        colony_file.write_file(plugins_file_path, plugins_serialized)
 
         # copies the package file to the registry
         shutil.copy(package_path, registry_path + "/plugins")
