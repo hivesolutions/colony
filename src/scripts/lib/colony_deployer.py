@@ -113,7 +113,16 @@ RELATIVE_REGISTRY_PATH = "var/registry"
 REQUIRED_VALUES = ("platform", "id", "version")
 """ The tuple of required values """
 
-COLONY_FILE_EXTENSIONS = (".cbx", ".cpx")
+JSON_FILE_EXTENSION = ".json"
+""" The json file extension """
+
+COLONY_BUNDLE_FILE_EXTENSION = ".cpx"
+""" The colony bundle file extension """
+
+COLONY_PLUGIN_FILE_EXTENSION = ".cpx"
+""" The colony plugin file extension """
+
+COLONY_FILE_EXTENSIONS = (COLONY_BUNDLE_FILE_EXTENSION, COLONY_PLUGIN_FILE_EXTENSION)
 """ The tuple containing all the colony file extensions """
 
 class Deployer:
@@ -315,7 +324,7 @@ class Deployer:
             plugin_version = plugin[VERSION_VALUE]
 
             # creates the plugin file name
-            plugin_file_name = plugin_id + "_" + plugin_version + ".cpx"
+            plugin_file_name = plugin_id + "_" + plugin_version + COLONY_PLUGIN_FILE_EXTENSION
 
             # retrieves the plugin file path
             plugin_file_path = os.path.normpath(temporary_path + "/plugins/" + plugin_file_name)
@@ -351,9 +360,9 @@ class Deployer:
             TIMESTAMP_VALUE : current_time
         }
 
-        # touches the plugins (structure)
+        # touches the bundles (structure)
         # updating the dates in it
-        self._touch_structure(plugins)
+        self._touch_structure(bundles)
 
         # serializes the bundles
         bundles_serialized = json.dumps(bundles)
@@ -438,7 +447,7 @@ class Deployer:
         main_file_name, _mail_file_extension = os.path.splitext(main_file)
 
         # creates the new specification file name
-        new_specification_file_name = main_file_name + ".json"
+        new_specification_file_name = main_file_name + JSON_FILE_EXTENSION
 
         # creates the new specification file path
         new_specification_file_path = os.path.normpath(target_path + "/" + new_specification_file_name)
@@ -492,6 +501,9 @@ class Deployer:
         # retrieves the registry path
         registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
 
+        # creates the plugins path
+        plugins_path = os.path.normpath(self.manager_path + "/" + RELATIVE_PLUGINS_PATH)
+
         # creates the plugins file path
         plugins_file_path = os.path.normpath(registry_path + "/" + PLUGINS_FILE_NAME)
 
@@ -508,6 +520,96 @@ class Deployer:
         if not package_id in installed_plugins:
             # raises a deployer exception
             raise colony_exceptions.DeployerException("Plugin is not installed")
+
+        # retrieves the plugin (information) from the
+        # installed plugins
+        plugin = installed_plugins[package_id]
+
+        # sets the plugin id as the package id
+        plugin_id = package_id
+
+        # retrieves the plugin version as the
+        plugin_version = package_version or plugin["version"]
+
+        # creates the plugin file name from the plugin
+        # id and version
+        plugin_file_name = plugin_id + "_" + plugin_version + COLONY_PLUGIN_FILE_EXTENSION
+
+        # creates the plugin path from the
+        plugin_path = os.path.normpath(registry_path + "/" + RELATIVE_PLUGINS_PATH + "/" + plugin_file_name)
+
+        # creates a new zip (manager)
+        zip = colony_zip.Zip()
+
+        # reads the plugin file names from the zip file
+        plugin_file_names = zip.names(plugin_path)
+
+        # reads the specification file contents from the zip file
+        specification_file_contents = zip.read(plugin_path, "specification.json")
+
+        # loads the json specification file contents
+        specification = json.loads(specification_file_contents)
+
+        # retrieves the main file
+        main_file = specification[MAIN_FILE_VALUE]
+
+        # splits the main file name into name and extension
+        main_file_name, _mail_file_extension = os.path.splitext(main_file)
+
+        # creates the list of directory path for (possible)
+        # later removal
+        directory_path_list = []
+
+        # iterates over all the plugin file names
+        for plugin_file_name in plugin_file_names:
+            # retrieves the plugin file name prefix
+            plugin_file_name_prefix = plugin_file_name[0:10]
+
+            # in case the plugin file name prefix is resources
+            if plugin_file_name_prefix == "resources/":
+                # removes the resources prefix
+                plugin_file_name = plugin_file_name.replace("resources/", "", 1)
+
+            # in case the current plugin file name is the
+            # specification file name
+            if plugin_file_name == SPECIFICATION_FILE_NAME:
+                # creates the new (specification) plugin file name
+                plugin_file_name = main_file_name + JSON_FILE_EXTENSION
+
+            # creates the (complete) file path
+            file_path = os.path.normpath(plugins_path + "/" + plugin_file_name)
+
+            # in case the file path exists
+            if not os.path.exists(file_path):
+                # continues the loop
+                continue
+
+            # prints a log message
+            self.log("Removing resource file '%s'" % file_path)
+
+            # removes the file in the file path
+            os.remove(file_path)
+
+            # retrieves the file directory path
+            file_directory_path = os.path.dirname(file_path)
+
+            # in case the file directory path is not yet
+            # present in the directory path list
+            if not file_directory_path in directory_path_list:
+                # adds the file directory path to the
+                # directory path list
+                directory_path_list.append(file_directory_path)
+
+        # iterates over all the directory paths
+        for directory_path in directory_path_list:
+            # in case the directory path does not refers
+            # a directory or in case it contains element
+            if not os.path.isdir(directory_path) or os.listdir(directory_path):
+                # continues the loop
+                continue
+
+            # removes the directories in the directory path
+            os.removedirs(directory_path)
 
         # deletes the package id from the installed plugins
         del installed_plugins[package_id]
@@ -564,7 +666,7 @@ class Deployer:
         capabilities = specification.get("capabilities", [])
         capabilities_allowed = specification.get("capabilities_allowed", [])
         dependencies = specification.get("dependencies", [])
-        main_file = specification.get("main_file", [])
+        main_file = specification.get("main_file", None)
         resources = specification.get("resources", [])
 
         # prints the various values
