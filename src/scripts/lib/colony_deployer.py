@@ -649,7 +649,7 @@ class Deployer:
         # splits the main file name into name and extension
         main_file_name, _mail_file_extension = os.path.splitext(main_file)
 
-        # creates the list of directory path for (possible)
+        # creates the list of directory paths for (possible)
         # later removal
         directory_path_list = []
 
