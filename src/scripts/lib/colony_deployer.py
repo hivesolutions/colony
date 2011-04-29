@@ -311,8 +311,15 @@ class Deployer:
             # unpacks the package to a temporary (plugin) path
             temporary_plugin_path = self._unzip_package(plugin_file_path)
 
-            # deploys the plugin package, using the current paths
-            self.deploy_plugin_package(plugin_file_path, temporary_plugin_path)
+            try:
+                # deploys the plugin package, using the current paths
+                self.deploy_plugin_package(plugin_file_path, temporary_plugin_path)
+            finally:
+                # prints a log message
+                self.log("Removing temporary (plugin) path '%s'" % temporary_plugin_path)
+
+                # removes the temporary (plugin) path (directory)
+                colony_file.remove_directory(temporary_plugin_path)
 
         # reads the bundles file contents
         bundles_file_contents = colony_file.read_file(bundles_file_path)
