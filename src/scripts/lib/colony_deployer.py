@@ -554,6 +554,16 @@ class Deployer:
             print ":" + str(value)
 
     def _unzip_package(self, package_path):
+        """
+        Unzips (unpacks) the package in the given package path
+        to a generated temporary path.
+
+        @type package_path: String
+        @param package_path: The path to the package to be unpacked.
+        @rtype: String
+        @return: The generated temporary path for the package contents.
+        """
+
         # creates a new temporary path
         temporary_path = tempfile.mkdtemp()
 
