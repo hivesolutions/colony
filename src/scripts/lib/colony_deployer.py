@@ -502,13 +502,13 @@ class Deployer:
         """
 
         # prints a log message
-        self.log("Removing '%s' v'%s' from '%s'" % (package_id, package_version, self.manager_path), logging.INFO)
+        self.log("Removing '%s' from '%s'" % (package_id, self.manager_path), logging.INFO)
 
         # removes the bundle package
         self.remove_bundle_package(package_id, package_version)
 
         # prints a log message
-        self.log("Finished removing '%s' v'%s' from'%s'" % (package_id, package_version, self.manager_path), logging.INFO)
+        self.log("Finished removing '%s' from'%s'" % (package_id, self.manager_path), logging.INFO)
 
     def remove_bundle_package(self, package_id, package_version):
         # prints a log message
