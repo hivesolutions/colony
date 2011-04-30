@@ -82,6 +82,21 @@ COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
 COLONY_FILE_EXTENSIONS = (".cbx", ".cpx")
 """ The tuple containing all the colony file extensions """
 
+def start_logging():
+    """
+    Starts the logging sub system, installing
+    the logger structures and activating them.
+    """
+
+    # retrieves the logger
+    logger = logging.getLogger("default")
+
+    # creates a new stream handler
+    stream_handler = logging.StreamHandler()
+
+    # adds the stream handler to the logger
+    logger.addHandler(stream_handler)
+
 def update_system_path():
     """
     Updates the current system path, with the extra
@@ -110,6 +125,9 @@ def usage():
     print USAGE
 
 def main():
+    # imports the colony references
+    import colony_deployer
+
     # in case the number of command line arguments
     # is len than two
     if len(sys.argv) < 2:
@@ -170,29 +188,14 @@ def main():
     # retrieves the logger
     logger = logging.getLogger("default")
 
-    # creates a new stream handler
-    stream_handler = logging.StreamHandler()
+    # retrieves the logger level to be used
+    logger_level = verbose and logging.DEBUG or logging.INFO
 
-    # adds the stream handler to the logger
-    logger.addHandler(stream_handler)
+    # sets the logger level
+    logger.setLevel(logger_level)
 
     # creates a new deployer object
     deployer = colony_deployer.Deployer(manager_path)
-
-    # in case the verbose flag is set
-    if verbose:
-        # sets the logger level to debug
-        logger.setLevel(logging.DEBUG)
-
-        # sets the stream handler level to debug
-        stream_handler.setLevel(logging.DEBUG)
-    # otherwise no verbose is required
-    else:
-        # sets the logger level to info
-        logger.setLevel(logging.INFO)
-
-        # sets the stream handler level to info
-        stream_handler.setLevel(logging.INFO)
 
     # in case the info flag is set
     if info:
@@ -225,16 +228,19 @@ def main():
     deployer.deploy_package(package_path)
 
 if __name__ == "__main__":
-    # updates the system path
-    update_system_path()
+    # starts (initializes) the logging
+    start_logging()
 
     try:
-        # imports the colony references
-        import colony_deployer
+        # updates the system path
+        update_system_path()
 
         # runs the main
         main()
     except Exception, exception:
+        # retrieves the default logger
+        logger = logging.getLogger("default")
+
         # retrieves the execution information
         _type, _value, traceback_list = sys.exc_info()
 
@@ -242,7 +248,7 @@ if __name__ == "__main__":
         formated_traceback = traceback.format_tb(traceback_list)
 
         # prints the error information
-        print "Error: " + unicode(exception)
+        logger.error("Error: " + unicode(exception))
 
         # prints the stack trace information
         for traceback_line in formated_traceback:
@@ -250,7 +256,7 @@ if __name__ == "__main__":
             traceback_line = traceback_line.strip()
 
             # prints the traceback line
-            print traceback_line
+            logger.error(traceback_line)
 
         # exits in error
         sys.exit(2)
