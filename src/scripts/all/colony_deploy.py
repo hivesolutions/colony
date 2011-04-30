@@ -82,6 +82,9 @@ COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
 COLONY_FILE_EXTENSIONS = (".cbx", ".cpx")
 """ The tuple containing all the colony file extensions """
 
+DEFAULT_LOGGING_FORMAT = "[%(levelname)s] %(message)s"
+""" The default logging format """
+
 def start_logging():
     """
     Starts the logging sub system, installing
@@ -93,6 +96,12 @@ def start_logging():
 
     # creates a new stream handler
     stream_handler = logging.StreamHandler()
+
+    # creates the logging formatter
+    formatter = logging.Formatter(DEFAULT_LOGGING_FORMAT)
+
+    # sets the formatter in the stream handler
+    stream_handler.setFormatter(formatter)
 
     # adds the stream handler to the logger
     logger.addHandler(stream_handler)
