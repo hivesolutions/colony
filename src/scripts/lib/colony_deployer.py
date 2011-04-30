@@ -542,7 +542,7 @@ class Deployer:
         bundle_id = package_id
 
         # retrieves the bundle version as the
-        bundle_version = package_version or bundle["version"]
+        bundle_version = package_version or bundle[VERSION_VALUE]
 
         # creates the bundle file name from the bundle
         # id and version
@@ -628,7 +628,7 @@ class Deployer:
         plugin_id = package_id
 
         # retrieves the plugin version as the
-        plugin_version = package_version or plugin["version"]
+        plugin_version = package_version or plugin[VERSION_VALUE]
 
         # creates the plugin file name from the plugin
         # id and version
