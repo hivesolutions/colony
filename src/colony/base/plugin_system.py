@@ -1638,7 +1638,7 @@ class PluginManager:
 
         try:
             # prints an info message
-            self.logger.info("Starting plugin manager...")
+            self.info("Starting plugin manager...")
 
             # updates the workspace path
             self.update_workspace_path()
@@ -1844,7 +1844,7 @@ class PluginManager:
 
         # in case the path does not exist
         if not os.path.exists(path):
-            self.logger.warning("Path '%s' does not exist in the current filesystem" % (path))
+            self.warning("Path '%s' does not exist in the current filesystem" % (path))
             return modules
 
         # retrieves the directory list for the path
@@ -1975,7 +1975,7 @@ class PluginManager:
         """
 
         # prints an info message
-        self.logger.info("Loading plugins (importing %d main module files)..." % len(plugins))
+        self.info("Loading plugins (importing %d main module files)..." % len(plugins))
 
         # iterates over all the available plugins
         for plugin in plugins:
@@ -1986,10 +1986,10 @@ class PluginManager:
                     __import__(plugin)
                 except BaseException, exception:
                     # prints an error message
-                    self.logger.error("Problem importing module %s: %s" % (plugin, unicode(exception)))
+                    self.error("Problem importing module %s: %s" % (plugin, unicode(exception)))
 
         # prints an info message
-        self.logger.info("Finished loading plugins")
+        self.info("Finished loading plugins")
 
     def start_plugin_manager_plugins(self):
         """
@@ -2548,7 +2548,7 @@ class PluginManager:
             method(*arguments)
         except Exception, exception:
             # prints an error message
-            self.logger.error("Error while executing command: " + unicode(exception))
+            self.error("Error while executing command: " + unicode(exception))
 
             # logs the stack trace
             self.log_stack_trace()
@@ -2589,7 +2589,7 @@ class PluginManager:
         # in case the plugin does not pass the test plugin load
         if not self.test_plugin_load(plugin):
             # prints an info message
-            self.logger.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
+            self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
 
             # returns false
             return False
@@ -2653,7 +2653,7 @@ class PluginManager:
         # in case the plugin load is not successful
         if not self.test_plugin_load(plugin):
             # prints an info message
-            self.logger.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
+            self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
 
             # returns false
             return False
@@ -2661,7 +2661,7 @@ class PluginManager:
         # in case a type is defined
         if type:
             # prints an info message
-            self.logger.info("Loading of type: '%s'" % (type))
+            self.info("Loading of type: '%s'" % (type))
 
         # in case the plugin to be loaded is either of type main or thread
         if loading_type == MAIN_TYPE or loading_type == THREAD_TYPE:
@@ -2670,7 +2670,7 @@ class PluginManager:
                 plugin_thread = self.plugin_threads_map[plugin.id]
 
                 # prints an info message
-                self.logger.info("Thread restarted for plugin '%s' v%s" % (plugin.short_name, plugin.version))
+                self.info("Thread restarted for plugin '%s' v%s" % (plugin.short_name, plugin.version))
             else:
                 # creates a new tread to run the main plugin
                 plugin_thread = PluginThread(plugin)
@@ -2685,7 +2685,7 @@ class PluginManager:
                 self.plugin_threads_map[plugin.id] = plugin_thread
 
                 # prints an info message
-                self.logger.info("New thread started for plugin '%s' v%s" % (plugin.short_name, plugin.version))
+                self.info("New thread started for plugin '%s' v%s" % (plugin.short_name, plugin.version))
 
             # sets the plugin load as not completed
             plugin_thread.set_load_complete(False)
@@ -2731,7 +2731,7 @@ class PluginManager:
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.logger.error("Problem loading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
+            self.error("Problem loading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the loading process
             return False
@@ -2779,7 +2779,7 @@ class PluginManager:
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.logger.error("Problem end loading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
+            self.error("Problem end loading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the loading process
             return False
@@ -2824,7 +2824,7 @@ class PluginManager:
         # in case a type is defined
         if type:
             # prints an info message
-            self.logger.info("Unloading of type: '%s'" % (type))
+            self.info("Unloading of type: '%s'" % (type))
 
         # unloads the plugins that depend on the plugin being unloaded
         for dependent_plugin in self.get_plugin_dependent_plugins_map(plugin.id):
@@ -2880,7 +2880,7 @@ class PluginManager:
                 plugin.unload_plugin()
             except BaseException, exception:
                 # prints the error message
-                self.logger.error("There was an exception: %s" % unicode(exception))
+                self.error("There was an exception: %s" % unicode(exception))
 
                 # sets the exception in the plugin
                 plugin.exception = exception
@@ -2891,7 +2891,7 @@ class PluginManager:
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.logger.error("Problem unloading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
+            self.error("Problem unloading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the unloading process
             return False
@@ -2926,7 +2926,7 @@ class PluginManager:
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.logger.error("Problem end unloading plugin '%s' v%s %s" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
+            self.error("Problem end unloading plugin '%s' v%s %s" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the unloading process
             return False
@@ -2978,7 +2978,7 @@ class PluginManager:
         # tests the plugin against the current platform
         if not self.test_platform_compatible(plugin):
             # prints an info message
-            self.logger.info("Current platform (%s) not compatible with plugin '%s' v%s" % (self.platform, plugin_short_name, plugin_version))
+            self.info("Current platform (%s) not compatible with plugin '%s' v%s" % (self.platform, plugin_short_name, plugin_version))
 
             # returns false
             return False
@@ -2986,7 +2986,7 @@ class PluginManager:
         # tests the plugin for the availability of the dependencies
         if not self.test_dependencies_available(plugin):
             # prints an info message
-            self.logger.info("Missing dependencies for plugin '%s' v%s" % (plugin_short_name, plugin_version))
+            self.info("Missing dependencies for plugin '%s' v%s" % (plugin_short_name, plugin_version))
 
             # returns false
             return False
@@ -3018,7 +3018,7 @@ class PluginManager:
             # in case the test dependency tests fails
             if not plugin_dependency.test_dependency(self):
                 # prints an info message
-                self.logger.info("Problem with dependency for plugin '%s' v%s" % (plugin.short_name, plugin.version))
+                self.info("Problem with dependency for plugin '%s' v%s" % (plugin.short_name, plugin.version))
 
                 # returns false
                 return False
@@ -3176,7 +3176,7 @@ class PluginManager:
                         allowed_plugin = self.diffusion_scope_loaded_plugins_map[plugin.diffusion_scope][allowed_plugin.id]
                     else:
                         # prints an info message
-                        self.logger.info("Creating allowed plugin '%s' v%s as same diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
+                        self.info("Creating allowed plugin '%s' v%s as same diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
 
                         # creates a new allowed plugin (in a the same diffusion scope as the plugin)
                         allowed_plugin = self._create_plugin(allowed_plugin.id, allowed_plugin.version, plugin.diffusion_scope)
@@ -3186,7 +3186,7 @@ class PluginManager:
                 # in case the diffusion policy is new diffusion scope
                 elif diffusion_policy == NEW_DIFFUSION_SCOPE:
                     # prints an info message
-                    self.logger.info("Creating allowed plugin '%s' v%s as new diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
+                    self.info("Creating allowed plugin '%s' v%s as new diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
 
                     # creates a new allowed plugin (in a new diffusion scope)
                     allowed_plugin = self.create_plugin(allowed_plugin.id, allowed_plugin.version)
@@ -3390,7 +3390,7 @@ class PluginManager:
 
         # test the plugin
         if not self.test_plugin_load(plugin):
-            self.logger.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
+            self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
             return False
 
         if MAIN_TYPE in plugin.capabilities:
@@ -4261,7 +4261,7 @@ class PluginManager:
             self.event_plugins_handled_loaded_map[event_name].append(plugin)
 
             # prints an info message
-            self.logger.info("Registering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
+            self.info("Registering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
 
     def unregister_plugin_manager_event(self, plugin, event_name):
         """
@@ -4278,7 +4278,7 @@ class PluginManager:
                 self.event_plugins_handled_loaded_map[event_name].remove(plugin)
 
                 # prints an info message
-                self.logger.info("Unregistering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
+                self.info("Unregistering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
 
     def notify_handlers(self, event_name, event_args):
         """
@@ -4301,7 +4301,7 @@ class PluginManager:
             if event_or_super_event in self.event_plugins_handled_loaded_map:
                 # iterates over all the plugins registered for notification
                 for event_plugin_loaded in self.event_plugins_handled_loaded_map[event_or_super_event]:
-                    self.logger.info("Notifying '%s' v%s about event '%s' generated in plugin manager" % (event_plugin_loaded.short_name, event_plugin_loaded.version, event_name))
+                    self.info("Notifying '%s' v%s about event '%s' generated in plugin manager" % (event_plugin_loaded.short_name, event_plugin_loaded.version, event_name))
 
                     event_plugin_loaded.event_handler(event_name, *event_args)
 
@@ -4316,7 +4316,7 @@ class PluginManager:
         """
 
         # prints an info message
-        self.logger.info("Event '%s' generated in plugin manager" % (event_name))
+        self.info("Event '%s' generated in plugin manager" % (event_name))
 
         # notifies the event handlers of the event name with the event arguments
         self.notify_handlers(event_name, event_args)
@@ -4445,8 +4445,114 @@ class PluginManager:
             # strips the formated traceback line
             formated_traceback_line_stripped = formated_traceback_line.rstrip()
 
-            # prints an error message with the formated traceback line
-            self.logger.error(formated_traceback_line_stripped)
+            # prints an debug message with the formated traceback line
+            self.logger.debug(formated_traceback_line_stripped)
+
+    def debug(self, message):
+        """
+        Adds the given debug message to the logger.
+
+        @type message: String
+        @param message: The debug message to be added to the logger.
+        """
+
+        # formats the logger message
+        logger_message = self.format_logger_message(message)
+
+        # prints the debug message
+        self.logger.debug(logger_message)
+
+    def info(self, message):
+        """
+        Adds the given info message to the logger.
+
+        @type message: String
+        @param message: The info message to be added to the logger.
+        """
+
+        # formats the logger message
+        logger_message = self.format_logger_message(message)
+
+        # prints the info message
+        self.logger.info(logger_message)
+
+    def warning(self, message):
+        """
+        Adds the given warning message to the logger.
+
+        @type message: String
+        @param message: The warning message to be added to the logger.
+        """
+
+        # formats the logger message
+        logger_message = self.format_logger_message(message)
+
+        # prints the warning message
+        self.logger.warning(logger_message)
+
+        # logs the stack trace
+        self.log_stack_trace()
+
+    def error(self, message):
+        """
+        Adds the given error message to the logger.
+
+        @type message: String
+        @param message: The error message to be added to the logger.
+        """
+
+        # formats the logger message
+        logger_message = self.format_logger_message(message)
+
+        # prints the error message
+        self.logger.error(logger_message)
+
+        # logs the stack trace
+        self.log_stack_trace()
+
+    def critical(self, message):
+        """
+        Adds the given critical message to the logger.
+
+        @type message: String
+        @param message: The critical message to be added to the logger.
+        """
+
+        # formats the logger message
+        logger_message = self.format_logger_message(message)
+
+        # prints the critical message
+        self.logger.critical(logger_message)
+
+        # logs the stack trace
+        self.log_stack_trace()
+
+    def format_logger_message(self, message):
+        """
+        Formats the given message into a logging message.
+
+        @type message: String
+        @param message: The message to be formated into logging message.
+        @rtype: String
+        @return: The formated logging message.
+        """
+
+        # the default formatting message
+        formatting_message = str()
+
+        # in case the plugin id logging option is activated
+        if plugin_manager_configuration.get("plugin_id_logging", False):
+            formatting_message += "[pt.hive.colony] "
+
+        # in case the thread id logging option is activated
+        if plugin_manager_configuration.get("thread_id_logging", False):
+            formatting_message += "[" + str(thread.get_ident()) + "] "
+
+        # appends the formatting message to the logging message
+        logger_message = formatting_message + message
+
+        # returns the logger message
+        return logger_message
 
     def print_all_plugins(self):
         """
@@ -4787,16 +4893,16 @@ class PluginManager:
 
         try:
             # print a warning message
-            self.logger.warning("Unloading system due to signal: '%s'" % signum)
+            self.warning("Unloading system due to signal: '%s'" % signum)
 
             # unloads the system
             self.unload_system(True)
 
             # print a warning message
-            self.logger.warning("Unloaded system due to signal: '%s'" % signum)
+            self.warning("Unloaded system due to signal: '%s'" % signum)
         except Exception, exception:
             # prints an error message
-            self.logger.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
+            self.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
 
             # stops the blocking system structures
             self._stop_blocking_system_structures()
@@ -4834,7 +4940,7 @@ class PluginManager:
         """
 
         # prints an error message
-        self.logger.error("Unloading timeout (%.2f seconds) reached, killing the system..." % DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
+        self.error("Unloading timeout (%.2f seconds) reached, killing the system..." % DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
 
         # exits in error
         exit(2)
@@ -4855,16 +4961,16 @@ class PluginManager:
             exception_type = exception.__class__.__name__
 
             # print a warning message
-            self.logger.warning("Unloading system due to exception: '%s' of type '%s'" % (unicode(exception), exception_type))
+            self.warning("Unloading system due to exception: '%s' of type '%s'" % (unicode(exception), exception_type))
 
             # unloads the system
             self.unload_system(False)
 
             # print a warning message
-            self.logger.warning("Unloaded system due to exception: '%s' of type '%s'" % (unicode(exception), exception_type))
+            self.warning("Unloaded system due to exception: '%s' of type '%s'" % (unicode(exception), exception_type))
         except KeyboardInterrupt, exception:
             # prints an error message
-            self.logger.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
+            self.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
 
             # stops the blocking system structures
             self._stop_blocking_system_structures()
