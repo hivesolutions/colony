@@ -509,8 +509,36 @@ class Deployer:
         # prints a log message
         self.log("Removing '%s' from '%s'" % (package_id, self.manager_path), logging.INFO)
 
-        # removes the bundle package
-        self.remove_bundle_package(package_id, package_version)
+        # retrieves the packages structure
+        packages = self._get_packages()
+
+        # retrieves the installed packages
+        installed_packages = packages.get(INSTALLED_PACKAGES_VALUE, {})
+
+        # in case the package id is not found in the installed packages
+        if not package_id in installed_packages:
+            # raises a deployer exception
+            raise colony_exceptions.DeployerException("Package '%s' v'%s' is not installed" % (package_id, package_version))
+
+        # retrieves the package (information) from the
+        # installed packages
+        package = installed_packages[package_id]
+
+        # retrieves the type
+        type = package[TYPE_VALUE]
+
+        # in case the type is bundle
+        if type == BUNDLE_VALUE:
+            # removes the bundle package
+            self.remove_bundle_package(package_id, package_version)
+        # in case the type is plugin
+        elif type == PLUGIN_VALUE:
+            # removes the plugin package
+            self.remove_plugin_package(package_id, package_version)
+        # otherwise there is an error
+        else:
+            # raises a deployer exception
+            raise colony_exceptions.DeployerException("Invalid packaging type")
 
         # prints a log message
         self.log("Finished removing '%s' from'%s'" % (package_id, self.manager_path), logging.INFO)
@@ -522,14 +550,8 @@ class Deployer:
         # retrieves the registry path
         registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
 
-        # creates the bundles file path
-        bundles_file_path = os.path.normpath(registry_path + "/" + BUNDLES_FILE_NAME)
-
-        # reads the bundles file contents
-        bundles_file_contents = colony_file.read_file(bundles_file_path)
-
-        # loads the bundles file contents from json
-        bundles = json.loads(bundles_file_contents)
+        # retrieves the bundles structure
+        bundles = self._get_bundles()
 
         # retrieves the installed bundles
         installed_bundles = bundles.get(INSTALLED_BUNDLES_VALUE, {})
@@ -585,18 +607,8 @@ class Deployer:
         # removes the bundle file
         os.remove(bundle_path)
 
-        # deletes the package id from the installed bundles
-        del installed_bundles[package_id]
-
-        # touches the bundles (structure)
-        # updating the dates in it
-        self._touch_structure(bundles)
-
-        # serializes the bundles
-        bundles_serialized = json.dumps(bundles)
-
-        # writes the bundles file contents
-        colony_file.write_file(bundles_file_path, bundles_serialized)
+        # removes the bundle item
+        self._remove_bundle_item(package_id)
 
     def remove_plugin_package(self, package_id, package_version):
         # prints a log message
@@ -608,14 +620,8 @@ class Deployer:
         # creates the plugins path
         plugins_path = os.path.normpath(self.manager_path + "/" + RELATIVE_PLUGINS_PATH)
 
-        # creates the plugins file path
-        plugins_file_path = os.path.normpath(registry_path + "/" + PLUGINS_FILE_NAME)
-
-        # reads the plugins file contents
-        plugins_file_contents = colony_file.read_file(plugins_file_path)
-
-        # loads the plugins file contents from json
-        plugins = json.loads(plugins_file_contents)
+        # retrieves the plugins structure
+        plugins = self._get_plugins()
 
         # retrieves the installed plugins
         installed_plugins = plugins.get(INSTALLED_PLUGINS_VALUE, {})
@@ -725,18 +731,8 @@ class Deployer:
         # removes the plugin file
         os.remove(plugin_path)
 
-        # deletes the package id from the installed plugins
-        del installed_plugins[package_id]
-
-        # touches the plugins (structure)
-        # updating the dates in it
-        self._touch_structure(plugins)
-
-        # serializes the plugins
-        plugins_serialized = json.dumps(plugins)
-
-        # writes the plugins file contents
-        colony_file.write_file(plugins_file_path, plugins_serialized)
+        # removes the plugin item
+        self._remove_plugin_item(package_id)
 
     def validate_specification(self, specification):
         """
@@ -902,6 +898,36 @@ class Deployer:
         structure[LAST_MODIFIED_TIMESTAMP_VALUE] = current_time
         structure[LAST_MODIFIED_DATE_VALUE] = current_date_time_formated
 
+    def _get_packages(self):
+        """
+        Retrieves the packages structure.
+
+        @rtype: Dictionary
+        @return: The retrieved bundles structure.
+        """
+
+        return self.__get_structure(PACKAGES_FILE_NAME)
+
+    def _get_bundles(self):
+        """
+        Retrieves the bundles structure.
+
+        @rtype: Dictionary
+        @return: The retrieved bundles structure.
+        """
+
+        return self.__get_structure(BUNDLES_FILE_NAME)
+
+    def _get_plugins(self):
+        """
+        Retrieves the plugins structure.
+
+        @rtype: Dictionary
+        @return: The retrieved plugins structure.
+        """
+
+        return self.__get_structure(PLUGINS_FILE_NAME)
+
     def _add_package_item(self, item_key, item_value, update_time = True):
         """
         Adds a package item to the packages file structure.
@@ -944,6 +970,61 @@ class Deployer:
 
         self.__add_structure_item(item_key, item_value, update_time, PLUGINS_FILE_NAME, INSTALLED_PLUGINS_VALUE)
 
+    def _remove_package_item(self, item_key):
+        """
+        Removes a package item from the packages file structure.
+
+        @type item_key: String
+        @param item_key: The key to the item to be removed.
+        """
+
+        self.__remove_structure_item(item_key, PACKAGES_FILE_NAME, INSTALLED_PACKAGES_VALUE)
+
+    def _remove_bundle_item(self, item_key):
+        """
+        Removes a bundle item from the bundles file structure.
+
+        @type item_key: String
+        @param item_key: The key to the item to be removed.
+        """
+
+        self.__remove_structure_item(item_key, BUNDLES_FILE_NAME, INSTALLED_BUNDLES_VALUE)
+
+    def _remove_plugin_item(self, item_key):
+        """
+        Removes a plugin item from the bundles file structure.
+
+        @type item_key: String
+        @param item_key: The key to the item to be removed.
+        """
+
+        self.__remove_structure_item(item_key, PLUGINS_FILE_NAME, INSTALLED_PLUGINS_VALUE)
+
+    def __get_structure(self, structure_file_name):
+        """
+        Retrieves the structure from the structure file.
+
+        @type structure_file_name: String
+        @param structure_file_name: The name of the structure file to be used.
+        @rtype: Dictionary
+        @return: The structure retrieved from the structure file.
+        """
+
+        # retrieves the registry path
+        registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
+
+        # creates the structure file path
+        structure_file_path = os.path.normpath(registry_path + "/" + structure_file_name)
+
+        # reads the structure file contents
+        structure_file_contents = colony_file.read_file(structure_file_path)
+
+        # loads the structure file contents from json
+        structure = json.loads(structure_file_contents)
+
+        # returns the structure
+        return structure
+
     def __add_structure_item(self, item_key, item_value, update_time, structure_file_name, structure_key_name):
         """
         Adds a new structure item to an existing structures file.
@@ -985,6 +1066,52 @@ class Deployer:
 
         # sets the installed structure map
         installed_structure[item_key] = item_value
+
+        # touches the structure (internal structure)
+        # updating the dates in it
+        self._touch_structure(structure)
+
+        # serializes the structure
+        structure_serialized = json.dumps(structure)
+
+        # writes the structure file contents
+        colony_file.write_file(structure_file_path, structure_serialized)
+
+    def __remove_structure_item(self, item_key, structure_file_name, structure_key_name):
+        """
+        Removes a structure item from an existing structures file.
+
+        @type item_key: String
+        @param item_key: The key to the item to be removed.
+        @type structure_file_name: String
+        @param structure_file_name: The name of the structure file to be used.
+        @type structure_key_name: String
+        @param structure_key_name: The key to the structure base item.
+        """
+
+        # retrieves the registry path
+        registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
+
+        # creates the structure file path
+        structure_file_path = os.path.normpath(registry_path + "/" + structure_file_name)
+
+        # reads the structure file contents
+        structure_file_contents = colony_file.read_file(structure_file_path)
+
+        # loads the structure file contents from json
+        structure = json.loads(structure_file_contents)
+
+        # retrieves the installed structure
+        installed_structure = structure.get(structure_key_name, {})
+
+        # in case the item key is not present in the
+        # installed structure
+        if not item_key in installed_structure:
+            # raises a deployer exception
+            raise colony_exceptions.DeployerException("Item key '%s' does not exist" % item_key)
+
+        # removes the item from the installed structure
+        del installed_structure[item_key]
 
         # touches the structure (internal structure)
         # updating the dates in it
