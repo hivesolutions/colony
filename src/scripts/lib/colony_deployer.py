@@ -244,6 +244,28 @@ class Deployer:
             # removes the deploy file (using the full path)
             os.remove(deploy_full_path)
 
+    def exists_package(self, package_id):
+        """
+        Tests if the package with the given id exists in the
+        current appropriate target.
+
+        @type package_id: String
+        @param package_id: The id of the package to be tested
+        for existence.
+        """
+
+        # retrieves the packages structure
+        packages = self._get_packages()
+
+        # retrieves the installed packages
+        installed_packages = packages.get(INSTALLED_PACKAGES_VALUE, {})
+
+        # checks if the package exists in the installed packages
+        exists_package = package_id in installed_packages
+
+        # returns the exists package (flag)
+        return exists_package
+
     def deploy_package(self, package_path):
         """
         Deploys the package in the given package path to the
@@ -259,10 +281,10 @@ class Deployer:
         # unpacks the package to a temporary path
         temporary_path = self._unzip_package(package_path)
 
-        # creates the specification file path
-        specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
-
         try:
+            # creates the specification file path
+            specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
+
             # opens the specification from the specification file path
             specification = self._open_specification(specification_file_path)
 
@@ -274,6 +296,14 @@ class Deployer:
 
             # retrieves the version
             version = specification[VERSION_VALUE]
+
+            # checks if the package is already installed
+            # (in case it "exists")
+            exists_package = self.exists_package(id)
+
+            # in case the package exists remove the package
+            # with the current id
+            exists_package and self.remove_package(id)
 
             # in case the type is bundle
             if type == BUNDLE_VALUE:
