@@ -570,6 +570,12 @@ class Deployer:
             # raises a deployer exception
             raise colony_exceptions.DeployerException("Invalid packaging type")
 
+        # retrieves the package item key
+        package_item_key = package_id
+
+        # removes the package with the given key
+        self._remove_package_item(package_item_key)
+
         # prints a log message
         self.log("Finished removing '%s' from'%s'" % (package_id, self.manager_path), logging.INFO)
 
@@ -630,6 +636,12 @@ class Deployer:
 
             # removes the plugin with the given id
             self.remove_plugin_package(plugin_id, plugin_version)
+
+            # retrieves the package item key
+            package_item_key = plugin_id
+
+            # remove the package with the given key
+            self._remove_package_item(package_item_key)
 
         # prints a log message
         self.log("Removing bundle file '%s'" % bundle_path)
