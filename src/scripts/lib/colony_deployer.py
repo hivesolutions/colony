@@ -62,6 +62,9 @@ TYPE_VALUE = "type"
 ID_VALUE = "id"
 """ The id value """
 
+TYPE_VALUE = "type"
+""" The type value """
+
 VERSION_VALUE = "version"
 """ The version value """
 
@@ -73,6 +76,9 @@ MAIN_FILE_VALUE = "main_file"
 
 RESOURCES_VALUE = "resources"
 """ The resources value """
+
+INSTALLED_PACKAGES_VALUE = "installed_packages"
+""" The installed packages value """
 
 INSTALLED_BUNDLES_VALUE = "installed_bundles"
 """ The installed bundles value """
@@ -97,6 +103,9 @@ PLUGIN_VALUE = "plugin"
 
 BUNDLE_VALUE = "bundle"
 """ The bundle value """
+
+PACKAGES_FILE_NAME = "packages.json"
+""" The packages file name """
 
 BUNDLES_FILE_NAME = "bundles.json"
 """ The bundles file name """
@@ -260,6 +269,12 @@ class Deployer:
             # retrieves the type
             type = specification[TYPE_VALUE]
 
+            # retrieves the id
+            id = specification[ID_VALUE]
+
+            # retrieves the version
+            version = specification[VERSION_VALUE]
+
             # in case the type is bundle
             if type == BUNDLE_VALUE:
                 # deploys the bundle package, using the current paths
@@ -285,6 +300,18 @@ class Deployer:
             # removes the temporary path (directory)
             colony_file.remove_directory(temporary_path)
 
+        # retrieves the package item key
+        package_item_key = id
+
+        # creates the package item value
+        package_item_value = {
+            TYPE_VALUE : type,
+            VERSION_VALUE : version,
+        }
+
+        # adds the package with the given key and value
+        self._add_package_item(package_item_key, package_item_value)
+
         # prints a log message
         self.log("Finished deploying '%s' to '%s'" % (package_path, self.manager_path), logging.INFO)
 
@@ -302,9 +329,6 @@ class Deployer:
 
         # retrieves the registry path
         registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
-
-        # creates the bundles file path
-        bundles_file_path = os.path.normpath(registry_path + "/" + BUNDLES_FILE_NAME)
 
         # creates the specification file path
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
@@ -351,33 +375,28 @@ class Deployer:
                 # removes the temporary (plugin) path (directory)
                 colony_file.remove_directory(temporary_plugin_path)
 
-        # reads the bundles file contents
-        bundles_file_contents = colony_file.read_file(bundles_file_path)
+            # retrieves the package item key
+            package_item_key = plugin_id
 
-        # loads the bundles file contents from json
-        bundles = json.loads(bundles_file_contents)
+            # creates the package item value
+            package_item_value = {
+                TYPE_VALUE : PLUGIN_VALUE,
+                VERSION_VALUE : plugin_version,
+            }
 
-        # retrieves the installed bundles
-        installed_bundles = bundles.get(INSTALLED_BUNDLES_VALUE, {})
+            # adds the package with the given key and value
+            self._add_package_item(package_item_key, package_item_value)
 
-        # retrieves the current time
-        current_time = time.time()
+        # retrieves the bundle item key
+        bundle_item_key = id
 
-        # sets the installed bundles map
-        installed_bundles[id] = {
-            VERSION_VALUE : version,
-            TIMESTAMP_VALUE : current_time
+        # creates the bundle item value
+        bundle_item_value = {
+            VERSION_VALUE : version
         }
 
-        # touches the bundles (structure)
-        # updating the dates in it
-        self._touch_structure(bundles)
-
-        # serializes the bundles
-        bundles_serialized = json.dumps(bundles)
-
-        # writes the bundles file contents
-        colony_file.write_file(bundles_file_path, bundles_serialized)
+        # adds the bundle with the given key and value
+        self._add_bundle_item(bundle_item_key, bundle_item_value)
 
         # copies the package file to the registry
         shutil.copy(package_path, registry_path + "/bundles")
@@ -399,9 +418,6 @@ class Deployer:
 
         # retrieves the registry path
         registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
-
-        # creates the plugins file path
-        plugins_file_path = os.path.normpath(registry_path + "/" + PLUGINS_FILE_NAME)
 
         # creates the specification file path
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
@@ -464,33 +480,16 @@ class Deployer:
         # copies the specification file as the new specification file
         shutil.copy(specification_file_path, new_specification_file_path)
 
-        # reads the plugins file contents
-        plugins_file_contents = colony_file.read_file(plugins_file_path)
+        # retrieves the plugin item key
+        plugin_item_key = id
 
-        # loads the plugin file contents from json
-        plugins = json.loads(plugins_file_contents)
-
-        # retrieves the installed plugins
-        installed_plugins = plugins.get(INSTALLED_PLUGINS_VALUE, {})
-
-        # retrieves the current time
-        current_time = time.time()
-
-        # sets the installed plugin map
-        installed_plugins[id] = {
-            VERSION_VALUE : version,
-            TIMESTAMP_VALUE : current_time
+        # creates the plugin item value
+        plugin_item_value = {
+            VERSION_VALUE : version
         }
 
-        # touches the plugins (structure)
-        # updating the dates in it
-        self._touch_structure(plugins)
-
-        # serializes the plugins
-        plugins_serialized = json.dumps(plugins)
-
-        # writes the plugins file contents
-        colony_file.write_file(plugins_file_path, plugins_serialized)
+        # adds the plugin with the given key and value
+        self._add_plugin_item(plugin_item_key, plugin_item_value)
 
         # copies the package file to the registry
         shutil.copy(package_path, registry_path + "/plugins")
@@ -902,3 +901,97 @@ class Deployer:
         # and date time values
         structure[LAST_MODIFIED_TIMESTAMP_VALUE] = current_time
         structure[LAST_MODIFIED_DATE_VALUE] = current_date_time_formated
+
+    def _add_package_item(self, item_key, item_value, update_time = True):
+        """
+        Adds a package item to the packages file structure.
+
+        @type item_key: String
+        @param item_key: The key to the item to be added.
+        @type item_value: Dictionary
+        @param item_value: The map containing the item value to be added.
+        @type update_time: bool
+        @param update_time: If the timetamp value should be updated.
+        """
+
+        self._add_structure_item(item_key, item_value, update_time, PACKAGES_FILE_NAME, INSTALLED_PACKAGES_VALUE)
+
+    def _add_bundle_item(self, item_key, item_value, update_time = True):
+        """
+        Adds a bundle item to the bundles file structure.
+
+        @type item_key: String
+        @param item_key: The key to the item to be added.
+        @type item_value: Dictionary
+        @param item_value: The map containing the item value to be added.
+        @type update_time: bool
+        @param update_time: If the timetamp value should be updated.
+        """
+
+        self._add_structure_item(item_key, item_value, update_time, BUNDLES_FILE_NAME, INSTALLED_BUNDLES_VALUE)
+
+    def _add_plugin_item(self, item_key, item_value, update_time = True):
+        """
+        Adds a plugin item to the plugins file structure.
+
+        @type item_key: String
+        @param item_key: The key to the item to be added.
+        @type item_value: Dictionary
+        @param item_value: The map containing the item value to be added.
+        @type update_time: bool
+        @param update_time: If the timetamp value should be updated.
+        """
+
+        self.__add_structure_item(item_key, item_value, update_time, PLUGINS_FILE_NAME, INSTALLED_PLUGINS_VALUE)
+
+    def __add_structure_item(self, item_key, item_value, update_time, structure_file_name, structure_key_name):
+        """
+        Adds a new structure item to an existing structures file.
+
+        @type item_key: String
+        @param item_key: The key to the item to be added.
+        @type item_value: Dictionary
+        @param item_value: The map containing the item value to be added.
+        @type update_time: bool
+        @param update_time: If the timetamp value should be updated.
+        @type structure_file_name: String
+        @param structure_file_name: The name of the structure file to be used.
+        @type structure_key_name: String
+        @param structure_key_name: The key to the structure base item.
+        """
+
+        # retrieves the registry path
+        registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
+
+        # creates the structure file path
+        structure_file_path = os.path.normpath(registry_path + "/" + structure_file_name)
+
+        # reads the structure file contents
+        structure_file_contents = colony_file.read_file(structure_file_path)
+
+        # loads the structure file contents from json
+        structure = json.loads(structure_file_contents)
+
+        # retrieves the installed structure
+        installed_structure = structure.get(structure_key_name, {})
+
+        # in case the update time flag is set
+        if update_time:
+            # retrieves the current time
+            current_time = time.time()
+
+            # sets the item value
+            item_value[TIMESTAMP_VALUE] = current_time
+
+        # sets the installed structure map
+        installed_structure[item_key] = item_value
+
+        # touches the structure (internal structure)
+        # updating the dates in it
+        self._touch_structure(structure)
+
+        # serializes the structure
+        structure_serialized = json.dumps(structure)
+
+        # writes the structure file contents
+        colony_file.write_file(structure_file_path, structure_serialized)
