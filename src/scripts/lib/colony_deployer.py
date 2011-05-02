@@ -92,6 +92,12 @@ LAST_MODIFIED_TIMESTAMP_VALUE = "last_modified_timestamp"
 LAST_MODIFIED_DATE_VALUE = "last_modified_date"
 """ The last modified date value """
 
+PLUGIN_VALUE = "plugin"
+""" The plugin value """
+
+BUNDLE_VALUE = "bundle"
+""" The bundle value """
+
 BUNDLES_FILE_NAME = "bundles.json"
 """ The bundles file name """
 
@@ -255,11 +261,11 @@ class Deployer:
             type = specification[TYPE_VALUE]
 
             # in case the type is bundle
-            if type == "bundle":
+            if type == BUNDLE_VALUE:
                 # deploys the bundle package, using the current paths
                 self.deploy_bundle_package(package_path, temporary_path)
             # in case the type is plugin
-            elif type == "plugin":
+            elif type == PLUGIN_VALUE:
                 # deploys the plugin package, using the current paths
                 self.deploy_plugin_package(package_path, temporary_path)
             # otherwise there is an error
