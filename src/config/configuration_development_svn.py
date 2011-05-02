@@ -41,3 +41,21 @@ from configuration_development import * #@UnusedWildImport
 
 layout_mode = "repository_svn"
 """ The project layout mode """
+
+run_mode = "development"
+""" The project run mode """
+
+verbose = False
+""" The verbose flag """
+
+debug = True
+""" The debug flag """
+
+silent = False
+""" The silent flag """
+
+stop_on_cycle_error = True
+""" The stop on cycle error flag """
+
+daemon_file_path = None
+""" The daemon file path """
