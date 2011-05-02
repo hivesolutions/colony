@@ -192,7 +192,7 @@ class Deployer:
         # in case the package path does not exist
         if not os.path.exists(package_path):
             # raises a deployer exception
-            raise colony_exceptions.DeployerException("The package path '%s' does not exist" % package_path)
+            raise colony_exceptions.DeployerException("the package path '%s' does not exist" % package_path)
 
         # creates a new zip (manager)
         zip = colony_zip.Zip()
@@ -316,7 +316,7 @@ class Deployer:
             # otherwise there is an error
             else:
                 # raises a deployer exception
-                raise colony_exceptions.DeployerException("Invalid packaging type")
+                raise colony_exceptions.DeployerException("invalid packaging type: %s" % type)
         except Exception, exception:
             # prints a log message
             self.log("Problem deploying '%s' with error '%s'" % (package_path, str(exception)))
@@ -548,7 +548,7 @@ class Deployer:
         # in case the package id is not found in the installed packages
         if not package_id in installed_packages:
             # raises a deployer exception
-            raise colony_exceptions.DeployerException("Package '%s' v'%s' is not installed" % (package_id, package_version))
+            raise colony_exceptions.DeployerException("package '%s' v'%s' is not installed" % (package_id, package_version))
 
         # retrieves the package (information) from the
         # installed packages
@@ -568,7 +568,7 @@ class Deployer:
         # otherwise there is an error
         else:
             # raises a deployer exception
-            raise colony_exceptions.DeployerException("Invalid packaging type")
+            raise colony_exceptions.DeployerException("invalid packaging type: %s" % type)
 
         # retrieves the package item key
         package_item_key = package_id
@@ -595,7 +595,7 @@ class Deployer:
         # in case the package id is not found in the installed plugins
         if not package_id in installed_bundles:
             # raises a deployer exception
-            raise colony_exceptions.DeployerException("Bundle '%s' v'%s' is not installed" % (package_id, package_version))
+            raise colony_exceptions.DeployerException("bundle '%s' v'%s' is not installed" % (package_id, package_version))
 
         # retrieves the bundle (information) from the
         # installed bundles
@@ -671,7 +671,7 @@ class Deployer:
         # in case the package id is not found in the installed plugins
         if not package_id in installed_plugins:
             # raises a deployer exception
-            raise colony_exceptions.DeployerException("Plugin '%s' v'%s' is not installed" % (package_id, package_version))
+            raise colony_exceptions.DeployerException("plugin '%s' v'%s' is not installed" % (package_id, package_version))
 
         # retrieves the plugin (information) from the
         # installed plugins
@@ -792,7 +792,7 @@ class Deployer:
             # in case the required value is not in the specification
             if not required_value in specification:
                 # raises a deployer exception
-                raise colony_exceptions.DeployerException("Required value '%s' missing in specification file" % (required_value))
+                raise colony_exceptions.DeployerException("required value '%s' missing in specification file" % (required_value))
 
     def print_specification(self, specification):
         """
@@ -878,7 +878,7 @@ class Deployer:
         # in case the package path does not exist
         if not os.path.exists(package_path):
             # raises a deployer exception
-            raise colony_exceptions.DeployerException("The package path '%s' does not exist" % package_path)
+            raise colony_exceptions.DeployerException("the package path '%s' does not exist" % package_path)
 
         # prints a log message
         self.log("Unpacking package file '%s' using zip decoder" % (package_path))
@@ -1150,7 +1150,7 @@ class Deployer:
         # installed structure
         if not item_key in installed_structure:
             # raises a deployer exception
-            raise colony_exceptions.DeployerException("Item key '%s' does not exist" % item_key)
+            raise colony_exceptions.DeployerException("item key '%s' does not exist" % item_key)
 
         # removes the item from the installed structure
         del installed_structure[item_key]
