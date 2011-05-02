@@ -257,7 +257,7 @@ if __name__ == "__main__":
         formated_traceback = traceback.format_tb(traceback_list)
 
         # prints the error information
-        logger.error("Error: " + unicode(exception))
+        logger.error(unicode(exception))
 
         # prints the stack trace information
         for traceback_line in formated_traceback:
@@ -265,7 +265,7 @@ if __name__ == "__main__":
             traceback_line = traceback_line.strip()
 
             # prints the traceback line
-            logger.error(traceback_line)
+            logger.debug(traceback_line)
 
         # exits in error
         sys.exit(2)
