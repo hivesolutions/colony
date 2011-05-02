@@ -914,7 +914,7 @@ class Deployer:
         @param update_time: If the timetamp value should be updated.
         """
 
-        self._add_structure_item(item_key, item_value, update_time, PACKAGES_FILE_NAME, INSTALLED_PACKAGES_VALUE)
+        self.__add_structure_item(item_key, item_value, update_time, PACKAGES_FILE_NAME, INSTALLED_PACKAGES_VALUE)
 
     def _add_bundle_item(self, item_key, item_value, update_time = True):
         """
@@ -928,7 +928,7 @@ class Deployer:
         @param update_time: If the timetamp value should be updated.
         """
 
-        self._add_structure_item(item_key, item_value, update_time, BUNDLES_FILE_NAME, INSTALLED_BUNDLES_VALUE)
+        self.__add_structure_item(item_key, item_value, update_time, BUNDLES_FILE_NAME, INSTALLED_BUNDLES_VALUE)
 
     def _add_plugin_item(self, item_key, item_value, update_time = True):
         """
