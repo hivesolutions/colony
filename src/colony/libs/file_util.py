@@ -43,6 +43,8 @@ import threading
 
 import path_util
 
+import colony.libs.path_util
+
 class FileRotator:
     """
     Class for handling of writing in files
@@ -537,15 +539,12 @@ class FileTransactionContext(FileContext):
 
             # runs the cleanup
             self._cleanup()
+
+            # runs the reset
+            self._reset()
         finally:
             # releases the access lock
             self.access_lock.release()
-
-        # empties the path tuples list
-        self.path_tuples_list = []
-
-        # resets the transaction level
-        self.transaction_level = 0
 
     def rollback(self):
         """
@@ -561,15 +560,27 @@ class FileTransactionContext(FileContext):
         try:
             # runs the cleanup
             self._cleanup()
+
+            # runs the reset
+            self._reset()
         finally:
-            # empties the path tuples list
-            self.path_tuples_list = []
-
-            # resets the transaction level
-            self.transaction_level = 0
-
             # releases the access lock
             self.access_lock.release()
+
+    def _reset(self):
+        """
+        Resets the state of the transaction file.
+        """
+
+        # empties the path tuples list
+        self.path_tuples_list = []
+
+        # resets the transaction level
+        self.transaction_level = 0
+
+        # in case the temporary path is a directory removes
+        # the temporary path
+        os.path.isdir(self.temporary_path) and colony.libs.path_util.remove_directory(self.temporary_path)
 
     def _cleanup(self):
         """
