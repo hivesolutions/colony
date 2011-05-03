@@ -461,9 +461,6 @@ class Deployer:
         # retrieves the version
         version = specification[VERSION_VALUE]
 
-        # retrieves the main file
-        main_file = specification[MAIN_FILE_VALUE]
-
         # retrieves the resources
         resources = specification[RESOURCES_VALUE]
 
@@ -494,21 +491,6 @@ class Deployer:
 
             # copies the resource file as the new resource file
             shutil.copy(resource_file_path, new_resource_file_path)
-
-        # prints a log message
-        self.log("Moving main file '%s' to '%s'" % (resource_file_path, new_resource_file_path))
-
-        # splits the main file name into name and extension
-        main_file_name, _mail_file_extension = os.path.splitext(main_file)
-
-        # creates the new specification file name
-        new_specification_file_name = main_file_name + JSON_FILE_EXTENSION
-
-        # creates the new specification file path
-        new_specification_file_path = os.path.normpath(target_path + "/" + new_specification_file_name)
-
-        # copies the specification file as the new specification file
-        shutil.copy(specification_file_path, new_specification_file_path)
 
         # retrieves the plugin item key
         plugin_item_key = id
