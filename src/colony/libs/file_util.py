@@ -359,6 +359,34 @@ class FileTransactionContext(FileContext):
         self.path_tuples_list = []
         self.access_lock = threading.RLock()
 
+    def read_file(self, file_path):
+        """
+        Reads the given file contents from a file.
+        In case a current transaction exists the contents
+        read are the virtual ones.
+
+        @type file_path: String
+        @param file_path: The path to the file to be
+        read.
+        @rtype: String
+        @return: The read file contents.
+        """
+
+        # retrieves the virtual file path for the file path
+        virtual_file_path = self._get_virtual_file_path(file_path)
+
+        # in case the virtual file path exists
+        if os.path.exists(virtual_file_path):
+            # reads the file using the file context (virtual file path used)
+            file_contents = FileContext.read_file(self, virtual_file_path)
+        # in case no virtual file path exists
+        else:
+            # reads the file using the file context (real file path used)
+            file_contents = FileContext.read_file(self, file_path)
+
+        # returns the file contents
+        return file_contents
+
     def write_file(self, file_path, file_contents):
         """
         Writes the given file contents to a file in
