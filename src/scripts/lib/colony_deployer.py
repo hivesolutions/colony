@@ -681,14 +681,8 @@ class Deployer:
         # loads the json specification file contents
         specification = json.loads(specification_file_contents)
 
-        # retrieves the main file
-        main_file = specification[MAIN_FILE_VALUE]
-
         # retrieves the resources
         resources = specification[RESOURCES_VALUE]
-
-        # splits the main file name into name and extension
-        main_file_name, _mail_file_extension = os.path.splitext(main_file)
 
         # creates the list of directory paths for (possible)
         # later removal
@@ -722,18 +716,6 @@ class Deployer:
                 # adds the file directory path to the
                 # directory path list
                 directory_path_list.append(resource_file_directory_path)
-
-        # creates the (new) plugin file name
-        specification_file_name = main_file_name + JSON_FILE_EXTENSION
-
-        # creates the (complete) specification file path
-        specification_file_path = os.path.normpath(plugins_path + "/" + specification_file_name)
-
-        # prints a log message
-        self.log("Removing specification file '%s'" % specification_file_path)
-
-        # removes the specification file in the specification file path
-        os.remove(specification_file_path)
 
         # prints a log message
         self.log("Removing empty directories for plugin file '%s'" % plugin_path)
