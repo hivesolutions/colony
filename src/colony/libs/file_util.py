@@ -387,8 +387,8 @@ class FileTransactionContext(FileContext):
     def read_file(self, file_path):
         """
         Reads the given file contents from a file.
-        In case a current transaction exists the contents
-        read are the virtual ones.
+        In case a transaction exists the contents read
+        are the virtual ones.
 
         @type file_path: String
         @param file_path: The path to the file to be
@@ -433,6 +433,23 @@ class FileTransactionContext(FileContext):
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
+
+    def remove_directory(self, directory_path):
+        """
+        Removes the directory in the given directory path.
+        In case a transaction exists the directory to be
+        removed is the virtual one.
+
+        @type directory_path: String
+        @param directory_path: The path to the directory
+        to be removed.
+        """
+
+        # resolves the directory path (real directory path)
+        real_directory_path = self.resolve_file_path(directory_path)
+
+        # removes the directory in the (real) directory path
+        path_util.remove_directory(real_directory_path)
 
     def get_file_path(self, file_path):
         """
@@ -503,6 +520,12 @@ class FileTransactionContext(FileContext):
                 # unpacks the path tuple
                 virtual_file_path, file_path = path_tuple
 
+                # in case the path does not exist (no need to proceed
+                # with persistence)
+                if not os.path.exists(virtual_file_path):
+                    # continues the loop
+                    continue
+
                 # in case the virtual file path is a directory
                 if os.path.isdir(virtual_file_path):
                     # copies the directory in the virtual path to the directory in the file path
@@ -563,6 +586,12 @@ class FileTransactionContext(FileContext):
             # creates the temporary complete path item, by joining the
             # temporary path and the temporary path item
             temporary_complete_path_item = os.path.join(self.temporary_path, temporary_path_item)
+
+            # in case the path does not exist (no need to proceed
+            # with removal)
+            if not os.path.exists(temporary_complete_path_item):
+                # continues the loop
+                continue
 
             # in case the temporary item is a directory
             if os.path.isdir(temporary_complete_path_item):
