@@ -359,6 +359,30 @@ class FileTransactionContext(FileContext):
         self.path_tuples_list = []
         self.access_lock = threading.RLock()
 
+    def resolve_file_path(self, file_path):
+        """
+        Resolves the given file path, checking if it
+        exists and if it is valid.
+
+        @type file_path: String
+        @param file_path: The file path to be resolved.
+        @rtype: String
+        @return: The resolved (real) file path.
+        """
+
+        # retrieves the virtual file path for the file path
+        virtual_file_path = self._get_virtual_file_path(file_path)
+
+        # checks if the virtual file path exists
+        virtual_file_path_exists = os.path.exists(virtual_file_path)
+
+        # resolves the file path taking into account the
+        # existence of the virtual file path
+        real_file_path = virtual_file_path_exists and virtual_file_path or file_path
+
+        # returns the real file path
+        return real_file_path
+
     def read_file(self, file_path):
         """
         Reads the given file contents from a file.
@@ -372,17 +396,11 @@ class FileTransactionContext(FileContext):
         @return: The read file contents.
         """
 
-        # retrieves the virtual file path for the file path
-        virtual_file_path = self._get_virtual_file_path(file_path)
+        # resolves the file path (real file path)
+        real_file_path = self.resolve_file_path(file_path)
 
-        # in case the virtual file path exists
-        if os.path.exists(virtual_file_path):
-            # reads the file using the file context (virtual file path used)
-            file_contents = FileContext.read_file(self, virtual_file_path)
-        # in case no virtual file path exists
-        else:
-            # reads the file using the file context (real file path used)
-            file_contents = FileContext.read_file(self, file_path)
+        # reads the file using the file context (virtual file path used)
+        file_contents = FileContext.read_file(self, real_file_path)
 
         # returns the file contents
         return file_contents
@@ -496,14 +514,14 @@ class FileTransactionContext(FileContext):
             # runs the cleanup
             self._cleanup()
         finally:
-            # empties the path tuples list
-            self.path_tuples_list = []
-
-            # resets the transaction level
-            self.transaction_level = 0
-
             # releases the access lock
             self.access_lock.release()
+
+        # empties the path tuples list
+        self.path_tuples_list = []
+
+        # resets the transaction level
+        self.transaction_level = 0
 
     def rollback(self):
         """
