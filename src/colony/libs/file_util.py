@@ -38,6 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import os
+import tempfile
 import threading
 
 import path_util
@@ -344,7 +345,7 @@ class FileTransactionContext(FileContext):
     access_lock = None
     """ The lock controlling the access to the file transaction """
 
-    def __init__(self, temporary_path):
+    def __init__(self, temporary_path = None):
         """
         Constructor of the class.
 
@@ -354,7 +355,7 @@ class FileTransactionContext(FileContext):
         """
 
         FileContext.__init__(self)
-        self.temporary_path = temporary_path
+        self.temporary_path = temporary_path or tempfile.mkdtemp()
 
         self.path_tuples_list = []
         self.access_lock = threading.RLock()
