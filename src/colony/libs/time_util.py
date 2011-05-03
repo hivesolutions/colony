@@ -149,7 +149,9 @@ def format_seconds_smart(seconds, mode = SIMPLE_VALUE, includes = DEFAULT_INCLUD
         # sets the processed includes with the last
         # element of the original includes, in order to
         # avoid empty strings
-        processed_includes = (includes[-1],)
+        processed_includes = (
+            includes[-1],
+        )
 
     # creates the is first flag
     is_first = True
@@ -269,24 +271,38 @@ def _process_includes(seconds, includes):
     # represented
     if seconds < 60:
         # sets the valid includes as the seconds
-        valid_includes = (SECOND_VALUE,)
+        valid_includes = (
+            SECOND_VALUE,
+        )
     # in case there are only second and minutes
     # to be represented
     elif seconds < 3600:
         # sets the valid includes as the minutes
         # and the seconds
-        valid_includes = (MINUTE_VALUE, SECOND_VALUE)
+        valid_includes = (
+            MINUTE_VALUE,
+            SECOND_VALUE
+        )
     # in case there are seconds, minutes and
     # hours to be represented
     elif seconds < 86400:
         # sets the valid includes as the hours, the minutes
         # and the seconds
-        valid_includes = (HOUR_VALUE, MINUTE_VALUE, SECOND_VALUE)
+        valid_includes = (
+            HOUR_VALUE,
+            MINUTE_VALUE,
+            SECOND_VALUE
+        )
     # in case everything should be represented
     else:
         # sets the valid includes as the days, the hours, the minutes
         # and the seconds
-        valid_includes = (DAY_VALUE, HOUR_VALUE, MINUTE_VALUE, SECOND_VALUE)
+        valid_includes = (
+            DAY_VALUE,
+            HOUR_VALUE,
+            MINUTE_VALUE,
+            SECOND_VALUE
+        )
 
     # intersects the (original) list of includes and the valid includes
     # to retrieve the processed includes
