@@ -4843,7 +4843,9 @@ class PluginManager:
         @return: The result of the command processing.
         """
 
-        return (self.manager_path,)
+        return (
+            self.manager_path,
+        )
 
     def process_command_plugin_path(self, arguments):
         """
@@ -4855,7 +4857,9 @@ class PluginManager:
         @return: The result of the command processing.
         """
 
-        return (self.get_plugin_path_by_id(*arguments),)
+        return (
+            self.get_plugin_path_by_id(*arguments),
+        )
 
     def process_command_configuration(self, arguments):
         """
@@ -4879,7 +4883,9 @@ class PluginManager:
         @return: The result of the command processing.
         """
 
-        return (self.get_environment_variable(*arguments),)
+        return (
+            self.get_environment_variable(*arguments),
+        )
 
     def _kill_system_signal_handler(self, signum, frame):
         """
