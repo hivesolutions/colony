@@ -45,6 +45,15 @@ import path_util
 
 import colony.libs.path_util
 
+PATH_TUPLE_PROCESS_METHOD_PREFIX = "_process_path_tuple_"
+""" The prefix to the path tuple process method """
+
+ADD_OPERATION = "add"
+""" The add operation """
+
+REMOVE_OPERATION = "remove"
+""" The remove operation """
+
 class FileRotator:
     """
     Class for handling of writing in files
@@ -430,13 +439,49 @@ class FileTransactionContext(FileContext):
         FileContext.write_file(self, virtual_file_path, file_contents)
 
         # creates a path tuple with the virtual file path
-        # and the file path
-        path_tuple = (virtual_file_path, file_path)
+        # and the file path for the operation add
+        path_tuple = (ADD_OPERATION, virtual_file_path, file_path)
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
 
     def remove_directory(self, directory_path):
+        """
+        Removes the directory in the given path.
+        This removal is not persisted immediately and
+        pushed to a transaction.
+
+        @type directory_path: String
+        @param directory_path: The path to the directory
+        to be removed.
+        """
+
+        # creates a path tuple with the directory path
+        # the operation remove, the recursive flag is set
+        path_tuple = (REMOVE_OPERATION, directory_path, True)
+
+        # adds the path tuple
+        self._add_path_tuple(path_tuple)
+
+    def remove_file(self, file_path):
+        """
+        Removes the file in the given path.
+        This removal is not persisted immediately and
+        pushed to a transaction.
+
+        @type directory_path: String
+        @param directory_path: The path to the file
+        to be removed.
+        """
+
+        # creates a path tuple with the file path
+        # the operation remove, the recursive flag is unset
+        path_tuple = (REMOVE_OPERATION, file_path, True)
+
+        # adds the path tuple
+        self._add_path_tuple(path_tuple)
+
+    def remove_directory_immediate(self, directory_path):
         """
         Removes the directory in the given directory path.
         In case a transaction exists the directory to be
@@ -470,7 +515,7 @@ class FileTransactionContext(FileContext):
 
         # creates a path tuple with the virtual file path
         # and the file path
-        path_tuple = (virtual_file_path, file_path)
+        path_tuple = (ADD_OPERATION, virtual_file_path, file_path)
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
@@ -519,23 +564,17 @@ class FileTransactionContext(FileContext):
             # iterates over all the path tuples in
             # path tuples list
             for path_tuple in self.path_tuples_list:
-                # unpacks the path tuple
-                virtual_file_path, file_path = path_tuple
+                # retrieves the operation (name)
+                operation = path_tuple[0]
 
-                # in case the path does not exist (no need to proceed
-                # with persistence)
-                if not os.path.exists(virtual_file_path):
-                    # continues the loop
-                    continue
+                # creates the path tuple process method name from the operation
+                path_tuple_process_method_name = PATH_TUPLE_PROCESS_METHOD_PREFIX + operation
 
-                # in case the virtual file path is a directory
-                if os.path.isdir(virtual_file_path):
-                    # copies the directory in the virtual path to the directory in the file path
-                    path_util.copy_directory(virtual_file_path, file_path)
-                # otherwise it must be a "normal" file
-                else:
-                    # copies the file in the virtual path to the file in the file path
-                    path_util.copy_file(virtual_file_path, file_path)
+                # retrieves the path tuple process method
+                path_tuple_process_method = getattr(self, path_tuple_process_method_name)
+
+                # calls the path tuple process method
+                path_tuple_process_method(path_tuple)
 
             # runs the cleanup
             self._cleanup()
@@ -655,3 +694,70 @@ class FileTransactionContext(FileContext):
 
         # returns the virtual file path
         return virtual_file_path
+
+    def _process_path_tuple_add(self, path_tuple):
+        """
+        Processes a path tuple of type add.
+        The remote tuple refers paths to be added
+        in persistence.
+
+        @type path_tuple: String
+        @param path_tuple: The tuple with the path contents.
+        """
+
+        # unpacks the path tuple
+        _operation, virtual_file_path, file_path = path_tuple
+
+        # in case the path does not exist (no need to proceed
+        # with persistence)
+        if not os.path.exists(virtual_file_path):
+            # returns immediately
+            return
+
+        # in case the virtual file path is a directory
+        if os.path.isdir(virtual_file_path):
+            # copies the directory in the virtual path to the directory in the file path
+            path_util.copy_directory(virtual_file_path, file_path)
+        # otherwise it must be a "normal" file
+        else:
+            # copies the file in the virtual path to the file in the file path
+            path_util.copy_file(virtual_file_path, file_path)
+
+    def _process_path_tuple_remove(self, path_tuple):
+        """
+        Processes a path tuple of type remove.
+        The remote tuple refers paths to be removed
+        in persistence.
+
+        @type path_tuple: String
+        @param path_tuple: The tuple with the path contents.
+        """
+
+        # unpacks the path tuple
+        _operation, file_path, recursive = path_tuple
+
+        # in case the path does not exist (no need to proceed
+        # with removal)
+        if not os.path.exists(file_path):
+            # returns immediately
+            return
+
+        # in case the file path is a directory
+        if os.path.isdir(file_path):
+            # retrieves the directory items
+            directory_items = os.listdir(file_path)
+
+            # in case the recursive mode is active
+            if recursive:
+                # checks the directory for items and removes
+                # the directory in the path (recursively)
+                not directory_items and os.removedirs(file_path)
+            # in case the removal is not recursive
+            else:
+                # checks the directory for items and removes
+                # the directory in the path
+                not directory_items and os.remove(file_path)
+        # otherwise it must be a "normal" file
+        else:
+            # removes the file path
+            os.remove(file_path)
