@@ -252,6 +252,8 @@ class Deployer:
         @type package_id: String
         @param package_id: The id of the package to be tested
         for existence.
+        @rtype: bool
+        @return: The result of the existence package test.
         """
 
         # retrieves the packages structure
