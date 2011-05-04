@@ -562,6 +562,15 @@ class Deployer:
         self.log("Finished removing '%s' from'%s'" % (package_id, self.manager_path), logging.INFO)
 
     def remove_bundle_package(self, package_id, package_version):
+        """
+        Removes the bundle package with the given id and version.
+
+        @type package_id: String
+        @param package_id: The id of the bundle package to be removed.
+        @type package_version: String
+        @param package_version: The version of the bundle package to be removed.
+        """
+
         # prints a log message
         self.log("Removing bundle package '%s' v'%s'" % (package_id, package_version))
 
@@ -635,6 +644,15 @@ class Deployer:
         self._remove_bundle_item(package_id)
 
     def remove_plugin_package(self, package_id, package_version):
+        """
+        Removes the plugin package with the given id and version.
+
+        @type package_id: String
+        @param package_id: The id of the plugin package to be removed.
+        @type package_version: String
+        @param package_version: The version of the plugin package to be removed.
+        """
+
         # prints a log message
         self.log("Removing plugin package '%s' v'%s'" % (package_id, package_version))
 
