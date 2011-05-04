@@ -128,7 +128,7 @@ RELATIVE_PLUGINS_PATH = "plugins"
 RELATIVE_REGISTRY_PATH = "var/registry"
 """ The path relative to the manager path for the registry """
 
-REQUIRED_VALUES = ("platform", "id", "version")
+REQUIRED_VALUES = ("type", "id", "version")
 """ The tuple of required values """
 
 JSON_FILE_EXTENSION = ".json"
@@ -205,6 +205,9 @@ class Deployer:
 
         # loads the json specification file contents
         specification = json.loads(specification_file_contents)
+
+        # validates the specification
+        self.validate_specification(specification)
 
         # prints the specification
         self.print_specification(specification)
@@ -617,6 +620,9 @@ class Deployer:
         # loads the json specification file contents
         specification = json.loads(specification_file_contents)
 
+        # validates the specification
+        self.validate_specification(specification)
+
         # retrieves the plugins
         plugins = specification[PLUGINS_VALUE]
 
@@ -702,6 +708,9 @@ class Deployer:
 
         # loads the json specification file contents
         specification = json.loads(specification_file_contents)
+
+        # validates the specification
+        self.validate_specification(specification)
 
         # retrieves the resources
         resources = specification[RESOURCES_VALUE]
@@ -898,6 +907,9 @@ class Deployer:
 
         # loads the json specification file contents
         specification = json.loads(specification_file_contents)
+
+        # validates the specification
+        self.validate_specification(specification)
 
         # returns the specification
         return specification
