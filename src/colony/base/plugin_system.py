@@ -108,6 +108,9 @@ DEFAULT_LOGGING_FILE_BACKUP_COUNT = 5
 DEFAULT_TEMPORARY_PATH = u"tmp"
 """ The default temporary path """
 
+DEFAULT_VARIABLE_PATH = u"var"
+""" The default variable path """
+
 DEFAULT_PLUGIN_PATH = u"plugins"
 """ The default plugin path """
 
@@ -4740,6 +4743,24 @@ class PluginManager:
 
         # returns the temporary path
         return temporary_path
+
+    def get_variable_path(self):
+        """
+        Retrieves the manager variable path for execution.
+
+        @rtype: String
+        @return: The manager variable path for execution.
+        """
+
+        # retrieves the manager path
+        manager_path = self.get_manager_path()
+
+        # creates the main plugin full path joining the manager path and the
+        # default variable path
+        variable_path = os.path.join(manager_path, DEFAULT_VARIABLE_PATH)
+
+        # returns the variable path
+        return variable_path
 
     def get_layout_mode(self):
         """
