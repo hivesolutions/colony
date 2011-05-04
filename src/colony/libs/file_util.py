@@ -597,6 +597,15 @@ class FileTransactionContext(FileContext):
         self.access_lock.acquire()
 
         try:
+            # in case the transaction level is zero
+            if self.transaction_level == 0:
+                # returns immediately
+                return
+            # in case the transaction level is negative
+            elif self.transaction_level < 0:
+                # raises the runtime error
+                raise RuntimeError("Invalid transaction level")
+
             # runs the cleanup
             self._cleanup()
 
