@@ -583,7 +583,7 @@ class Deployer:
         # retrieves the installed bundles
         installed_bundles = bundles.get(INSTALLED_BUNDLES_VALUE, {})
 
-        # in case the package id is not found in the installed plugins
+        # in case the package id is not found in the installed bundles
         if not package_id in installed_bundles:
             # raises a deployer exception
             raise colony_exceptions.DeployerException("bundle '%s' v'%s' is not installed" % (package_id, package_version))
@@ -595,7 +595,8 @@ class Deployer:
         # sets the bundle id as the package id
         bundle_id = package_id
 
-        # retrieves the bundle version as the
+        # retrieves the bundle version as the as the package version
+        # or from the bundle structure
         bundle_version = package_version or bundle[VERSION_VALUE]
 
         # creates the bundle file name from the bundle
@@ -680,7 +681,8 @@ class Deployer:
         # sets the plugin id as the package id
         plugin_id = package_id
 
-        # retrieves the plugin version as the
+        # retrieves the plugin version as the package version
+        # or from the plugin structure
         plugin_version = package_version or plugin[VERSION_VALUE]
 
         # creates the plugin file name from the plugin
