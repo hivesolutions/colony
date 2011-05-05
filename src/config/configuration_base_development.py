@@ -148,6 +148,7 @@ plugin_path_list = [
     "%colony_prefix_path%/pt.hive.colony.plugins.service.yadis/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.specifications/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.system.installer/src/colony/plugins",
+    "%colony_prefix_path%/pt.hive.colony.plugins.system.registry/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.system.updater/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.template_engine/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.template.handler/src/colony/plugins",
