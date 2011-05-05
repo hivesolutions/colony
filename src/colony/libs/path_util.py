@@ -52,7 +52,10 @@ NT_PLATFORM_VALUE = "nt"
 DOS_PLATFORM_VALUE = "dos"
 """ The dos platform value """
 
-WINDOWS_PLATFORMS_VALUE = (NT_PLATFORM_VALUE, DOS_PLATFORM_VALUE)
+WINDOWS_PLATFORMS_VALUE = (
+    NT_PLATFORM_VALUE,
+    DOS_PLATFORM_VALUE
+)
 """ The windows platform value """
 
 def normalize_path(path):

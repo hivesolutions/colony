@@ -64,7 +64,10 @@ def quote(string_value, safe = "/"):
     """
 
     # creates the cache key tuple
-    cache_key = (safe, QUOTE_SAFE_CHAR)
+    cache_key = (
+        safe,
+        QUOTE_SAFE_CHAR
+    )
 
     try:
         # in case the cache key is not defined

@@ -128,7 +128,11 @@ RELATIVE_PLUGINS_PATH = "plugins"
 RELATIVE_REGISTRY_PATH = "var/registry"
 """ The path relative to the manager path for the registry """
 
-REQUIRED_VALUES = ("type", "id", "version")
+REQUIRED_VALUES = (
+    "type",
+    "id",
+    "version"
+)
 """ The tuple of required values """
 
 JSON_FILE_EXTENSION = ".json"
@@ -140,7 +144,10 @@ COLONY_BUNDLE_FILE_EXTENSION = ".cbx"
 COLONY_PLUGIN_FILE_EXTENSION = ".cpx"
 """ The colony plugin file extension """
 
-COLONY_FILE_EXTENSIONS = (COLONY_BUNDLE_FILE_EXTENSION, COLONY_PLUGIN_FILE_EXTENSION)
+COLONY_FILE_EXTENSIONS = (
+    COLONY_BUNDLE_FILE_EXTENSION,
+    COLONY_PLUGIN_FILE_EXTENSION
+)
 """ The tuple containing all the colony file extensions """
 
 class Deployer:

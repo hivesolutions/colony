@@ -440,7 +440,11 @@ class FileTransactionContext(FileContext):
 
         # creates a path tuple with the virtual file path
         # and the file path for the operation add
-        path_tuple = (ADD_OPERATION, virtual_file_path, file_path)
+        path_tuple = (
+            ADD_OPERATION,
+            virtual_file_path,
+            file_path
+        )
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
@@ -458,7 +462,11 @@ class FileTransactionContext(FileContext):
 
         # creates a path tuple with the directory path
         # the operation remove, the recursive flag is set
-        path_tuple = (REMOVE_OPERATION, directory_path, True)
+        path_tuple = (
+            REMOVE_OPERATION,
+            directory_path,
+            True
+        )
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
@@ -476,7 +484,11 @@ class FileTransactionContext(FileContext):
 
         # creates a path tuple with the file path
         # the operation remove, the recursive flag is unset
-        path_tuple = (REMOVE_OPERATION, file_path, True)
+        path_tuple = (
+            REMOVE_OPERATION,
+            file_path,
+            True
+        )
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
@@ -515,7 +527,11 @@ class FileTransactionContext(FileContext):
 
         # creates a path tuple with the virtual file path
         # and the file path
-        path_tuple = (ADD_OPERATION, virtual_file_path, file_path)
+        path_tuple = (
+            ADD_OPERATION,
+            virtual_file_path,
+            file_path
+        )
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)

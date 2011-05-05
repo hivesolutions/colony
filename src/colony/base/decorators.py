@@ -80,7 +80,10 @@ def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enable
             plugin = args[0]
 
             # retrieves the plugin tupple from the plugin information
-            plugin_tuple = (plugin.id, plugin.version)
+            plugin_tuple = (
+                plugin.id,
+                plugin.version
+            )
 
             # retrieves the metadata map for the current plugin
             metadata_map = load_plugin.load_plugin_map[plugin_tuple]["metadata"]
@@ -105,7 +108,10 @@ def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enable
         """
 
         # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (plugin_id, plugin_version)
+        plugin_tuple = (
+            plugin_id,
+            plugin_version
+        )
 
         if not load_plugin.load_plugin_map:
             load_plugin.load_plugin_map = {}
@@ -154,7 +160,10 @@ def plugin_meta_information(metadata_key, metadata_values = {}):
         """
 
         # creates the load plugin tuple
-        load_plugin_tuple = (load_plugin.plugin_id, load_plugin.plugin_version)
+        load_plugin_tuple = (
+            load_plugin.plugin_id,
+            load_plugin.plugin_version
+        )
 
         # retrieves the metadata plugin map
         metadata_plugin_map = load_plugin.load_plugin_map[load_plugin_tuple]["metadata"]
@@ -216,7 +225,10 @@ def load_allowed(plugin_id, plugin_version, load_plugin = False):
             allowed_plugin = args[1]
             capability = args[2]
 
-            original_plugin_tuple = (original_plugin.id, original_plugin.version)
+            original_plugin_tuple = (
+                original_plugin.id,
+                original_plugin.version
+            )
 
             if original_plugin_tuple in load_allowed.load_allowed_map:
                 allowed_functions_map = load_allowed.load_allowed_map[original_plugin_tuple]
@@ -244,7 +256,10 @@ def load_allowed(plugin_id, plugin_version, load_plugin = False):
         """
 
         # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (plugin_id, plugin_version)
+        plugin_tuple = (
+            plugin_id,
+            plugin_version
+        )
 
         if not load_allowed.load_allowed_map:
             load_allowed.load_allowed_map = {}
@@ -293,7 +308,11 @@ def load_allowed_capability(capability, load_plugin = False):
 
         load_allowed.function = function
 
-        load_allowed_tuple = (load_allowed.plugin_id, load_allowed.plugin_version)
+        load_allowed_tuple = (
+            load_allowed.plugin_id,
+            load_allowed.plugin_version
+        )
+
         load_allowed.load_allowed_map[load_allowed_tuple][capability] = load_allowed.function
 
         if load_plugin:
@@ -348,7 +367,10 @@ def unload_allowed(plugin_id, plugin_version, load_plugin = False):
             allowed_plugin = args[1]
             capability = args[2]
 
-            original_plugin_tuple = (original_plugin.id, original_plugin.version)
+            original_plugin_tuple = (
+                original_plugin.id,
+                original_plugin.version
+            )
 
             if original_plugin_tuple in unload_allowed.unload_allowed_map:
                 allowed_functions_map = unload_allowed.unload_allowed_map[original_plugin_tuple]
@@ -376,7 +398,10 @@ def unload_allowed(plugin_id, plugin_version, load_plugin = False):
         """
 
         # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (plugin_id, plugin_version)
+        plugin_tuple = (
+            plugin_id,
+            plugin_version
+        )
 
         if not unload_allowed.unload_allowed_map:
             unload_allowed.unload_allowed_map = {}
@@ -425,7 +450,11 @@ def unload_allowed_capability(capability, load_plugin = False):
 
         unload_allowed.function = function
 
-        unload_allowed_tuple = (unload_allowed.plugin_id, unload_allowed.plugin_version)
+        unload_allowed_tuple = (
+            unload_allowed.plugin_id,
+            unload_allowed.plugin_version
+        )
+
         unload_allowed.unload_allowed_map[unload_allowed_tuple][capability] = unload_allowed.function
 
         if load_plugin:
@@ -483,10 +512,16 @@ def inject_dependencies(plugin_id, plugin_version, load_plugin = False):
             dependency_plugin = args[1]
 
             # creates the original plugin tuple
-            original_plugin_tuple = (original_plugin.original_id, original_plugin.version)
+            original_plugin_tuple = (
+                original_plugin.original_id,
+                original_plugin.version
+            )
 
             # creates the dependency plugin tuple
-            dependency_plugin_tuple = (dependency_plugin.original_id, dependency_plugin.version)
+            dependency_plugin_tuple = (
+                dependency_plugin.original_id,
+                dependency_plugin.version
+            )
 
             if original_plugin_tuple in inject_dependencies.inject_dependencies_map:
                 dependency_functions_map = inject_dependencies.inject_dependencies_map[original_plugin_tuple]
@@ -518,7 +553,10 @@ def inject_dependencies(plugin_id, plugin_version, load_plugin = False):
         """
 
         # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (plugin_id, plugin_version)
+        plugin_tuple = (
+            plugin_id,
+            plugin_version
+        )
 
         if not inject_dependencies.inject_dependencies_map:
             inject_dependencies.inject_dependencies_map = {}
@@ -569,7 +607,11 @@ def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
 
         plugin_inject.function = function
 
-        inject_dependencies_tuple = (inject_dependencies.plugin_id, inject_dependencies.plugin_version)
+        inject_dependencies_tuple = (
+            inject_dependencies.plugin_id,
+            inject_dependencies.plugin_version
+        )
+
         inject_dependencies.inject_dependencies_map[inject_dependencies_tuple][plugin_id, plugin_version] = plugin_inject.function
 
         if load_plugin:
@@ -624,7 +666,10 @@ def event_handler(plugin_id, plugin_version, load_plugin = False):
             event_name = args[1]
             all_method_args = args[1:]
 
-            original_plugin_tuple = (original_plugin.id, original_plugin.version)
+            original_plugin_tuple = (
+                original_plugin.id,
+                original_plugin.version
+            )
 
             if original_plugin_tuple in event_handler.event_handler_methods_map:
                 event_handler_functions_map = event_handler.event_handler_methods_map[original_plugin_tuple]
@@ -669,7 +714,10 @@ def event_handler(plugin_id, plugin_version, load_plugin = False):
         """
 
         # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (plugin_id, plugin_version)
+        plugin_tuple = (
+            plugin_id,
+            plugin_version
+        )
 
         if not event_handler.event_handler_methods_map:
             event_handler.event_handler_methods_map = {}
@@ -718,7 +766,11 @@ def event_handler_method(event_name, load_plugin = False):
 
         event_handler_method.function = function
 
-        event_handler_tuple = (event_handler.plugin_id, event_handler.plugin_version)
+        event_handler_tuple = (
+            event_handler.plugin_id,
+            event_handler.plugin_version
+        )
+
         event_handler.event_handler_methods_map[event_handler_tuple][event_name] = event_handler_method.function
 
         if load_plugin:
@@ -775,7 +827,10 @@ def set_configuration_property(plugin_id, plugin_version, load_plugin = False):
             property_name = args[1]
             property = args[2]
 
-            original_plugin_tuple = (original_plugin.id, original_plugin.version)
+            original_plugin_tuple = (
+                original_plugin.id,
+                original_plugin.version
+            )
 
             # in case the original plugin tuple exists in the set configuration
             # property map
@@ -810,7 +865,10 @@ def set_configuration_property(plugin_id, plugin_version, load_plugin = False):
         """
 
         # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (plugin_id, plugin_version)
+        plugin_tuple = (
+            plugin_id,
+            plugin_version
+        )
 
         if not set_configuration_property.set_configuration_property_methods_map:
             set_configuration_property.set_configuration_property_methods_map = {}
@@ -860,7 +918,11 @@ def set_configuration_property_method(property_name, load_plugin = False):
 
         set_configuration_property_method.function = function
 
-        set_configuration_property_tuple = (set_configuration_property.plugin_id, set_configuration_property.plugin_version)
+        set_configuration_property_tuple = (
+            set_configuration_property.plugin_id,
+            set_configuration_property.plugin_version
+        )
+
         set_configuration_property.set_configuration_property_methods_map[set_configuration_property_tuple][property_name] = set_configuration_property_method.function
 
         if load_plugin:
@@ -916,7 +978,10 @@ def unset_configuration_property(plugin_id, plugin_version, load_plugin = False)
             original_plugin = args[0]
             property_name = args[1]
 
-            original_plugin_tuple = (original_plugin.id, original_plugin.version)
+            original_plugin_tuple = (
+                original_plugin.id,
+                original_plugin.version
+            )
 
             # in case the original plugin tuple exists in the unset configuration
             # property map
@@ -951,7 +1016,10 @@ def unset_configuration_property(plugin_id, plugin_version, load_plugin = False)
         """
 
         # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (plugin_id, plugin_version)
+        plugin_tuple = (
+            plugin_id,
+            plugin_version
+        )
 
         if not unset_configuration_property.unset_configuration_property_methods_map:
             unset_configuration_property.unset_configuration_property_methods_map = {}
@@ -1001,7 +1069,11 @@ def unset_configuration_property_method(property_name, load_plugin = False):
 
         unset_configuration_property_method.function = function
 
-        unset_configuration_property_tuple = (unset_configuration_property.plugin_id, unset_configuration_property.plugin_version)
+        unset_configuration_property_tuple = (
+            unset_configuration_property.plugin_id,
+            unset_configuration_property.plugin_version
+        )
+
         unset_configuration_property.unset_configuration_property_methods_map[unset_configuration_property_tuple][property_name] = unset_configuration_property_method.function
 
         if load_plugin:
@@ -1098,7 +1170,10 @@ def unregister_plugin_decorators(plugin_id, plugin_version):
     """
 
     # creates the plugin tuple for the referred plugin
-    plugin_tuple = (plugin_id, plugin_version)
+    plugin_tuple = (
+        plugin_id,
+        plugin_version
+    )
 
     if load_allowed.load_allowed_map and plugin_tuple in load_allowed.load_allowed_map:
         del load_allowed.load_allowed_map[plugin_tuple]

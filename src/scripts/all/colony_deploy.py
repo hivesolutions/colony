@@ -79,7 +79,10 @@ DEFAULT_MANAGER_PATH_VALUE = os.path.normpath(os.path.realpath(DEFAULT_PATH_VALU
 COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
 """ The colony home environment variable name """
 
-COLONY_FILE_EXTENSIONS = (".cbx", ".cpx")
+COLONY_FILE_EXTENSIONS = (
+    ".cbx",
+    ".cpx"
+)
 """ The tuple containing all the colony file extensions """
 
 DEFAULT_LOGGING_FORMAT = "[%(levelname)s] %(message)s"

@@ -464,7 +464,10 @@ class Plugin(object):
         """
 
         # creates the plugin capability tuple
-        publin_capability_tuple = (plugin, capability)
+        publin_capability_tuple = (
+            plugin,
+            capability
+        )
 
         # in case the plugin capability tuple already exists in
         # the allowed loaded capability list
@@ -492,7 +495,10 @@ class Plugin(object):
         """
 
         # creates the plugin capability tuple
-        publin_capability_tuple = (plugin, capability)
+        publin_capability_tuple = (
+            plugin,
+            capability
+        )
 
         # in case the plugin capability tuple does not exist in
         # the allowed loaded capability list
@@ -1017,7 +1023,10 @@ class Plugin(object):
         @return: Tuple representing the plugin (id and version).
         """
 
-        return (self.id, self.version)
+        return (
+            self.id,
+            self.version
+        )
 
     def log_stack_trace(self):
         """
@@ -3963,7 +3972,11 @@ class PluginManager:
 
             # creates the values tuple with the start and end position
             # and with the values
-            values_tuple = (start_position, end_position, values)
+            values_tuple = (
+                start_position,
+                end_position,
+                values
+            )
 
             # adds the value tuple to the value tuples list
             values_tuples_list.append(values_tuple)
@@ -5159,7 +5172,10 @@ class PluginDependency(Dependency):
         @return: A tuple representing the plugin dependency.
         """
 
-        return (self.plugin_id, self.plugin_version)
+        return (
+            self.plugin_id,
+            self.plugin_version
+        )
 
 class PackageDependency(Dependency):
     """
@@ -5279,7 +5295,10 @@ class PackageDependency(Dependency):
         @return: A tuple representing the package dependency.
         """
 
-        return (self.package_name, self.package_version)
+        return (
+            self.package_name,
+            self.package_version
+        )
 
 class Condition:
     """

@@ -494,7 +494,18 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     # adds the extra plugin path to the plugin path
     plugin_path += extra_plugin_path
 
-    return (verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, logger_path, library_path, plugin_path)
+    return (
+        verbose,
+        debug,
+        silent,
+        layout_mode,
+        run_mode,
+        stop_on_cycle_error,
+        daemon_file_path,
+        logger_path,
+        library_path,
+        plugin_path
+    )
 
 def convert_reference_path_list(manager_path, current_prefix_paths, reference_path_list):
     """
