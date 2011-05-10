@@ -39,7 +39,9 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import number_util
 
-COEFFICIENT_VALUES = (2, 3, 4, 5, 6, 7, 8, 9)
+COEFFICIENT_VALUES = (
+    2, 3, 4, 5, 6, 7, 8, 9
+)
 """ The tuple containing the coefficient values """
 
 def calculate_tax_number_control_value(tax_number):
