@@ -296,22 +296,45 @@ class StringBuffer:
         # returns the duplicated string buffer
         return duplicated_string_buffer
 
-    def rollback_last(self):
+    def rollback_last(self, item_count = 1):
         """
         Rollsback the last write.
+
+        @type item_count: int
+        @param item_count: The number of items
+        to be "rollbacked".
         """
 
-        return self.string_list.pop()
+        # iterates over the range of item count
+        for _index in range(item_count):
+            # pops an item from the string list
+            self.string_list.pop()
 
-    def get_last(self):
+    def get_last(self, index = -1):
         """
         Retrieves the last write.
 
+        @type index: int
+        @param index: The index to retrieve from
+        the string list.
         @rtype: String
         @return: The last write.
         """
 
-        return self.string_list[-1]
+        # retrieves the absolute index
+        absolute_index = abs(index)
+
+        # retrieves the string list length
+        string_list_length = len(self.string_list)
+
+        # in case the absolute index "overflows"
+        # the string list length
+        if absolute_index > string_list_length:
+            # return invalid
+            return None
+
+        # returns the "last" element
+        return self.string_list[index]
 
     def _write_fast(self, string_value):
         """
