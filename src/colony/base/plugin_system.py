@@ -464,19 +464,19 @@ class Plugin(object):
         """
 
         # creates the plugin capability tuple
-        publin_capability_tuple = (
+        plugin_capability_tuple = (
             plugin,
             capability
         )
 
         # in case the plugin capability tuple already exists in
         # the allowed loaded capability list
-        if publin_capability_tuple in self.allowed_loaded_capability:
+        if plugin_capability_tuple in self.allowed_loaded_capability:
             # raises the plugin system exception
             raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
         # adds the plugin capability tuple to the allowed loaded capability
-        self.allowed_loaded_capability.append(publin_capability_tuple)
+        self.allowed_loaded_capability.append(plugin_capability_tuple)
 
         # registers for all registrable events
         self.register_all_registrable_events_plugin(plugin)
@@ -495,19 +495,19 @@ class Plugin(object):
         """
 
         # creates the plugin capability tuple
-        publin_capability_tuple = (
+        plugin_capability_tuple = (
             plugin,
             capability
         )
 
         # in case the plugin capability tuple does not exist in
         # the allowed loaded capability list
-        if not publin_capability_tuple in self.allowed_loaded_capability:
+        if not plugin_capability_tuple in self.allowed_loaded_capability:
             # raises the plugin system exception
             raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
         # removes the plugin capability tuple from the allowed loaded capability
-        self.allowed_loaded_capability.remove(publin_capability_tuple)
+        self.allowed_loaded_capability.remove(plugin_capability_tuple)
 
         # unregisters for all registrable events
         self.unregister_all_registrable_events_plugin(plugin)
