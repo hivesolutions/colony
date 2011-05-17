@@ -101,6 +101,7 @@ plugin_path_list = [
     "%colony_prefix_path%/pt.hive.colony.plugins.main.remote.rest.encoder/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.main.remote.xmlrpc/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.main.restricted/src/colony/plugins",
+    "%colony_prefix_path%/pt.hive.colony.plugins.main.scaffolding/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.main.service/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.main.service.abecula/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.main.service.bittorrent/src/colony/plugins",
