@@ -89,8 +89,7 @@ library_path_list = [
 """ The list of library paths """
 
 plugin_path_list = [
-    "plugins",
-    "var/development/pt.hive.colony.plugins.tobias"
+    "plugins"
 ]
 """ The list of plugin paths """
 
