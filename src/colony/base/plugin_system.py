@@ -117,6 +117,9 @@ DEFAULT_PLUGIN_PATH = u"plugins"
 DEFAULT_CONFIGURATION_PATH = u"meta"
 """ The default configuration path """
 
+DEFAULT_PLUGIN_PATHS_FILE_PATH = u"config/general/plugins.pth"
+""" The default plugin paths file path """
+
 DEFAULT_WORKSPACE_PATH = u"~/.colony_workspace"
 """ The default workspace path """
 
@@ -2205,6 +2208,65 @@ class PluginManager:
 
             # removes the plugin thread from the plugin threads map
             del self.plugin_threads_map[plugin_id]
+
+    def add_plugin_path(self, plugin_path, persist = False):
+        """
+        Adds the given plugin path to the plugin paths
+        registry for manager use.
+        Optionally the plugin path may be persisted to the
+        plugin paths file.
+
+        @type plugin_path: String
+        @param plugin_path: The plugin path to be added.
+        @type persist: bool
+        @param persist: If the plugin path should be persisted
+        to the plugin paths file.
+        """
+
+        # adds the plugin path to the plugin paths
+        self.plugin_paths.append(plugin_path)
+
+        # in case the persist flag is set
+        # persists the plugin path
+        persist and self.persist_plugin_path(plugin_path)
+
+    def remove_plugin_path(self, plugin_path):
+        """
+        Removes the given plugin path from the plugin paths
+        registry for manager use.
+
+        @type plugin_path: String
+        @param plugin_path: The plugin path to be removed.
+        """
+
+        # removes the plugin path from the plugin paths
+        self.plugin_paths.remove(plugin_path)
+
+    def persist_plugin_path(self, plugin_path):
+        """
+        Persists the given plugin path into the plugin
+        paths file, for later usage.
+
+        @type plugin_path: String
+        @param plugin_path: The plugin path to be persisted
+        in the plugin paths file.
+        """
+
+        # retrieves the plugin paths file path
+        plugin_paths_file_path = self.get_plugin_paths_file_path()
+
+        # normalizes the plugin path
+        plugin_path = os.path.normcase(plugin_path)
+
+        # opens the plugin paths file for appending
+        plugin_paths_file = open(plugin_paths_file_path, "a")
+
+        try:
+            # writes the plugin path and a new line separator
+            plugin_paths_file.write(plugin_path + "\n")
+        except:
+            # closes the plugin paths file
+            plugin_paths_file.close()
 
     def get_all_plugin_classes(self, base_plugin_class = Plugin):
         """
@@ -4605,7 +4667,7 @@ class PluginManager:
         @return: The current configuration path.
         """
 
-        return self.manager_path + "/" + self.configuration_path
+        return os.path.join(self.manager_path, self.configuration_path)
 
     def get_workspace_path(self):
         """
@@ -4777,6 +4839,24 @@ class PluginManager:
 
         # returns the variable path
         return variable_path
+
+    def get_plugin_paths_file_path(self):
+        """
+        Retrieves the manager plugin paths file path for execution.
+
+        @rtype: String
+        @return: The manager plugin paths file path for execution.
+        """
+
+        # retrieves the manager path
+        manager_path = self.get_manager_path()
+
+        # creates the main plugin full path joining the manager path and the
+        # default variable path
+        plugin_paths_file_path = os.path.join(manager_path, DEFAULT_PLUGIN_PATHS_FILE_PATH)
+
+        # returns the plugin paths file path
+        return plugin_paths_file_path
 
     def get_layout_mode(self):
         """
