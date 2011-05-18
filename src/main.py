@@ -105,6 +105,15 @@ PREFIX_PATH_SUFIX_VALUE = "_prefix_path%"
 LIBRARY_DIRECTORY = "colony/libs"
 """ The colony library directory """
 
+CONFIG_DIRECTORY = "config"
+""" The colony config directory """
+
+GENERAL_DIRECTORY = "general"
+""" The colony general directory """
+
+PLUGIN_PATHS_FILE = "plugins.pth"
+""" The colony plugin paths file """
+
 VERBOSE_VALUE = "verbose"
 """ The verbose value """
 
@@ -487,6 +496,12 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     # adds the extra library path to the library path
     library_path += extra_library_path
 
+    # loads the plugin paths file path
+    plugin_paths_file_path = load_plugin_paths_file(manager_path)
+
+    # adds the plugin paths file path to the plugin path
+    plugin_path += plugin_paths_file_path
+
     # retrieves the extra plugin path as the dereferenced values from the colony
     # configuration plugin path list
     extra_plugin_path = convert_reference_path_list(manager_path, current_prefix_paths, colony_configuration.plugin_path_list)
@@ -521,7 +536,7 @@ def convert_reference_path_list(manager_path, current_prefix_paths, reference_pa
     @type reference_path_list: List
     @param reference_path_list: The list of reference paths.
     @rtype: String
-    @return: A stringconverted_reference_path containing all the dereferenced paths
+    @return: A string converted reference path containing all the dereferenced paths.
     """
 
     # initializes the converted reference path
@@ -548,6 +563,57 @@ def convert_reference_path_list(manager_path, current_prefix_paths, reference_pa
 
     # returns the converted reference path
     return converted_reference_path
+
+def load_plugin_paths_file(manager_path):
+    """
+    Loads the plugin paths file, creating the base plugin
+    paths contained in the file.
+
+    @type manager_path: String
+    @param manager_path: The path to the manager.
+    @rtype: String
+    @return: A string with the paths loaded from the file.
+    """
+
+    # creates the config general path from the manager path
+    config_general_path = manager_path + "/" + CONFIG_DIRECTORY + "/" + GENERAL_DIRECTORY
+
+    # crates the plugin paths file path (from the config genal path)
+    plugin_paths_file_path = config_general_path + "/" + PLUGIN_PATHS_FILE
+
+    # in case the plugin paths file does not exists (not mandatory)
+    if not os.path.exists(plugin_paths_file_path):
+        # returns immediately
+        return
+
+    # opens the plugin paths file for reading
+    plugin_paths_file = open(plugin_paths_file_path, "r")
+
+    try:
+        # reads the plugin paths file contents
+        plugin_paths_file_contents =  plugin_paths_file.read()
+    finally:
+        # closes the plugin paths file
+        plugin_paths_file.close()
+
+    # splits the paths over the newline character
+    paths = plugin_paths_file_contents.split("\n")
+
+    # filters the "invalid" path values
+    paths = [value for value in paths if value]
+
+    # initializes the converted reference path
+    plugin_paths_string_value = str()
+
+    # iterates over all the paths to creates the
+    # plugins paths string
+    for path in paths:
+        # adds the path to the plugin paths string
+        # value
+        plugin_paths_string_value += path + ";"
+
+    # returns the plugin paths string value
+    return plugin_paths_string_value
 
 def configure_system(layout_mode, run_mode, manager_path):
     """
