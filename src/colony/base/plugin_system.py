@@ -2255,8 +2255,9 @@ class PluginManager:
         # retrieves the plugin paths file path
         plugin_paths_file_path = self.get_plugin_paths_file_path()
 
-        # normalizes the plugin path
-        plugin_path = os.path.normcase(plugin_path)
+        # converts the plugin path to the best (possible)
+        # plugin path, possibly a relative one
+        plugin_path = self._get_best_plugin_path(plugin_path)
 
         # opens the plugin paths file for appending
         plugin_paths_file = open(plugin_paths_file_path, "a")
@@ -5100,6 +5101,47 @@ class PluginManager:
 
             # exits in error
             exit(2)
+
+    def _get_best_plugin_path(self, plugin_path):
+        """
+        Converts the given plugin path into the
+        best fitting plugin path, counting with the
+        possible relative paths.
+
+        @type plugin_path: String
+        @param plugin_path: The plugin path to be converted
+        @rtype: String
+        @return: The converted plugin path.
+        """
+
+        # retrieves the manager path
+        manager_path = self.get_manager_path()
+
+        # normalizes the plugin path
+        plugin_path = os.path.normcase(plugin_path)
+
+        # checks if the plugin path is absolute
+        plugin_path_absolute = os.path.abspath(plugin_path)
+
+        # in case the plugin path is not absolute (relative)
+        if not plugin_path_absolute:
+            # returns the plugin path immediately
+            # as nothing is better than a relative path
+            return plugin_path
+
+        # retrieves the relative path between the manager path and the plugin
+        # path
+        plugin_relative_path = os.path.relpath(plugin_path, manager_path)
+
+        # checks if the plugin relative path is a back-reference
+        plugin_relative_path_back = plugin_relative_path.startswith("..")
+
+        # sets the plugin path to the absolute value or the relative
+        # value in case it fits best
+        plugin_path = plugin_relative_path_back and plugin_path or plugin_relative_path
+
+        # returns the resulting plugin path
+        return plugin_path
 
 class Dependency:
     """
