@@ -1660,8 +1660,11 @@ class PluginManager:
 
             # gets all modules from all plugin paths
             for plugin_path in self.plugin_paths:
+                # retrieves all the modules from the plugin path
+                plugin_path_modules = self.get_all_modules(plugin_path)
+
                 # extends the referred modules with all the plugin modules
-                self.referred_modules.extend(self.get_all_modules(plugin_path))
+                self.referred_modules.extend(plugin_path_modules)
 
             # defines the plugin system configuration
             plugin_system_configuration = {
