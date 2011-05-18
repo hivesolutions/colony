@@ -608,6 +608,11 @@ def load_plugin_paths_file(manager_path):
     # iterates over all the paths to creates the
     # plugins paths string
     for path in paths:
+        # in case the path is not an absolute path
+        if not os.path.isabs(path):
+            # creates the (complete) path prepending the manager path
+            path = manager_path + "/" + path
+
         # adds the path to the plugin paths string
         # value
         plugin_paths_string_value += path + ";"
