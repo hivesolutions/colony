@@ -395,6 +395,50 @@ class FileTransactionContext(FileContext):
         # returns the real file path
         return real_file_path
 
+    def exists_file_path(self, file_path):
+        """
+        Tests if the given file path exists in
+        the current virtual environment.
+
+        @type file_path: String
+        @param file_path: The file path to be tested
+        for existence.
+        @rtype: bool
+        @return: The result of the test for
+        file existence.
+        """
+
+        # resolves the file path (real file path)
+        real_file_path = self.resolve_file_path(file_path)
+
+        # tests if the file path exists
+        exists_file_path = os.path.exists(real_file_path)
+
+        # returns the exists file path result
+        return exists_file_path
+
+    def is_directory_path(self, file_path):
+        """
+        Tests if the given file path refers a directory path in
+        the current virtual environment.
+
+        @type file_path: String
+        @param file_path: The file path to be tested
+        for directory referral.
+        @rtype: bool
+        @return: The result of the test for
+        directory referral.
+        """
+
+        # resolves the file path (real file path)
+        real_file_path = self.resolve_file_path(file_path)
+
+        # tests if the file path refers a directory path
+        is_directory_path = os.path.isdir(real_file_path)
+
+        # returns the id directory path result
+        return is_directory_path
+
     def read_file(self, file_path):
         """
         Reads the given file contents from a file.
