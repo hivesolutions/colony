@@ -87,7 +87,7 @@ COLONY_RUN_MODE_ENVIRONMENT = "COLONY_RUN_MODE"
 DEFAULT_STRING_VALUE = "default"
 """ The default string value """
 
-DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "config/configuration_development.py"
+DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "config/python/configuration_development.py"
 """ The default configuration file path """
 
 DEFAULT_MANAGER_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
