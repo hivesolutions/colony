@@ -133,7 +133,10 @@ setuptools.setup (
     license = "GNU General Public License (GPL), Version 3",
     keywords = "colony plugin framework web",
     url = "http://getcolony.com",
-    py_modules = ["main", "script"],
+    py_modules = [
+        "main",
+        "script"
+    ],
     packages = [
         "colony",
         "colony.base",
