@@ -170,6 +170,86 @@ class OrderedMapIterator:
         # returns the current key value
         return key
 
+class MultipleValueMap:
+    """
+    Map that holds multiple values for
+    each key, and considers
+    the first value to the key's value.
+    """
+
+    map = {}
+    """ The map """
+
+    def __init__(self):
+        """
+        Constructor of the class.
+        """
+
+        # initializes the map
+        self.map = {}
+
+    def __len__(self):
+        return self.map.__len__()
+
+    def __getitem__(self, key):
+        # returns the value
+        values = self.map.get(key)
+
+        # returns in case no
+        # value was found
+        if not values:
+            return
+
+        # retrieves the first value
+        value = values[0]
+
+        # returns the value
+        return value
+
+    def __setitem__(self, key, value):
+        # retrieves the values
+        values = self.map.get(key, [])
+
+        # adds the value to the list
+        values.append(value)
+
+        # sets the values in the map
+        self.map[key] = values
+
+    def __delitem__(self, key):
+        del self.map[key]
+
+    def __iter__(self):
+        return self.map.__iter__()
+
+    def __contains__(self, item):
+        return self.map.__contains__(item)
+
+    def keys(self):
+        return self.map.keys()
+
+    def values(self):
+        return self.map.values()
+
+    def items(self):
+        return self.map.items()
+
+    def unset(self, key, value):
+        """
+        Unsets the value from the specified key.
+
+        @type key: Object
+        @param key: The key where to unset the value.
+        @type value: Object
+        @param value: The value to unset.
+        """
+
+        # retrieves the values
+        values = self.map[key]
+
+        # removes the value
+        values.remove(value)
+
 def is_dictionary(object):
     """
     Validates if the given object is a valid
