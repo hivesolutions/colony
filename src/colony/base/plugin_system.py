@@ -278,7 +278,7 @@ class Plugin(object):
     dependencies_loaded = []
     """ The list of dependency plugins loaded """
 
-    allowed_loaded_capability = {}
+    allowed_loaded_capability = []
     """ The list of allowed plugins loaded with capability """
 
     event_plugins_handled_loaded_map = {}
@@ -434,7 +434,13 @@ class Plugin(object):
         # sets the error state as false
         self.error_state = False
 
+        # resets the dependencies loaded (no dependencies
+        # are loaded in the plugin at the end of the unload)
         self.dependencies_loaded = []
+
+        # resets the allowed loaded capability (no allowed
+        # are loaded in the plugin at the end of the unload)
+        self.allowed_loaded_capability = []
 
         # generates the load plugin event
         self.manager.generate_event("plugin_manager.plugin.unload_plugin", [self.id, self.version, self])
