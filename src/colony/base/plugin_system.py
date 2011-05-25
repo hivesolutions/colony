@@ -4536,7 +4536,7 @@ class PluginManager:
             formated_traceback_line_stripped = formated_traceback_line.rstrip()
 
             # prints an debug message with the formated traceback line
-            self.logger.error(formated_traceback_line_stripped)
+            self.logger.debug(formated_traceback_line_stripped)
 
     def debug(self, message):
         """
