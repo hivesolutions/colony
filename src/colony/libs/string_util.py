@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "João Magalhães <joamag@hive.pt>"
+__author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
 """ The author(s) of the module """
 
 __version__ = "1.0.0"
@@ -99,8 +99,8 @@ def convert_underscore(string_value):
     the underscore notation.
     This method is useful to treat class string values in python.
 
-    @type name: String
-    @param name: The camel cased string value to be converted
+    @type string_value: String
+    @param string_value: The camel cased string value to be converted
     into underscore notation.
     @rtype: String
     @return: The converted underscore notation string value.
@@ -118,16 +118,68 @@ def convert_underscore(string_value):
     # returns the string value in underscore notation
     return string_value_underscore
 
-def pluralize(value):
-    return "%ss" % value
+def convert_camelcase(string_value):
+    """
+    Converts the underscore notation "case" string value into
+    the camel case notation.
+    This method is useful to treat class string values in python.
 
-def convert_camelcase(underscore_value):
-    value_tokens = underscore_value.split("_")
-    camelcase_value = "".join([value_token.capitalize() for value_token in value_tokens])
-    return camelcase_value
+    @type string_value: String
+    @param string_value: The underscore notation "cased" string
+    value to be converted into camel case notation.
+    @rtype: String
+    @return: The converted camel case notation string value.
+    """
 
-def capitalize_all(value):
-    value_tokens = value.split()
-    capitalized_value = "".join([value_token.capitalize() + " " for value_token in value_tokens])
-    capitalized_value = capitalized_value.rstrip()
-    return capitalized_value
+    # splits the string value retrieving
+    # the string value tokens
+    string_value_tokens = string_value.split("_")
+
+    # creates a list with all the string value tokens capitalized
+    string_value_tokens_capitalized = [value.capitalize() for value in string_value_tokens]
+
+    # joins the various string value tokens
+    # creating the string value camel case
+    string_value_camelcase = "".join(string_value_tokens_capitalized)
+
+    # returns the string value camel case
+    return string_value_camelcase
+
+def pluralize(string_value):
+    """
+    Pluralizes the given string value, using a
+    typical heuristic for it.
+
+    @type string_value: String
+    @param string_value: The string to be pluralized.
+    @rtype: String
+    @return: The pluralized string.
+    """
+
+    return "%ss" % string_value
+
+def capitalize_all(string_value):
+    """
+    Takes a space separated string value
+    and capitalizes all of its words.
+
+    @type string_value: String
+    @param string_value: The space separated string
+    to be capitalized.
+    @rtype: String
+    @return: The capitalized string.
+    """
+
+    # splits the string value retrieving
+    # the string value tokens
+    string_value_tokens = string_value.split()
+
+    # creates a list with all the string value tokens capitalized
+    string_value_tokens_capitalized = [value.capitalize() for value in string_value_tokens]
+
+    # joins the various string value tokens
+    # creating the string value capitalized
+    string_value_capitalized = " ".join(string_value_tokens_capitalized)
+
+    # returns the string value capitalized
+    return string_value_capitalized
