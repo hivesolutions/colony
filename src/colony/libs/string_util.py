@@ -117,3 +117,17 @@ def convert_underscore(string_value):
 
     # returns the string value in underscore notation
     return string_value_underscore
+
+def pluralize(value):
+    return "%ss" % value
+
+def convert_camelcase(underscore_value):
+    value_tokens = underscore_value.split("_")
+    camelcase_value = "".join([value_token.capitalize() for value_token in value_tokens])
+    return camelcase_value
+
+def capitalize_all(value):
+    value_tokens = value.split()
+    capitalized_value = "".join([value_token.capitalize() + " " for value_token in value_tokens])
+    capitalized_value = capitalized_value.rstrip()
+    return capitalized_value
