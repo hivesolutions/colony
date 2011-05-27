@@ -120,12 +120,12 @@ def convert_underscore(string_value):
 
 def convert_camelcase(string_value):
     """
-    Converts the underscore notation "case" string value into
+    Converts the given underscore notation string value into
     the camel case notation.
     This method is useful to treat class string values in python.
 
     @type string_value: String
-    @param string_value: The underscore notation "cased" string
+    @param string_value: The underscore notation string
     value to be converted into camel case notation.
     @rtype: String
     @return: The converted camel case notation string value.
