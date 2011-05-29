@@ -256,3 +256,56 @@ def copy_link(target_path, link_path):
 
     # copies the directory in the target path to the link path
     copy_directory(target_path, link_path)
+
+def ensure_file_path(file_path, default_file_path):
+    """
+    Ensures that the given file path is set with
+    contents.
+    In case the file does not exists the file in the default
+    file path is copied to the file path.
+
+    @type file_path: String
+    @param file_path: The file path to ensure contents.
+    @type default_file_path: String
+    @param default_file_path: The path to the file to be
+    used in case the file path does not exist.
+    """
+
+    # checks if the file exists
+    file_exists = os.path.exists(file_path)
+
+    # in case the file already exists
+    if file_exists:
+        # returns immediately
+        return
+
+    # retrieves the file directory path
+    file_directory_path = os.path.dirname(file_path)
+
+    # checks if the file directory path exists
+    file_directory_path_exists = os.path.isdir(file_directory_path)
+
+    # in case the file directory path does not exists creates the
+    # directories required recursively
+    not file_directory_path_exists and os.makedirs(file_directory_path)
+
+    # opens the default file
+    default_file = open(default_file_path, "rb")
+
+    try:
+        # reads the default file contents
+        default_file_contents = default_file.read()
+    finally:
+        # closes the default file
+        default_file.close()
+
+    # opens the file
+    file = open(file_path, "wb")
+
+    try:
+        # writes the default file contents to it
+        # in order to set the value
+        file.write(default_file_contents)
+    finally:
+        # closes the file
+        file.close()
