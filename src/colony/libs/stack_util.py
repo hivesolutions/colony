@@ -44,6 +44,8 @@ def get_call_module_directory(depth_level = 1):
     """
     Retrieves the directory path for the calling
     module in the given depth level of the call stack.
+    This function is extremely dangerous as it may
+    not work in a large range of python implementations.
 
     @type depth_level: int
     @param depth_level: The depth level of the call
