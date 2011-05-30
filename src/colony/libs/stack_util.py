@@ -38,7 +38,36 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import os
+import sys
 import inspect
+
+def get_instance_module_directory(instance):
+    """
+    Retrieves the directory path from the given
+    instance value.
+
+    @type instance: Object
+    @param instance: The instance value to be used to
+    retrieve the module.
+    @rtype: String
+    @return: The path to the directory that contains
+    the module with the given instance.
+    """
+
+    # retrieves the module name
+    module_name = instance.__module__
+
+    # retrieves the module from the modules map
+    module = sys.modules[module_name]
+
+    # retrieves the module file path
+    module_file_path = module.__file__
+
+    # retrieve the module directory path
+    module_directory_path = os.path.dirname(module_file_path)
+
+    # returns the module directory path
+    return module_directory_path
 
 def get_call_module_directory(depth_level = 1):
     """
