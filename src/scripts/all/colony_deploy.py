@@ -53,7 +53,7 @@ BUILD = "${out value=build_version /}"
 """ The build value """
 
 RELEASE_DATE = "${out value=date /}"
-"""" The release date value """
+""" The release date value """
 
 USAGE = "Help:\n\
 --help[-h] - prints this message\n\
