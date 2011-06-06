@@ -109,6 +109,7 @@ plugin_path_list = [
     "%colony_prefix_path%/pt.hive.colony.plugins.main.service.dns/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.main.service.http/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.main.service.irc/src/colony/plugins",
+    "%colony_prefix_path%/pt.hive.colony.plugins.main.service.mdns/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.main.service.policy/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.main.service.pop/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.main.service.smtp/src/colony/plugins",
