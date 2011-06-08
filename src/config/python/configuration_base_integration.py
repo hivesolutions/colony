@@ -55,8 +55,6 @@ plugin_path_list = [
     "%colony_prefix_path%/pt.hive.colony.plugins.data_converter/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.descriptor/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.distribution/src/colony/plugins",
-    "%colony_prefix_path%/pt.hive.colony.plugins.distribution.helper/src/colony/plugins",
-    "%colony_prefix_path%/pt.hive.colony.plugins.distribution.registry/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.dns.storage/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.document.pdf/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.dummy/src/colony/plugins",
