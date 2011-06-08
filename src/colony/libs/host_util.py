@@ -38,6 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import socket
+import struct
 
 LOCAL_EXTENSION = ".local"
 """ The local extension value """
@@ -116,7 +117,7 @@ def get_addresses_ip4():
     @return: The list currently available ip4 addresses.
     """
 
-    return get_addresses_family(socket.AF_INET)
+    return get_addresses_family(socket.AF_INET, ("127.0.0.1",))
 
 def get_addresses_ip6():
     """
@@ -126,13 +127,18 @@ def get_addresses_ip6():
     @return: The list currently available ip6 addresses.
     """
 
-    return get_addresses_family(socket.AF_INET6)
+    return get_addresses_family(socket.AF_INET6, ("::1",))
 
-def get_addresses_family(filter_family):
+def get_addresses_family(filter_family, filter_addresses = []):
     """
     Retrieves the list of addresses available in the
     current machine for the given family of protocols.
 
+    @type filter_family: int
+    @param filter_family: The network family to be filtered.
+    @type filter_addresses: List
+    @param filter_addresses: The list of addresses to be ignored in
+    the filtering.
     @rtype: List
     @return: The list of addresses available in the
     current machine for the given family of protocols.
@@ -157,6 +163,12 @@ def get_addresses_family(filter_family):
         # extracts the socket host from the socket address
         socket_host = socket_address[0]
 
+        # in case the socket host is present in the
+        # filter addresses list
+        if socket_host in filter_addresses:
+            # continues the loop
+            continue
+
         # adds the socket host to the list of addresses
         addresses_list.append(socket_host)
 
@@ -180,3 +192,94 @@ def get_address_tuples():
 
     # returns the address tuples
     return address_tuples
+
+def ip4_address_from_network(ip4_address_network):
+    """
+    Converts the given ip4 network signed byte stream into
+    an ip4 address string value.
+
+    @type ip4_address_network: String
+    @param ip4_address_network: The ip4 network signed byte stream
+    to be converted.
+    @rtype: String
+    @return: The converted ip4 address string value.
+    """
+
+    # unpacks the data from the network signed byte stream
+    ip4_address_data_bytes = struct.unpack("!4B", ip4_address_network)
+
+    # creates and joins the data string to create the address
+    ip4_address_data_string = [str(value) for value in ip4_address_data_bytes]
+    ip4_address = ".".join(ip4_address_data_string)
+
+    # returns the ip4 address
+    return ip4_address
+
+def ip4_address_to_network(ip4_address):
+    """
+    Converts the given ip4 address string value into an
+    ip4 network signed byte stream.
+
+    @type ip4_address: String
+    @param ip4_address: The ip4 address string value to be
+    converted.
+    @rtype: String
+    @return: The converted ip4 network signed byte stream.
+    """
+
+    # converts the ip4 address to a series of bytes
+    ip4_address_data_string = ip4_address.split(".")
+    ip4_address_data_bytes = [int(value) for value in ip4_address_data_string]
+
+    # packs the series of bytes into a network signed byte stream
+    ip4_address_data_bytes_length = len(ip4_address_data_bytes)
+    ip4_address_data_bytes_length_string = str(ip4_address_data_bytes_length)
+    ip4_address_network = struct.pack("!" + ip4_address_data_bytes_length_string + "B", *ip4_address_data_bytes)
+
+    # returns the ip4 address network
+    return ip4_address_network
+
+def ip6_address_from_network(ip6_address_network):
+    """
+    Converts the given ip6 network signed short stream into
+    an ip6 address string value.
+
+    @type ip6_address_network: String
+    @param ip6_address_network: The ip6 network signed short stream
+    to be converted.
+    @rtype: String
+    @return: The converted ip6 address string value.
+    """
+
+    # unpacks the data from the network signed short stream
+    ip6_address_data_shorts = struct.unpack("!8H", ip6_address_network)
+
+    # creates and joins the data string to create the address
+    ip6_address_data_string = ["%x" % value for value in ip6_address_data_shorts if value > 0]
+    ip6_address = ":".join(ip6_address_data_string)
+
+    # returns the ip6 address
+    return ip6_address
+
+def ip6_address_to_network(ip6_address):
+    """
+    Converts the given ip6 address string value into an
+    ip6 network signed short stream.
+
+    @type ip6_address: String
+    @param ip6_address: The ip6 address string value to be
+    converted.
+    @rtype: String
+    @return: The converted ip6 network signed short stream.
+    """
+
+    # converts the ip6 address to a series of shorts
+    ip6_address_data_string = ip6_address.split(":")
+    ip6_address_data_shorts = [int(value or "", 16) for value in ip6_address_data_string]
+
+    # packs the series of shorts into a network signed short stream
+    ip6_address_data_shorts_length = len(ip6_address_data_shorts)
+    ip6_address_network = struct.pack("!" + ip6_address_data_shorts_length + "H", *ip6_address_data_shorts)
+
+    # returns the ip6 address network
+    return ip6_address_network
