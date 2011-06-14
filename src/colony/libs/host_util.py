@@ -43,6 +43,18 @@ import struct
 LOCAL_EXTENSION = ".local"
 """ The local extension value """
 
+LOOPBACK_IP4_ADDRESS = "127.0.0.1"
+""" The loopback ip4 address """
+
+LOOPBACK_IP6_ADDRESS = "::1"
+""" The loopback ip6 address """
+
+ALL_IP4_ADDRESS = "0.0.0.0"
+""" The all ip4 address """
+
+ALL_IP6_ADDRESS = "::0"
+""" The all ip6 address """
+
 def get_hostname():
     """"
     Retrieves the current base host name.
@@ -87,7 +99,7 @@ def get_address_ip4():
     addresses_ip4 = get_addresses_ip4()
 
     # retrieves the "preferred" ip4 address
-    preferred_address_ip4 = addresses_ip4[0]
+    preferred_address_ip4 = addresses_ip4 and addresses_ip4[0] or ALL_IP4_ADDRESS
 
     # returns the "preferred" ip4 address
     return preferred_address_ip4
@@ -104,7 +116,7 @@ def get_address_ip6():
     addresses_ip6 = get_addresses_ip6()
 
     # retrieves the "preferred" ip6 address
-    preferred_address_ip6 = addresses_ip6[0]
+    preferred_address_ip6 = addresses_ip6 and addresses_ip6[0] or ALL_IP6_ADDRESS
 
     # returns the "preferred" ip6 address
     return preferred_address_ip6
@@ -117,7 +129,7 @@ def get_addresses_ip4():
     @return: The list currently available ip4 addresses.
     """
 
-    return get_addresses_family(socket.AF_INET, ("127.0.0.1",))
+    return get_addresses_family(socket.AF_INET, (LOOPBACK_IP4_ADDRESS,))
 
 def get_addresses_ip6():
     """
@@ -127,7 +139,7 @@ def get_addresses_ip6():
     @return: The list currently available ip6 addresses.
     """
 
-    return get_addresses_family(socket.AF_INET6, ("::1",))
+    return get_addresses_family(socket.AF_INET6, (LOOPBACK_IP6_ADDRESS,))
 
 def get_addresses_family(filter_family, filter_addresses = []):
     """
