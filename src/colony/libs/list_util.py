@@ -53,3 +53,29 @@ def list_intersect(first_list, second_list):
 
     # returns the intersection resulting list
     return [value for value in first_list if value in second_list]
+
+def list_extend(base_list, extension_list):
+    """
+    Extends the list with the the extension list,
+    retrieving a list resulting of the merge of both list.
+    Duplicates are avoided to remove additional elements.
+
+    @type base_list: List
+    @param base_list: The list to be used as base for
+    the merge.
+    @type extension_list: List
+    @param extension_list: The list to be used to extend the base
+    one.
+    @rtype: List
+    @return: The list that result of the merge of both lists.
+    """
+
+    # creates the list of values that are "new" to the base
+    # list (in order to avoid duplicates)
+    filtered_list = [value for value in extension_list if not value in base_list]
+
+    # extends the base list with the filtered list (new elements)
+    base_list.extend(filtered_list)
+
+    # returns the "new" base list
+    return base_list
