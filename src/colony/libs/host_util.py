@@ -81,8 +81,12 @@ def get_hostname_local():
     # retrieves the host name
     hostname = get_hostname()
 
-    # creates the "local" host name from the host name
-    hostname_local = hostname + LOCAL_EXTENSION
+    # checks if the hostname is of type local
+    is_local_hostname = hostname.endswith(LOCAL_EXTENSION)
+
+    # creates the "local" host name from the host name in
+    # case it's necessary
+    hostname_local = is_local_hostname and hostname or hostname + LOCAL_EXTENSION
 
     # returns the "local" host name
     return hostname_local
