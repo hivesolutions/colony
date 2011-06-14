@@ -55,6 +55,15 @@ ALL_IP4_ADDRESS = "0.0.0.0"
 ALL_IP6_ADDRESS = "::0"
 """ The all ip6 address """
 
+DEFAULT_IP4_HOST = "google.com"
+""" The default host to be used for ip4 queries """
+
+DEFAULT_IP6_HOST = "ipv6.google.com"
+""" The default host to be used for ip6 queries """
+
+DEFAULT_PORT = 80
+""" The default port to be used for queries """
+
 def get_hostname():
     """"
     Retrieves the current base host name.
@@ -108,6 +117,41 @@ def get_address_ip4():
     # returns the "preferred" ip4 address
     return preferred_address_ip4
 
+def get_address_ip4_force(host = DEFAULT_IP4_HOST, port = DEFAULT_PORT):
+    """
+    Retrieves the current "preferred" ip4 address.
+    This method uses a brute force hack that requires a remote
+    connection. This method is way more compatible but should be used
+    carefully as it requires an external "internet" connection.
+
+    @type host: String
+    @param host: The host to be used to retrieve the address.
+    @type port: int
+    @param port: The port to be used to retrieve the address.
+    @rtype: String
+    @return: The current "preferred" ip4 address.
+    """
+
+    # creates the force socket
+    force_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    try:
+        # creates the address tuple
+        address_tuple = (host, port)
+
+        # connects to the host described in the
+        # address tuple
+        force_socket.connect(address_tuple)
+
+        # retrieves the force socket address and port
+        address, port = force_socket.getsockname()
+    finally:
+        # closes the socket
+        force_socket.close()
+
+    # returns the address
+    return address
+
 def get_address_ip6():
     """
     Retrieves the current "preferred" ip6 address.
@@ -124,6 +168,42 @@ def get_address_ip6():
 
     # returns the "preferred" ip6 address
     return preferred_address_ip6
+
+def get_address_ip6_force(host = DEFAULT_IP6_HOST, port = DEFAULT_PORT):
+    """
+    Retrieves the current "preferred" ip6 address.
+    This method uses a brute force hack that requires a remote
+    connection. This method is way more compatible but should be used
+    carefully as it requires an external "internet" connection.
+
+    @type host: String
+    @param host: The host to be used to retrieve the address.
+    @type port: int
+    @param port: The port to be used to retrieve the address.
+    @rtype: String
+    @return: The current "preferred" ip6 address.
+    """
+
+    # creates the force socket
+    force_socket = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+
+    try:
+        # creates the address tuple
+        address_tuple = (host, port)
+
+        # connects to the host described in the
+        # address tuple
+        force_socket.connect(address_tuple)
+
+        # retrieves the force socket address, port and
+        # other values
+        address, port, _flow_info, _scope_id = force_socket.getsockname()
+    finally:
+        # closes the socket
+        force_socket.close()
+
+    # returns the address
+    return address
 
 def get_addresses_ip4():
     """
