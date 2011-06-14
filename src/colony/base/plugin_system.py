@@ -260,11 +260,11 @@ class Plugin(object):
     dependencies = []
     """ The dependencies of the plugin """
 
-    events_handled = []
-    """ The events handled by the plugin """
+    events_fired = []
+    """ The events fired by the plugin """
 
-    events_registrable = []
-    """ The events that the plugin can register for """
+    events_handled = []
+    """ The events that the plugin can handle """
 
     main_modules = []
     """ The main modules of the plugin """
@@ -281,8 +281,8 @@ class Plugin(object):
     allowed_loaded_capability = []
     """ The list of allowed plugins loaded with capability """
 
-    event_plugins_handled_loaded_map = {}
-    """ The map with the plugin associated with the name of the event handled """
+    event_plugins_fired_loaded_map = {}
+    """ The map with the plugin associated with the name of the event fired """
 
     event_plugins_registered_loaded_map = {}
     """ The map with the plugin associated with the name of the event registered """
@@ -341,7 +341,7 @@ class Plugin(object):
         self.logger = logging.getLogger(DEFAULT_LOGGER)
         self.dependencies_loaded = []
         self.allowed_loaded_capability = []
-        self.event_plugins_handled_loaded_map = {}
+        self.event_plugins_fired_loaded_map = {}
         self.event_plugins_registered_loaded_map = {}
         self.event_plugin_manager_registered_loaded_list = []
         self.configuration_map = {}
@@ -487,8 +487,8 @@ class Plugin(object):
         # adds the plugin capability tuple to the allowed loaded capability
         self.allowed_loaded_capability.append(plugin_capability_tuple)
 
-        # registers for all registrable events
-        self.register_all_registrable_events_plugin(plugin)
+        # registers for all handled events
+        self.register_all_handled_events_plugin(plugin)
 
         # prints an info message
         self.info("Loading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
@@ -518,8 +518,8 @@ class Plugin(object):
         # removes the plugin capability tuple from the allowed loaded capability
         self.allowed_loaded_capability.remove(plugin_capability_tuple)
 
-        # unregisters for all registrable events
-        self.unregister_all_registrable_events_plugin(plugin)
+        # unregisters for all handled events
+        self.unregister_all_handled_events_plugin(plugin)
 
         # prints an info message
         self.info("Unloading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
@@ -542,7 +542,7 @@ class Plugin(object):
 
         self.info("Plugin '%s' v%s notified about the end of the plugin manager init process" % (self.short_name, self.version))
 
-    def register_all_registrable_events_plugin(self, plugin):
+    def register_all_handled_events_plugin(self, plugin):
         """
         Registers all the allowed events from a given plugin in self.
 
@@ -550,12 +550,12 @@ class Plugin(object):
         @param plugin: The plugin containing the events to be registered.
         """
 
-        event_names_registrable = [event_name for event_name in plugin.events_handled if is_event_or_super_event_in_list(event_name, self.events_registrable)]
+        event_names_handled = [event_name for event_name in plugin.events_fired if is_event_or_super_event_in_list(event_name, self.events_handled)]
 
-        for event_name_registrable in event_names_registrable:
-            self.register_for_plugin_event(plugin, event_name_registrable)
+        for event_name_handled in event_names_handled:
+            self.register_for_plugin_event(plugin, event_name_handled)
 
-    def unregister_all_registrable_events_plugin(self, plugin):
+    def unregister_all_handled_events_plugin(self, plugin):
         """
         Unregisters all the allowed events from a given plugin in self.
 
@@ -572,10 +572,10 @@ class Plugin(object):
         Registers all the plugin manager events in self.
         """
 
-        event_names_registrable = [event_name for event_name in self.events_registrable if is_event_or_sub_event(PLUGIN_MANAGER_TYPE, event_name)]
+        event_names_handled = [event_name for event_name in self.events_handled if is_event_or_sub_event(PLUGIN_MANAGER_TYPE, event_name)]
 
-        for event_name_registrable in event_names_registrable:
-            self.register_for_plugin_manager_event(event_name_registrable)
+        for event_name_handled in event_names_handled:
+            self.register_for_plugin_manager_event(event_name_handled)
 
     def unregister_all_plugin_manager_events(self):
         """
@@ -695,11 +695,11 @@ class Plugin(object):
         @param event_name: The name of the event to be registered.
         """
 
-        if not event_name in self.event_plugins_handled_loaded_map:
-            self.event_plugins_handled_loaded_map[event_name] = []
+        if not event_name in self.event_plugins_fired_loaded_map:
+            self.event_plugins_fired_loaded_map[event_name] = []
 
-        if not plugin in self.event_plugins_handled_loaded_map[event_name]:
-            self.event_plugins_handled_loaded_map[event_name].append(plugin)
+        if not plugin in self.event_plugins_fired_loaded_map[event_name]:
+            self.event_plugins_fired_loaded_map[event_name].append(plugin)
             self.info("Registering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.short_name, plugin.version, self.short_name, self.version))
 
     def unregister_plugin_event(self, plugin, event_name):
@@ -712,9 +712,9 @@ class Plugin(object):
         @param event_name: The name of the event to be unregistered.
         """
 
-        if event_name in self.event_plugins_handled_loaded_map:
-            if plugin in self.event_plugins_handled_loaded_map[event_name]:
-                self.event_plugins_handled_loaded_map[event_name].remove(plugin)
+        if event_name in self.event_plugins_fired_loaded_map:
+            if plugin in self.event_plugins_fired_loaded_map[event_name]:
+                self.event_plugins_fired_loaded_map[event_name].remove(plugin)
                 self.info("Unregistering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.short_name, plugin.version, self.short_name, self.version))
 
     def notify_handlers(self, event_name, event_args):
@@ -727,17 +727,17 @@ class Plugin(object):
         @param event_args: The arguments to be passed to the handler.
         """
 
-        # the names of the events handled by self
-        event_names_list = self.event_plugins_handled_loaded_map.keys()
+        # the names of the events fired by self
+        event_names_list = self.event_plugins_fired_loaded_map.keys()
 
         # retrieves all the events and super events that match the generated event
         events_or_super_events_list = get_all_events_or_super_events_in_list(event_name, event_names_list)
 
         # iterates over all the events and super events for notification
         for event_or_super_event in events_or_super_events_list:
-            if event_or_super_event in self.event_plugins_handled_loaded_map:
+            if event_or_super_event in self.event_plugins_fired_loaded_map:
                 # iterates over all the plugins registered for notification
-                for event_plugin_loaded in self.event_plugins_handled_loaded_map[event_or_super_event]:
+                for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
                     # prints an info message
                     self.info("Notifying '%s' v%s about event '%s' generated in '%s' v%s" % (event_plugin_loaded.short_name, event_plugin_loaded.version, event_name, self.short_name, self.version))
 
@@ -755,7 +755,7 @@ class Plugin(object):
         @param event_args: The arguments to be passed to the handler.
         """
 
-        if not is_event_or_super_event_in_list(event_name, self.events_handled):
+        if not is_event_or_super_event_in_list(event_name, self.events_fired):
             return
 
         # prints an info message
@@ -1363,8 +1363,8 @@ class PluginManager:
     deleted_plugin_classes = []
     """ The list containing the classes for the deleted plugins """
 
-    event_plugins_handled_loaded_map = {}
-    """ The map with the plugin associated with the name of the event handled """
+    event_plugins_fired_loaded_map = {}
+    """ The map with the plugin associated with the name of the event fired """
 
     def __init__(self, manager_path = None, logger_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
         """
@@ -1443,7 +1443,7 @@ class PluginManager:
         self.capabilities_plugins_map = {}
         self.diffusion_scope_loaded_plugins_map = {}
         self.deleted_plugin_classes = []
-        self.event_plugins_handled_loaded_map = {}
+        self.event_plugins_fired_loaded_map = {}
 
     def create_plugin(self, plugin_id, plugin_version):
         """
@@ -3792,6 +3792,26 @@ class PluginManager:
 
         return result
 
+    def get_plugins_by_event_fired(self, event_fired):
+        # the results list
+        result = []
+
+        for plugin in self.plugin_instances:
+            if event_fired in plugin.events_fired:
+                result.append(self.get_plugin(plugin))
+
+        return result
+
+    def _get_plugins_by_event_fired(self, event_fired):
+        # the results list
+        result = []
+
+        for plugin in self.plugin_instances:
+            if event_fired in plugin.events_fired:
+                result.append(plugin)
+
+        return result
+
     def get_plugins_by_event_handled(self, event_handled):
         # the results list
         result = []
@@ -3808,26 +3828,6 @@ class PluginManager:
 
         for plugin in self.plugin_instances:
             if event_handled in plugin.events_handled:
-                result.append(plugin)
-
-        return result
-
-    def get_plugins_by_event_registrable(self, event_registrable):
-        # the results list
-        result = []
-
-        for plugin in self.plugin_instances:
-            if event_registrable in plugin.events_registrable:
-                result.append(self.get_plugin(plugin))
-
-        return result
-
-    def _get_plugins_by_event_registrable(self, event_registrable):
-        # the results list
-        result = []
-
-        for plugin in self.plugin_instances:
-            if event_registrable in plugin.events_registrable:
                 result.append(plugin)
 
         return result
@@ -4343,11 +4343,11 @@ class PluginManager:
         @param event_name: The name of the event to be registered.
         """
 
-        if not event_name in self.event_plugins_handled_loaded_map:
-            self.event_plugins_handled_loaded_map[event_name] = []
+        if not event_name in self.event_plugins_fired_loaded_map:
+            self.event_plugins_fired_loaded_map[event_name] = []
 
-        if not plugin in self.event_plugins_handled_loaded_map[event_name]:
-            self.event_plugins_handled_loaded_map[event_name].append(plugin)
+        if not plugin in self.event_plugins_fired_loaded_map[event_name]:
+            self.event_plugins_fired_loaded_map[event_name].append(plugin)
 
             # prints an info message
             self.info("Registering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
@@ -4362,9 +4362,9 @@ class PluginManager:
         @param event_name: The name of the event to be unregistered.
         """
 
-        if event_name in self.event_plugins_handled_loaded_map:
-            if plugin in self.event_plugins_handled_loaded_map[event_name]:
-                self.event_plugins_handled_loaded_map[event_name].remove(plugin)
+        if event_name in self.event_plugins_fired_loaded_map:
+            if plugin in self.event_plugins_fired_loaded_map[event_name]:
+                self.event_plugins_fired_loaded_map[event_name].remove(plugin)
 
                 # prints an info message
                 self.info("Unregistering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
@@ -4379,19 +4379,20 @@ class PluginManager:
         @param event_args: The arguments to be passed to the handler.
         """
 
-        # the names of the events handled by self
-        event_names_list = self.event_plugins_handled_loaded_map.keys()
+        # the names of the events fired by self
+        event_names_list = self.event_plugins_fired_loaded_map.keys()
 
         # retrieves all the events and super events that match the generated event
         events_or_super_events_list = get_all_events_or_super_events_in_list(event_name, event_names_list)
 
         # iterates over all the events and super events for notification
         for event_or_super_event in events_or_super_events_list:
-            if event_or_super_event in self.event_plugins_handled_loaded_map:
+            if event_or_super_event in self.event_plugins_fired_loaded_map:
                 # iterates over all the plugins registered for notification
-                for event_plugin_loaded in self.event_plugins_handled_loaded_map[event_or_super_event]:
+                for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
                     self.info("Notifying '%s' v%s about event '%s' generated in plugin manager" % (event_plugin_loaded.short_name, event_plugin_loaded.version, event_name))
 
+                    # calls the event handler for the event and the event arguments
                     event_plugin_loaded.event_handler(event_name, *event_args)
 
     def generate_event(self, event_name, event_args):
