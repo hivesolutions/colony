@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import copy
+
 def list_intersect(first_list, second_list):
     """
     Intersects the given lists, returning a list with
@@ -54,11 +56,13 @@ def list_intersect(first_list, second_list):
     # returns the intersection resulting list
     return [value for value in first_list if value in second_list]
 
-def list_extend(base_list, extension_list):
+def list_extend(base_list, extension_list, copy_base_list = True):
     """
     Extends the list with the the extension list,
     retrieving a list resulting of the merge of both list.
     Duplicates are avoided to remove additional elements.
+    The base list may be changed or left untouched based on
+    the copy base list flag.
 
     @type base_list: List
     @param base_list: The list to be used as base for
@@ -66,16 +70,22 @@ def list_extend(base_list, extension_list):
     @type extension_list: List
     @param extension_list: The list to be used to extend the base
     one.
+    @type copy_base_list: bool
+    @param copy_base_list: If the base list should be copied before
+    being extended in order to avoid loss of data.
     @rtype: List
     @return: The list that result of the merge of both lists.
     """
+
+    # copies the base list to create the initial result list (optional)
+    result_list= copy_base_list and copy.copy(base_list) or base_list
 
     # creates the list of values that are "new" to the base
     # list (in order to avoid duplicates)
     filtered_list = [value for value in extension_list if not value in base_list]
 
-    # extends the base list with the filtered list (new elements)
-    base_list.extend(filtered_list)
+    # extends the result list with the filtered list (new elements)
+    result_list.extend(filtered_list)
 
-    # returns the "new" base list
-    return base_list
+    # returns the result list
+    return result_list

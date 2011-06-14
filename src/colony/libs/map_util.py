@@ -130,12 +130,14 @@ def map_remove(removal_map, destiny_map):
         # removes the key item from the destiny map
         del destiny_map[key]
 
-def map_extend(base_map, extension_map, override = True):
+def map_extend(base_map, extension_map, override = True, copy_base_map = True):
     """
     Extends the given map with the extension map,
     retrieving a map resulting of the merge of both maps.
     In case the override flag is set the values are overridden
     in case they already exist in the base map.
+    The base map may be changed or left untouched based on
+    the copy base map flag.
 
     @type base_map: Dictionary
     @param base_map: The map to be used as base for
@@ -146,12 +148,15 @@ def map_extend(base_map, extension_map, override = True):
     @type override: bool
     @param override: If a value should be overridden in
     case it already exists in the base map.
+    @type copy_base_map: bool
+    @param copy_base_map: If the base map should be copied before
+    being extended in order to avoid loss of data.
     @rtype: Dictionary
     @return: The map that result of the merge of both maps.
     """
 
-    # copies the base map to create the initial result map
-    result_map = copy.copy(base_map)
+    # copies the base map to create the initial result map (optional)
+    result_map = copy_base_map and copy.copy(base_map) or base_map
 
     # iterates over all the keys and values
     # in the extension map
