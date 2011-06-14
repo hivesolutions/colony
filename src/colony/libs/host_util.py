@@ -152,6 +152,28 @@ def get_address_ip4_force(host = DEFAULT_IP4_HOST, port = DEFAULT_PORT):
     # returns the address
     return address
 
+def get_address_ip4_all():
+    """
+    Retrieves the current "preferred" ip4 address.
+    This method uses all the possible methods to retrieve
+    the ip4 address.
+    Use this method carefully as it may require
+    an external "internet" connection.
+
+    @rtype: String
+    @return: The current "preferred" ip4 address.
+    """
+
+    # retrieves the ip4 address using the "normal" method
+    address_ip4 = get_address_ip4()
+
+    # retrieves the ip4 address using the "force" method in
+    # case the previous retrieval was not successful
+    address_ip4 = address_ip4 == ALL_IP4_ADDRESS and get_address_ip4_force() or address_ip4
+
+    # returns the ip4 address
+    return address_ip4
+
 def get_address_ip6():
     """
     Retrieves the current "preferred" ip6 address.
@@ -204,6 +226,28 @@ def get_address_ip6_force(host = DEFAULT_IP6_HOST, port = DEFAULT_PORT):
 
     # returns the address
     return address
+
+def get_address_ip6_all():
+    """
+    Retrieves the current "preferred" ip6 address.
+    This method uses all the possible methods to retrieve
+    the ip6 address.
+    Use this method carefully as it may require
+    an external "internet" connection.
+
+    @rtype: String
+    @return: The current "preferred" ip6 address.
+    """
+
+    # retrieves the ip6 address using the "normal" method
+    address_ip6 = get_address_ip6()
+
+    # retrieves the ip6 address using the "force" method in
+    # case the previous retrieval was not successful
+    address_ip6 = address_ip6 == ALL_IP6_ADDRESS and get_address_ip6_force() or address_ip6
+
+    # returns the ip6 address
+    return address_ip6
 
 def get_addresses_ip4():
     """
