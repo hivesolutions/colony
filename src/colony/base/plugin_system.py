@@ -6246,6 +6246,11 @@ class PluginEventThread(threading.Thread):
                 # calls the event thread method
                 self.method()
             except BaseException, exception:
+                print "Exception in user code:"
+                print '-'*60
+                traceback.print_exc(file=sys.stdout)
+                print '-'*60
+
                 # prints an error message
                 self.plugin.error("Problem starting thread plugin: " + unicode(exception))
 
