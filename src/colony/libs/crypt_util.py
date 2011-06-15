@@ -39,11 +39,23 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import hashlib
 
+MD5_VALUE = "md5"
+""" The md5 value """
+
+SHA1_VALUE = "sha1"
+""" The sha1 value """
+
+SHA256_VALUE = "sha256"
+""" The sha256 value """
+
 MD5_CRPYT_SEPARATOR = "$"
 """ The md5 crypt separator """
 
 DEFAULT_MD5_CRYPT_MAGIC = "$1$"
 """ The default md5 crypt magic value """
+
+DEFAULT_HASH_SET = (MD5_VALUE, SHA1_VALUE, SHA256_VALUE)
+""" The default hash set """
 
 INTEGER_TO_ASCII_64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 """ The array of conversion from integer to ascii """
@@ -195,3 +207,77 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
 
     # returns the md5 crypt value
     return md5_crypt_value
+
+def generate_hash_digest_map(file_path, hash_set = DEFAULT_HASH_SET):
+    """
+    Generates a map containing a set of hash digests generate
+    from the file contained in the given file path.
+    The set of hash function to be used may be controlled using the
+    hash set parameter.
+
+    @type file_path: String
+    @param file_path: The path to the file to be used for hash
+    digest calculation.
+    @type hash_set: Tuple
+    @param hash_set: The set of hash functions to be used.
+    @rtype: Dictionary
+    @return: The map containing the hash digest values for the file.
+    """
+
+    # creates the list to hold the various
+    # hash objects
+    hash_list = []
+
+    # iterates over the hash set
+    # to create the various hash objects
+    for hash_name in hash_set:
+        # creates the hash object and adds
+        # it to the list of hash objects
+        hash = hashlib.new(hash_name)
+        hash_list.append(hash)
+
+    # opens the file for read
+    file = open(file_path, "rb")
+
+    try:
+        # iterates continuously
+        while True:
+            # reads "some" file contents
+            file_contents = file.read(4096)
+
+            # in case the file contents are
+            # not valid (end of file)
+            if not file_contents:
+                # breaks the loop
+                break
+
+            # iterates over all the hash objects
+            # in the hash list to update them
+            for hash in hash_list:
+                # updates the hash object
+                # with the file contents
+                hash.update(file_contents)
+    finally:
+        # closes the file
+        file.close()
+
+    # creates the map to hold the various
+    # hash digests
+    hash_digest_map = {}
+
+    # iterates over all the hash objects
+    # in the hash list to retrieve the digest
+    # and update the hash digest map
+    for hash in hash_list:
+        # retrieves the name of the hash (function)
+        hash_name = hash.name
+
+        # retrieves the hash (hexadecimal) digest
+        hash_digest = hash.hexdigest()
+
+        # updates the hash digest map with the
+        # new hash digest
+        hash_digest_map[hash_name] = hash_digest
+
+    # returns the hash digest map
+    return hash_digest_map
