@@ -48,6 +48,7 @@ import tempfile
 
 import colony_zip
 import colony_file
+import colony_crypt
 import colony_exceptions
 
 DEFAULT_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
@@ -91,6 +92,9 @@ VERSION_VALUE = "version"
 
 TIMESTAMP_VALUE = "timestamp"
 """ The timestamp value """
+
+HASH_DIGEST_VALUE = "hash_digest"
+""" The hash digest value """
 
 LAST_MODIFIED_TIMESTAMP_VALUE = "last_modified_timestamp"
 """ The last modified timestamp value """
@@ -345,10 +349,14 @@ class Deployer:
         # retrieves the package item key
         package_item_key = id
 
+        # generates the hash digest map for the package file
+        hash_digest_map = colony_crypt.generate_hash_digest_map(package_path)
+
         # creates the package item value
         package_item_value = {
             TYPE_VALUE : type,
             VERSION_VALUE : version,
+            HASH_DIGEST_VALUE : hash_digest_map
         }
 
         # adds the package with the given key and value
@@ -420,10 +428,14 @@ class Deployer:
             # retrieves the package item key
             package_item_key = plugin_id
 
+            # generates the hash digest map for the package file
+            hash_digest_map = colony_crypt.generate_hash_digest_map(plugin_file_path)
+
             # creates the package item value
             package_item_value = {
                 TYPE_VALUE : PLUGIN_VALUE,
                 VERSION_VALUE : plugin_version,
+                HASH_DIGEST_VALUE : hash_digest_map
             }
 
             # adds the package with the given key and value
@@ -432,9 +444,13 @@ class Deployer:
         # retrieves the bundle item key
         bundle_item_key = id
 
+        # generates the hash digest map for the bundle file
+        hash_digest_map = colony_crypt.generate_hash_digest_map(package_path)
+
         # creates the bundle item value
         bundle_item_value = {
-            VERSION_VALUE : version
+            VERSION_VALUE : version,
+            HASH_DIGEST_VALUE : hash_digest_map
         }
 
         # adds the bundle with the given key and value
@@ -507,9 +523,13 @@ class Deployer:
         # retrieves the plugin item key
         plugin_item_key = id
 
+        # generates the hash digest map for the plugin file
+        hash_digest_map = colony_crypt.generate_hash_digest_map(package_path)
+
         # creates the plugin item value
         plugin_item_value = {
-            VERSION_VALUE : version
+            VERSION_VALUE : version,
+            HASH_DIGEST_VALUE : hash_digest_map
         }
 
         # adds the plugin with the given key and value
