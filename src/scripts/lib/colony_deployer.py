@@ -78,6 +78,9 @@ MAIN_FILE_VALUE = "main_file"
 RESOURCES_VALUE = "resources"
 """ The resources value """
 
+EXTRA_RESOURCES_VALUE = "extra_resources"
+""" The extra resources value """
+
 INSTALLED_PACKAGES_VALUE = "installed_packages"
 """ The installed packages value """
 
@@ -741,6 +744,12 @@ class Deployer:
 
         # retrieves the resources
         resources = specification[RESOURCES_VALUE]
+
+        # retrieves the extra resources
+        extra_resources = specification.get(EXTRA_RESOURCES_VALUE, [])
+
+        # extends the resources list with the extra resources
+        resources.extend(extra_resources)
 
         # creates the list of directory paths for (possible)
         # later removal
