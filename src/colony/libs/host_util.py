@@ -144,7 +144,10 @@ def get_address_ip4_force(host = DEFAULT_IP4_HOST, port = DEFAULT_PORT):
         force_socket.connect(address_tuple)
 
         # retrieves the force socket address and port
-        address, port = force_socket.getsockname()
+        address, _port = force_socket.getsockname()
+    except:
+        # sets the address as the default one
+        address = ALL_IP4_ADDRESS
     finally:
         # closes the socket
         force_socket.close()
@@ -219,7 +222,10 @@ def get_address_ip6_force(host = DEFAULT_IP6_HOST, port = DEFAULT_PORT):
 
         # retrieves the force socket address, port and
         # other values
-        address, port, _flow_info, _scope_id = force_socket.getsockname()
+        address, _port, _flow_info, _scope_id = force_socket.getsockname()
+    except:
+        # sets the address as the default one
+        address = ALL_IP6_ADDRESS
     finally:
         # closes the socket
         force_socket.close()
