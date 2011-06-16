@@ -39,14 +39,13 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import plugin_system
 
-def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enabled = True):
+METHOD_NAME_VALUE = "method_name"
+""" The method name value """
+
+def load_plugin(lazy_loading = False, metadata_enabled = True):
     """
     Decorator for the initial load of the plugin.
 
-    @type plugin_id: String
-    @param plugin_id: The id of the plugin to be loaded with allowed plugins.
-    @type plugin_version: String
-    @param plugin_version: The version of the plugin to be loaded with allowed plugins.
     @type lazy_loading: bool
     @param lazy_loading: The boolean flag to set the type of loading for the plugin.
     @type metadata_enabled: bool
@@ -65,7 +64,7 @@ def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enable
 
         def decorator_interceptor(*args, **kwargs):
             """
-            The interceptor function for the load_allowed decorator.
+            The interceptor function for the load allowed decorator.
 
             @type args: pointer
             @param args: The function arguments list.
@@ -79,18 +78,13 @@ def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enable
             # retrieves the plugin instance
             plugin = args[0]
 
-            # retrieves the plugin tupple from the plugin information
-            plugin_tuple = (
-                plugin.id,
-                plugin.version
-            )
-
             # retrieves the metadata map for the current plugin
-            metadata_map = load_plugin.load_plugin_map[plugin_tuple]["metadata"]
+            metadata_map = function.metadata
 
             # sets the metadata map in the plugin instance
             plugin.metadata_map = metadata_map
 
+        # returns the decorator interceptor
         return decorator_interceptor
 
     def decorator(function, *args, **kwargs):
@@ -107,20 +101,13 @@ def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enable
         @return: The decorator interceptor function.
         """
 
-        # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (
-            plugin_id,
-            plugin_version
-        )
+        # starts the matadata map for
+        # the current function
+        function.metadata = {}
 
-        if not load_plugin.load_plugin_map:
-            load_plugin.load_plugin_map = {}
-        load_plugin.load_plugin_map[plugin_tuple] = {}
-
-        load_plugin.load_plugin_map[plugin_tuple]["metadata"] = {}
-
-        load_plugin.plugin_id = plugin_id
-        load_plugin.plugin_version = plugin_version
+        # sets the current load plugin function
+        # for the load allowed reference
+        load_plugin.current = function
 
         # creates the decorator interceptor with the given function
         decorator_interceptor_function = create_decorator_interceptor(function)
@@ -130,8 +117,6 @@ def load_plugin(plugin_id, plugin_version, lazy_loading = False, metadata_enable
 
     # returns the created decorator
     return decorator
-
-load_plugin.load_plugin_map = None
 
 def plugin_meta_information(metadata_key, metadata_values = {}):
     """
@@ -147,7 +132,7 @@ def plugin_meta_information(metadata_key, metadata_values = {}):
 
     def decorator(function, *args, **kwargs):
         """
-        The decorator function for the plugin_meta_information decorator.
+        The decorator function for the plugin meta information decorator.
 
         @type function: Function
         @param function: The function to be decorated.
@@ -159,126 +144,93 @@ def plugin_meta_information(metadata_key, metadata_values = {}):
         @return: The decorator interceptor function.
         """
 
-        # creates the load plugin tuple
-        load_plugin_tuple = (
-            load_plugin.plugin_id,
-            load_plugin.plugin_version
-        )
+        # retrieves the current load plugin function
+        load_plugin_current = load_plugin.current
 
         # retrieves the metadata plugin map
-        metadata_plugin_map = load_plugin.load_plugin_map[load_plugin_tuple]["metadata"]
+        metadata_plugin_map = load_plugin_current.metadata
 
         # in case the metadata key does not exist in the metadata plugin map
         if not metadata_key in metadata_plugin_map:
+            # creates a new list for the metadata key
             metadata_plugin_map[metadata_key] = []
 
         # retrieves the function name
         function_name = function.__name__
 
         # sets the value for the metadata method name
-        metadata_values["method_name"] = function_name
+        metadata_values[METHOD_NAME_VALUE] = function_name
 
         # appends the metadata values to the list of values with the same metadata key
         metadata_plugin_map[metadata_key].append(metadata_values)
 
+        # returns the function
         return function
 
     # returns the created decorator
     return decorator
 
-def load_allowed(plugin_id, plugin_version, load_plugin = False):
+def load_allowed(function):
     """
     Decorator that loads the allowed plugins into the defined methods.
 
-    @type plugin_id: String
-    @param plugin_id: The id of the plugin to be loaded with allowed plugins.
-    @type plugin_version: String
-    @param plugin_version: The version of the plugin to be loaded with allowed plugins.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
+    @type function: Function
+    @param function: The function to be decorated.
     @rtype: Function
     @return: The created decorator.
     """
 
-    def create_decorator_interceptor(function):
+    def decorator_interceptor(*args, **kwargs):
         """
-        Creates a decorator interceptor, that intercepts the normal function call.
+        The interceptor function for the load allowed decorator.
 
-        @type function: Function
-        @param function: The callback function.
-        """
-
-        def decorator_interceptor(*args, **kwargs):
-            """
-            The interceptor function for the load_allowed decorator.
-
-            @type args: pointer
-            @param args: The function arguments list.
-            @type kwargs: pointer pointer
-            @param kwargs: The function arguments map.
-            """
-
-            # calls the callback function
-            function(*args, **kwargs)
-
-            original_plugin = args[0]
-            allowed_plugin = args[1]
-            capability = args[2]
-
-            original_plugin_tuple = (
-                original_plugin.id,
-                original_plugin.version
-            )
-
-            if original_plugin_tuple in load_allowed.load_allowed_map:
-                allowed_functions_map = load_allowed.load_allowed_map[original_plugin_tuple]
-                for capability_key in allowed_functions_map:
-                    if plugin_system.is_capability_or_sub_capability(capability_key, capability):
-                        capability_function = allowed_functions_map[capability]
-                        capability_function_name = capability_function.__name__
-                        capability_method = getattr(original_plugin, capability_function_name)
-                        capability_method(allowed_plugin, capability)
-
-        return decorator_interceptor
-
-    def decorator(function, *args, **kwargs):
-        """
-        The decorator function for the load_allowed decorator.
-
-        @type function: Function
-        @param function: The function to be decorated.
         @type args: pointer
         @param args: The function arguments list.
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
-        @rtype: Function
-        @return: The decorator interceptor function.
         """
 
-        # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (
-            plugin_id,
-            plugin_version
-        )
+        # calls the callback function
+        function(*args, **kwargs)
 
-        if not load_allowed.load_allowed_map:
-            load_allowed.load_allowed_map = {}
-        load_allowed.load_allowed_map[plugin_tuple] = {}
+        # retrieves the allowed functions map
+        allowed_functions_map = function.allowed_functions_map
 
-        load_allowed.plugin_id = plugin_id
-        load_allowed.plugin_version = plugin_version
+        # unpacks the various arguments for the function
+        original_plugin = args[0]
+        allowed_plugin = args[1]
+        capability = args[2]
 
-        # creates the decorator interceptor with the given function
-        decorator_interceptor_function = create_decorator_interceptor(function)
+        # iterates over all the capabilities in the allowed
+        # functions map
+        for capability_key in allowed_functions_map:
+            # checks if the capability is a valid capability for the plugin
+            # currently being handled and skips the current iteration
+            # in case it's not
+            if not plugin_system.is_capability_or_sub_capability(capability_key, capability):
+                # continues the loop
+                continue
 
-        if load_plugin:
-            decorator_interceptor_function = create_load_plugin_interceptor(decorator_interceptor_function)
+            # retrieves the capability function name from the allowed
+            # functions map
+            capability_function = allowed_functions_map[capability]
+            capability_function_name = capability_function.__name__
 
-        # returns the interceptor to be used
-        return decorator_interceptor_function
+            # retrieves the capability method from the original plugin and
+            # handles the capability
+            capability_method = getattr(original_plugin, capability_function_name)
+            capability_method(allowed_plugin, capability)
 
-    # returns the created decorator
-    return decorator
+    # starts the allowed functions map for
+    # the current function
+    function.allowed_functions_map = {}
+
+    # sets the current load allowed function
+    # for the load allowed reference
+    load_allowed.current = function
+
+    # returns the decorator interceptor
+    return decorator_interceptor
 
 def load_allowed_capability(capability, load_plugin = False):
     """
@@ -294,7 +246,7 @@ def load_allowed_capability(capability, load_plugin = False):
 
     def decorator(function, *args, **kwargs):
         """
-        The decorator function for the load_allowed_capability decorator.
+        The decorator function for the load allowed capability decorator.
 
         @type function: Function
         @param function: The function to be decorated.
@@ -306,18 +258,21 @@ def load_allowed_capability(capability, load_plugin = False):
         @return: The function to be decorated.
         """
 
-        load_allowed.function = function
+        # retrieves the current load allowed function
+        load_allowed_current = load_allowed.current
 
-        load_allowed_tuple = (
-            load_allowed.plugin_id,
-            load_allowed.plugin_version
-        )
+        # sets the current function for capability handling
+        # in the current function
+        load_allowed_current.allowed_functions_map[capability] = function
 
-        load_allowed.load_allowed_map[load_allowed_tuple][capability] = load_allowed.function
-
+        # in case the load plugin test should be made before loading
+        # the capability
         if load_plugin:
+            # creates the new decorator interceptor function
             decorator_interceptor_function = create_load_plugin_interceptor(function)
+        # otherwise the normal approach is set
         else:
+            # sets the decorator interceptor function as the function
             decorator_interceptor_function = function
 
         # returns the interceptor to be used
@@ -326,101 +281,67 @@ def load_allowed_capability(capability, load_plugin = False):
     # returns the created decorator
     return decorator
 
-load_allowed.load_allowed_map = None
-
-def unload_allowed(plugin_id, plugin_version, load_plugin = False):
+def unload_allowed(function):
     """
     Decorator that unloads the allowed plugins into the defined methods.
 
-    @type plugin_id: String
-    @param plugin_id: The id of the plugin to be unloaded with allowed plugins.
-    @type plugin_version: String
-    @param plugin_version: The version of the plugin to be unloaded with allowed plugins.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
+    @type function: Function
+    @param function: The function to be decorated.
     @rtype: Function
     @return: The created decorator.
     """
 
-    def create_decorator_interceptor(function):
+    def decorator_interceptor(*args, **kwargs):
         """
-        Creates a decorator interceptor, that intercepts the normal function call.
+        The interceptor function for the unload allowed decorator.
 
-        @type function: Function
-        @param function: The callback function.
-        """
-
-        def decorator_interceptor(*args, **kwargs):
-            """
-            The interceptor function for the unload_allowed decorator.
-
-            @type args: pointer
-            @param args: The function arguments list.
-            @type kwargs: pointer pointer
-            @param kwargs: The function arguments map.
-            """
-
-            # calls the callback function
-            function(*args, **kwargs)
-
-            original_plugin = args[0]
-            allowed_plugin = args[1]
-            capability = args[2]
-
-            original_plugin_tuple = (
-                original_plugin.id,
-                original_plugin.version
-            )
-
-            if original_plugin_tuple in unload_allowed.unload_allowed_map:
-                allowed_functions_map = unload_allowed.unload_allowed_map[original_plugin_tuple]
-                for capability_key in allowed_functions_map:
-                    if plugin_system.is_capability_or_sub_capability(capability_key, capability):
-                        capability_function = allowed_functions_map[capability]
-                        capability_function_name = capability_function.__name__
-                        capability_method = getattr(original_plugin, capability_function_name)
-                        capability_method(allowed_plugin, capability)
-
-        return decorator_interceptor
-
-    def decorator(function, *args, **kwargs):
-        """
-        The decorator function for the unload_allowed decorator.
-
-        @type function: Function
-        @param function: The function to be decorated.
         @type args: pointer
         @param args: The function arguments list.
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
-        @rtype: Function
-        @return: The decorator interceptor function.
         """
 
-        # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (
-            plugin_id,
-            plugin_version
-        )
+        # calls the callback function
+        function(*args, **kwargs)
 
-        if not unload_allowed.unload_allowed_map:
-            unload_allowed.unload_allowed_map = {}
-        unload_allowed.unload_allowed_map[plugin_tuple] = {}
+        # retrieves the allowed functions map
+        allowed_functions_map = function.allowed_functions_map
 
-        unload_allowed.plugin_id = plugin_id
-        unload_allowed.plugin_version = plugin_version
+        # unpacks the various arguments for the function
+        original_plugin = args[0]
+        allowed_plugin = args[1]
+        capability = args[2]
 
-        # creates the decorator interceptor with the given function
-        decorator_interceptor_function = create_decorator_interceptor(function)
+        # iterates over all the capabilities in the allowed
+        # functions map
+        for capability_key in allowed_functions_map:
+            # checks if the capability is a valid capability for the plugin
+            # currently being handled and skips the current iteration
+            # in case it's not
+            if not plugin_system.is_capability_or_sub_capability(capability_key, capability):
+                # continues the loop
+                continue
 
-        if load_plugin:
-            decorator_interceptor_function = create_load_plugin_interceptor(decorator_interceptor_function)
+            # retrieves the capability function name from the allowed
+            # functions map
+            capability_function = allowed_functions_map[capability]
+            capability_function_name = capability_function.__name__
 
-        # returns the interceptor to be used
-        return decorator_interceptor_function
+            # retrieves the capability method from the original plugin and
+            # handles the capability
+            capability_method = getattr(original_plugin, capability_function_name)
+            capability_method(allowed_plugin, capability)
 
-    # returns the created decorator
-    return decorator
+    # starts the allowed functions map for
+    # the current function
+    function.allowed_functions_map = {}
+
+    # sets the current unload allowed function
+    # for the unload allowed reference
+    unload_allowed.current = function
+
+    # returns the decorator interceptor
+    return decorator_interceptor
 
 def unload_allowed_capability(capability, load_plugin = False):
     """
@@ -436,7 +357,7 @@ def unload_allowed_capability(capability, load_plugin = False):
 
     def decorator(function, *args, **kwargs):
         """
-        The decorator function for the unload_allowed_capability decorator.
+        The decorator function for the unload allowed capability decorator.
 
         @type function: Function
         @param function: The function to be decorated.
@@ -448,18 +369,21 @@ def unload_allowed_capability(capability, load_plugin = False):
         @return: The function to be decorated.
         """
 
-        unload_allowed.function = function
+        # retrieves the current unload allowed function
+        unload_allowed_current = unload_allowed.current
 
-        unload_allowed_tuple = (
-            unload_allowed.plugin_id,
-            unload_allowed.plugin_version
-        )
+        # sets the current function for capability handling
+        # in the current function
+        unload_allowed_current.allowed_functions_map[capability] = function
 
-        unload_allowed.unload_allowed_map[unload_allowed_tuple][capability] = unload_allowed.function
-
+        # in case the load plugin test should be made before unloading
+        # the capability
         if load_plugin:
+            # creates the new decorator interceptor function
             decorator_interceptor_function = create_load_plugin_interceptor(function)
+        # otherwise the normal approach is set
         else:
+            # sets the decorator interceptor function as the function
             decorator_interceptor_function = function
 
         # returns the interceptor to be used
@@ -468,114 +392,79 @@ def unload_allowed_capability(capability, load_plugin = False):
     # returns the created decorator
     return decorator
 
-unload_allowed.unload_allowed_map = None
-
-def inject_dependencies(plugin_id, plugin_version, load_plugin = False):
+def inject_dependencies(function):
     """
     Decorator that injects the dependencies into the defined methods.
 
-    @type plugin_id: String
-    @param plugin_id: The id of the plugin to be injected with dependencies.
-    @type plugin_version: String
-    @param plugin_version: The version of the plugin to be injected with dependencies.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
+    @type function: Function
+    @param function: The function to be decorated.
     @rtype: Function
     @return: The created decorator.
     """
 
-    def create_decorator_interceptor(function):
+    def decorator_interceptor(*args, **kwargs):
         """
-        Creates a decorator interceptor, that intercepts the normal function call.
+        The interceptor function for the inject dependencies decorator.
 
-        @type function: Function
-        @param function: The callback function.
-        """
-
-        def decorator_interceptor(*args, **kwargs):
-            """
-            The interceptor function for the inject_dependencies decorator.
-
-            @type args: pointer
-            @param args: The function arguments list.
-            @type kwargs: pointer pointer
-            @param kwargs: The function arguments map.
-            """
-
-            # calls the callback function
-            function(*args, **kwargs)
-
-            # retrieves the original plugin
-            original_plugin = args[0]
-
-            # retrieves the dependency plugin
-            dependency_plugin = args[1]
-
-            # creates the original plugin tuple
-            original_plugin_tuple = (
-                original_plugin.original_id,
-                original_plugin.version
-            )
-
-            # creates the dependency plugin tuple
-            dependency_plugin_tuple = (
-                dependency_plugin.original_id,
-                dependency_plugin.version
-            )
-
-            if original_plugin_tuple in inject_dependencies.inject_dependencies_map:
-                dependency_functions_map = inject_dependencies.inject_dependencies_map[original_plugin_tuple]
-                if dependency_plugin_tuple in dependency_functions_map:
-                    set_function = dependency_functions_map[dependency_plugin_tuple]
-                    set_function_name = set_function.__name__
-                    set_method = getattr(original_plugin, set_function_name)
-                    set_method(dependency_plugin)
-                elif (dependency_plugin.id, None) in dependency_functions_map:
-                    set_function = dependency_functions_map[(dependency_plugin.id, None)]
-                    set_function_name = set_function.__name__
-                    set_method = getattr(original_plugin, set_function_name)
-                    set_method(dependency_plugin)
-
-        return decorator_interceptor
-
-    def decorator(function, *args, **kwargs):
-        """
-        The decorator function for the inject_dependencies decorator.
-
-        @type function: Function
-        @param function: The function to be decorated.
         @type args: pointer
         @param args: The function arguments list.
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
-        @rtype: Function
-        @return: The decorator interceptor function.
         """
 
-        # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (
-            plugin_id,
-            plugin_version
+        # calls the callback function
+        function(*args, **kwargs)
+
+        # retrieves the dependency functions map
+        dependency_functions_map = function.dependency_functions_map
+
+        # retrieves the original plugin
+        original_plugin = args[0]
+
+        # retrieves the dependency plugin
+        dependency_plugin = args[1]
+
+        # creates the dependency plugin tuple
+        dependency_plugin_tuple = (
+            dependency_plugin.original_id,
+            dependency_plugin.version
         )
 
-        if not inject_dependencies.inject_dependencies_map:
-            inject_dependencies.inject_dependencies_map = {}
-        inject_dependencies.inject_dependencies_map[plugin_tuple] = {}
+        # creates the dependency plugin simple tuple
+        # this tuple only contains the
+        dependency_plugin_simple_tuple = (
+            dependency_plugin.original_id,
+            None
+        )
 
-        inject_dependencies.plugin_id = plugin_id
-        inject_dependencies.plugin_version = plugin_version
+        # tries to retrieve the set function using both the complete plugin id and
+        # version approach and the version only approach
+        set_function = dependency_functions_map.get(dependency_plugin_tuple, None)
+        set_function = set_function or dependency_functions_map.get(dependency_plugin_simple_tuple, None)
 
-        # creates the decorator interceptor with the given function
-        decorator_interceptor_function = create_decorator_interceptor(function)
+        # in case the set function is not defined
+        if not set_function:
+            # returns immediately
+            return
 
-        if load_plugin:
-            decorator_interceptor_function = create_load_plugin_interceptor(decorator_interceptor_function)
+        # retrieves the set function name from the dependency functions map
+        set_function = dependency_functions_map[dependency_plugin_simple_tuple]
+        set_function_name = set_function.__name__
 
-        # returns the interceptor to be used
-        return decorator_interceptor_function
+        # calls the set method from the original plugin instance
+        set_method = getattr(original_plugin, set_function_name)
+        set_method(dependency_plugin)
 
-    # returns the created decorator
-    return decorator
+    # starts the dependency functions map for
+    # the current function
+    function.dependency_functions_map = {}
+
+    # sets the current inject dependencies function
+    # for the inject dependencies reference
+    inject_dependencies.current = function
+
+    # returns the decorator interceptor
+    return decorator_interceptor
 
 def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
     """
@@ -605,18 +494,27 @@ def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
         @return: The function to be decorated.
         """
 
-        plugin_inject.function = function
-
-        inject_dependencies_tuple = (
-            inject_dependencies.plugin_id,
-            inject_dependencies.plugin_version
+        # creates the dependency plugin tuple
+        dependency_plugin_tuple = (
+            plugin_id,
+            plugin_version
         )
 
-        inject_dependencies.inject_dependencies_map[inject_dependencies_tuple][plugin_id, plugin_version] = plugin_inject.function
+        # retrieves the current inject dependencies function
+        inject_dependencies_current = inject_dependencies.current
 
+        # sets the current function for dependency injection
+        # in the current function
+        inject_dependencies_current.dependency_functions_map[dependency_plugin_tuple] = function
+
+        # in case the load plugin test should be made before injecting
+        # the dependency
         if load_plugin:
+            # creates the new decorator interceptor functions
             decorator_interceptor_function = create_load_plugin_interceptor(function)
+        # otherwise the normal approach is set
         else:
+            # sets the decorator interceptor function as the function
             decorator_interceptor_function = function
 
         # returns the interceptor to be used
@@ -625,118 +523,79 @@ def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
     # returns the created decorator
     return decorator
 
-inject_dependencies.inject_dependencies_map = None
-
-def event_handler(plugin_id, plugin_version, load_plugin = False):
+def event_handler(function):
     """
     Decorator that redirects the event handling into the defined methods.
 
-    @type plugin_id: String
-    @param plugin_id: The id of the plugin to take care of the event handling.
-    @type plugin_version: String
-    @param plugin_version: The version of the plugin to take care of the event handling.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
+    @type function: Function
+    @param function: The function to be decorated.
     @rtype: Function
     @return: The created decorator.
     """
 
-    def create_decorator_interceptor(function):
+    def decorator_interceptor(*args, **kwargs):
         """
-        Creates a decorator interceptor, that intercepts the normal function call.
+        The interceptor function for the event handler decorator.
 
-        @type function: Function
-        @param function: The callback function.
-        """
-
-        def decorator_interceptor(*args, **kwargs):
-            """
-            The interceptor function for the event_handler decorator.
-
-            @type args: pointer
-            @param args: The function arguments list.
-            @type kwargs: pointer pointer
-            @param kwargs: The function arguments map.
-            """
-
-            # calls the callback function
-            function(*args, **kwargs)
-
-            original_plugin = args[0]
-            event_name = args[1]
-            all_method_args = args[1:]
-
-            original_plugin_tuple = (
-                original_plugin.id,
-                original_plugin.version
-            )
-
-            if original_plugin_tuple in event_handler.event_handler_methods_map:
-                event_handler_functions_map = event_handler.event_handler_methods_map[original_plugin_tuple]
-                for event_name_key in event_handler_functions_map:
-                    if plugin_system.is_event_or_sub_event(event_name_key, event_name):
-                        # retrieves the event handler function from event handler functions map
-                        event_handler_function = event_handler_functions_map[event_name_key]
-
-                        # retrieves the function name and the event handler method from the original
-                        # plugin
-                        event_handler_function_name = event_handler_function.__name__
-                        event_handler_method = getattr(original_plugin, event_handler_function_name)
-
-                        # retrieves the number of arguments for the function
-                        number_arguments = event_handler_function.func_code.co_argcount
-
-                        # in case the length of the arguments is insufficient
-                        if len(all_method_args) < number_arguments:
-                            # adds padding to the call arguments
-                            call_args = list(all_method_args) + [None]
-                        else:
-                            # maintains the calling arguments
-                            call_args = all_method_args
-
-                        # calls the event handler method
-                        event_handler_method(*call_args)
-
-        return decorator_interceptor
-
-    def decorator(function, *args, **kwargs):
-        """
-        The decorator function for the event_handler decorator.
-
-        @type function: Function
-        @param function: The function to be decorated.
         @type args: pointer
         @param args: The function arguments list.
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
-        @rtype: Function
-        @return: The decorator interceptor function.
         """
 
-        # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (
-            plugin_id,
-            plugin_version
-        )
+        # calls the callback function
+        function(*args, **kwargs)
 
-        if not event_handler.event_handler_methods_map:
-            event_handler.event_handler_methods_map = {}
-        event_handler.event_handler_methods_map[plugin_tuple] = {}
+        # retrieves the event handler functions map
+        event_handler_functions_map = function.event_handler_functions_map
 
-        event_handler.plugin_id = plugin_id
-        event_handler.plugin_version = plugin_version
+        # unpacks the function arguments
+        original_plugin = args[0]
+        event_name = args[1]
+        all_method_args = args[1:]
 
-        # creates the decorator interceptor with the given function
-        decorator_interceptor_function = create_decorator_interceptor(function)
+        # iterates over all the events in the evens in the event handler
+        # functions map
+        for event_name_key in event_handler_functions_map:
+            # checks if the event is a valid event for the plugin
+            # currently being handled and skips the current iteration
+            # in case it's not
+            if not plugin_system.is_event_or_sub_event(event_name_key, event_name):
+                # continues the loop
+                continue
 
-        if load_plugin:
-            decorator_interceptor_function = create_load_plugin_interceptor(decorator_interceptor_function)
+            # retrieves the event handler function from event handler functions map
+            event_handler_function = event_handler_functions_map[event_name_key]
 
-        # returns the interceptor to be used
-        return decorator_interceptor_function
+            # retrieves the function name and the event handler method from the original
+            # plugin
+            event_handler_function_name = event_handler_function.__name__
+            event_handler_method = getattr(original_plugin, event_handler_function_name)
 
-    # returns the created decorator
-    return decorator
+            # retrieves the number of arguments for the function
+            number_arguments = event_handler_function.func_code.co_argcount
+
+            # in case the length of the arguments is insufficient
+            if len(all_method_args) < number_arguments:
+                # adds padding to the call arguments
+                call_args = list(all_method_args) + [None]
+            else:
+                # maintains the calling arguments
+                call_args = all_method_args
+
+            # calls the event handler method
+            event_handler_method(*call_args)
+
+    # starts the event handler functions map for
+    # the current function
+    function.event_handler_functions_map = {}
+
+    # sets the current event handler function
+    # for the event handler reference
+    event_handler.current = function
+
+    # returns the decorator interceptor
+    return decorator_interceptor
 
 def event_handler_method(event_name, load_plugin = False):
     """
@@ -752,7 +611,7 @@ def event_handler_method(event_name, load_plugin = False):
 
     def decorator(function, *args, **kwargs):
         """
-        The decorator function for the event_handler_method decorator.
+        The decorator function for the event handler method decorator.
 
         @type function: Function
         @param function: The function to be decorated.
@@ -764,18 +623,21 @@ def event_handler_method(event_name, load_plugin = False):
         @return: The function to be decorated.
         """
 
-        event_handler_method.function = function
+        # retrieves the current event handler function
+        event_handler_current = event_handler.current
 
-        event_handler_tuple = (
-            event_handler.plugin_id,
-            event_handler.plugin_version
-        )
+        # sets the current function for event handling
+        # in the current function
+        event_handler_current.event_handler_functions_map[event_name] = function
 
-        event_handler.event_handler_methods_map[event_handler_tuple][event_name] = event_handler_method.function
-
+        # in case the load plugin test should be made before handling
+        # the event
         if load_plugin:
+            # creates the new decorator interceptor functions
             decorator_interceptor_function = create_load_plugin_interceptor(function)
+        # otherwise the normal approach is set
         else:
+            # sets the decorator interceptor function as the function
             decorator_interceptor_function = function
 
         # returns the interceptor to be used
@@ -784,111 +646,64 @@ def event_handler_method(event_name, load_plugin = False):
     # returns the created decorator
     return decorator
 
-event_handler.event_handler_methods_map = None
-
-def set_configuration_property(plugin_id, plugin_version, load_plugin = False):
+def set_configuration_property(function):
     """
     Decorator that redirects the setting of configuration properties into the defined methods.
 
-    @type plugin_id: String
-    @param plugin_id: The id of the plugin to take care of the setting of
-    configuration properties.
-    @type plugin_version: String
-    @param plugin_version: The version of the plugin to take care of the setting of
-    configuration properties.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
+    @type function: Function
+    @param function: The function to be decorated.
     @rtype: Function
     @return: The created decorator.
     """
 
-    def create_decorator_interceptor(function):
+    def decorator_interceptor(*args, **kwargs):
         """
-        Creates a decorator interceptor, that intercepts the normal function call.
+        The interceptor function for the set configuration property decorator.
 
-        @type function: Function
-        @param function: The callback function.
-        """
-
-        def decorator_interceptor(*args, **kwargs):
-            """
-            The interceptor function for the set_configuration_property decorator.
-
-            @type args: pointer
-            @param args: The function arguments list.
-            @type kwargs: pointer pointer
-            @param kwargs: The function arguments map.
-            """
-
-            # calls the callback function
-            function(*args, **kwargs)
-
-            original_plugin = args[0]
-            property_name = args[1]
-            property = args[2]
-
-            original_plugin_tuple = (
-                original_plugin.id,
-                original_plugin.version
-            )
-
-            # in case the original plugin tuple exists in the set configuration
-            # property map
-            if original_plugin_tuple in set_configuration_property.set_configuration_property_methods_map:
-                set_configuration_property_functions_map = set_configuration_property.set_configuration_property_methods_map[original_plugin_tuple]
-                if property_name in set_configuration_property_functions_map:
-                    # retrieves the set configuration property function from set configuration property functions map
-                    set_configuration_property_function = set_configuration_property_functions_map[property_name]
-
-                    # retrieves the function name and the set configuration property method from the original
-                    # plugin
-                    set_configuration_property_function_name = set_configuration_property_function.__name__
-                    set_configuration_property_method = getattr(original_plugin, set_configuration_property_function_name)
-
-                    # calls the set configuration property method
-                    set_configuration_property_method(property_name, property)
-
-        return decorator_interceptor
-
-    def decorator(function, *args, **kwargs):
-        """
-        The decorator function for the set_configuration_property decorator.
-
-        @type function: Function
-        @param function: The function to be decorated.
         @type args: pointer
         @param args: The function arguments list.
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
-        @rtype: Function
-        @return: The decorator interceptor function.
         """
 
-        # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (
-            plugin_id,
-            plugin_version
-        )
+        # calls the callback function
+        function(*args, **kwargs)
 
-        if not set_configuration_property.set_configuration_property_methods_map:
-            set_configuration_property.set_configuration_property_methods_map = {}
+        # retrieves the set configuration property functions map
+        set_configuration_property_functions_map = function.set_configuration_property_functions_map
 
-        set_configuration_property.set_configuration_property_methods_map[plugin_tuple] = {}
+        # unpacks the function arguments
+        original_plugin = args[0]
+        property_name = args[1]
+        property = args[2]
 
-        set_configuration_property.plugin_id = plugin_id
-        set_configuration_property.plugin_version = plugin_version
+        # in case the property name is not defined in the set configuration
+        # property functions map
+        if not property_name in set_configuration_property_functions_map:
+            # returns immediately
+            return
 
-        # creates the decorator interceptor with the given function
-        decorator_interceptor_function = create_decorator_interceptor(function)
+        # retrieves the set configuration property function from set configuration property functions map
+        set_configuration_property_function = set_configuration_property_functions_map[property_name]
 
-        if load_plugin:
-            decorator_interceptor_function = create_load_plugin_interceptor(decorator_interceptor_function)
+        # retrieves the function name and the set configuration property method from the original
+        # plugin
+        set_configuration_property_function_name = set_configuration_property_function.__name__
+        set_configuration_property_method = getattr(original_plugin, set_configuration_property_function_name)
 
-        # returns the interceptor to be used
-        return decorator_interceptor_function
+        # calls the set configuration property method
+        set_configuration_property_method(property_name, property)
 
-    # returns the created decorator
-    return decorator
+    # starts the set configuration property functions map for
+    # the current function
+    function.set_configuration_property_functions_map = {}
+
+    # sets the current set configuration property function
+    # for the set configuration property reference
+    set_configuration_property.current = function
+
+    # returns the decorator interceptor
+    return decorator_interceptor
 
 def set_configuration_property_method(property_name, load_plugin = False):
     """
@@ -904,7 +719,7 @@ def set_configuration_property_method(property_name, load_plugin = False):
 
     def decorator(function, *args, **kwargs):
         """
-        The decorator function for the set_configuration_property decorator.
+        The decorator function for the set configuration property decorator.
 
         @type function: Function
         @param function: The function to be decorated.
@@ -916,18 +731,21 @@ def set_configuration_property_method(property_name, load_plugin = False):
         @return: The function to be decorated.
         """
 
-        set_configuration_property_method.function = function
+        # retrieves the current set configuration propery function
+        set_configuration_property_current = set_configuration_property.current
 
-        set_configuration_property_tuple = (
-            set_configuration_property.plugin_id,
-            set_configuration_property.plugin_version
-        )
+        # sets the current function for set configuration property
+        # in the current function
+        set_configuration_property_current.set_configuration_property_functions_map[property_name] = function
 
-        set_configuration_property.set_configuration_property_methods_map[set_configuration_property_tuple][property_name] = set_configuration_property_method.function
-
+        # in case the load plugin test should be made before setting
+        # the configuration property
         if load_plugin:
+            # creates the new decorator interceptor functions
             decorator_interceptor_function = create_load_plugin_interceptor(function)
+        # otherwise the normal approach is set
         else:
+            # sets the decorator interceptor function as the function
             decorator_interceptor_function = function
 
         # returns the interceptor to be used
@@ -936,110 +754,63 @@ def set_configuration_property_method(property_name, load_plugin = False):
     # returns the created decorator
     return decorator
 
-set_configuration_property.set_configuration_property_methods_map = None
-
-def unset_configuration_property(plugin_id, plugin_version, load_plugin = False):
+def unset_configuration_property(function):
     """
     Decorator that redirects the unsetting of configuration properties into the defined methods.
 
-    @type plugin_id: String
-    @param plugin_id: The id of the plugin to take care of the unsetting of
-    configuration properties.
-    @type plugin_version: String
-    @param plugin_version: The version of the plugin to take care of the unsetting of
-    configuration properties.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
+    @type function: Function
+    @param function: The function to be decorated.
     @rtype: Function
     @return: The created decorator.
     """
 
-    def create_decorator_interceptor(function):
+    def decorator_interceptor(*args, **kwargs):
         """
-        Creates a decorator interceptor, that intercepts the normal function call.
+        The interceptor function for the unset configuration property decorator.
 
-        @type function: Function
-        @param function: The callback function.
-        """
-
-        def decorator_interceptor(*args, **kwargs):
-            """
-            The interceptor function for the unset_configuration_property decorator.
-
-            @type args: pointer
-            @param args: The function arguments list.
-            @type kwargs: pointer pointer
-            @param kwargs: The function arguments map.
-            """
-
-            # calls the callback function
-            function(*args, **kwargs)
-
-            original_plugin = args[0]
-            property_name = args[1]
-
-            original_plugin_tuple = (
-                original_plugin.id,
-                original_plugin.version
-            )
-
-            # in case the original plugin tuple exists in the unset configuration
-            # property map
-            if original_plugin_tuple in unset_configuration_property.unset_configuration_property_methods_map:
-                unset_configuration_property_functions_map = unset_configuration_property.unset_configuration_property_methods_map[original_plugin_tuple]
-                if property_name in unset_configuration_property_functions_map:
-                    # retrieves the unset configuration property function from unset configuration property functions map
-                    unset_configuration_property_function = unset_configuration_property_functions_map[property_name]
-
-                    # retrieves the function name and the unset configuration property method from the original
-                    # plugin
-                    unset_configuration_property_function_name = unset_configuration_property_function.__name__
-                    unset_configuration_property_method = getattr(original_plugin, unset_configuration_property_function_name)
-
-                    # calls the unset configuration property method
-                    unset_configuration_property_method(property_name)
-
-        return decorator_interceptor
-
-    def decorator(function, *args, **kwargs):
-        """
-        The decorator function for the unset_configuration_property decorator.
-
-        @type function: Function
-        @param function: The function to be decorated.
         @type args: pointer
         @param args: The function arguments list.
         @type kwargs: pointer pointer
         @param kwargs: The function arguments map.
-        @rtype: Function
-        @return: The decorator interceptor function.
         """
 
-        # creates the plugin tuple using the plugin id and version
-        plugin_tuple = (
-            plugin_id,
-            plugin_version
-        )
+        # calls the callback function
+        function(*args, **kwargs)
 
-        if not unset_configuration_property.unset_configuration_property_methods_map:
-            unset_configuration_property.unset_configuration_property_methods_map = {}
+        # retrieves the unset configuration property functions map
+        unset_configuration_property_functions_map = function.unset_configuration_property_functions_map
 
-        unset_configuration_property.unset_configuration_property_methods_map[plugin_tuple] = {}
+        # unpacks the function arguments
+        original_plugin = args[0]
+        property_name = args[1]
 
-        unset_configuration_property.plugin_id = plugin_id
-        unset_configuration_property.plugin_version = plugin_version
+        # in case the property name is not defined in the unset configuration
+        # property functions map
+        if not property_name in unset_configuration_property_functions_map:
+            # returns immediately
+            return
 
-        # creates the decorator interceptor with the given function
-        decorator_interceptor_function = create_decorator_interceptor(function)
+        # retrieves the unset configuration property function from unset configuration property functions map
+        unset_configuration_property_function = unset_configuration_property_functions_map[property_name]
 
-        if load_plugin:
-            decorator_interceptor_function = create_load_plugin_interceptor(decorator_interceptor_function)
+        # retrieves the function name and the unset configuration property method from the original
+        # plugin
+        unset_configuration_property_function_name = unset_configuration_property_function.__name__
+        unset_configuration_property_method = getattr(original_plugin, unset_configuration_property_function_name)
 
-        # returns the interceptor to be used
-        return decorator_interceptor_function
+        # calls the unset configuration property method
+        unset_configuration_property_method(property_name)
 
-    # returns the created decorator
-    return decorator
+    # starts the unset configuration property functions map for
+    # the current function
+    function.unset_configuration_property_functions_map = {}
+
+    # unsets the current unset configuration property function
+    # for the unset configuration property reference
+    unset_configuration_property.current = function
+
+    # returns the decorator interceptor
+    return decorator_interceptor
 
 def unset_configuration_property_method(property_name, load_plugin = False):
     """
@@ -1055,7 +826,7 @@ def unset_configuration_property_method(property_name, load_plugin = False):
 
     def decorator(function, *args, **kwargs):
         """
-        The decorator function for the unset_configuration_property decorator.
+        The decorator function for the unset configuration property decorator.
 
         @type function: Function
         @param function: The function to be decorated.
@@ -1067,18 +838,21 @@ def unset_configuration_property_method(property_name, load_plugin = False):
         @return: The function to be decorated.
         """
 
-        unset_configuration_property_method.function = function
+        # retrieves the current unset configuration propery function
+        unset_configuration_property_current = unset_configuration_property.current
 
-        unset_configuration_property_tuple = (
-            unset_configuration_property.plugin_id,
-            unset_configuration_property.plugin_version
-        )
+        # unsets the current function for unset configuration property
+        # in the current function
+        unset_configuration_property_current.unset_configuration_property_functions_map[property_name] = function
 
-        unset_configuration_property.unset_configuration_property_methods_map[unset_configuration_property_tuple][property_name] = unset_configuration_property_method.function
-
+        # in case the load plugin test should be made before unsetting
+        # the configuration property
         if load_plugin:
+            # creates the new decorator interceptor functions
             decorator_interceptor_function = create_load_plugin_interceptor(function)
+        # otherwise the normal approach is unset
         else:
+            # unsets the decorator interceptor function as the function
             decorator_interceptor_function = function
 
         # returns the interceptor to be used
@@ -1086,8 +860,6 @@ def unset_configuration_property_method(property_name, load_plugin = False):
 
     # returns the created decorator
     return decorator
-
-unset_configuration_property.unset_configuration_property_methods_map = None
 
 def plugin_call(load_plugin = True):
     """
@@ -1157,33 +929,5 @@ def create_load_plugin_interceptor(function):
         # calls the callback function
         return function(*args, **kwargs)
 
+    # returns the decorator interceptor
     return decorator_interceptor
-
-def unregister_plugin_decorators(plugin_id, plugin_version):
-    """
-    Unregisters the decorators for the plugin with the given id and version.
-
-    @type plugin_id: String
-    @param plugin_id: The id of the plugin to unregister the decorators.
-    @type plugin_version: String
-    @param plugin_version: The version of the plugin to unregister the decorators.
-    """
-
-    # creates the plugin tuple for the referred plugin
-    plugin_tuple = (
-        plugin_id,
-        plugin_version
-    )
-
-    if load_allowed.load_allowed_map and plugin_tuple in load_allowed.load_allowed_map:
-        del load_allowed.load_allowed_map[plugin_tuple]
-    if unload_allowed.unload_allowed_map and plugin_tuple in unload_allowed.unload_allowed_map:
-        del unload_allowed.unload_allowed_map[plugin_tuple]
-    if inject_dependencies.inject_dependencies_map and plugin_tuple in inject_dependencies.inject_dependencies_map:
-        del inject_dependencies.inject_dependencies_map[plugin_tuple]
-    if event_handler.event_handler_methods_map and plugin_tuple in event_handler.event_handler_methods_map:
-        del event_handler.event_handler_methods_map[plugin_tuple]
-    if set_configuration_property.set_configuration_property_methods_map and plugin_tuple in set_configuration_property.set_configuration_property_methods_map:
-        del set_configuration_property.set_configuration_property_methods_map[plugin_tuple]
-    if unset_configuration_property.unset_configuration_property_methods_map and plugin_tuple in unset_configuration_property.unset_configuration_property_methods_map:
-        del unset_configuration_property.unset_configuration_property_methods_map[plugin_tuple]

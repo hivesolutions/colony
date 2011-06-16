@@ -60,7 +60,6 @@ import colony.libs.string_buffer_util
 import colony.base.dummy_input
 
 import colony.base.util
-import colony.base.decorators
 
 import colony.base.plugin_system_exceptions
 import colony.base.plugin_system_information
@@ -2160,9 +2159,6 @@ class PluginManager:
         # retrieves the plugin id
         plugin_id = plugin.id
 
-        # retrieves the plugin version
-        plugin_version = plugin.version
-
         # retrieves the plugin description
         plugin_description = plugin.description
 
@@ -2195,9 +2191,6 @@ class PluginManager:
 
         # unregisters the plugin capabilities in the plugin manager
         self.unregister_plugin_capabilities(plugin_instance)
-
-        # unregisters the decorator information associated with the plugin
-        colony.base.decorators.unregister_plugin_decorators(plugin_id, plugin_version)
 
         # in case the plugin exists in the plugin threads map
         if plugin_id in self.plugin_threads_map:
