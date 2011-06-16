@@ -75,6 +75,9 @@ class FileRotator:
     current_file_size = None
     """ The size of the current file in use """
 
+    closed = False
+    """ The flag that controls the current status of the file rotator """
+
     def __init__(self, base_file_path, maximum_file_size = 1048576, file_count = 5):
         """
         Constructor of the class.
@@ -99,6 +102,9 @@ class FileRotator:
         # starts the rotator
         self._sart_rotator()
 
+        # updates the closed status
+        self.closed = False
+
     def close(self):
         """
         Closes the file rotator.
@@ -106,6 +112,9 @@ class FileRotator:
 
         # stops the rotator
         self._stop_rotator()
+
+        # updates the closed status
+        self.closed = True
 
     def write(self, string_value, flush = True):
         """
@@ -138,6 +147,18 @@ class FileRotator:
         # increments the current file size with
         # the string value length
         self.current_file_size += string_value_length
+
+    def is_closed(self):
+        """
+        Returns the current closed status
+        for the internal file reference.
+
+        @rtype: bool
+        @return: The current closed status
+        for the internal file reference.
+        """
+
+        return self.closed
 
     def _sart_rotator(self):
         """
