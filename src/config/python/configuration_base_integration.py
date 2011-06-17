@@ -162,7 +162,6 @@ plugin_path_list = [
     "%colony_prefix_path%/pt.hive.colony.plugins.web.mvc.communication.push_apple/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.web.mvc.encryption/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.web.mvc.manager/src/colony/plugins",
-    "%colony_prefix_path%/pt.hive.colony.plugins.web.mvc.manager.page_item/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.web.mvc.monitor_item/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.web.mvc.panel_item/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.web.mvc.resources.base/src/colony/plugins",
