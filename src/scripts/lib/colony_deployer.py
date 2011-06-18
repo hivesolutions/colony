@@ -536,6 +536,10 @@ class Deployer:
                 # path and the manager path
                 new_resource_relative_path = os.path.relpath(new_resource_file_path, self.manager_path)
 
+                # normalizes the path replacing the backslashes with
+                # "normal" slashes
+                new_resource_relative_path = new_resource_relative_path.replace("\\", "/")
+
                 # retrieves the number of times the file is "duplicated"
                 duplicate_file_count = duplicate_files_structure.get(new_resource_relative_path, 0)
 
@@ -797,6 +801,10 @@ class Deployer:
             # "calculates" the relative path between the resource file
             # path and the manager path
             resource_relative_path = os.path.relpath(resource_file_path, self.manager_path)
+
+            # normalizes the path replacing the backslashes with
+            # "normal" slashes
+            resource_relative_path = resource_relative_path.replace("\\", "/")
 
             # retrieves the number of times the file is "duplicated"
             duplicate_file_count = duplicate_files_structure.get(resource_relative_path, 0)
