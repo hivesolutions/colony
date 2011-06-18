@@ -120,6 +120,9 @@ BUNDLES_FILE_NAME = "bundles.json"
 PLUGINS_FILE_NAME = "plugins.json"
 """ The plugins file name """
 
+DUPLICATES_FILE_NAME = "duplicates.json"
+""" The duplicates file name """
+
 SPECIFICATION_FILE_NAME = "specification.json"
 """ The specification file name """
 
@@ -501,6 +504,12 @@ class Deployer:
         # prints a log message
         self.log("Moving resources from '%s' to '%s'" % (temporary_path, target_path))
 
+        # retrieves the duplicates structure (from file)
+        duplicates_structure = self._get_duplicates_structure()
+
+        # retrieves the duplicate files structure
+        duplicate_files_structure = duplicates_structure.get("duplicate_files", {})
+
         # iterates over all the resources
         for resource in resources:
             # retrieves the resource file path
@@ -520,8 +529,27 @@ class Deployer:
                 # creates the new resource directory path (directories)
                 os.makedirs(new_resource_directory_path)
 
+            # in case the new resource file path already exist we're
+            # in a presence of a "duplicate"
+            if os.path.exists(new_resource_file_path):
+                # "calculates" the relative path between the new resource file
+                # path and the manager path
+                new_resource_relative_path = os.path.relpath(new_resource_file_path, self.manager_path)
+
+                # retrieves the number of times the file is "duplicated"
+                duplicate_file_count = duplicate_files_structure.get(new_resource_relative_path, 0)
+
+                # increments the duplicate count by one
+                duplicate_file_count += 1
+
+                # sets the duplicate file count in the duplicate files structure
+                duplicate_files_structure[new_resource_relative_path] = duplicate_file_count
+
             # copies the resource file as the new resource file
             shutil.copy(resource_file_path, new_resource_file_path)
+
+        # persists the duplicates structure
+        self._persist_duplicates_structure(duplicates_structure)
 
         # retrieves the plugin item key
         plugin_item_key = id
@@ -755,10 +783,49 @@ class Deployer:
         # later removal
         directory_path_list = []
 
+        # retrieves the duplicates structure (from file)
+        duplicates_structure = self._get_duplicates_structure()
+
+        # retrieves the duplicate files structure
+        duplicate_files_structure = duplicates_structure.get("duplicate_files", {})
+
         # iterates over all the resources
         for resource in resources:
             # creates the (complete) resource file path
             resource_file_path = os.path.normpath(plugins_path + "/" + resource)
+
+            # "calculates" the relative path between the resource file
+            # path and the manager path
+            resource_relative_path = os.path.relpath(resource_file_path, self.manager_path)
+
+            # retrieves the number of times the file is "duplicated"
+            duplicate_file_count = duplicate_files_structure.get(resource_relative_path, 0)
+
+            # checks if the file should be removed
+            remove_file = duplicate_file_count == 0
+
+            # decrements the duplicate count by one
+            duplicate_file_count -= 1
+
+            # in case the duplicate file count is superior to zero
+            if duplicate_file_count > 0:
+                # sets the duplicate file count in the duplicate files structure
+                duplicate_files_structure[resource_relative_path] = duplicate_file_count
+            # otherwise in case the resource relative path reference
+            # exists in the duplicate files structure
+            elif resource_relative_path in duplicate_files_structure:
+                # removes the resource relative path from the duplicate
+                # files structure
+                del duplicate_files_structure[resource_relative_path]
+
+            # in case the remove file is not set
+            if not remove_file:
+                # prints a log message
+                self.log("Skipping resource file (duplicate) '%s'" % resource_file_path)
+
+                # continues the loop no need to remove a file that
+                # is duplicated
+                continue
 
             # in case the resource file path exists
             if not os.path.exists(resource_file_path):
@@ -783,6 +850,9 @@ class Deployer:
                 # adds the file directory path to the
                 # directory path list
                 directory_path_list.append(resource_file_directory_path)
+
+        # persists the duplicates structure
+        self._persist_duplicates_structure(duplicates_structure)
 
         # prints a log message
         self.log("Removing empty directories for plugin file '%s'" % plugin_path)
@@ -1075,6 +1145,56 @@ class Deployer:
         """
 
         self.__remove_structure_item(item_key, PLUGINS_FILE_NAME, INSTALLED_PLUGINS_VALUE)
+
+    def _get_duplicates_structure(self):
+        """
+        Retrieves the duplicates structure from the file system.
+
+        @rtype: Dictionary
+        @return: The duplicates structure retrieved from the
+        file system.
+        """
+
+        # retrieves the registry path
+        registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
+
+        # creates the structure file path
+        structure_file_path = os.path.normpath(registry_path + "/" + DUPLICATES_FILE_NAME)
+
+        # reads the structure file contents
+        structure_file_contents = colony_file.read_file(structure_file_path)
+
+        # loads the structure file contents from json
+        structure = json.loads(structure_file_contents)
+
+        # returns the structure
+        return structure
+
+    def _persist_duplicates_structure(self, duplicates_structure):
+        """
+        Persists the given duplicates structure into
+        the file system.
+
+        @type duplicates_structure: Dictionary
+        @param duplicates_structure: The duplicates structure to be
+        persisted into the file system.
+        """
+
+        # retrieves the registry path
+        registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
+
+        # creates the structure file path
+        structure_file_path = os.path.normpath(registry_path + "/duplicates.json")
+
+        # touches the duplicates structure (internal structure)
+        # updating the dates in it
+        self._touch_structure(duplicates_structure)
+
+        # serializes the structure
+        structure_serialized = json.dumps(duplicates_structure)
+
+        # writes the structure file contents
+        colony_file.write_file(structure_file_path, structure_serialized)
 
     def __get_structure(self, structure_file_name):
         """
