@@ -89,7 +89,7 @@ def normalize_path(path):
 def align_path(path):
     """
     Aligns the given path, converting all the system specific
-    characters into the defined irtual separators.
+    characters into the defined virtual separators.
     The retrieved path is system independent.
 
     @type path: String
