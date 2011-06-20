@@ -86,6 +86,25 @@ def normalize_path(path):
     # returns the normalized path
     return normalized_path
 
+def align_path(path):
+    """
+    Aligns the given path, converting all the system specific
+    characters into the defined irtual separators.
+    The retrieved path is system independent.
+
+    @type path: String
+    @param path: The path to the aligned (become system independent).
+    @rtype: String
+    @return: The aligned path (system independent).
+    """
+
+    # aligns the path replacing the backslashes with
+    # "normal" slashes
+    aligned_path = path.replace("\\", "/")
+
+    # returns the aligned path
+    return aligned_path
+
 def copy_directory(source_path, target_path):
     """
     Copies the directory in the given source path to the
