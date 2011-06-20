@@ -1192,7 +1192,7 @@ class Deployer:
         registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
 
         # creates the structure file path
-        structure_file_path = os.path.normpath(registry_path + "/duplicates.json")
+        structure_file_path = os.path.normpath(registry_path + "/" + DUPLICATES_FILE_NAME)
 
         # touches the duplicates structure (internal structure)
         # updating the dates in it
