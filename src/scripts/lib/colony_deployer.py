@@ -539,9 +539,9 @@ class Deployer:
                 # path and the manager path
                 new_resource_relative_path = os.path.relpath(new_resource_file_path, self.manager_path)
 
-                # normalizes the path replacing the backslashes with
+                # aligns the path replacing the backslashes with
                 # "normal" slashes
-                new_resource_relative_path = new_resource_relative_path.replace("\\", "/")
+                new_resource_relative_path = self.__align_path(new_resource_relative_path)
 
                 # retrieves the number of times the file is "duplicated"
                 duplicate_file_count = duplicate_files_structure.get(new_resource_relative_path, 0)
@@ -805,9 +805,9 @@ class Deployer:
             # path and the manager path
             resource_relative_path = os.path.relpath(resource_file_path, self.manager_path)
 
-            # normalizes the path replacing the backslashes with
+            # aligns the path replacing the backslashes with
             # "normal" slashes
-            resource_relative_path = resource_relative_path.replace("\\", "/")
+            resource_relative_path = self.__align_path(resource_relative_path)
 
             # retrieves the number of times the file is "duplicated"
             duplicate_file_count = duplicate_files_structure.get(resource_relative_path, 0)
@@ -1329,3 +1329,22 @@ class Deployer:
 
         # writes the structure file contents
         colony_file.write_file(structure_file_path, structure_serialized)
+
+    def __align_path(self, path):
+        """
+        Aligns the given path, converting all the system specific
+        characters into the defined virtual separators.
+        The retrieved path is system independent.
+
+        @type path: String
+        @param path: The path to the aligned (become system independent).
+        @rtype: String
+        @return: The aligned path (system independent).
+        """
+
+        # aligns the path replacing the backslashes with
+        # "normal" slashes
+        aligned_path = path.replace("\\", "/")
+
+        # returns the aligned path
+        return aligned_path
