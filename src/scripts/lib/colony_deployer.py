@@ -111,6 +111,9 @@ PLUGIN_VALUE = "plugin"
 BUNDLE_VALUE = "bundle"
 """ The bundle value """
 
+DUPLICATE_FILES_VALUE = "duplicate_files"
+""" The duplicate files """
+
 PACKAGES_FILE_NAME = "packages.json"
 """ The packages file name """
 
@@ -508,7 +511,7 @@ class Deployer:
         duplicates_structure = self._get_duplicates_structure()
 
         # retrieves the duplicate files structure
-        duplicate_files_structure = duplicates_structure.get("duplicate_files", {})
+        duplicate_files_structure = duplicates_structure.get(DUPLICATE_FILES_VALUE, {})
 
         # iterates over all the resources
         for resource in resources:
@@ -529,7 +532,7 @@ class Deployer:
                 # creates the new resource directory path (directories)
                 os.makedirs(new_resource_directory_path)
 
-            # in case the new resource file path already exist we're
+            # in case the new resource file path already exists we're
             # in a presence of a "duplicate"
             if os.path.exists(new_resource_file_path):
                 # "calculates" the relative path between the new resource file
@@ -791,7 +794,7 @@ class Deployer:
         duplicates_structure = self._get_duplicates_structure()
 
         # retrieves the duplicate files structure
-        duplicate_files_structure = duplicates_structure.get("duplicate_files", {})
+        duplicate_files_structure = duplicates_structure.get(DUPLICATE_FILES_VALUE, {})
 
         # iterates over all the resources
         for resource in resources:
