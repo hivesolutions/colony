@@ -127,6 +127,12 @@ def map_remove(removal_map, destiny_map):
     # iterates over all the keys in
     # the removal map
     for key in removal_map:
+        # in case the key does not exists in
+        # destiny map
+        if not key in destiny_map:
+            # continues the loop
+            continue
+
         # removes the key item from the destiny map
         del destiny_map[key]
 
