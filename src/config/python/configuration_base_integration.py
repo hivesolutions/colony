@@ -186,6 +186,7 @@ plugin_path_list = [
     "%hive_development_prefix_path%/pt.hive.hive_development.plugins.service.media_dashboard/src/hive_development/plugins",
     "%hive_development_prefix_path%/pt.hive.hive_development.plugins.task_registry/src/hive_development/plugins",
     "%hive_development_prefix_path%/pt.hive.hive_development.plugins.url_shortener/src/hive_development/plugins",
+    "%hive_development_prefix_path%/pt.hive.hive_development.plugins.web_dropbox/src/hive_development/plugins",
     "%hive_development_prefix_path%/pt.hive.hive_development.plugins.web_toolbar/src/hive_development/plugins"
 ]
 """ The list of plugin paths """
