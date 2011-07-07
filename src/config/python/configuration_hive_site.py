@@ -55,7 +55,7 @@ debug = False
 silent = False
 """ The silent flag """
 
-stop_on_cycle_error = False
+stop_on_cycle_error = True
 """ The stop on cycle error flag """
 
 daemon_file_path = None
