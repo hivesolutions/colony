@@ -60,7 +60,7 @@ prefix_paths = {
         "first_day" : "../../"
     },
     "repository_svn" : {
-        "colony" : "../../",
+        "colony" : "../../../../pt.hive.colony.plugins/trunk",
         "omni" : "../../../../pt.hive.omni/trunk",
         "colony_demo" : "../../../../pt.hive.colony.demo/trunk",
         "colony_site" : "../../../../pt.hive.colony_site/trunk",
