@@ -42,6 +42,7 @@ prefix_paths = {
     },
     "workspace_eclipse" : {
         "colony" : "../../",
+        "colony_extras" : "../../",
         "omni" : "../../",
         "colony_demo" : "../../",
         "colony_site" : "../../",
@@ -61,6 +62,7 @@ prefix_paths = {
     },
     "repository_svn" : {
         "colony" : "../../../../pt.hive.colony.plugins/trunk",
+        "colony_extras" : "../../../../pt.hive.colony.extras/trunk",
         "omni" : "../../../../pt.hive.omni/trunk",
         "colony_demo" : "../../../../pt.hive.colony.demo/trunk",
         "colony_site" : "../../../../pt.hive.colony_site/trunk",
