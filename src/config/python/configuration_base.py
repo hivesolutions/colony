@@ -43,6 +43,7 @@ prefix_paths = {
     "workspace_eclipse" : {
         "colony" : "../../",
         "colony_extras" : "../../",
+        "colony_language" : "../../",
         "omni" : "../../",
         "colony_demo" : "../../",
         "colony_site" : "../../",
@@ -63,6 +64,7 @@ prefix_paths = {
     "repository_svn" : {
         "colony" : "../../../../pt.hive.colony.plugins/trunk",
         "colony_extras" : "../../../../pt.hive.colony.extras/trunk",
+        "colony_language" : "../../../../pt.hive.colony.language/trunk",
         "omni" : "../../../../pt.hive.omni/trunk",
         "colony_demo" : "../../../../pt.hive.colony.demo/trunk",
         "colony_site" : "../../../../pt.hive.colony_site/trunk",
@@ -84,9 +86,9 @@ prefix_paths = {
 """ The prefix path maps """
 
 library_path_list = [
-    "%colony_prefix_path%/pt.hive.colony.language.generator/src/colony",
-    "%colony_prefix_path%/pt.hive.colony.language.settler/src/colony",
-    "%colony_prefix_path%/pt.hive.colony.language.wiki/src/colony"
+    "%colony_language_prefix_path%/pt.hive.colony.language.generator/src/colony",
+    "%colony_language_prefix_path%/pt.hive.colony.language.settler/src/colony",
+    "%colony_language_prefix_path%/pt.hive.colony.language.wiki/src/colony"
 ]
 """ The list of library paths """
 
