@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: Cp1252 -*-
+# -*- coding: utf-8 -*-
 
 # Hive Colony Framework
 # Copyright (C) 2008 Hive Solutions Lda.

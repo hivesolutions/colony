@@ -16,7 +16,7 @@
 :: You should have received a copy of the GNU General Public License
 :: along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-:: __author__    = Jo„o Magalh„es <joamag@hive.pt>
+:: __author__    = Jo√£o Magalh√£es <joamag@hive.pt>
 :: __version__   = 1.0.0
 :: __revision__  = $LastChangedRevision: 10451 $
 :: __date__      = $LastChangedDate: 2010-09-16 14:01:15 +0100 (Qui, 16 Set 2010) $

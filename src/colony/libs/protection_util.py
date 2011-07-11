@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: Cp1252 -*-
+# -*- coding: utf-8 -*-
 
 # Hive Colony Framework
 # Copyright (C) 2008 Hive Solutions Lda.
@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "Jo�o Magalh�es <joamag@hive.pt>"
+__author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
 __version__ = "1.0.0"
@@ -28,7 +28,7 @@ __version__ = "1.0.0"
 __revision__ = "$LastChangedRevision: 12730 $"
 """ The revision number of the module """
 
-__date__ = "$LastChangedDate: 2011-01-15 17:29:58 +0000 (sáb, 15 Jan 2011) $"
+__date__ = "$LastChangedDate: 2011-01-15 17:29:58 +0000 (sÃ¡b, 15 Jan 2011) $"
 """ The last change date of the module """
 
 __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: Cp1252 -*-
+# -*- coding: utf-8 -*-
 
 # Hive Colony Framework
 # Copyright (C) 2008 Hive Solutions Lda.
@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "Jo„o Magalh„es <joamag@hive.pt>"
+__author__ = "Jo√£o Magalh√£es <joamag@hive.pt>"
 """ The author(s) of the module """
 
 __version__ = "1.0.0"
@@ -56,7 +56,7 @@ def execute_retries(callable, number_retries = DEFAULT_NUMBER_RETRIES, retry_sle
     @param callable: The callalbe to be called using retries.
     @type number_retries: int
     @param number_retries: The number of retries to be used.
-    @type retry_sleep: int¥
+    @type retry_sleep: int¬¥
     @param retry_sleep: The sleep time between retries.
     @rtype: Object
     @return: The return value from the callable.
