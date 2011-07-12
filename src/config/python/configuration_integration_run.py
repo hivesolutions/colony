@@ -43,7 +43,7 @@ from configuration_base_integration import * #@UnusedWildImport
 layout_mode = "repository_svn"
 """ The project layout mode """
 
-run_mode = "integration"
+run_mode = "integration_run"
 """ The project run mode """
 
 verbose = False
