@@ -78,7 +78,7 @@ def list_extend(base_list, extension_list, copy_base_list = True):
     """
 
     # copies the base list to create the initial result list (optional)
-    result_list= copy_base_list and copy.copy(base_list) or base_list
+    result_list = copy_base_list and copy.copy(base_list) or base_list
 
     # creates the list of values that are "new" to the base
     # list (in order to avoid duplicates)
@@ -86,6 +86,34 @@ def list_extend(base_list, extension_list, copy_base_list = True):
 
     # extends the result list with the filtered list (new elements)
     result_list.extend(filtered_list)
+
+    # returns the result list
+    return result_list
+
+def list_no_duplicates(list):
+    """
+    Removes the duplicated values from the given list.
+    This method is expensive and should be used carefully.
+
+    @type list: List
+    @param list: The list to heave it's duplicates removed.
+    @rtype: List
+    @return: The list with the duplicates removed.
+    """
+
+    # creates the initial result list to hold the results
+    result_list = []
+
+    # iterates over all the values in the list
+    for value in list:
+        # in case the value already exists
+        # in the result list (duplicate)
+        if value in result_list:
+            # continues the loop
+            continue
+
+        # adds the value to the result list
+        result_list.append(value)
 
     # returns the result list
     return result_list
