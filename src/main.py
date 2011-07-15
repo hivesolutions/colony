@@ -556,7 +556,9 @@ def convert_reference_path_list(manager_path, current_prefix_paths, reference_pa
             current_prefix_path_value = current_prefix_paths[current_prefix_path]
 
             # replaces the current prefix path name with the current prefix path value
+            # and resolves the absolute path
             dereferenced_path = dereferenced_path.replace(current_prefix_path_name, current_prefix_path_value)
+            dereferenced_path = os.path.abspath(dereferenced_path)
 
         # adds the dereferenced path to the converted reference path
         converted_reference_path += dereferenced_path + ";"
