@@ -5139,7 +5139,7 @@ class PluginManager:
         plugin_relative_path_back = plugin_relative_path.startswith("..")
 
         # sets the plugin path to the absolute value or the relative
-        # value in case it fits best
+        # value in case it fits best (no back references allowed)
         plugin_path = plugin_relative_path_back and plugin_path or plugin_relative_path
 
         # returns the resulting plugin path
