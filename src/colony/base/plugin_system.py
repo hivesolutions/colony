@@ -5133,7 +5133,7 @@ class PluginManager:
 
         # retrieves the relative path between the manager path and the plugin
         # path
-        plugin_relative_path = os.path.relpath(plugin_path, manager_path)
+        plugin_relative_path = colony.libs.path_util.relative_path(plugin_path, manager_path)
 
         # checks if the plugin relative path is a back-reference
         plugin_relative_path_back = plugin_relative_path.startswith("..")
