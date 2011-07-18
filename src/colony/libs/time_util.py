@@ -65,6 +65,12 @@ EXTENDED_VALUE = "extended"
 EXTENDED_SIMPLE_VALUE = "extended_simple"
 """ The extended simple value """
 
+MINIMIZE_MULTIPLE = "minimize_multiple"
+""" The minimization with multiple value support """
+
+MINIMIZE_UNIQUE = "minimize_unique"
+""" The minimization with unique value support """
+
 DEFAULT_INCLUDES = (
     DAY_VALUE,
     HOUR_VALUE,
@@ -112,7 +118,7 @@ SEPARATORS = {
 }
 """ The separators map """
 
-def format_seconds_smart(seconds, mode = SIMPLE_VALUE, includes = DEFAULT_INCLUDES, minimize = True):
+def format_seconds_smart(seconds, mode = SIMPLE_VALUE, includes = DEFAULT_INCLUDES, minimize = MINIMIZE_MULTIPLE):
     """
     Formats the given seconds according to the given
     mode, includes and minimization support.
@@ -126,9 +132,10 @@ def format_seconds_smart(seconds, mode = SIMPLE_VALUE, includes = DEFAULT_INCLUD
     @type includes: List
     @param includes: The list of types to be included in the
     formatted string.
-    @type minimize: bool
+    @type minimize: String
     @param minimize: If the includes list should be minimized
-    according to the number of seconds "available".
+    according to the number of seconds "available". The minimize
+    string controls the way of minimization.
     @rtype: String
     @return: The string containing the formated seconds.
     """
@@ -136,8 +143,10 @@ def format_seconds_smart(seconds, mode = SIMPLE_VALUE, includes = DEFAULT_INCLUD
     # in case the minimize flag is active
     if minimize:
         # re-processes the includes to according to the
-        # amount of seconds available to be processed
-        processed_includes = _process_includes(seconds, includes)
+        # amount of seconds available to be processed, the
+        # minimize mode controls the way the include are going
+        # to be minimized
+        processed_includes = _process_includes(seconds, includes, minimize)
     # otherwise
     else:
         # sets the processed includes as the original includes
@@ -254,7 +263,7 @@ def timestamp_datetime(timestamp_string):
     # returns the converted datetime
     return datetime_value
 
-def _process_includes(seconds, includes):
+def _process_includes(seconds, includes, minimize_mode):
     """
     Processes the includes list, retrieving the minimized
     includes list with only the minimum required includes.
@@ -265,13 +274,17 @@ def _process_includes(seconds, includes):
     @param includes: The list of includes to be processed.
     @rtype: List
     @return: The processed includes
+    @type minimize_mode: String
+    @param minimize_mode: The minimize mode to be used.
     """
 
     # in case there are only seconds to be
     # represented
     if seconds < 60:
         # sets the valid includes as the seconds
-        valid_includes = (
+        valid_includes = minimize_mode == MINIMIZE_MULTIPLE and (
+            SECOND_VALUE,
+        ) or (
             SECOND_VALUE,
         )
     # in case there are only second and minutes
@@ -279,29 +292,35 @@ def _process_includes(seconds, includes):
     elif seconds < 3600:
         # sets the valid includes as the minutes
         # and the seconds
-        valid_includes = (
+        valid_includes = minimize_mode == MINIMIZE_MULTIPLE and (
             MINUTE_VALUE,
             SECOND_VALUE
+        ) or (
+            MINUTE_VALUE,
         )
     # in case there are seconds, minutes and
     # hours to be represented
     elif seconds < 86400:
         # sets the valid includes as the hours, the minutes
         # and the seconds
-        valid_includes = (
+        valid_includes = minimize_mode == MINIMIZE_MULTIPLE and (
             HOUR_VALUE,
             MINUTE_VALUE,
             SECOND_VALUE
+        ) or (
+            HOUR_VALUE,
         )
     # in case everything should be represented
     else:
         # sets the valid includes as the days, the hours, the minutes
         # and the seconds
-        valid_includes = (
+        valid_includes = minimize_mode == MINIMIZE_MULTIPLE and (
             DAY_VALUE,
             HOUR_VALUE,
             MINUTE_VALUE,
             SECOND_VALUE
+        ) or (
+            DAY_VALUE,
         )
 
     # intersects the (original) list of includes and the valid includes
