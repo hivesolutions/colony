@@ -181,6 +181,7 @@ plugin_path_list = [
     "%omni_prefix_path%/pt.hive.omni.plugins.organization/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.sales/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.users/src/omni/plugins",
+    "%omni_prefix_path%/pt.hive.omni.plugins.web_crm/src/omni/plugins",
     "%hive_site_prefix_path%/pt.hive.hive_site.plugins.main/src/hive_site/plugins",
     "%hive_blog_prefix_path%/pt.hive.hive_blog.plugins.main/src/hive_blog/plugins",
     "%hive_development_prefix_path%/pt.hive.hive_development.plugins.library_repository/src/hive_development/plugins",
