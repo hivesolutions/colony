@@ -38,6 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import os
+import sys
 import stat
 
 BUFFER_SIZE = 4096
@@ -46,14 +47,27 @@ BUFFER_SIZE = 4096
 LONG_PATH_PREFIX = u"\\\\?\\"
 """ The windows long path prefix """
 
+CURRENT_DIRECTORY = "."
+""" The current directory string """
+
+PARENT_DIRECTORY = ".."
+""" The parent directory string """
+
+SEPARATOR = "/"
+""" The directory separator string """
+
 NT_PLATFORM_VALUE = "nt"
 """ The nt platform value """
+
+CE_PLATFORM_VALUE = "ce"
+""" The ce platform value """
 
 DOS_PLATFORM_VALUE = "dos"
 """ The dos platform value """
 
 WINDOWS_PLATFORMS_VALUE = (
     NT_PLATFORM_VALUE,
+    CE_PLATFORM_VALUE,
     DOS_PLATFORM_VALUE
 )
 """ The windows platform value """
@@ -328,3 +342,155 @@ def ensure_file_path(file_path, default_file_path):
     finally:
         # closes the file
         file.close()
+
+def relative_path_windows(path, start_path = CURRENT_DIRECTORY):
+    """
+    "Calculates" the relative path between the base path
+    and the given "start" path.
+    This version of the calculus is target at windows platforms.
+
+    @type path: String
+    @param path: The path to be used as "target".
+    @type start_path: String
+    @param start_path: The path to be used as starting point.
+    @rtype: String
+    @return: The relative path between both paths.
+    """
+
+    # in case the path is not defined (error)
+    if not path:
+        # raises a base value error
+        raise ValueError("no path specified")
+
+    # retrieves the various util values from the start
+    # path and path
+    start_is_unc, start_prefix, start_list = _abspath_split(start_path)
+    path_is_unc, path_prefix, path_list = _abspath_split(path)
+
+    # in case one of the paths is of type unc and the other
+    # is not (error)
+    if path_is_unc ^ start_is_unc:
+        # raises a value error
+        raise ValueError("cannot mix unc and non-unc paths %s and %s" % (path, start_path))
+    # in
+    if path_prefix.lower() != start_prefix.lower():
+        if path_is_unc:
+            # raises a value error
+            raise ValueError("path is on unc root %s, start on unc root %s" % (path_prefix, start_prefix))
+        else:
+            # raises a value error
+            raise ValueError("path is on drive %s, start on drive %s" % (path_prefix, start_prefix))
+
+    # works out how much of the file path
+    # is shared by start and path
+    index = 0
+
+    # iterates over both sub paths list to check for differences
+    for start_sub_path, sub_path in zip(start_list, path_list):
+        # in case the sub paths are different
+        if start_sub_path.lower() != sub_path.lower():
+            # breaks the loop
+            break
+
+        # increment the index
+        index += 1
+
+    # calculates the "relatives" list using the start list and path list
+    # as reference
+    relatives_list = [PARENT_DIRECTORY] * (len(start_list) - index) + path_list[index:]
+
+    # in case the are not relatives list
+    # (is the same directory)
+    if not relatives_list:
+        # returns the current directory
+        return CURRENT_DIRECTORY
+
+    # returns the result of joining all
+    # the relatives list
+    return os.path.join(*relatives_list)
+
+def relative_path_posix(path, start = CURRENT_DIRECTORY):
+    """
+    "Calculates" the relative path between the base path
+    and the given "start" path.
+    This version of the calculus is target at posix platforms.
+
+    @type path: String
+    @param path: The path to be used as "target".
+    @type start_path: String
+    @param start_path: The path to be used as starting point.
+    @rtype: String
+    @return: The relative path between both paths.
+    """
+
+    # in case the path is not defined (error)
+    if not path:
+        # raises a base value error
+        raise ValueError("no path specified")
+
+    # retrieves the sub paths list for both the start path and the path
+    start_list = [value for value in os.path.abspath(start).split(SEPARATOR) if value]
+    path_list = [value for value in os.path.abspath(path).split(SEPARATOR) if value]
+
+    # works out how much of the file path is shared by start and path
+    index = len(os.path.commonprefix([start_list, path_list]))
+
+    # calculates the "relatives" list using the start list and path list
+    # as reference
+    relatives_list = [PARENT_DIRECTORY] * (len(start_list) - index) + path_list[index:]
+
+    # in case the are not relatives list
+    # (is the same directory)
+    if not relatives_list:
+        # returns the current directory
+        return CURRENT_DIRECTORY
+
+    # returns the result of joining all
+    # the relatives list
+    return os.path.join(*relatives_list)
+
+def _abspath_split(path):
+    """
+    Method for util splitting of the path into
+    is unc, prefix and path list.
+    The values are returned in a tuple.
+
+    @type path: String
+    @param path: The path to be checked.
+    @rtype: Tuple
+    @return: A tuple containing the is unc, prefix and
+    path list util values.
+    """
+
+    # normalizes the path and the retrieves
+    # the absolute path and then splits it into
+    # prefix and rest
+    path = os.path.normpath(path)
+    absolute_path = os.path.abspath(path)
+    prefix, rest = os.path.splitunc(absolute_path)
+
+    # converts the prefix to boolean for checking
+    # if the path is unc based
+    is_unc = bool(prefix)
+    if not is_unc:
+        # splits the absolute path for drive checking
+        prefix, rest = os.path.splitdrive(absolute_path)
+
+    # retrieves the list of various (sub) paths from the rest
+    path_list = [value for value in rest.split(SEPARATOR) if value]
+
+    # returns the tuple value
+    return is_unc, prefix, path_list
+
+# checks if the current platform is of type windows
+if NT_PLATFORM_VALUE in sys.builtin_module_names or CE_PLATFORM_VALUE in sys.builtin_module_names:
+    # sets the separator value and the relative
+    # path method values (for windows)
+    SEPARATOR = "\\"
+    relative_path = relative_path_windows
+# otherwise it should be a posix environment
+else:
+    # sets the separator value and the relative
+    # path method values (for posix)
+    SEPARATOR = "/"
+    relative_path = relative_path_posix
