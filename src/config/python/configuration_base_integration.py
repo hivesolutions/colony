@@ -180,6 +180,7 @@ plugin_path_list = [
     "%omni_prefix_path%/pt.hive.omni.plugins.migration.demo_data/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.migration.diamante/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.sales/src/omni/plugins",
+    "%omni_prefix_path%/pt.hive.omni.plugins.web_adm/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.web_common/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.web_crm/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.web_ivm/src/omni/plugins",
