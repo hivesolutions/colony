@@ -1667,6 +1667,9 @@ class PluginManager:
             # checks the standard input
             self.check_standard_input()
 
+            # generates the system information map
+            self.generate_system_information_map()
+
             # gets all modules from all plugin paths
             for plugin_path in self.plugin_paths:
                 # retrieves all the modules from the plugin path
@@ -4509,6 +4512,23 @@ class PluginManager:
         # returns false
         return False
 
+    def generate_system_information_map(self):
+        """
+        Generates the map containing a set of information
+        regarding global system settings.
+        """
+
+        self.system_information_map = {
+            "layout_mode" : self.get_layout_mode(),
+            "run_mode" : self.get_run_mode(),
+            "version" : self.get_version(),
+            "release" : self.get_release(),
+            "build" : self.get_build(),
+            "release_date" : self.get_release_date(),
+            "release_date_time" : self.get_release_date_time(),
+            "environment" : self.get_environment()
+        }
+
     def log_stack_trace(self):
         """
         Logs the current stack trace to the logger.
@@ -4940,6 +4960,18 @@ class PluginManager:
         """
 
         return colony.base.plugin_system_information.ENVIRONMENT
+
+    def get_system_information_map(self):
+        """
+        Retrieves a map containing a set of information
+        regarding global system settings.
+
+        @rtype: Dictionary
+        @return: A map containing a set of information
+        regarding global system settings.
+        """
+
+        return self.system_information_map
 
     def echo(self, value = "echo"):
         """
