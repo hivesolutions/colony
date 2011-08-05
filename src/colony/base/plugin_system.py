@@ -1661,6 +1661,9 @@ class PluginManager:
             # prints an info message
             self.info("Starting plugin manager...")
 
+            # sets the plugin manager timestamp
+            self.set_plugin_manager_timestamp()
+
             # updates the workspace path
             self.update_workspace_path()
 
@@ -1927,9 +1930,6 @@ class PluginManager:
 
         # loads the plugin manager plugins
         self.load_plugin_manager_plugins()
-
-        # sets the plugin manager timestamp
-        self.set_plugin_manager_timestamp()
 
         # sets the plugin manager plugins loaded to true
         self.set_plugin_manager_plugins_loaded(True)
@@ -4521,6 +4521,7 @@ class PluginManager:
         self.system_information_map = {
             "layout_mode" : self.get_layout_mode(),
             "run_mode" : self.get_run_mode(),
+            "timestamp" : self.get_plugin_manager_timestamp(),
             "version" : self.get_version(),
             "release" : self.get_release(),
             "build" : self.get_build(),
@@ -4900,6 +4901,16 @@ class PluginManager:
         """
 
         return self.run_mode
+
+    def get_plugin_manager_timestamp(self):
+        """
+        Retrieves the current base (plugin manager) timestamp.
+
+        @rtype: float
+        @return: The current base (plugin manager) timestamp.
+        """
+
+        return self.plugin_manager_timestamp
 
     def get_version(self):
         """
