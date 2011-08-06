@@ -171,6 +171,7 @@ plugin_path_list = [
     "%omni_prefix_path%/pt.hive.omni.plugins.base.data/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.base.logic/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.base.runtime/src/omni/plugins",
+    "%omni_prefix_path%/pt.hive.omni.plugins.build.automation.items/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.customers/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.documents/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.foundation/src/omni/plugins",
