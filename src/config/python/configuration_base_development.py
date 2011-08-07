@@ -169,7 +169,7 @@ plugin_path_list = [
     "%colony_prefix_path%/pt.hive.colony.plugins.web.mvc.wiki/src/colony/plugins",
     "%colony_site_prefix_path%/pt.hive.colony_site.plugins.main/src/colony_site/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.authentication/src/omni/plugins",
-    "%omni_prefix_path%/pt.hive.omni.plugins.base.data/src/omni/plugins",
+    #"%omni_prefix_path%/pt.hive.omni.plugins.base.data/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.base.logic/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.base.runtime/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.build.automation.items/src/omni/plugins",
