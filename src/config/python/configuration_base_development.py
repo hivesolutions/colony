@@ -208,6 +208,7 @@ plugin_path_list = [
     "%a_la_carte_prefix_path%/pt.hive.a_la_carte.plugins.demo_data/src/a_la_carte/plugins",
     "%a_la_carte_prefix_path%/pt.hive.a_la_carte.plugins.main/src/a_la_carte/plugins",
     "%pecway_prefix_path%/pt.hive.pecway.plugins.main/src/pecway/plugins",
+    "%products_prefix_path%/pt.hive.products.plugins.build.automation.items/src/products/plugins",
     "%panzerini_prefix_path%/pt.hive.panzerini.plugins.dummy/src/panzerini/plugins",
     "%panzerini_prefix_path%/pt.hive.panzerini.plugins.main.client.web_mvc/src/panzerini/plugins",
     "%panzerini_prefix_path%/pt.hive.panzerini.plugins.main.logic/src/panzerini/plugins",
