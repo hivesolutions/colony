@@ -84,6 +84,4 @@
             "scripts/lib/colony_deployer.py",
             "scripts/lib/colony_exceptions.py", "scripts/lib/colony_file.py",
             "scripts/lib/colony_zip.py"]
-    ,
-
 }
