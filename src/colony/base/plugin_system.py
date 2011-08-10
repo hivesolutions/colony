@@ -104,6 +104,9 @@ DEFAULT_LOGGING_FILE_SIZE = 10485760
 DEFAULT_LOGGING_FILE_BACKUP_COUNT = 5
 """ The default logging file backup count """
 
+DEFAULT_CONTAINERS_PATH = u"containers"
+""" The default containers path """
+
 DEFAULT_TEMPORARY_PATH = u"tmp"
 """ The default temporary path """
 
@@ -4827,6 +4830,24 @@ class PluginManager:
 
         # returns the main plugin (full) path
         return main_plugin_full_path
+
+    def get_containers_path(self):
+        """
+        Retrieves the manager containers path for execution.
+
+        @rtype: String
+        @return: The manager containers path for execution.
+        """
+
+        # retrieves the manager path
+        manager_path = self.get_manager_path()
+
+        # creates the main plugin full path joining the manager path and the
+        # default containers path
+        containers_path = os.path.join(manager_path, DEFAULT_CONTAINERS_PATH)
+
+        # returns the containers path
+        return containers_path
 
     def get_temporary_path(self):
         """
