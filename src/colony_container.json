@@ -7,6 +7,7 @@
     "description" : "The plugin system that manager a colony instance",
     "version" : "1.0.0",
     "author" : "Hive Solutions Lda. <development@hive.pt>",
+    "dependencies" : [],
     "resources" : ["main.py", "script.py", "colony/__init__.py",
             "colony/base/__init__.py", "colony/base/decorators.py",
             "colony/base/dummy_input.py",
