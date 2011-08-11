@@ -141,6 +141,7 @@ plugin_path_list = [
     "%colony_prefix_path%/pt.hive.colony.plugins.search.scorer/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.security.captcha/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.service.bargania_rss/src/colony/plugins",
+    "%colony_prefix_path%/pt.hive.colony.plugins.service.wone_rss/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.service.easypay/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.service.facebook/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.service.openid/src/colony/plugins",
