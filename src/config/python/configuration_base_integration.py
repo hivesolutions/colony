@@ -146,6 +146,7 @@ plugin_path_list = [
     "%colony_prefix_path%/pt.hive.colony.plugins.service.openid/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.service.twitter/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.service.web.mvc.encryption/src/colony/plugins",
+    "%colony_prefix_path%/pt.hive.colony.plugins.service.wone_rss/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.service.yadis/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.specifications/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.system.installer/src/colony/plugins",
