@@ -56,7 +56,7 @@
             "tmp/README", "var/README", "var/registry/containers.json",
             "var/registry/duplicates.json", "var/registry/packages.json",
             "var/registry/plugins.json"],
-    "create_resources" : ["var/registry/bundles.json",
+    "keep_resources" : ["var/registry/bundles.json",
             "var/registry/containers.json", "var/registry/duplicates.json",
             "var/registry/packages.json", "var/registry/plugins.json"],
     "extra_resources" : ["main.py", "script.py", "colony/__init__.py",
