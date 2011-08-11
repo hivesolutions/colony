@@ -622,7 +622,7 @@ class FileTransactionContext(FileContext):
     def commit(self):
         """
         Commits a new transaction context.
-        All the pending file operation
+        All the pending file operations
         will be persisted.
         """
 
