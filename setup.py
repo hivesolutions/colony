@@ -120,7 +120,7 @@ def find_data_files(source_path, target_path, patterns):
 scripts_data_files = find_data_files("src/scripts", "scripts", ["all/*", "lib/*", "unix/*", "win32/*"])
 
 # finds the config data files
-config_data_files = find_data_files("src/config", "config", ["*.py"])
+config_data_files = find_data_files("src/config", "config", ["general/*", "python/*.py"])
 
 # creates the "complete" data files
 data_files = BASE_DATA_FILES + scripts_data_files + config_data_files
