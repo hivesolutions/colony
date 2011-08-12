@@ -201,6 +201,7 @@ plugin_path_list = [
     "%hive_development_prefix_path%/pt.hive.hive_development.plugins.web_toolbar/src/hive_development/plugins",
     "%products_prefix_path%/pt.hive.products.plugins.build.automation.items/src/products/plugins",
     "%bargania_prefix_path%/com.bargania.bargania_site.plugins.facebook/src/bargania_site/plugins",
-    "%bargania_prefix_path%/com.bargania.bargania_site.plugins.main/src/bargania_site/plugins"
+    "%bargania_prefix_path%/com.bargania.bargania_site.plugins.main/src/bargania_site/plugins",
+    "%bargania_prefix_path%/com.bargania.documentation.plugins.main/src/bargania_documentation/plugins"
 ]
 """ The list of plugin paths """

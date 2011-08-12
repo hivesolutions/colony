@@ -216,6 +216,7 @@ plugin_path_list = [
     "%panzerini_prefix_path%/pt.hive.panzerini.plugins.main.websocket_handler/src/panzerini/plugins",
     "%bargania_prefix_path%/com.bargania.bargania_site.plugins.facebook/src/bargania_site/plugins",
     "%bargania_prefix_path%/com.bargania.bargania_site.plugins.main/src/bargania_site/plugins",
+    "%bargania_prefix_path%/com.bargania.documentation.plugins.main/src/bargania_documentation/plugins",
     "%escolinhas_prefix_path%/pt.escolinhas.apple_push.notification_handler/src/escolinhas/plugins",
     "%first_day_prefix_path%/pt.first-day.showroom.plugins.main/src/first_day_showroom/plugins"
 ]
