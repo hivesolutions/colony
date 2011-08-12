@@ -119,7 +119,7 @@ def align_path(path):
     # returns the aligned path
     return aligned_path
 
-def copy_directory(source_path, target_path):
+def copy_directory(source_path, target_path, replace_files = True):
     """
     Copies the directory in the given source path to the
     target path.
@@ -131,6 +131,9 @@ def copy_directory(source_path, target_path):
     @param source_path: The path to the source directory.
     @type target_path: String
     @param target_path: The path to the target directory.
+    @type replace_files: bool
+    @param replace_files: If the files should be replaced
+    in case duplicate files are found.
     """
 
     # in case the source path is not a directory
@@ -167,8 +170,18 @@ def copy_directory(source_path, target_path):
         # in case it is a directory
         if stat.S_ISDIR(mode):
             # copies the (sub) directory
-            copy_directory(entry_full_path, target_full_path)
+            copy_directory(entry_full_path, target_full_path, replace_files)
+        # otherwise it's a file and must be copied
         else:
+            # checks if the target full path exists
+            target_full_path_exists = os.path.exists(target_full_path)
+
+            # in case the replace files flag is not set and the
+            # target full path exists (avoids replacing file)
+            if not replace_files and target_full_path_exists:
+                # continues the loop (no copy)
+                continue
+
             # copies the entry to the target path
             copy_file(entry_full_path, target_full_path)
 
