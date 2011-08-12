@@ -78,6 +78,9 @@ MAIN_FILE_VALUE = "main_file"
 RESOURCES_VALUE = "resources"
 """ The resources value """
 
+KEEP_RESOURCES_VALUE = "keep_resources"
+""" The keep resources value """
+
 EXTRA_RESOURCES_VALUE = "extra_resources"
 """ The extra resources value """
 
@@ -89,6 +92,9 @@ INSTALLED_BUNDLES_VALUE = "installed_bundles"
 
 INSTALLED_PLUGINS_VALUE = "installed_plugins"
 """ The installed plugins value """
+
+INSTALLED_CONTAINERS_VALUE = "installed_containers"
+""" The installed containers value """
 
 VERSION_VALUE = "version"
 """ The version value """
@@ -105,11 +111,14 @@ LAST_MODIFIED_TIMESTAMP_VALUE = "last_modified_timestamp"
 LAST_MODIFIED_DATE_VALUE = "last_modified_date"
 """ The last modified date value """
 
+BUNDLE_VALUE = "bundle"
+""" The bundle value """
+
 PLUGIN_VALUE = "plugin"
 """ The plugin value """
 
-BUNDLE_VALUE = "bundle"
-""" The bundle value """
+CONTAINER_VALUE = "container"
+""" The container value """
 
 DUPLICATE_FILES_VALUE = "duplicate_files"
 """ The duplicate files """
@@ -122,6 +131,9 @@ BUNDLES_FILE_NAME = "bundles.json"
 
 PLUGINS_FILE_NAME = "plugins.json"
 """ The plugins file name """
+
+CONTAINERS_FILE_NAME = "containers.json"
+""" The containers file name """
 
 DUPLICATES_FILE_NAME = "duplicates.json"
 """ The duplicates file name """
@@ -137,6 +149,9 @@ RELATIVE_BUNDLES_PATH = "bundles"
 
 RELATIVE_PLUGINS_PATH = "plugins"
 """ The path relative to the manager path for the plugins """
+
+RELATIVE_CONTAINERS_PATH = "containers"
+""" The path relative to the manager path for the containers """
 
 RELATIVE_REGISTRY_PATH = "var/registry"
 """ The path relative to the manager path for the registry """
@@ -157,9 +172,13 @@ COLONY_BUNDLE_FILE_EXTENSION = ".cbx"
 COLONY_PLUGIN_FILE_EXTENSION = ".cpx"
 """ The colony plugin file extension """
 
+COLONY_CONTAINER_FILE_EXTENSION = ".ccx"
+""" The colony container file extension """
+
 COLONY_FILE_EXTENSIONS = (
     COLONY_BUNDLE_FILE_EXTENSION,
-    COLONY_PLUGIN_FILE_EXTENSION
+    COLONY_PLUGIN_FILE_EXTENSION,
+    COLONY_CONTAINER_FILE_EXTENSION
 )
 """ The tuple containing all the colony file extensions """
 
@@ -338,6 +357,10 @@ class Deployer:
             elif type == PLUGIN_VALUE:
                 # deploys the plugin package, using the current paths
                 self.deploy_plugin_package(package_path, temporary_path)
+            # in case the type is container
+            elif type == CONTAINER_VALUE:
+                # deploys the container package, using the current paths
+                self.deploy_container_package(package_path, temporary_path)
             # otherwise there is an error
             else:
                 # raises a deployer exception
@@ -576,6 +599,135 @@ class Deployer:
         # copies the package file to the registry
         shutil.copy(package_path, registry_path + "/plugins")
 
+    def deploy_container_package(self, package_path, temporary_path):
+        """
+        Deploys the given container package, using the contents of the
+        given temporary path.
+
+        @type package_path: String
+        @param package_path: The path to the package to be deployed.
+        @type temporary_path: String
+        @param temporary_path: The path to the temporary directory with
+        the contents of the package.
+        """
+
+        # retrieves the target path
+        target_path = os.path.normpath(self.manager_path + "/" + RELATIVE_CONTAINERS_PATH)
+
+        # retrieves the registry path
+        registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
+
+        # creates the specification file path
+        specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
+
+        # opens the specification from the specification file path
+        specification = self._open_specification(specification_file_path)
+
+        # retrieves the id
+        id = specification[ID_VALUE]
+
+        # retrieves the version
+        version = specification[VERSION_VALUE]
+
+        # retrieves the resources
+        resources = specification[RESOURCES_VALUE]
+
+        # retrieves the keep resources
+        keep_resources = specification[KEEP_RESOURCES_VALUE]
+
+        # retrieves the target (exclusive) path to be used
+        # uniquely by this container
+        target_exclusive_path = os.path.normpath(target_path + "/" + id)
+
+        # prints a log message
+        self.log("Deploying container package '%s' v'%s'" % (id, version))
+
+        # prints a log message
+        self.log("Moving resources from '%s' to '%s'" % (temporary_path, target_exclusive_path))
+
+        # retrieves the duplicates structure (from file)
+        duplicates_structure = self._get_duplicates_structure()
+
+        # retrieves the duplicate files structure
+        duplicate_files_structure = duplicates_structure.get(DUPLICATE_FILES_VALUE, {})
+
+        # iterates over all the resources
+        for resource in resources:
+            # checks if the current resource is of type
+            # keep resource
+            is_keep_resource = resource in keep_resources
+
+            # retrieves the resource file path
+            resource_file_path = os.path.normpath(temporary_path + "/resources/" + resource)
+
+            # creates the new resource file path
+            new_resource_file_path = os.path.normpath(target_exclusive_path + "/" + resource)
+
+            # retrieves the new resource directory path
+            new_resource_directory_path = os.path.dirname(new_resource_file_path)
+
+            # prints a log message
+            self.log("Moving resource file '%s' to '%s'" % (resource_file_path, new_resource_file_path))
+
+            # in case the new resource directory path does not exist
+            if not os.path.exists(new_resource_directory_path):
+                # creates the new resource directory path (directories)
+                os.makedirs(new_resource_directory_path)
+
+            # checks if thw new resource file path already exists
+            new_resource_file_path_exists = os.path.exists(new_resource_file_path)
+
+            # in case the new resource file path exists
+            # and the resource should be kept
+            if new_resource_file_path_exists and is_keep_resource:
+                # continues the loop (no need
+                # to run a copy)
+                continue
+
+            # in case the new resource file path already exists we're
+            # in a presence of a "duplicate"
+            if new_resource_file_path_exists:
+                # "calculates" the relative path between the new resource file
+                # path and the manager path
+                new_resource_relative_path = os.path.relpath(new_resource_file_path, self.manager_path)
+
+                # aligns the path replacing the backslashes with
+                # "normal" slashes
+                new_resource_relative_path = self.__align_path(new_resource_relative_path)
+
+                # retrieves the number of times the file is "duplicated"
+                duplicate_file_count = duplicate_files_structure.get(new_resource_relative_path, 0)
+
+                # increments the duplicate count by one
+                duplicate_file_count += 1
+
+                # sets the duplicate file count in the duplicate files structure
+                duplicate_files_structure[new_resource_relative_path] = duplicate_file_count
+
+            # copies the resource file as the new resource file
+            shutil.copy(resource_file_path, new_resource_file_path)
+
+        # persists the duplicates structure
+        self._persist_duplicates_structure(duplicates_structure)
+
+        # retrieves the container item key
+        container_item_key = id
+
+        # generates the hash digest map for the container file
+        hash_digest_map = colony_crypt.generate_hash_digest_map(package_path)
+
+        # creates the container item value
+        container_item_value = {
+            VERSION_VALUE : version,
+            HASH_DIGEST_VALUE : hash_digest_map
+        }
+
+        # adds the container with the given key and value
+        self._add_container_item(container_item_key, container_item_value)
+
+        # copies the package file to the registry
+        shutil.copy(package_path, registry_path + "/containers")
+
     def remove_package(self, package_id, package_version = None):
         """
         Removes the package with the given id and version.
@@ -617,6 +769,10 @@ class Deployer:
         elif type == PLUGIN_VALUE:
             # removes the plugin package
             self.remove_plugin_package(package_id, package_version)
+        # in case the type is container
+        elif type == CONTAINER_VALUE:
+            # removes the container package
+            self.remove_container_package(package_id, package_version)
         # otherwise there is an error
         else:
             # raises a deployer exception
@@ -888,6 +1044,188 @@ class Deployer:
         # removes the plugin item
         self._remove_plugin_item(package_id)
 
+    def remove_container_package(self, package_id, package_version):
+        """
+        Removes the container package with the given id and version.
+
+        @type package_id: String
+        @param package_id: The id of the container package to be removed.
+        @type package_version: String
+        @param package_version: The version of the container package to be removed.
+        """
+
+        # prints a log message
+        self.log("Removing container package '%s' v'%s'" % (package_id, package_version))
+
+        # retrieves the registry path
+        registry_path = os.path.normpath(self.manager_path + "/" + RELATIVE_REGISTRY_PATH)
+
+        # creates the containers path
+        containers_path = os.path.normpath(self.manager_path + "/" + RELATIVE_CONTAINERS_PATH)
+
+        # retrieves the containers structure
+        containers = self._get_containers()
+
+        # retrieves the installed containers
+        installed_containers = containers.get(INSTALLED_CONTAINERS_VALUE, {})
+
+        # in case the package id is not found in the installed containers
+        if not package_id in installed_containers:
+            # raises a deployer exception
+            raise colony_exceptions.DeployerException("container '%s' v'%s' is not installed" % (package_id, package_version))
+
+        # retrieves the container (information) from the
+        # installed containers
+        container = installed_containers[package_id]
+
+        # sets the container id as the package id
+        container_id = package_id
+
+        # "calculates" the containers exclusive path to be used for unique usage
+        containers_exclusive_path = os.path.normpath(containers_path + "/" + container_id)
+
+        # retrieves the container version as the package version
+        # or from the container structure
+        container_version = package_version or container[VERSION_VALUE]
+
+        # creates the container file name from the container
+        # id and version
+        container_file_name = container_id + "_" + container_version + COLONY_CONTAINER_FILE_EXTENSION
+
+        # creates the container path from the
+        container_path = os.path.normpath(registry_path + "/" + RELATIVE_CONTAINERS_PATH + "/" + container_file_name)
+
+        # creates a new zip (manager)
+        zip = colony_zip.Zip()
+
+        # reads the specification file contents from the zip file
+        specification_file_contents = zip.read(container_path, SPECIFICATION_FILE_NAME)
+
+        # loads the json specification file contents
+        specification = json.loads(specification_file_contents)
+
+        # validates the specification
+        self.validate_specification(specification)
+
+        # retrieves the resources
+        resources = specification[RESOURCES_VALUE]
+
+        # retrieves the keep resources
+        keep_resources = specification.get(KEEP_RESOURCES_VALUE, [])
+
+        # retrieves the extra resources
+        extra_resources = specification.get(EXTRA_RESOURCES_VALUE, [])
+
+        # extends the resources list with the extra resources
+        resources = [value for value in resources if not value in keep_resources]
+        resources.extend(extra_resources)
+
+        # creates the list of directory paths for (possible)
+        # later removal
+        directory_path_list = []
+
+        # retrieves the duplicates structure (from file)
+        duplicates_structure = self._get_duplicates_structure()
+
+        # retrieves the duplicate files structure
+        duplicate_files_structure = duplicates_structure.get(DUPLICATE_FILES_VALUE, {})
+
+        # iterates over all the resources
+        for resource in resources:
+            # creates the (complete) resource file path
+            resource_file_path = os.path.normpath(containers_exclusive_path + "/" + resource)
+
+            # "calculates" the relative path between the resource file
+            # path and the manager path
+            resource_relative_path = os.path.relpath(resource_file_path, self.manager_path)
+
+            # aligns the path replacing the backslashes with
+            # "normal" slashes
+            resource_relative_path = self.__align_path(resource_relative_path)
+
+            # retrieves the number of times the file is "duplicated"
+            duplicate_file_count = duplicate_files_structure.get(resource_relative_path, 0)
+
+            # checks if the file should be removed
+            remove_file = duplicate_file_count == 0
+
+            # decrements the duplicate count by one
+            duplicate_file_count -= 1
+
+            # in case the duplicate file count is superior to zero
+            if duplicate_file_count > 0:
+                # sets the duplicate file count in the duplicate files structure
+                duplicate_files_structure[resource_relative_path] = duplicate_file_count
+            # otherwise in case the resource relative path reference
+            # exists in the duplicate files structure
+            elif resource_relative_path in duplicate_files_structure:
+                # removes the resource relative path from the duplicate
+                # files structure
+                del duplicate_files_structure[resource_relative_path]
+
+            # in case the remove file is not set
+            if not remove_file:
+                # prints a log message
+                self.log("Skipping resource file (duplicate) '%s'" % resource_file_path)
+
+                # continues the loop no need to remove a file that
+                # is duplicated
+                continue
+
+            # in case the resource file path exists
+            if not os.path.exists(resource_file_path):
+                # prints a log message
+                self.log("Skipping resource file '%s'" % resource_file_path)
+
+                # continues the loop
+                continue
+
+            # prints a log message
+            self.log("Removing resource file '%s'" % resource_file_path)
+
+            # removes the resource file in the resource file path
+            os.remove(resource_file_path)
+
+            # retrieves the resource file directory path
+            resource_file_directory_path = os.path.dirname(resource_file_path)
+
+            # in case the resource file directory path is not yet
+            # present in the directory path list
+            if not resource_file_directory_path in directory_path_list:
+                # adds the file directory path to the
+                # directory path list
+                directory_path_list.append(resource_file_directory_path)
+
+        # persists the duplicates structure
+        self._persist_duplicates_structure(duplicates_structure)
+
+        # prints a log message
+        self.log("Removing empty directories for container file '%s'" % container_path)
+
+        # iterates over all the directory paths
+        for directory_path in directory_path_list:
+            # in case the directory path does not refers
+            # a directory or in case it contains element
+            if not os.path.isdir(directory_path) or os.listdir(directory_path):
+                # continues the loop
+                continue
+
+            # removes the directories in the directory path
+            os.removedirs(directory_path)
+
+        # prints a log message
+        self.log("Removing container file '%s'" % container_path)
+
+        # removes the container file
+        os.remove(container_path)
+
+        # removes the container item
+        self._remove_container_item(package_id)
+
+
+
+
+
     def validate_specification(self, specification):
         """
         Validates the given specification map, checking if
@@ -1085,6 +1423,16 @@ class Deployer:
 
         return self.__get_structure(PLUGINS_FILE_NAME)
 
+    def _get_containers(self):
+        """
+        Retrieves the containers structure.
+
+        @rtype: Dictionary
+        @return: The retrieved containers structure.
+        """
+
+        return self.__get_structure(CONTAINERS_FILE_NAME)
+
     def _add_package_item(self, item_key, item_value, update_time = True):
         """
         Adds a package item to the packages file structure.
@@ -1127,6 +1475,21 @@ class Deployer:
 
         self.__add_structure_item(item_key, item_value, update_time, PLUGINS_FILE_NAME, INSTALLED_PLUGINS_VALUE)
 
+    def _add_container_item(self, item_key, item_value, update_time = True):
+        """
+        Adds a container item to the containers file structure.
+
+        @type item_key: String
+        @param item_key: The key to the item to be added.
+        @type item_value: Dictionary
+        @param item_value: The map containing the item value to be added.
+        @type update_time: bool
+        @param update_time: If the timetamp value should be updated.
+        """
+
+        self.__add_structure_item(item_key, item_value, update_time, CONTAINERS_FILE_NAME, INSTALLED_CONTAINERS_VALUE)
+
+
     def _remove_package_item(self, item_key):
         """
         Removes a package item from the packages file structure.
@@ -1156,6 +1519,16 @@ class Deployer:
         """
 
         self.__remove_structure_item(item_key, PLUGINS_FILE_NAME, INSTALLED_PLUGINS_VALUE)
+
+    def _remove_container_item(self, item_key):
+        """
+        Removes a container item from the bundles file structure.
+
+        @type item_key: String
+        @param item_key: The key to the item to be removed.
+        """
+
+        self.__remove_structure_item(item_key, CONTAINERS_FILE_NAME, INSTALLED_CONTAINERS_VALUE)
 
     def _get_duplicates_structure(self):
         """
