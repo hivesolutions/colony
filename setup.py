@@ -43,6 +43,7 @@ import setuptools
 
 BASE_DATA_FILES = [
     ("config", ["src/config/README"]),
+    ("containers", ["src/containers/README"]),
     ("deploy", ["src/deploy/README"]),
     ("log", ["src/log/README"]),
     ("meta", ["src/meta/README"]),
