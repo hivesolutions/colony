@@ -173,19 +173,10 @@ def copy_directory(source_path, target_path, replace_files = True):
             copy_directory(entry_full_path, target_full_path, replace_files)
         # otherwise it's a file and must be copied
         else:
-            # checks if the target full path exists
-            target_full_path_exists = os.path.exists(target_full_path)
-
-            # in case the replace files flag is not set and the
-            # target full path exists (avoids replacing file)
-            if not replace_files and target_full_path_exists:
-                # continues the loop (no copy)
-                continue
-
             # copies the entry to the target path
-            copy_file(entry_full_path, target_full_path)
+            copy_file(entry_full_path, target_full_path, replace_files)
 
-def copy_file(source_path, target_path):
+def copy_file(source_path, target_path, replace_file = True):
     """
     Copies a file in the given source path to the
     target path.
@@ -196,7 +187,19 @@ def copy_file(source_path, target_path):
     @param source_path: The path to the source file.
     @type target_path: String
     @param target_path: The path to the target file.
+    @type replace_file: bool
+    @param replace_file: If the file should be replaced
+    in existent files is found.
     """
+
+    # checks if the target path (file) exists
+    target_file_exists = os.path.exists(target_path)
+
+    # in case the replace file flag is not set and the
+    # target path (file) exists (avoids replacing file)
+    if not replace_file and target_file_exists:
+        # returns immediately (no copy)
+        return
 
     # opens the source file
     source_file = open(source_path, "rb")

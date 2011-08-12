@@ -850,14 +850,10 @@ class FileTransactionContext(FileContext):
             path_util.copy_directory(virtual_file_path, file_path, False)
         # otherwise it must be a "normal" file
         else:
-            # in case the file path already exists
-            # there is no need to proceed with persistence
-            if os.path.exists(file_path):
-                # returns immediately
-                return
-
             # copies the file in the virtual path to the file in the file path
-            path_util.copy_file(virtual_file_path, file_path)
+            # the copy of the file is made without replacing an eventual
+            # existent file
+            path_util.copy_file(virtual_file_path, file_path, False)
 
     def _process_path_tuple_remove(self, path_tuple):
         """
