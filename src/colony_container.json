@@ -1,6 +1,6 @@
 {
     "type" : "container",
-    "sub_type" : "base",
+    "sub_type" : "plugin_system",
     "id" : "pt.hive.colony",
     "name" : "Colony Plugin System",
     "short_name" : "Colony",
