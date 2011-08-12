@@ -633,7 +633,7 @@ class Deployer:
         resources = specification[RESOURCES_VALUE]
 
         # retrieves the keep resources
-        keep_resources = specification[KEEP_RESOURCES_VALUE]
+        keep_resources = specification.get(KEEP_RESOURCES_VALUE, [])
 
         # retrieves the target (exclusive) path to be used
         # uniquely by this container
