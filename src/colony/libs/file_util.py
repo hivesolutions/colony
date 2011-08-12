@@ -51,6 +51,9 @@ PATH_TUPLE_PROCESS_METHOD_PREFIX = "_process_path_tuple_"
 ADD_OPERATION = "add"
 """ The add operation """
 
+ADD_NO_REPLACE_OPERATION = "add_no_replace"
+""" The add no replace operation """
+
 REMOVE_OPERATION = "remove"
 """ The remove operation """
 
@@ -482,7 +485,7 @@ class FileTransactionContext(FileContext):
         # returns the file contents
         return file_contents
 
-    def write_file(self, file_path, file_contents):
+    def write_file(self, file_path, file_contents, replace_file = True):
         """
         Writes the given file contents to a file in
         the given file path.
@@ -495,6 +498,9 @@ class FileTransactionContext(FileContext):
         @type file_contents: String
         @param file_contents: The contents to be written
         to the file.
+        @type replace_file: bool
+        @param replace_file: If the file should be replaced
+        in case existent file is found.
         """
 
         # retrieves the virtual file path for the file path
@@ -503,10 +509,13 @@ class FileTransactionContext(FileContext):
         # writes the file using the file context (virtual file path used)
         FileContext.write_file(self, virtual_file_path, file_contents)
 
+        # sets the operation based on the value of the replace file flag
+        operation = replace_file and ADD_OPERATION or ADD_NO_REPLACE_OPERATION
+
         # creates a path tuple with the virtual file path
         # and the file path for the operation add
         path_tuple = (
-            ADD_OPERATION,
+            operation,
             virtual_file_path,
             file_path
         )
@@ -575,7 +584,7 @@ class FileTransactionContext(FileContext):
         # removes the directory in the (real) directory path
         path_util.remove_directory(real_directory_path)
 
-    def get_file_path(self, file_path):
+    def get_file_path(self, file_path, replace_files = True):
         """
         Retrieves a file path to be used for writing.
         The file path to be used will be used in a
@@ -583,6 +592,9 @@ class FileTransactionContext(FileContext):
 
         @type file_path: String
         @param file_path: The file path to be used as base.
+        @type replace_files: bool
+        @param replace_files: If the files should be replaced
+        in case duplicate files are found.
         @rtype: String
         @return: The file path to be used for writing.
         """
@@ -590,10 +602,13 @@ class FileTransactionContext(FileContext):
         # retrieves the virtual file path for the file path
         virtual_file_path = self._get_virtual_file_path(file_path)
 
+        # sets the operation based on the value of the replace files flag
+        operation = replace_files and ADD_OPERATION or ADD_NO_REPLACE_OPERATION
+
         # creates a path tuple with the virtual file path
         # and the file path
         path_tuple = (
-            ADD_OPERATION,
+            operation,
             virtual_file_path,
             file_path
         )
@@ -810,6 +825,37 @@ class FileTransactionContext(FileContext):
             path_util.copy_directory(virtual_file_path, file_path)
         # otherwise it must be a "normal" file
         else:
+            # copies the file in the virtual path to the file in the file path
+            path_util.copy_file(virtual_file_path, file_path)
+
+    def _process_path_tuple_add_no_replace(self, path_tuple):
+        """
+        Processes a path tuple of type add no replace.
+        The remote tuple refers paths to be added
+        in persistence.
+        In this mode no files are replaced in case of name
+        collision.
+
+        @type path_tuple: String
+        @param path_tuple: The tuple with the path contents.
+        """
+
+        # unpacks the path tuple
+        _operation, virtual_file_path, file_path = path_tuple
+
+        # in case the virtual file path is a directory
+        if os.path.isdir(virtual_file_path):
+            # copies the directory in the virtual path to the directory in the file path
+            # the copy of the directory is made without replacing existent files
+            path_util.copy_directory(virtual_file_path, file_path, False)
+        # otherwise it must be a "normal" file
+        else:
+            # in case the file path already exists
+            # there is no need to proceed with persistence
+            if os.path.exists(file_path):
+                # returns immediately
+                return
+
             # copies the file in the virtual path to the file in the file path
             path_util.copy_file(virtual_file_path, file_path)
 
