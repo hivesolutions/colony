@@ -41,6 +41,7 @@ plugin_path_list = [
     "plugins",
     "%colony_demo_prefix_path%/pt.hive.colony.demo.plugins.twitter/src/colony/plugins",
     "%colony_extras_prefix_path%/pt.hive.colony.bundles.plugins.base.bundles/src/colony/plugins",
+    "%colony_language_prefix_path%/pt.hive.colony.language.plugins.wiki/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation.extensions/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.build.automation.generator/src/colony/plugins",
