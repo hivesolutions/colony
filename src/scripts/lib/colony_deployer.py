@@ -524,6 +524,9 @@ class Deployer:
         # retrieves the resources
         resources = specification[RESOURCES_VALUE]
 
+        # retrieves the keep resources
+        keep_resources = specification.get(KEEP_RESOURCES_VALUE, [])
+
         # prints a log message
         self.log("Deploying plugin package '%s' v'%s'" % (id, version))
 
@@ -538,6 +541,10 @@ class Deployer:
 
         # iterates over all the resources
         for resource in resources:
+            # checks if the current resource is of type
+            # keep resource
+            is_keep_resource = resource in keep_resources
+
             # retrieves the resource file path
             resource_file_path = os.path.normpath(temporary_path + "/resources/" + resource)
 
@@ -546,6 +553,19 @@ class Deployer:
 
             # retrieves the new resource directory path
             new_resource_directory_path = os.path.dirname(new_resource_file_path)
+
+            # checks if the new resource file path already exists
+            new_resource_file_path_exists = os.path.exists(new_resource_file_path)
+
+            # in case the new resource file path exists
+            # and the resource should be kept
+            if new_resource_file_path_exists and is_keep_resource:
+                # prints a log message
+                self.log("Skipping resource file (keep) '%s'" % resource_file_path)
+
+                # continues the loop (no need
+                # to run a copy)
+                continue
 
             # prints a log message
             self.log("Moving resource file '%s' to '%s'" % (resource_file_path, new_resource_file_path))
@@ -666,6 +686,19 @@ class Deployer:
             # retrieves the new resource directory path
             new_resource_directory_path = os.path.dirname(new_resource_file_path)
 
+            # checks if the new resource file path already exists
+            new_resource_file_path_exists = os.path.exists(new_resource_file_path)
+
+            # in case the new resource file path exists
+            # and the resource should be kept
+            if new_resource_file_path_exists and is_keep_resource:
+                # prints a log message
+                self.log("Skipping resource file (keep) '%s'" % resource_file_path)
+
+                # continues the loop (no need
+                # to run a copy)
+                continue
+
             # prints a log message
             self.log("Moving resource file '%s' to '%s'" % (resource_file_path, new_resource_file_path))
 
@@ -673,16 +706,6 @@ class Deployer:
             if not os.path.exists(new_resource_directory_path):
                 # creates the new resource directory path (directories)
                 os.makedirs(new_resource_directory_path)
-
-            # checks if thw new resource file path already exists
-            new_resource_file_path_exists = os.path.exists(new_resource_file_path)
-
-            # in case the new resource file path exists
-            # and the resource should be kept
-            if new_resource_file_path_exists and is_keep_resource:
-                # continues the loop (no need
-                # to run a copy)
-                continue
 
             # in case the new resource file path already exists we're
             # in a presence of a "duplicate"
@@ -936,10 +959,14 @@ class Deployer:
         # retrieves the resources
         resources = specification[RESOURCES_VALUE]
 
+        # retrieves the keep resources
+        keep_resources = specification.get(KEEP_RESOURCES_VALUE, [])
+
         # retrieves the extra resources
         extra_resources = specification.get(EXTRA_RESOURCES_VALUE, [])
 
         # extends the resources list with the extra resources
+        resources = [value for value in resources if not value in keep_resources]
         resources.extend(extra_resources)
 
         # creates the list of directory paths for (possible)
@@ -1221,10 +1248,6 @@ class Deployer:
 
         # removes the container item
         self._remove_container_item(package_id)
-
-
-
-
 
     def validate_specification(self, specification):
         """
