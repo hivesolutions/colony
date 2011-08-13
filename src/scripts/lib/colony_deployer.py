@@ -815,15 +815,11 @@ class Deployer:
         # retrieves the keep resources
         keep_resources = specification.get(KEEP_RESOURCES_VALUE, [])
 
-        # retrieves the target (exclusive) path to be used
-        # uniquely by this plugin system
-        target_exclusive_path = os.path.normpath(target_path + "/" + id)
-
         # prints a log message
         self.log("Deploying plugin system package '%s' v'%s'" % (id, version))
 
         # prints a log message
-        self.log("Moving resources from '%s' to '%s'" % (temporary_path, target_exclusive_path))
+        self.log("Moving resources from '%s' to '%s'" % (temporary_path, target_path))
 
         # iterates over all the resources
         for resource in resources:
@@ -835,7 +831,7 @@ class Deployer:
             resource_file_path = os.path.normpath(temporary_path + "/resources/" + resource)
 
             # creates the new resource file path
-            new_resource_file_path = os.path.normpath(target_exclusive_path + "/" + resource)
+            new_resource_file_path = os.path.normpath(target_path + "/" + resource)
 
             # retrieves the new resource directory path
             new_resource_directory_path = os.path.dirname(new_resource_file_path)
