@@ -1480,7 +1480,71 @@ class Deployer:
         @param package_version: The version of the plugin system package to be removed.
         """
 
-        pass
+        # prints a log message
+        self.log("Removing plugin system package '%s' v'%s'" % (package_id, package_version))
+
+        # creates the plugin system path
+        plugin_system_path = os.path.normpath(self.manager_path)
+
+        # retrieves the resources
+        resources = specification[RESOURCES_VALUE]
+
+        # retrieves the keep resources
+        keep_resources = specification.get(KEEP_RESOURCES_VALUE, [])
+
+        # retrieves the extra resources
+        extra_resources = specification.get(EXTRA_RESOURCES_VALUE, [])
+
+        # extends the resources list with the extra resources
+        resources = [value for value in resources if not value in keep_resources]
+        resources.extend(extra_resources)
+
+        # creates the list of directory paths for (possible)
+        # later removal
+        directory_path_list = []
+
+        # iterates over all the resources
+        for resource in resources:
+            # creates the (complete) resource file path
+            resource_file_path = os.path.normpath(plugin_system_path + "/" + resource)
+
+            # in case the resource file path does not exists
+            if not os.path.exists(resource_file_path):
+                # prints a log message
+                self.log("Skipping resource file '%s'" % resource_file_path)
+
+                # continues the loop
+                continue
+
+            # prints a log message
+            self.log("Removing resource file '%s'" % resource_file_path)
+
+            # removes the resource file in the resource file path
+            os.remove(resource_file_path)
+
+            # retrieves the resource file directory path
+            resource_file_directory_path = os.path.dirname(resource_file_path)
+
+            # in case the resource file directory path is not yet
+            # present in the directory path list
+            if not resource_file_directory_path in directory_path_list:
+                # adds the file directory path to the
+                # directory path list
+                directory_path_list.append(resource_file_directory_path)
+
+        # prints a log message
+        self.log("Removing empty directories for plugin system file")
+
+        # iterates over all the directory paths
+        for directory_path in directory_path_list:
+            # in case the directory path does not refers
+            # a directory or in case it contains element
+            if not os.path.isdir(directory_path) or os.listdir(directory_path):
+                # continues the loop
+                continue
+
+            # removes the directories in the directory path
+            os.removedirs(directory_path)
 
     def remove_library_package(self, package_id, package_version, specification):
         """
