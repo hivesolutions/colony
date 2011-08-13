@@ -36,7 +36,7 @@
             "config/python/configuration_base.py",
             "config/python/configuration_development.py",
             "config/python/configuration_production.py", "containers/README",
-            "deploy/README", "lib/README", "log/README", "meta/README",
+            "deploy/README", "libraries/README", "log/README", "meta/README",
             "plugins/README", "scripts/README",
             "scripts/all/colony_daemon_test.py",
             "scripts/all/colony_deploy.py", "scripts/bsd/colony_command.sh",
