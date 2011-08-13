@@ -4,7 +4,7 @@
     "id" : "pt.hive.colony",
     "name" : "Colony Plugin System",
     "short_name" : "Colony",
-    "description" : "The plugin system that manager a colony instance",
+    "description" : "The plugin system that manages a colony instance",
     "version" : "1.0.0",
     "author" : "Hive Solutions Lda. <development@hive.pt>",
     "dependencies" : [],
