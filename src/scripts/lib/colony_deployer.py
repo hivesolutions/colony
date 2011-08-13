@@ -794,7 +794,75 @@ class Deployer:
         the contents of the package.
         """
 
-        pass
+        # retrieves the target path
+        target_path = os.path.normpath(self.manager_path)
+
+        # creates the specification file path
+        specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
+
+        # opens the specification from the specification file path
+        specification = self._open_specification(specification_file_path)
+
+        # retrieves the id
+        id = specification[ID_VALUE]
+
+        # retrieves the version
+        version = specification[VERSION_VALUE]
+
+        # retrieves the resources
+        resources = specification[RESOURCES_VALUE]
+
+        # retrieves the keep resources
+        keep_resources = specification.get(KEEP_RESOURCES_VALUE, [])
+
+        # retrieves the target (exclusive) path to be used
+        # uniquely by this plugin system
+        target_exclusive_path = os.path.normpath(target_path + "/" + id)
+
+        # prints a log message
+        self.log("Deploying plugin system package '%s' v'%s'" % (id, version))
+
+        # prints a log message
+        self.log("Moving resources from '%s' to '%s'" % (temporary_path, target_exclusive_path))
+
+        # iterates over all the resources
+        for resource in resources:
+            # checks if the current resource is of type
+            # keep resource
+            is_keep_resource = resource in keep_resources
+
+            # retrieves the resource file path
+            resource_file_path = os.path.normpath(temporary_path + "/resources/" + resource)
+
+            # creates the new resource file path
+            new_resource_file_path = os.path.normpath(target_exclusive_path + "/" + resource)
+
+            # retrieves the new resource directory path
+            new_resource_directory_path = os.path.dirname(new_resource_file_path)
+
+            # checks if the new resource file path already exists
+            new_resource_file_path_exists = os.path.exists(new_resource_file_path)
+
+            # in case the new resource file path exists
+            # and the resource should be kept
+            if new_resource_file_path_exists and is_keep_resource:
+                # prints a log message
+                self.log("Skipping resource file (keep) '%s'" % resource_file_path)
+
+                # continues the loop (no need
+                # to run a copy)
+                continue
+
+            # prints a log message
+            self.log("Moving resource file '%s' to '%s'" % (resource_file_path, new_resource_file_path))
+
+            # in case the new resource directory path does not exist
+            if not os.path.exists(new_resource_directory_path):
+                # creates the new resource directory path (directories)
+                os.makedirs(new_resource_directory_path)
+
+            # copies the resource file as the new resource file
+            shutil.copy(resource_file_path, new_resource_file_path)
 
     def deploy_library_package(self, package_path, temporary_path):
         """
