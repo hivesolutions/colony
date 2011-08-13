@@ -1162,7 +1162,7 @@ class Deployer:
                 # is duplicated
                 continue
 
-            # in case the resource file path exists
+            # in case the resource file path does not exists
             if not os.path.exists(resource_file_path):
                 # prints a log message
                 self.log("Skipping resource file '%s'" % resource_file_path)
@@ -1275,6 +1275,9 @@ class Deployer:
         # validates the specification
         self.validate_specification(specification)
 
+        # retrieves the sub type
+        sub_type = specification[SUB_TYPE_VALUE]
+
         # retrieves the resources
         resources = specification[RESOURCES_VALUE]
 
@@ -1340,7 +1343,7 @@ class Deployer:
                 # is duplicated
                 continue
 
-            # in case the resource file path exists
+            # in case the resource file path does not exists
             if not os.path.exists(resource_file_path):
                 # prints a log message
                 self.log("Skipping resource file '%s'" % resource_file_path)
@@ -1389,6 +1392,109 @@ class Deployer:
 
         # removes the container item
         self._remove_container_item(package_id)
+
+        # in case the sub type is plugin system
+        if sub_type == PLUGIN_SYSTEM_VALUE:
+            # removes the plugin system package
+            self.remove_plugin_system_package(package_id, package_version, specification)
+        # in case the sub type is library
+        elif sub_type == LIBRARY_VALUE:
+            # removes the library package
+            self.remove_library_package(package_id, package_version, specification)
+        # in case the sub type is configuration
+        elif sub_type == CONFIGURATION_VALUE:
+            # removes the configuration package
+            self.removes_configuration_package(package_id, package_version, specification)
+
+    def remove_library_package(self, package_id, package_version, specification):
+        """
+        Removes the library package with the given id and version.
+
+        @type package_id: String
+        @param package_id: The id of the library package to be removed.
+        @type package_version: String
+        @param package_version: The version of the library package to be removed.
+        """
+
+        # prints a log message
+        self.log("Removing library package '%s' v'%s'" % (package_id, package_version))
+
+        # creates the libraries path
+        libraries_path = os.path.normpath(self.manager_path + "/" + RELATIVE_LIBRARIES_PATH)
+
+        # sets the library id as the package id
+        library_id = package_id
+
+        # "calculates" the libraries exclusive path to be used for unique usage
+        libraries_exclusive_path = os.path.normpath(libraries_path + "/" + library_id)
+
+        # retrieves the resources
+        resources = specification[RESOURCES_VALUE]
+
+        # retrieves the keep resources
+        keep_resources = specification.get(KEEP_RESOURCES_VALUE, [])
+
+        # retrieves the extra resources
+        extra_resources = specification.get(EXTRA_RESOURCES_VALUE, [])
+
+        # extends the resources list with the extra resources
+        resources = [value for value in resources if not value in keep_resources]
+        resources.extend(extra_resources)
+
+        # creates the list of directory paths for (possible)
+        # later removal
+        directory_path_list = []
+
+        # iterates over all the resources
+        for resource in resources:
+            # creates the (complete) resource file path
+            resource_file_path = os.path.normpath(libraries_exclusive_path + "/" + resource)
+
+            # "calculates" the relative path between the resource file
+            # path and the manager path
+            resource_relative_path = os.path.relpath(resource_file_path, self.manager_path)
+
+            # aligns the path replacing the backslashes with
+            # "normal" slashes
+            resource_relative_path = self.__align_path(resource_relative_path)
+
+            # in case the resource file path does not exists
+            if not os.path.exists(resource_file_path):
+                # prints a log message
+                self.log("Skipping resource file '%s'" % resource_file_path)
+
+                # continues the loop
+                continue
+
+            # prints a log message
+            self.log("Removing resource file '%s'" % resource_file_path)
+
+            # removes the resource file in the resource file path
+            os.remove(resource_file_path)
+
+            # retrieves the resource file directory path
+            resource_file_directory_path = os.path.dirname(resource_file_path)
+
+            # in case the resource file directory path is not yet
+            # present in the directory path list
+            if not resource_file_directory_path in directory_path_list:
+                # adds the file directory path to the
+                # directory path list
+                directory_path_list.append(resource_file_directory_path)
+
+        # prints a log message
+        self.log("Removing empty directories for library file")
+
+        # iterates over all the directory paths
+        for directory_path in directory_path_list:
+            # in case the directory path does not refers
+            # a directory or in case it contains element
+            if not os.path.isdir(directory_path) or os.listdir(directory_path):
+                # continues the loop
+                continue
+
+            # removes the directories in the directory path
+            os.removedirs(directory_path)
 
     def validate_specification(self, specification):
         """
