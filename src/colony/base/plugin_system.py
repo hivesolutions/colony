@@ -107,6 +107,9 @@ DEFAULT_LOGGING_FILE_BACKUP_COUNT = 5
 DEFAULT_CONTAINERS_PATH = u"containers"
 """ The default containers path """
 
+DEFAULT_LIBRARIES_PATH = u"libraries"
+""" The default libraries path """
+
 DEFAULT_TEMPORARY_PATH = u"tmp"
 """ The default temporary path """
 
@@ -4842,12 +4845,30 @@ class PluginManager:
         # retrieves the manager path
         manager_path = self.get_manager_path()
 
-        # creates the main plugin full path joining the manager path and the
+        # creates the containers path joining the manager path and the
         # default containers path
         containers_path = os.path.join(manager_path, DEFAULT_CONTAINERS_PATH)
 
         # returns the containers path
         return containers_path
+
+    def get_libraries_path(self):
+        """
+        Retrieves the manager libraries path for execution.
+
+        @rtype: String
+        @return: The manager libraries path for execution.
+        """
+
+        # retrieves the manager path
+        manager_path = self.get_manager_path()
+
+        # creates the libraries path joining the manager path and the
+        # default libraries path
+        libraries_path = os.path.join(manager_path, DEFAULT_LIBRARIES_PATH)
+
+        # returns the libraries path
+        return libraries_path
 
     def get_temporary_path(self):
         """
@@ -4860,7 +4881,7 @@ class PluginManager:
         # retrieves the manager path
         manager_path = self.get_manager_path()
 
-        # creates the main plugin full path joining the manager path and the
+        # creates the temporary path joining the manager path and the
         # default temporary path
         temporary_path = os.path.join(manager_path, DEFAULT_TEMPORARY_PATH)
 
@@ -4878,7 +4899,7 @@ class PluginManager:
         # retrieves the manager path
         manager_path = self.get_manager_path()
 
-        # creates the main plugin full path joining the manager path and the
+        # creates the variable path joining the manager path and the
         # default variable path
         variable_path = os.path.join(manager_path, DEFAULT_VARIABLE_PATH)
 
@@ -4896,7 +4917,7 @@ class PluginManager:
         # retrieves the manager path
         manager_path = self.get_manager_path()
 
-        # creates the main plugin full path joining the manager path and the
+        # creates the plugins path file path joining the manager path and the
         # default variable path
         plugin_paths_file_path = os.path.join(manager_path, DEFAULT_PLUGIN_PATHS_FILE_PATH)
 
