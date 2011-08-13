@@ -1406,6 +1406,18 @@ class Deployer:
             # removes the configuration package
             self.removes_configuration_package(package_id, package_version, specification)
 
+    def remove_plugin_system_package(self, package_id, package_version, specification):
+        """
+        Removes the plugin system package with the given id and version.
+
+        @type package_id: String
+        @param package_id: The id of the plugin system package to be removed.
+        @type package_version: String
+        @param package_version: The version of the plugin system package to be removed.
+        """
+
+        pass
+
     def remove_library_package(self, package_id, package_version, specification):
         """
         Removes the library package with the given id and version.
@@ -1450,14 +1462,6 @@ class Deployer:
             # creates the (complete) resource file path
             resource_file_path = os.path.normpath(libraries_exclusive_path + "/" + resource)
 
-            # "calculates" the relative path between the resource file
-            # path and the manager path
-            resource_relative_path = os.path.relpath(resource_file_path, self.manager_path)
-
-            # aligns the path replacing the backslashes with
-            # "normal" slashes
-            resource_relative_path = self.__align_path(resource_relative_path)
-
             # in case the resource file path does not exists
             if not os.path.exists(resource_file_path):
                 # prints a log message
@@ -1495,6 +1499,18 @@ class Deployer:
 
             # removes the directories in the directory path
             os.removedirs(directory_path)
+
+    def remove_configuration_package(self, package_id, package_version, specification):
+        """
+        Removes the configuration package with the given id and version.
+
+        @type package_id: String
+        @param package_id: The id of the configuration package to be removed.
+        @type package_version: String
+        @param package_version: The version of the configuration package to be removed.
+        """
+
+        pass
 
     def validate_specification(self, specification):
         """
