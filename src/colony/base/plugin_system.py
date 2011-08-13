@@ -1870,17 +1870,32 @@ class PluginManager:
         # retrieves the library path entries
         libraries_path_entries = os.listdir(libraries_path)
 
+        # filters the "hidden" directories from the library path entries
+        libraries_path_entries = [value for value in libraries_path_entries if not value.startswith(".")]
+
         # iterates over all the libraries path entries
         for libraries_path_entry in libraries_path_entries:
-            # in case the library path entry already exists
-            # in the system path
-            if libraries_path_entry in sys.path:
+            # create the library path entry path from the
+            # libraries path and the libraries path entry an the
+            # normalizes it (avoids duplicates)
+            library_path_entry_path = os.path.join(libraries_path, libraries_path_entry)
+            library_path_entry_path = os.path.normpath(library_path_entry_path)
+
+            # in case the library path entry path does
+            # not refer a directory
+            if not os.path.isdir(library_path_entry_path):
                 # continues the loop
                 continue
 
-            # adds the libraries path entry to the
+            # in case the library path entry path already exists
+            # in the system path (skips to avoid duplicates)
+            if library_path_entry_path in sys.path:
+                # continues the loop
+                continue
+
+            # adds the libraries path entry path to the
             # system path
-            sys.path.append(libraries_path_entry)
+            sys.path.insert(0, library_path_entry_path)
 
     def check_standard_input(self):
         """
