@@ -1673,6 +1673,9 @@ class PluginManager:
             # updates the workspace path
             self.update_workspace_path()
 
+            # updates the libraries path
+            self.update_libraries_path()
+
             # checks the standard input
             self.check_standard_input()
 
@@ -1852,6 +1855,32 @@ class PluginManager:
         # creates the workspace path directory
         # if necessary
         self.create_workspace_path()
+
+    def update_libraries_path(self):
+        """
+        Updates the system path with the various sub-directories
+        in the libraries path.
+        This method should be used carefully as it may
+        consume some of the system resources.
+        """
+
+        # retrieves the current libraries path
+        libraries_path = self.get_libraries_path()
+
+        # retrieves the library path entries
+        libraries_path_entries = os.listdir(libraries_path)
+
+        # iterates over all the libraries path entries
+        for libraries_path_entry in libraries_path_entries:
+            # in case the library path entry already exists
+            # in the system path
+            if libraries_path_entry in sys.path:
+                # continues the loop
+                continue
+
+            # adds the libraries path entry to the
+            # system path
+            sys.path.append(libraries_path_entry)
 
     def check_standard_input(self):
         """
