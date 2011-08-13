@@ -377,6 +377,9 @@ class FileTransactionContext(FileContext):
     path_tuples_list = []
     """ The list of path tuples associated with the transaction """
 
+    commit_callbacks_list = []
+    """ The list of callback to be called upon commit """
+
     access_lock = None
     """ The lock controlling the access to the file transaction """
 
@@ -393,6 +396,7 @@ class FileTransactionContext(FileContext):
         self.temporary_path = temporary_path or tempfile.mkdtemp()
 
         self.path_tuples_list = []
+        self.commit_callbacks_list = []
         self.access_lock = threading.RLock()
 
     def resolve_file_path(self, file_path):
@@ -677,6 +681,9 @@ class FileTransactionContext(FileContext):
 
             # runs the reset
             self._reset()
+
+            # calls the "final" commit callbacks
+            self._call_commit_callbacks()
         finally:
             # releases the access lock
             self.access_lock.release()
@@ -710,6 +717,30 @@ class FileTransactionContext(FileContext):
         finally:
             # releases the access lock
             self.access_lock.release()
+
+    def add_commit_callback(self, callback):
+        """
+        Adds a new commit callback.
+        This callback will be called upon the final
+        commit is passed.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final commit.
+        """
+
+        self.commit_callbacks_list.append(callback)
+
+    def remove_commit_callback(self, callback):
+        """
+        Removes an existing commit callback.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final commit.
+        """
+
+        self.commit_callbacks_list.remove(callback)
 
     def _reset(self):
         """
@@ -893,3 +924,19 @@ class FileTransactionContext(FileContext):
         else:
             # removes the file path
             os.remove(file_path)
+
+    def _call_commit_callbacks(self):
+        """
+        Calls all the commit callback functions
+        in the current list.
+        This method should be called at the
+        end of a commit.
+        """
+
+        # iterates over all the commit callback functions
+        for commit_callback in self.commit_callbacks_list:
+            # calls the the commit callback
+            commit_callback()
+
+        # empties the commit callbacks
+        self.commit_callbacks_list = []
