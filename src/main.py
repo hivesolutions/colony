@@ -416,7 +416,7 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     # in case the configuration directory path is not an absolute path
     if not os.path.isabs(configuration_directory_path):
         # creates the (complete) configuration directory path prepending the manager path
-        configuration_directory_path = manager_path + "/" + configuration_directory_path
+        configuration_directory_path = os.path.normpath(manager_path + "/" + configuration_directory_path)
 
     # in case the configuration directory path is valid inserts it into the system path
     configuration_directory_path and sys.path.insert(0, configuration_directory_path)
