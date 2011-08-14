@@ -644,8 +644,9 @@ def configure_system(layout_mode, run_mode, manager_path):
     # sets the manager path as the colony home
     os.environ[COLONY_HOME_ENVIRONMENT] = manager_path
 
-    # constructs the library path
+    # constructs the library path and normalizes it
     library_path = manager_path + "/" + LIBRARY_DIRECTORY
+    library_path = os.path.normpath(library_path)
 
     # inserts the library path into the system path
     sys.path.insert(0, library_path)
