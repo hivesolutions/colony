@@ -88,6 +88,7 @@ prefix_paths = {
 """ The prefix path maps """
 
 library_path_list = [
+    "libraries",
     "%colony_language_prefix_path%/pt.hive.colony.language.generator/src/colony",
     "%colony_language_prefix_path%/pt.hive.colony.language.settler/src/colony",
     "%colony_language_prefix_path%/pt.hive.colony.language.wiki/src/colony"
