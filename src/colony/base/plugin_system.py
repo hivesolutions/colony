@@ -1673,9 +1673,6 @@ class PluginManager:
             # updates the workspace path
             self.update_workspace_path()
 
-            # updates the libraries path
-            self.update_libraries_path()
-
             # checks the standard input
             self.check_standard_input()
 
@@ -1788,10 +1785,12 @@ class PluginManager:
             # pops the top item
             event = self.event_queue.pop(0)
 
+            # in case the event is of type execute
             if event.event_name == EXECUTE_VALUE:
                 execution_method = event.event_args[0]
                 execution_arguments = event.event_args[1:]
                 execution_method(*execution_arguments)
+            # in case the event is of type exit
             elif event.event_name == EXIT_VALUE:
                 # unloads the thread based plugins
                 self._unload_thread_plugins()
@@ -1855,47 +1854,6 @@ class PluginManager:
         # creates the workspace path directory
         # if necessary
         self.create_workspace_path()
-
-    def update_libraries_path(self):
-        """
-        Updates the system path with the various sub-directories
-        in the libraries path.
-        This method should be used carefully as it may
-        consume some of the system resources.
-        """
-
-        # retrieves the current libraries path
-        libraries_path = self.get_libraries_path()
-
-        # retrieves the library path entries
-        libraries_path_entries = os.listdir(libraries_path)
-
-        # filters the "hidden" directories from the library path entries
-        libraries_path_entries = [value for value in libraries_path_entries if not value.startswith(".")]
-
-        # iterates over all the libraries path entries
-        for libraries_path_entry in libraries_path_entries:
-            # create the library path entry path from the
-            # libraries path and the libraries path entry an the
-            # normalizes it (avoids duplicates)
-            library_path_entry_path = os.path.join(libraries_path, libraries_path_entry)
-            library_path_entry_path = os.path.normpath(library_path_entry_path)
-
-            # in case the library path entry path does
-            # not refer a directory
-            if not os.path.isdir(library_path_entry_path):
-                # continues the loop
-                continue
-
-            # in case the library path entry path already exists
-            # in the system path (skips to avoid duplicates)
-            if library_path_entry_path in sys.path:
-                # continues the loop
-                continue
-
-            # adds the libraries path entry path to the
-            # system path
-            sys.path.insert(0, library_path_entry_path)
 
     def check_standard_input(self):
         """
