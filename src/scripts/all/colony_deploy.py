@@ -43,7 +43,7 @@ import getopt
 import logging
 import traceback
 
-VERSION = "${out value=colony_deploy.version /}"
+VERSION = "${out value=colony_version /}"
 """ The version value """
 
 RELEASE = "${out value=release_version /}"
