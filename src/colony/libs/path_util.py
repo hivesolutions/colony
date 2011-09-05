@@ -359,6 +359,36 @@ def ensure_file_path(file_path, default_file_path):
         # closes the file
         file.close()
 
+def is_parent_path(path, parent_path):
+    """
+    Checks if the given parent path is a parent
+    to the given path.
+    A parent path is a path that contains the given
+    path at any relative depth.
+
+    @type path: String
+    @param path: The (base) path for the checking.
+    @type parent_path: String
+    @param parent_path: The path to be checked for
+    parenting.
+    @rtype: bool
+    @return: The result of the checking for parenting.
+    """
+
+    # checks the relative path between the path and
+    # the parent path
+    _relative_path = relative_path(path, parent_path)
+
+    # in case the relative path start with the
+    # parent directory character
+    if _relative_path.startswith(PARENT_DIRECTORY):
+        # returns false (invalid)
+        return False
+    # otherwise it muse be a parent path
+    else:
+        # returns false (invalid)
+        return True
+
 def relative_path_windows(path, start_path = CURRENT_DIRECTORY):
     """
     "Calculates" the relative path between the base path

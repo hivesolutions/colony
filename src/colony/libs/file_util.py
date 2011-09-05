@@ -436,11 +436,22 @@ class FileTransactionContext(FileContext):
         file existence.
         """
 
-        # resolves the file path (real file path)
-        real_file_path = self.resolve_file_path(file_path)
+        # resolves the virtual file path
+        virtual_file_path = self._get_virtual_file_path(file_path)
 
-        # tests if the file path exists
-        exists_file_path = os.path.exists(real_file_path)
+        # tests if the file has been already (potentially) removed
+        removed_file_path = self._is_removed_file_path(file_path)
+
+        # tests if both the (real) file path and the virtual
+        # file path exist
+        file_path_exists = os.path.exists(file_path)
+        virtual_file_path_exists = os.path.exists(virtual_file_path)
+
+        # tests if the file path exists, checks the condition
+        # that if the (real) file path exists the removed file path
+        # must not exist otherwise if the virtual file path exists
+        # the file also exists
+        exists_file_path = (file_path_exists and not removed_file_path) or virtual_file_path_exists
 
         # returns the exists file path result
         return exists_file_path
@@ -538,6 +549,15 @@ class FileTransactionContext(FileContext):
         to be removed.
         """
 
+        # retrieves the virtual directory path for the file path
+        virtual_directory_path = self._get_virtual_file_path(directory_path)
+
+        # in case the virtual directory path exists
+        if os.path.exists(virtual_directory_path):
+            # removes the virtual directory path
+            # and recursive directories
+            os.removedirs(virtual_directory_path)
+
         # creates a path tuple with the directory path
         # the operation remove, the recursive flag is set
         path_tuple = (
@@ -559,6 +579,15 @@ class FileTransactionContext(FileContext):
         @param directory_path: The path to the file
         to be removed.
         """
+
+        # retrieves the virtual file path for the file path
+        virtual_file_path = self._get_virtual_file_path(file_path)
+
+        # in case the virtual file path exists
+        if os.path.exists(virtual_file_path):
+            # removes the virtual file path
+            # and recursive directories
+            os.removedirs(virtual_file_path)
 
         # creates a path tuple with the file path
         # the operation remove, the recursive flag is unset
@@ -830,6 +859,49 @@ class FileTransactionContext(FileContext):
 
         # returns the virtual file path
         return virtual_file_path
+
+    def _is_removed_file_path(self, file_path):
+        """
+        Checks if the given file path has been removed in
+        the current context.
+        The fact the that the file has been removed in the
+        current context foes not imply that it does not exists
+        in the context.
+        If a write operation has been made after a removal
+        the file should be accounted as existent.
+
+        @type file_path: String
+        @param file_path: The path to the file to be checked
+        for removal.
+        @rtype: bool
+        @return: The result of the file removal check.
+        """
+
+        # iterates over all the path tuples in
+        # path tuples list
+        for path_tuple in self.path_tuples_list:
+            # unpacks the path tuple
+            operation, _file_path, _recursive = path_tuple
+
+            # in case the operation is not of type remove
+            if not operation == REMOVE_OPERATION:
+                # continues the loop
+                continue
+
+            # checks if the current iteration file path is
+            # a parent path to the path being checked
+            is_parent_path = colony.libs.path_util.is_parent_path(file_path, _file_path)
+
+            # in case it's not a parent path
+            if not is_parent_path:
+                # continues the loop
+                continue
+
+            # removal detected
+            return True
+
+        # returns false (no removal detected)
+        return False
 
     def _process_path_tuple_add(self, path_tuple):
         """
