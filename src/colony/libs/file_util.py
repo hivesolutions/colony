@@ -43,8 +43,6 @@ import threading
 
 import path_util
 
-import colony.libs.path_util
-
 PATH_TUPLE_PROCESS_METHOD_PREFIX = "_process_path_tuple_"
 """ The prefix to the path tuple process method """
 
@@ -275,6 +273,58 @@ class FileContext:
 
         pass
 
+    def resolve_file_path(self, file_path):
+        """
+        Resolves the given file path, for the current
+        environment it is the same value.
+
+        @type file_path: String
+        @param file_path: The file path to be resolved.
+        @rtype: String
+        @return: The resolved (real) file path.
+        """
+
+        # returns the file path (same value)
+        return file_path
+
+    def exists_file_path(self, file_path):
+        """
+        Tests if the given file path exists in
+        the current environment.
+
+        @type file_path: String
+        @param file_path: The file path to be tested
+        for existence.
+        @rtype: bool
+        @return: The result of the test for
+        file existence.
+        """
+
+        # checks if the file path exists
+        exists_file_path = os.path.exists(file_path)
+
+        # returns the exists file path result
+        return exists_file_path
+
+    def is_directory_path(self, file_path):
+        """
+        Tests if the given file path refers a directory path in
+        the current environment.
+
+        @type file_path: String
+        @param file_path: The file path to be tested
+        for directory referral.
+        @rtype: bool
+        @return: The result of the test for
+        directory referral.
+        """
+
+        # tests if the file path refers a directory path
+        is_directory_path = os.path.isdir(file_path)
+
+        # returns the is directory path result
+        return is_directory_path
+
     def read_file(self, file_path):
         """
         Reads the contents from the given
@@ -325,6 +375,48 @@ class FileContext:
         finally:
             # closes the file
             file.close()
+
+    def remove_directory(self, directory_path):
+        """
+        Removes the directory in the given path.
+
+        @type directory_path: String
+        @param directory_path: The path to the directory
+        to be removed.
+        """
+
+        # in case the directory path exists
+        if os.path.exists(directory_path):
+            # removes the directory path
+            # and recursive directories
+            os.removedirs(directory_path)
+
+    def remove_file(self, file_path):
+        """
+        Removes the file in the given path.
+
+        @type directory_path: String
+        @param directory_path: The path to the file
+        to be removed.
+        """
+
+        # in case the file path exists
+        if os.path.exists(file_path):
+            # removes the file path
+            # and recursive directories
+            os.removedirs(file_path)
+
+    def remove_directory_immediate(self, directory_path):
+        """
+        Removes the directory in the given directory path.
+
+        @type directory_path: String
+        @param directory_path: The path to the directory
+        to be removed.
+        """
+
+        # removes the directory in the (real) directory path
+        path_util.remove_directory(directory_path)
 
     def get_file_path(self, file_path):
         """
@@ -475,7 +567,7 @@ class FileTransactionContext(FileContext):
         # tests if the file path refers a directory path
         is_directory_path = os.path.isdir(real_file_path)
 
-        # returns the id directory path result
+        # returns the is directory path result
         return is_directory_path
 
     def read_file(self, file_path):
@@ -784,7 +876,7 @@ class FileTransactionContext(FileContext):
 
         # in case the temporary path is a directory removes
         # the temporary path
-        os.path.isdir(self.temporary_path) and colony.libs.path_util.remove_directory(self.temporary_path)
+        os.path.isdir(self.temporary_path) and path_util.remove_directory(self.temporary_path)
 
     def _cleanup(self):
         """
@@ -890,7 +982,7 @@ class FileTransactionContext(FileContext):
 
             # checks if the current iteration file path is
             # a parent path to the path being checked
-            is_parent_path = colony.libs.path_util.is_parent_path(file_path, _file_path)
+            is_parent_path = path_util.is_parent_path(file_path, _file_path)
 
             # in case it's not a parent path
             if not is_parent_path:
