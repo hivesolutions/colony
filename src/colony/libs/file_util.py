@@ -387,9 +387,12 @@ class FileContext:
 
         # in case the directory path exists
         if os.path.exists(directory_path):
-            # removes the directory path
-            # and recursive directories
-            os.removedirs(directory_path)
+            # retrieves the directory items
+            directory_items = os.listdir(directory_path)
+
+            # checks the directory for items and removes
+            # the directory in the path (recursively)
+            not directory_items and os.removedirs(directory_path)
 
     def remove_file(self, file_path):
         """
@@ -403,8 +406,7 @@ class FileContext:
         # in case the file path exists
         if os.path.exists(file_path):
             # removes the file path
-            # and recursive directories
-            os.removedirs(file_path)
+            os.remove(file_path)
 
     def remove_directory_immediate(self, directory_path):
         """
@@ -646,9 +648,12 @@ class FileTransactionContext(FileContext):
 
         # in case the virtual directory path exists
         if os.path.exists(virtual_directory_path):
-            # removes the virtual directory path
-            # and recursive directories
-            os.removedirs(virtual_directory_path)
+            # retrieves the (virtual) directory items
+            directory_items = os.listdir(virtual_directory_path)
+
+            # checks the directory for items and removes
+            # the directory in the virtual path (recursively)
+            not directory_items and os.removedirs(virtual_directory_path)
 
         # creates a path tuple with the directory path
         # the operation remove, the recursive flag is set
@@ -678,8 +683,7 @@ class FileTransactionContext(FileContext):
         # in case the virtual file path exists
         if os.path.exists(virtual_file_path):
             # removes the virtual file path
-            # and recursive directories
-            os.removedirs(virtual_file_path)
+            os.remove(virtual_file_path)
 
         # creates a path tuple with the file path
         # the operation remove, the recursive flag is unset
