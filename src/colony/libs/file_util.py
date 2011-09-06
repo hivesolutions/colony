@@ -649,11 +649,11 @@ class FileTransactionContext(FileContext):
         # in case the virtual directory path exists
         if os.path.exists(virtual_directory_path):
             # retrieves the (virtual) directory items
-            directory_items = os.listdir(virtual_directory_path)
+            virtual_directory_items = os.listdir(virtual_directory_path)
 
-            # checks the directory for items and removes
+            # checks the virtual directory for items and removes
             # the directory in the virtual path (recursively)
-            not directory_items and os.removedirs(virtual_directory_path)
+            not virtual_directory_items and os.removedirs(virtual_directory_path)
 
         # creates a path tuple with the directory path
         # the operation remove, the recursive flag is set
