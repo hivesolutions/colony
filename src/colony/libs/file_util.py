@@ -1009,7 +1009,8 @@ class FileTransactionContext(FileContext):
         _operation, virtual_file_path, file_path = path_tuple
 
         # in case the path does not exist (no need to proceed
-        # with persistence)
+        # with persistence), it represents a case where a temporary
+        # path was request but not used for writing
         if not os.path.exists(virtual_file_path):
             # returns immediately
             return
@@ -1037,6 +1038,13 @@ class FileTransactionContext(FileContext):
 
         # unpacks the path tuple
         _operation, virtual_file_path, file_path = path_tuple
+
+        # in case the path does not exist (no need to proceed
+        # with persistence), it represents a case where a temporary
+        # path was request but not used for writing
+        if not os.path.exists(virtual_file_path):
+            # returns immediately
+            return
 
         # in case the virtual file path is a directory
         if os.path.isdir(virtual_file_path):
