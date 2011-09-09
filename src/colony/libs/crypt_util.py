@@ -58,9 +58,6 @@ SHA1_VALUE = "sha1"
 SHA256_VALUE = "sha256"
 """ The sha256 value """
 
-MD5_CRYPT_VALUE = "crypt"
-""" The md5 crypt value """
-
 MD5_CRPYT_SEPARATOR = "$"
 """ The md5 crypt separator """
 
@@ -111,8 +108,6 @@ def password_crypt(password, salt = "", hash_method = MD5_VALUE):
         # sets the hash value as the (base)
         # password word value (plain)
         hash_value = password_word
-    elif hash_method_lower == MD5_CRYPT_VALUE:
-        pass
     # otherwise it must be a general hash function
     else:
         # creates the new hash object from the
@@ -167,11 +162,11 @@ def password_match(password_hash, password, salt = ""):
     # math result
     passwords_match = False
 
+    # in case the base password hash is of type plain
     if base_password_hash == PLAIN_VALUE:
         # checks if both passwords match
         passwords_match = password_word == base_password_value
-    elif base_password_hash == MD5_CRYPT_VALUE:
-        pass
+    # otherwise it must be a general hash function
     else:
         # creates the new hash object from the
         # base password hash (method)
