@@ -37,7 +37,17 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import re
 import hashlib
+
+HASH_VALUE = "hash"
+""" The hash value """
+
+VALUE_VALUE = "value"
+""" The value value """
+
+PLAIN_VALUE = "plain"
+""" The plain value """
 
 MD5_VALUE = "md5"
 """ The md5 value """
@@ -47,6 +57,9 @@ SHA1_VALUE = "sha1"
 
 SHA256_VALUE = "sha256"
 """ The sha256 value """
+
+MD5_CRYPT_VALUE = "crypt"
+""" The md5 crypt value """
 
 MD5_CRPYT_SEPARATOR = "$"
 """ The md5 crypt separator """
@@ -59,6 +72,124 @@ DEFAULT_HASH_SET = (MD5_VALUE, SHA1_VALUE, SHA256_VALUE)
 
 INTEGER_TO_ASCII_64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 """ The array of conversion from integer to ascii """
+
+PASSWORD_VALUE_REGEX_VALUE = "^\{(?P<hash>\w+)\}(?P<value>.+)$"
+""" The password value regex value """
+
+PASSWORD_VALUE_REGEX = re.compile(PASSWORD_VALUE_REGEX_VALUE)
+""" The password value regex """
+
+def password_crypt(password, salt = "", hash_method = MD5_VALUE):
+    """
+    Encrypts the given password using the provided hash method.
+    An optional salt may be provided for extra security.
+    The generated hash is always defined in hexadecimal.
+
+    @type password: String
+    @param password: The password to be encrypted using
+    the hash method.
+    @type salt: String
+    @param salt: The salt to be used during the encryption
+    process.
+    @type hash_method: String
+    @param hash_method: The name of the hash method to be used
+    for encryption.
+    @rtype: String
+    @return: The generated (complete) hash hexadecimal string.
+    """
+
+    # converts the name of the hash method to lower
+    # case string
+    hash_method_lower = hash_method.lower()
+
+    # creates the password (word) from the
+    # password an the salt
+    password_word = password + salt
+
+    # in case the hash method is of type plain
+    if hash_method_lower == PLAIN_VALUE:
+        # sets the hash value as the (base)
+        # password word value (plain)
+        hash_value = password_word
+    elif hash_method_lower == MD5_CRYPT_VALUE:
+        pass
+    # otherwise it must be a general hash function
+    else:
+        # creates the new hash object from the
+        # hash method
+        hash = hashlib.new(hash_method)
+
+        # updates the hash value with the
+        # password word
+        hash.update(password_word)
+
+        # retrieves the hash value from the
+        # hex digest
+        hash_value = hash.hexdigest()
+
+    # creates the final password hash prepending the
+    # hash method reference
+    password_hash = "{" + hash_method_lower + "}" + hash_value
+
+    # returns the password (final) hash
+    # value (with the hash method prefix)
+    return password_hash
+
+def password_match(password_hash, password, salt = ""):
+    """
+    Checks if the given password hash value matched
+    the given password using the given (optional) stal.
+    The matching process executes the original hash function
+    in order to check for same results.
+
+    @type password_hash: String
+    @param password_hash: The complete password hash hexadecimal string.
+    @type password: String
+    @param password: The base password for checking.
+    @type salt: String
+    @param salt: The base salt for checking.
+    @rtype: bool
+    @return: The result of the password match checking.
+    """
+
+    # tries to match the base password hash
+    base_password_match = PASSWORD_VALUE_REGEX.match(password_hash)
+
+    # retrieves the base password hash and value
+    base_password_hash = base_password_match.group(HASH_VALUE)
+    base_password_value = base_password_match.group(VALUE_VALUE)
+
+    # creates the password (word) from the
+    # password an the salt
+    password_word = password + salt
+
+    # sets the initial value for the passwords
+    # math result
+    passwords_match = False
+
+    if base_password_hash == PLAIN_VALUE:
+        # checks if both passwords match
+        passwords_match = password_word == base_password_value
+    elif base_password_hash == MD5_CRYPT_VALUE:
+        pass
+    else:
+        # creates the new hash object from the
+        # base password hash (method)
+        hash = hashlib.new(base_password_hash)
+
+        # updates the hash value with the
+        # password word
+        hash.update(password_word)
+
+        # retrieves the hash value from the
+        # hex digest
+        hash_value = hash.hexdigest()
+
+        # checks if both password (hashes) match
+        passwords_match = hash_value == base_password_value
+
+    # returns if both password match
+    return passwords_match
 
 def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     """
