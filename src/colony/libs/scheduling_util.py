@@ -139,6 +139,13 @@ class Scheduler(threading.Thread):
             time.sleep(self.sleep_step)
 
     def start_scheduler(self):
+        """
+        Starts the scheduler process.
+        This method is asynchronous and the starting of
+        the scheduler is not immediate.
+        This method creates a new thread for scheduling.
+        """
+
         # sets the continue flag
         self.continue_flag = True
 
@@ -146,13 +153,20 @@ class Scheduler(threading.Thread):
         self.start()
 
     def stop_scheduler(self):
+        """
+        Stops the scheduler process.
+        This method is asynchronous and the stopping of
+        the scheduler is not immediate.
+        """
+
         # unsets the continue flag
         self.continue_flag = False
 
     def reset_scheduler(self):
         """
-        Resets the scheduler to the original
-        state.
+        Resets the scheduler to the original state.
+        This method may be used to avoid the allocation
+        of new scheduler objects.
         """
 
         self.continue_flag = True
@@ -164,6 +178,8 @@ class Scheduler(threading.Thread):
         """
         Adds a callable object to the scheduler
         for calling upon the given timestamp value.
+        The sent callable is called without any arguments
+        and the real time for calling may not be assured.
 
         @type callbable: Callable
         @param callbable: The callable object to be called
