@@ -210,9 +210,14 @@ class Scheduler(threading.Thread):
                 # increments the index
                 index += 1
 
-            # insets the timestamp in the timestamp queue
+            # checks if the timestamp already exists in the
+            # current structures
+            timestamp_exists = timestamp in self.timestamp_map
+
+            # inserts the timestamp in the timestamp queue
             # for the correct index (in order to maintain order)
-            self.timestamp_queue.insert(index, timestamp)
+            # in case it does not exist already
+            not timestamp_exists and self.timestamp_queue.insert(index, timestamp)
 
             # retrieves the list of callabled for the given timestamp
             # and then updates it with the given callable object
