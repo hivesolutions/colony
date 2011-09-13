@@ -168,6 +168,8 @@ class Scheduler(threading.Thread):
         This method may be used to avoid the allocation
         of new scheduler objects.
         This operation is dangerous an is not thread safe.
+        A typical usage of this method involves first the
+        stopping of the scheduler.
         """
 
         self.continue_flag = True
@@ -198,7 +200,7 @@ class Scheduler(threading.Thread):
             index = 0
 
             # iterates over all the timestamps in the
-            # tiemstamp queue (to find position for insertion)
+            # timestamp queue (to find position for insertion)
             for _timestamp in self.timestamp_queue:
                 # in case the the current iteration
                 # tiemstamp contains a value smaller than
