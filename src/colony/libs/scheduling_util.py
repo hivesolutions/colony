@@ -167,6 +167,7 @@ class Scheduler(threading.Thread):
         Resets the scheduler to the original state.
         This method may be used to avoid the allocation
         of new scheduler objects.
+        This operation is dangerous an is not thread safe.
         """
 
         self.continue_flag = True
