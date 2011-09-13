@@ -6136,7 +6136,7 @@ class PluginThread(threading.Thread):
     condition = None
     """ The plugin thread condition """
 
-    def __init__ (self, plugin):
+    def __init__(self, plugin):
         """
         Constructor of the class.
 
@@ -6292,7 +6292,7 @@ class PluginEventThread(threading.Thread):
     method = None
     """ The method for the event thread """
 
-    def __init__ (self, plugin, method):
+    def __init__(self, plugin, method):
         """
         Constructor of the class.
 
