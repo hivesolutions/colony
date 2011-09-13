@@ -61,6 +61,9 @@ class Scheduler(threading.Thread):
     timestamp_map = {}
     """ The map associating the timestamp with a list of callables """
 
+    timestamp_lock = None
+    """ The lock that controls the access to the timestamp structures """
+
     def __init__(self, sleep_step = DEFAULT_SLEEP_STEP):
         """
         Constructor of the class.
@@ -78,52 +81,58 @@ class Scheduler(threading.Thread):
 
         self.timestamp_queue = []
         self.timestamp_map = {}
+        self.timestamp_lock = threading.RLock()
 
     def run(self):
         # iterates while the continue
         # flag is set
         while self.continue_flag:
-            # retrieves the current timestamp
-            current_timestamp = time.time()
+            # acquires the timestamp lock
+            self.timestamp_lock.acquire()
 
-            # iterates over the timestamp queue
-            while True:
-                # in case the timestamp queue is invalid
-                # (possibly empty)
-                if not self.timestamp_queue:
-                    # breaks the loop (no more work
-                    # to be processed for now)
-                    break
+            try:
+                # retrieves the current timestamp
+                current_timestamp = time.time()
 
-                # retrieves the timestamp from the
-                # timestamp queue
-                timestamp = self.timestamp_queue[0]
+                # iterates over the timestamp queue
+                while True:
+                    # in case the timestamp queue is invalid
+                    # (possibly empty)
+                    if not self.timestamp_queue:
+                        # breaks the loop (no more work
+                        # to be processed for now)
+                        break
 
-                # in case the final timestamp has been
-                # reached
-                if current_timestamp < timestamp:
-                    # breaks the loop (no more work
-                    # to be processed for now)
-                    break
+                    # retrieves the timestamp from the
+                    # timestamp queue
+                    timestamp = self.timestamp_queue[0]
 
-                # retrieves the callable (elements) list
-                # for the timestamp
-                callable_list = self.timestamp_map[timestamp]
+                    # in case the final timestamp has been
+                    # reached
+                    if current_timestamp < timestamp:
+                        # breaks the loop (no more work
+                        # to be processed for now)
+                        break
 
-                # iterates over all the callables to call
-                # them
-                for callable in callable_list:
-                    # calls the callable (element)
-                    callable()
+                    # retrieves the callable (elements) list
+                    # for the timestamp
+                    callable_list = self.timestamp_map[timestamp]
 
-                # removes the callable list for the timestmap
-                del self.timestamp_map[timestamp]
+                    # iterates over all the callables to call
+                    # them
+                    for callable in callable_list:
+                        # calls the callable (element)
+                        callable()
 
-                # pops (removes first element) the timestamp
-                # from the timestamp queue
-                self.timestamp_queue.pop(0)
+                    # removes the callable list for the timestmap
+                    del self.timestamp_map[timestamp]
 
-            # ACABA AKI O LOCK
+                    # pops (removes first element) the timestamp
+                    # from the timestamp queue
+                    self.timestamp_queue.pop(0)
+            finally:
+                # releases the timestamp lock
+                self.timestamp_lock.release()
 
             # sleeps for the amount of time defined
             # in the sleep step
@@ -140,26 +149,60 @@ class Scheduler(threading.Thread):
         # unsets the continue flag
         self.continue_flag = False
 
-    def clear_scheduler(self, callable):
+    def reset_scheduler(self):
+        """
+        Resets the scheduler to the original
+        state.
+        """
+
         self.continue_flag = True
         self.timestamp_queue = []
         self.timestamp_map = {}
+        self.timestamp_lock = threading.RLock()
 
     def add_callable(self, callbable, timestamp):
-        callable_list = self.timestamp_map.get(timestamp, [])
-        callable_list.append(callbable)
-        self.timestamp_map[timestamp] = callable_list
+        """
+        Adds a callable object to the scheduler
+        for calling upon the given timestamp value.
 
-        # starts the index value
-        index = 0
+        @type callbable: Callable
+        @param callbable: The callable object to be called
+        upon in time described in the given timestamp.
+        @type timestamp: float
+        @param timestamp: The timestamp describing the
+        time for calling the callable object.
+        """
 
-        for _timestamp in self.timestamp_queue:
-            if timestamp < _timestamp:
-                break
+        # acquires the timestamp lock
+        self.timestamp_lock.acquire()
 
-            # increments the index
-            index += 1
+        try:
+            # starts the index value
+            index = 0
 
-        # insets the timestamp in the timestamp queue
-        # for the correct index (in order to maintain order)
-        self.timestamp_queue.insert(index, timestamp)
+            # iterates over all the timestamps in the
+            # tiemstamp queue (to find position for insertion)
+            for _timestamp in self.timestamp_queue:
+                # in case the the current iteration
+                # tiemstamp contains a value smaller than
+                # the timestamp to be inserted
+                if timestamp < _timestamp:
+                    # breaks the loop (position for
+                    # insertion reached)
+                    break
+
+                # increments the index
+                index += 1
+
+            # insets the timestamp in the timestamp queue
+            # for the correct index (in order to maintain order)
+            self.timestamp_queue.insert(index, timestamp)
+
+            # retrieves the list of callabled for the given timestamp
+            # and then updates it with the given callable object
+            callable_list = self.timestamp_map.get(timestamp, [])
+            callable_list.append(callbable)
+            self.timestamp_map[timestamp] = callable_list
+        finally:
+            # releases the timestamp lock
+            self.timestamp_lock.release()
