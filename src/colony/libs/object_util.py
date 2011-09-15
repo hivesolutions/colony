@@ -46,6 +46,12 @@ TOPPER_VALUE = "_topper"
 LIST_TYPES = (types.ListType, types.TupleType)
 """ A tuple with the various list types """
 
+INVALID_ATTRIBUTE_NAMES = ("__doc__", "__module__")
+""" The set of invalid attribute names """
+
+INVALID_ATTRIBUTE_TYPES = (types.InstanceType, types.MethodType, types.ListType)
+""" The set of invalid attribute types """
+
 def object_flatten(instance, flattening_map):
     """
     Flattens the given instance using the given flattening
@@ -123,16 +129,33 @@ def object_print(instance):
         attribute = getattr(instance, attribute_name)
         attribute_type = type(attribute)
 
-        if attribute_name in ("__doc__", "__module__"):
+        # in case the attribute name is invalid
+        if attribute_name in INVALID_ATTRIBUTE_NAMES:
+            # continues the loop
             continue
 
-        if attribute_type in (types.InstanceType, types.MethodType, types.ListType):
+        # in case the attribute type is invalid
+        if attribute_type in INVALID_ATTRIBUTE_TYPES:
+            # continues the loop
             continue
 
         # prints the attribute name and the attribute value
         print "%s: %s" % (attribute_name, attribute)
 
 def _object_flatten(instances_list, flattening_map):
+    """
+    Flattens the given instance using the given flattening
+    map as reference for the flattening process.
+    This method implements the concrete behavior for the
+    flattening of an object.
+
+    @type instance: Object
+    @param instance: The instance to be flatten.
+    @type flattening_map: Dictionary
+    @param flattening_map: Map describing the structure
+    for flattening.
+    """
+
     # iterates over all the "base" instances
     for instance in instances_list:
         # flattens the instance in the to one relations
