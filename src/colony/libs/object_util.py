@@ -65,17 +65,17 @@ def object_flatten(instance, flattening_map):
     """
 
     # retrieves the type of the instance
-    object_type = type(instance)
+    instance_type = type(instance)
 
     # in case the type of instance is (just)
     # an instance
-    if object_type == types.InstanceType:
+    if instance_type == types.InstanceType:
         # converts the instance to a list
         # (in order to be able to work with it)
         instance = [instance]
     # in case the instance is neither an instance
     # nor a list
-    elif object_type in LIST_TYPES:
+    elif instance_type in LIST_TYPES:
         # raises a runtime error
         raise RuntimeError("invalid instance type")
 
@@ -146,14 +146,16 @@ def _object_flatten(instances_list, flattening_map):
     """
     Flattens the given instance using the given flattening
     map as reference for the flattening process.
-    This method implements the concrete behavior for the
-    flattening of an object.
+    This function implements the concrete behavior for the
+    flattening of an instance.
 
     @type instance: Object
     @param instance: The instance to be flatten.
     @type flattening_map: Dictionary
     @param flattening_map: Map describing the structure
     for flattening.
+    @rtype: List
+    @return: The list of instances in the flatten state.
     """
 
     # iterates over all the "base" instances
@@ -172,7 +174,22 @@ def _object_flatten(instances_list, flattening_map):
     # returns the list of flatten instances
     return instances_list
 
-def __object_flatten_to_one(base_object, instance, flattening_map):
+def __object_flatten_to_one(base_instance, instance, flattening_map):
+    """
+    Auxiliary function that provides the mechanism
+    to "map" the "to-one" relation in the instance
+    according to the flattening map.
+
+    @type base_instance: Object
+    @param base_instance: The base (top level) instance to
+    be used to set the top level attributes.
+    @type instance: The current concrete instance in the
+    recursion set.
+    @type flattening_map: Dictionary
+    @param flattening_map: Map describing the structure
+    for flattening.
+    """
+
     # iterates over all the keys and values
     # in the flattening map structure
     for key, value in flattening_map.items():
@@ -180,22 +197,37 @@ def __object_flatten_to_one(base_object, instance, flattening_map):
         value_type = type(value)
 
         # retrieves the instance value and type
-        object_value = getattr(instance, key)
-        object_value_type = type(object_value)
+        instance_value = getattr(instance, key)
+        instance_value_type = type(instance_value)
 
         # in case the value if of type string
         # (a leaf of the flattening structure)
         if value_type == types.StringType:
             # sets the leaf value in the base instance
-            setattr(base_object, value, object_value)
+            setattr(base_instance, value, instance_value)
         # in case the value is of type dictionary
         # and the instance value type is an instance
         # (defined to one relation)
-        elif value_type == types.DictionaryType and object_value_type == types.InstanceType:
+        elif value_type == types.DictionaryType and instance_value_type == types.InstanceType:
             # "flattens" the to one instance relation (recursion)
-            __object_flatten_to_one(base_object, object_value, value)
+            __object_flatten_to_one(base_instance, instance_value, value)
 
 def __object_flatten_to_one_map(base_map, instance, flattening_map):
+    """
+    Auxiliary function that provides the mechanism
+    to "map" the "to-one" relation in the instance
+    according to the flattening map.
+
+    @type base_map: Dictionary
+    @param base_map: The base (top level) map to
+    be used to set the top level attributes.
+    @type instance: The current concrete instance in the
+    recursion set.
+    @type flattening_map: Dictionary
+    @param flattening_map: Map describing the structure
+    for flattening.
+    """
+
     # iterates over all the keys and values
     # in the flattening map structure
     for key, value in flattening_map.items():
@@ -203,24 +235,24 @@ def __object_flatten_to_one_map(base_map, instance, flattening_map):
         value_type = type(value)
 
         # retrieves the instance value and type
-        object_value = getattr(instance, key)
-        object_value_type = type(object_value)
+        instance_value = getattr(instance, key)
+        instance_value_type = type(instance_value)
 
         # in case the value if of type string
         # (a leaf of the flattening structure)
         if value_type == types.StringType:
             # sets the leaf value in the base map
-            base_map[value] = object_value
+            base_map[value] = instance_value
         # in case the value is of type dictionary
         # and the instance value type is an instance
         # (defined to one relation)
-        elif value_type == types.DictionaryType and object_value_type == types.InstanceType:
+        elif value_type == types.DictionaryType and instance_value_type == types.InstanceType:
             # "flattens" the to one instance relation (recursion)
-            __object_flatten_to_one_map(base_map, object_value, value)
+            __object_flatten_to_one_map(base_map, instance_value, value)
 
 def __object_flatten_to_many(instances_list, flattening_map):
     # creates the new instances list
-    new_objects_list = []
+    new_instances_list = []
 
     # iterates over all the instance in the instances
     # list to process the to many relations
@@ -248,19 +280,19 @@ def __object_flatten_to_many(instances_list, flattening_map):
 
             # flattens the to many attribute (list) and retrieves the list
             # of to many instances list
-            to_many_objects_list = __object_flatten_to_many(to_many_attribute, _flattening_map)
+            to_many_intances_list = __object_flatten_to_many(to_many_attribute, _flattening_map)
 
             # calculates the new bucket (list) based on the product
             # of the bucket against the to many instances list, this product
             # is made with the "help" of the new flattening map
-            bucket = __object_flatten_product(bucket, to_many_objects_list, _flattening_map)
+            bucket = __object_flatten_product(bucket, to_many_intances_list, _flattening_map)
 
         # extends the new instances list with the bucket for
         # the current instance
-        new_objects_list.extend(bucket)
+        new_instances_list.extend(bucket)
 
     # returns the new instances list
-    return new_objects_list
+    return new_instances_list
 
 def __object_flush_topper(instances_list):
     """
