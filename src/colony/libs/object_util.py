@@ -272,7 +272,24 @@ def __object_flush_topper(instances_list):
         # map value
         delattr(instance, TOPPER_VALUE)
 
-def __object_flatten_product(first_list, second_list, _flattening_map):
+def __object_flatten_product(first_list, second_list, flattening_map):
+    """
+    Provides a special case of the cartesian product of
+    two sets (in this case lists).
+    Both lists are "multiplied" and then using the flattening
+    map the second list item is filtered accordingly.
+
+    @type first_list: List
+    @param first_list: The first (base) list for the cartesian
+    product.
+    @type second_list: List
+    @param second_list: The second list for the cartesian product.
+    @type flattening_map: Dictionary
+    @param flattening_map: Map describing the structure
+    for flattening.
+    @see: http://en.wikipedia.org/wiki/Cartesian_product
+    """
+
     # creates the initial product list
     product_list = []
 
@@ -300,7 +317,7 @@ def __object_flatten_product(first_list, second_list, _flattening_map):
 
             # flattens the to one relations in the second item
             # and puts them in the topper map
-            __object_flatten_to_one_map(_topper, second_item, _flattening_map)
+            __object_flatten_to_one_map(_topper, second_item, flattening_map)
 
             # sets the "topper" map in the new item
             new_item._topper = _topper
