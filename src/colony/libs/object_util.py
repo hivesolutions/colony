@@ -177,13 +177,14 @@ def _object_flatten(instances_list, flattening_map):
 def __object_flatten_to_one(base_instance, instance, flattening_map):
     """
     Auxiliary function that provides the mechanism
-    to "map" the "to-one" relation in the instance
+    to "map" the "to-one" relations in the instance
     according to the flattening map.
 
     @type base_instance: Object
     @param base_instance: The base (top level) instance to
     be used to set the top level attributes.
-    @type instance: The current concrete instance in the
+    @type instance: Object
+    @param instance: The current concrete instance in the
     recursion set.
     @type flattening_map: Dictionary
     @param flattening_map: Map describing the structure
@@ -215,13 +216,14 @@ def __object_flatten_to_one(base_instance, instance, flattening_map):
 def __object_flatten_to_one_map(base_map, instance, flattening_map):
     """
     Auxiliary function that provides the mechanism
-    to "map" the "to-one" relation in the instance
+    to "map" the "to-one" relations in the instance
     according to the flattening map.
 
     @type base_map: Dictionary
     @param base_map: The base (top level) map to
     be used to set the top level attributes.
-    @type instance: The current concrete instance in the
+    @type instance: Object
+    @param instance: The current concrete instance in the
     recursion set.
     @type flattening_map: Dictionary
     @param flattening_map: Map describing the structure
@@ -251,6 +253,22 @@ def __object_flatten_to_one_map(base_map, instance, flattening_map):
             __object_flatten_to_one_map(base_map, instance_value, value)
 
 def __object_flatten_to_many(instances_list, flattening_map):
+    """
+    Auxiliary function that provides the mechanism
+    to "map" the "to-many" relations in the instance
+    according to the flattening map.
+
+    @type instances_list: List
+    @param instances_list: The list of instances to have
+    the "to-many" relations mapped.
+    @type flattening_map: Dictionary
+    @param flattening_map: Map describing the structure
+    for flattening.
+    @rtype: List
+    @return: The resulting list after the "to-many" operations
+    that inclute cartesian product.
+    """
+
     # creates the new instances list
     new_instances_list = []
 
