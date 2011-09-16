@@ -120,7 +120,7 @@ def object_flatten(instance, flattening_map):
         instance = [instance]
     # in case the instance is neither an instance
     # nor a list
-    elif instance_type in LIST_TYPES:
+    elif not instance_type in LIST_TYPES:
         # raises a runtime error (no valid instance type)
         raise RuntimeError("invalid instance type")
 
@@ -181,6 +181,12 @@ def object_print(instance):
 
         # in case the attribute type is invalid
         if attribute_type in INVALID_ATTRIBUTE_TYPES:
+            # continues the loop
+            continue
+
+        # in case the attribute represents an
+        # object of type new class
+        if isinstance(attribute, object):
             # continues the loop
             continue
 
@@ -254,7 +260,7 @@ def __object_flatten_to_one(base_instance, instance, flattening_map):
         # in case the value is of type dictionary
         # and the instance value type is an instance
         # (defined to one relation)
-        elif value_type == types.DictionaryType and instance_value_type == types.InstanceType:
+        elif value_type == types.DictionaryType and (instance_value_type == types.InstanceType or isinstance(instance_value, object)):
             # "flattens" the to one instance relation (recursion)
             __object_flatten_to_one(base_instance, instance_value, value)
 
@@ -293,7 +299,7 @@ def __object_flatten_to_one_map(base_map, instance, flattening_map):
         # in case the value is of type dictionary
         # and the instance value type is an instance
         # (defined to one relation)
-        elif value_type == types.DictionaryType and instance_value_type == types.InstanceType:
+        elif value_type == types.DictionaryType and (instance_value_type == types.InstanceType or isinstance(instance_value, object)):
             # "flattens" the to one instance relation (recursion)
             __object_flatten_to_one_map(base_map, instance_value, value)
 
