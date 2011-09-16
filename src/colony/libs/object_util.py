@@ -77,7 +77,7 @@ def object_attribute_names(instance):
     # returns the valid attribute names (ready for print)
     return valid_attribute_names
 
-def object_attribute_values(instance):
+def object_attribute_values(instance, valid_attribute_names = None):
     """
     Function that retrieves the valid attribute
     values for printing.
@@ -87,6 +87,9 @@ def object_attribute_values(instance):
     @type instance: Object
     @param instance: The instance to retrieve the (valid)
     attribute values.
+    @type valid_attribute_names: List
+    @param valid_attribute_names: List of valid attribute
+    names that may be used to retrieve valid attribute values.
     @rtype: List
     @return: The valid attribute value according to the
     the state for printing the value.
@@ -94,7 +97,7 @@ def object_attribute_values(instance):
 
     # retrieves the valid attribute names in order
     # to use them to retrieve the valid attribute values
-    valid_attribute_names = object_attribute_names(instance)
+    valid_attribute_names = valid_attribute_names or object_attribute_names(instance)
     valid_attribute_values = [getattr(instance, value) for value in valid_attribute_names]
 
     # returns the valid attribute values (ready for print)
