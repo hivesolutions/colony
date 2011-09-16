@@ -52,6 +52,51 @@ INVALID_ATTRIBUTE_NAMES = ("__doc__", "__module__")
 INVALID_ATTRIBUTE_TYPES = (types.InstanceType, types.MethodType, types.ListType)
 """ The set of invalid attribute types """
 
+def object_attribute_names(instance):
+    """
+    Function that retrieves the valid attribute
+    names for printing.
+    A valid attribute is considered to be an attribute
+    that may have it's value ready for printing.
+
+    @type instance: Object
+    @param instance: The instance to retrieve the (valid)
+    attribute names.
+    @rtype: List
+    @return: The valid attribute names according to the
+    the state for printing the value.
+    """
+
+    # filters the attribute names based on the type and value
+    # of them (non printable attributes are filtered out)
+    valid_attribute_names = [key for key, value in instance.__dict__.items() if not type(value) in INVALID_ATTRIBUTE_TYPES]
+
+    # returns the valid attribute names (ready for print)
+    return valid_attribute_names
+
+def object_attribute_values(instance):
+    """
+    Function that retrieves the valid attribute
+    values for printing.
+    A valid attribute is considered to be an attribute
+    that may have it's value ready for printing.
+
+    @type instance: Object
+    @param instance: The instance to retrieve the (valid)
+    attribute values.
+    @rtype: List
+    @return: The valid attribute value according to the
+    the state for printing the value.
+    """
+
+    # retrieves the valid attribute names in order
+    # to use them to retrieve the valid attribute values
+    valid_attribute_names = object_attribute_names(instance)
+    valid_attribute_values = [getattr(instance, value) for value in valid_attribute_names]
+
+    # returns the valid attribute values (ready for print)
+    return valid_attribute_values
+
 def object_flatten(instance, flattening_map):
     """
     Flattens the given instance using the given flattening
