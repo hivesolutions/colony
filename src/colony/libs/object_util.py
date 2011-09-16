@@ -40,6 +40,9 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import copy
 import types
 
+NOT_SET_VALUE = None
+""" The value to be set when the value is not set (defined) """
+
 TOPPER_VALUE = "_topper"
 """ The value of the attribute to hold the top values """
 
@@ -47,10 +50,10 @@ LIST_TYPES = (types.ListType, types.TupleType)
 """ A tuple with the various list types """
 
 INVALID_ATTRIBUTE_NAMES = ("__doc__", "__module__")
-""" The set of invalid attribute names """
+""" The set of invalid attribute names (for printing) """
 
-INVALID_ATTRIBUTE_TYPES = (types.InstanceType, types.MethodType, types.ListType)
-""" The set of invalid attribute types """
+VALID_ATTRIBUTE_TYPES = (types.IntType, types.FloatType, types.BooleanType, types.StringType, types.UnicodeType, types.NoneType)
+""" The set of valid attribute types (for printing) """
 
 def object_attribute_names(instance):
     """
@@ -69,7 +72,7 @@ def object_attribute_names(instance):
 
     # filters the attribute names based on the type and value
     # of them (non printable attributes are filtered out)
-    valid_attribute_names = [key for key, value in instance.__dict__.items() if not type(value) in INVALID_ATTRIBUTE_TYPES and not isinstance(value, object)]
+    valid_attribute_names = [key for key, value in instance.__dict__.items() if type(value) in VALID_ATTRIBUTE_TYPES]
 
     # returns the valid attribute names (ready for print)
     return valid_attribute_names
@@ -179,14 +182,8 @@ def object_print(instance):
             # continues the loop
             continue
 
-        # in case the attribute type is invalid
-        if attribute_type in INVALID_ATTRIBUTE_TYPES:
-            # continues the loop
-            continue
-
-        # in case the attribute represents an
-        # object of type new class
-        if isinstance(attribute, object):
+        # in case the attribute type is not valid
+        if not attribute_type in VALID_ATTRIBUTE_TYPES:
             # continues the loop
             continue
 
@@ -248,19 +245,27 @@ def __object_flatten_to_one(base_instance, instance, flattening_map):
         # retrieves the value type
         value_type = type(value)
 
-        # retrieves the instance value and type
-        instance_value = getattr(instance, key)
-        instance_value_type = type(instance_value)
+        # tries to retrieves the instance value
+        # sets the value to invalid in case there
+        # is no such instance value (attribute)
+        instance_value = hasattr(instance, key) and getattr(instance, key) or None
 
         # in case the value if of type string
         # (a leaf of the flattening structure)
         if value_type == types.StringType:
+            # sets the default instance value (not set value
+            # in case it's not present)
+            instance_value = not instance_value == None and instance_value or NOT_SET_VALUE
+
             # sets the leaf value in the base instance
             setattr(base_instance, value, instance_value)
         # in case the value is of type dictionary
-        # and the instance value type is an instance
         # (defined to one relation)
-        elif value_type == types.DictionaryType and (instance_value_type == types.InstanceType or isinstance(instance_value, object)):
+        elif value_type == types.DictionaryType:
+            # sets the default instance value (empty object
+            # in case it's not present)
+            instance_value = not instance_value == None and instance_value or object()
+
             # "flattens" the to one instance relation (recursion)
             __object_flatten_to_one(base_instance, instance_value, value)
 
@@ -287,19 +292,27 @@ def __object_flatten_to_one_map(base_map, instance, flattening_map):
         # retrieves the value type
         value_type = type(value)
 
-        # retrieves the instance value and type
-        instance_value = getattr(instance, key)
-        instance_value_type = type(instance_value)
+        # tries to retrieves the instance value
+        # sets the value to invalid in case there
+        # is no such instance value (attribute)
+        instance_value = hasattr(instance, key) and getattr(instance, key) or None
 
         # in case the value if of type string
         # (a leaf of the flattening structure)
         if value_type == types.StringType:
+            # sets the default instance value (not set value
+            # in case it's not present)
+            instance_value = not instance_value == None and instance_value or NOT_SET_VALUE
+
             # sets the leaf value in the base map
             base_map[value] = instance_value
         # in case the value is of type dictionary
-        # and the instance value type is an instance
         # (defined to one relation)
-        elif value_type == types.DictionaryType and (instance_value_type == types.InstanceType or isinstance(instance_value, object)):
+        elif value_type == types.DictionaryType:
+            # sets the default instance value (empty object
+            # in case it's not present)
+            instance_value = not instance_value == None and instance_value or object()
+
             # "flattens" the to one instance relation (recursion)
             __object_flatten_to_one_map(base_map, instance_value, value)
 
