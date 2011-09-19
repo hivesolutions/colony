@@ -119,8 +119,8 @@ def object_flatten(instance, flattening_map):
     instance_type = type(instance)
 
     # in case the type of instance is (just)
-    # an instance
-    if instance_type == types.InstanceType:
+    # an instance or a map (dictionary)
+    if instance_type in (types.InstanceType, types.DictionaryType):
         # converts the instance to a list
         # (in order to be able to work with it)
         instance = [instance]
@@ -177,7 +177,7 @@ def object_print(instance):
     for attribute_name in attribute_names:
         # retrieves the attribute and the name
         # of the attribute from the instance
-        attribute = getattr(instance, attribute_name)
+        attribute = __object_get_attr(instance, attribute_name)
         attribute_type = type(attribute)
 
         # in case the attribute name is invalid
@@ -192,6 +192,159 @@ def object_print(instance):
 
         # prints the attribute name and the attribute value
         print "%s: %s" % (attribute_name, attribute)
+
+
+def __object_has_attr(instance, attribute_name):
+    """
+    Checks if an attribute with the given name
+    exists in the given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in ojects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to be checked
+    for attribute.
+    @type attribute_name: String
+    @param attribute_name: The name of the attribute
+    to be checked in the instance.
+    @rtype: bool
+    @return: The result of the has attribute testing
+    in the instance.
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # checks if the attribute name exists in
+        # instance (map)
+        return attribute_name in instance
+    # otherwise the instance is a "normal" instance
+    else:
+        # calls the normal has attr function
+        # in the instance
+        return hasattr(instance, attribute_name)
+
+def __object_get_attr(instance, attribute_name):
+    """
+    Retrieves an attribute with the given name from the
+    given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in objects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to retrieve the
+    attribute.
+    @type attribute_name: String
+    @param attribute_name: The name of the attribute
+    to be retrieved from the instance.
+    @rtype: Object
+    @return: The retrieved attribute from the instance.
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # returns the attribute from the map
+        # (dictionary) with the normal accessor
+        return instance[attribute_name]
+    # otherwise the instance is a "normal" instance
+    else:
+        # calls the normal has getattr function
+        # in the instance
+        return getattr(instance, attribute_name)
+
+def __object_set_attr(instance, attribute_name, attribute):
+    """
+    Sets an attribute with the given name in the
+    given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in objects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to retrieve the
+    attribute.
+    @type attribute_name: String
+    @param attribute_name: The name of the attribute
+    to be set in the instance.
+    @type attribute: Object
+    @param attribute: The attribute (value) to be set in
+    the instance.
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # sets the attribute using the normal
+        # map setter
+        instance[attribute_name] = attribute
+    # otherwise the instance is a "normal" instance
+    else:
+        # uses the typical setattr function to set
+        # the attribute in the instance
+        setattr(instance, attribute_name, attribute)
+
+def __object_del_attr(instance, attribute_name):
+    """
+    Deletes the attribute with the given name from the
+    given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in objects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to delete the
+    attribute.
+    @type attribute_name: String
+    @param attribute_name: The name of the attribute
+    to be deleted.
+    @rtype: Object
+    @return: The retrieved attribute from the instance.
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # calls the del operator in the instance
+        # map (dictionary)
+        del instance[attribute_name]
+    # otherwise the instance is a "normal" instance
+    else:
+        # deletes the attribute from the instance
+        # using the delattr function
+        delattr(instance, attribute_name)
+
+def __object_keys(instance):
+    """
+    Retrieves a list with all the instance names (keys),
+    from the given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in objects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to retrieve the keys
+    list (names list).
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # returns the instance (map) keys values
+        # using the normal map method
+        return instance.keys()
+    # otherwise the instance is a "normal" instance
+    else:
+        # returns the instance dictionary keys
+        # (the instance names)
+        return instance.__dict__.keys()
 
 def _object_flatten(instances_list, flattening_map):
     """
@@ -254,7 +407,7 @@ def __object_flatten_to_one(base_instance, instance, flattening_map):
         # tries to retrieves the instance value
         # sets the value to invalid in case there
         # is no such instance value (attribute)
-        instance_value = hasattr(instance, key) and getattr(instance, key) or None
+        instance_value = __object_has_attr(instance, key) and __object_get_attr(instance, key) or None
 
         # in case the instance value is not set
         if instance_value == None:
@@ -265,7 +418,7 @@ def __object_flatten_to_one(base_instance, instance, flattening_map):
         # (a leaf of the flattening structure)
         if value_type == types.StringType:
             # sets the leaf value in the base instance
-            setattr(base_instance, value, instance_value)
+            __object_set_attr(base_instance, value, instance_value)
         # in case the value is of type dictionary
         # (defined to one relation)
         elif value_type == types.DictionaryType:
@@ -298,7 +451,7 @@ def __object_flatten_to_one_map(base_map, instance, flattening_map):
         # tries to retrieves the instance value
         # sets the value to invalid in case there
         # is no such instance value (attribute)
-        instance_value = hasattr(instance, key) and getattr(instance, key) or None
+        instance_value = __object_has_attr(instance, key) and __object_get_attr(instance, key) or None
 
         # in case the instance value is not set
         if instance_value == None:
@@ -343,18 +496,18 @@ def __object_flatten_to_many(instances_list, flattening_map):
         # with only the initial instance
         bucket = [instance]
 
-        # retrieves all the attribute names for the instance
-        attribute_names = dir(instance)
+        # retrieves all the attribute names (keys) for the instance
+        attribute_names = __object_keys(instance)
 
         # retrieves all the to many attribute names of the instance based
         # on the type being a list type (tuple or list)
-        to_many_attribute_names = [attribute_name for attribute_name in attribute_names if type(getattr(instance, attribute_name)) in LIST_TYPES]
+        to_many_attribute_names = [attribute_name for attribute_name in attribute_names if type(__object_get_attr(instance, attribute_name)) in LIST_TYPES]
 
         # iterates over all the "to many" attributes
         # to process the relations
         for to_many_attribute_name in to_many_attribute_names:
             # retrieves the to many attribute
-            to_many_attribute = getattr(instance, to_many_attribute_name)
+            to_many_attribute = __object_get_attr(instance, to_many_attribute_name)
 
             # retrieves the (new) flattening map for the to many
             # attribute
@@ -391,23 +544,23 @@ def __object_flush_topper(instances_list):
     for instance in instances_list:
         # in case the instance does not
         # contain the topper map
-        if not hasattr(instance, TOPPER_VALUE):
+        if not __object_has_attr(instance, TOPPER_VALUE):
             # continues th loop
             continue
 
         # retrieves the "topper" map for
         # the current instance
-        _topper = instance._topper
+        _topper = __object_get_attr(instance, TOPPER_VALUE)
 
         # iterates over all the "topper" map
         # items (to set them in the instance)
         for key, value in _topper.items():
             # sets the item in the instance
-            setattr(instance, key, value)
+            __object_set_attr(instance, key, value)
 
         # deletes the (temporary) "topper"
         # map value
-        delattr(instance, TOPPER_VALUE)
+        __object_del_attr(instance, TOPPER_VALUE)
 
 def __object_flush_null(instances_list):
     """
@@ -428,7 +581,7 @@ def __object_flush_null(instances_list):
     # instances list (to clear retrieve the object keys)
     for instance in instances_list:
         # retrieves the keys (names) for the instance
-        instance_keys = instance.__dict__.keys()
+        instance_keys = __object_keys(instance)
 
         # retrieves the object keys from the
         # union of the instance keys element
@@ -442,13 +595,13 @@ def __object_flush_null(instances_list):
         for object_key in object_keys:
             # in case the instance does not contains
             # the object key
-            if hasattr(instance, object_key):
+            if __object_has_attr(instance, object_key):
                 # continues the loop
                 continue
 
             # sets the object key in the instance
             # as null (none)
-            setattr(instance, object_key, None)
+            __object_set_attr(instance, object_key, None)
 
 def __object_flatten_product(first_list, second_list, flattening_map):
     """
@@ -483,10 +636,10 @@ def __object_flatten_product(first_list, second_list, flattening_map):
 
             # in case the second item contains
             # the "topper" attribute
-            if hasattr(second_item, TOPPER_VALUE):
+            if __object_has_attr(second_item, TOPPER_VALUE):
                 # retrieves the "topper" attribute
                 # from the second item
-                _topper = second_item._topper
+                _topper = __object_get_attr(second_item, TOPPER_VALUE)
             # otherwise it's a leaf node and a "topper"
             # map must be created
             else:
@@ -498,7 +651,7 @@ def __object_flatten_product(first_list, second_list, flattening_map):
             __object_flatten_to_one_map(_topper, second_item, flattening_map)
 
             # sets the "topper" map in the new item
-            new_item._topper = _topper
+            __object_set_attr(new_item, TOPPER_VALUE, _topper)
 
             # adds the new item to the product
             # list
