@@ -72,7 +72,7 @@ def object_attribute_names(instance):
 
     # filters the attribute names based on the type and value
     # of them (non printable attributes are filtered out)
-    valid_attribute_names = [key for key, value in instance.__dict__.items() if type(value) in VALID_ATTRIBUTE_TYPES]
+    valid_attribute_names = [key for key, value in __object_items(instance) if type(value) in VALID_ATTRIBUTE_TYPES]
 
     # returns the valid attribute names (ready for print)
     return valid_attribute_names
@@ -98,7 +98,7 @@ def object_attribute_values(instance, valid_attribute_names = None):
     # retrieves the valid attribute names in order
     # to use them to retrieve the valid attribute values
     valid_attribute_names = valid_attribute_names or object_attribute_names(instance)
-    valid_attribute_values = [getattr(instance, value) for value in valid_attribute_names]
+    valid_attribute_values = [__object_get_attr(instance, value) for value in valid_attribute_names]
 
     # returns the valid attribute values (ready for print)
     return valid_attribute_values
@@ -170,7 +170,7 @@ def object_print(instance):
 
     # retrieves the list of all the attribute names
     # for the instance
-    attribute_names = dir(instance)
+    attribute_names = __object_keys(instance)
 
     # iterates over all the attribute names of the instance
     # (filters the invalid ones)
@@ -192,159 +192,6 @@ def object_print(instance):
 
         # prints the attribute name and the attribute value
         print "%s: %s" % (attribute_name, attribute)
-
-
-def __object_has_attr(instance, attribute_name):
-    """
-    Checks if an attribute with the given name
-    exists in the given instance.
-    This method provides an additional layer of abstraction
-    that allows it to be used in ojects or in maps.
-
-    @type instance: Object
-    @param instance: The instance to be checked
-    for attribute.
-    @type attribute_name: String
-    @param attribute_name: The name of the attribute
-    to be checked in the instance.
-    @rtype: bool
-    @return: The result of the has attribute testing
-    in the instance.
-    """
-
-    # retrieves the instance type
-    instance_type = type(instance)
-
-    # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
-        # checks if the attribute name exists in
-        # instance (map)
-        return attribute_name in instance
-    # otherwise the instance is a "normal" instance
-    else:
-        # calls the normal has attr function
-        # in the instance
-        return hasattr(instance, attribute_name)
-
-def __object_get_attr(instance, attribute_name):
-    """
-    Retrieves an attribute with the given name from the
-    given instance.
-    This method provides an additional layer of abstraction
-    that allows it to be used in objects or in maps.
-
-    @type instance: Object
-    @param instance: The instance to retrieve the
-    attribute.
-    @type attribute_name: String
-    @param attribute_name: The name of the attribute
-    to be retrieved from the instance.
-    @rtype: Object
-    @return: The retrieved attribute from the instance.
-    """
-
-    # retrieves the instance type
-    instance_type = type(instance)
-
-    # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
-        # returns the attribute from the map
-        # (dictionary) with the normal accessor
-        return instance[attribute_name]
-    # otherwise the instance is a "normal" instance
-    else:
-        # calls the normal has getattr function
-        # in the instance
-        return getattr(instance, attribute_name)
-
-def __object_set_attr(instance, attribute_name, attribute):
-    """
-    Sets an attribute with the given name in the
-    given instance.
-    This method provides an additional layer of abstraction
-    that allows it to be used in objects or in maps.
-
-    @type instance: Object
-    @param instance: The instance to retrieve the
-    attribute.
-    @type attribute_name: String
-    @param attribute_name: The name of the attribute
-    to be set in the instance.
-    @type attribute: Object
-    @param attribute: The attribute (value) to be set in
-    the instance.
-    """
-
-    # retrieves the instance type
-    instance_type = type(instance)
-
-    # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
-        # sets the attribute using the normal
-        # map setter
-        instance[attribute_name] = attribute
-    # otherwise the instance is a "normal" instance
-    else:
-        # uses the typical setattr function to set
-        # the attribute in the instance
-        setattr(instance, attribute_name, attribute)
-
-def __object_del_attr(instance, attribute_name):
-    """
-    Deletes the attribute with the given name from the
-    given instance.
-    This method provides an additional layer of abstraction
-    that allows it to be used in objects or in maps.
-
-    @type instance: Object
-    @param instance: The instance to delete the
-    attribute.
-    @type attribute_name: String
-    @param attribute_name: The name of the attribute
-    to be deleted.
-    @rtype: Object
-    @return: The retrieved attribute from the instance.
-    """
-
-    # retrieves the instance type
-    instance_type = type(instance)
-
-    # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
-        # calls the del operator in the instance
-        # map (dictionary)
-        del instance[attribute_name]
-    # otherwise the instance is a "normal" instance
-    else:
-        # deletes the attribute from the instance
-        # using the delattr function
-        delattr(instance, attribute_name)
-
-def __object_keys(instance):
-    """
-    Retrieves a list with all the instance names (keys),
-    from the given instance.
-    This method provides an additional layer of abstraction
-    that allows it to be used in objects or in maps.
-
-    @type instance: Object
-    @param instance: The instance to retrieve the keys
-    list (names list).
-    """
-
-    # retrieves the instance type
-    instance_type = type(instance)
-
-    # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
-        # returns the instance (map) keys values
-        # using the normal map method
-        return instance.keys()
-    # otherwise the instance is a "normal" instance
-    else:
-        # returns the instance dictionary keys
-        # (the instance names)
-        return instance.__dict__.keys()
 
 def _object_flatten(instances_list, flattening_map):
     """
@@ -574,8 +421,8 @@ def __object_flush_null(instances_list):
     the null values flushed.
     """
 
-    # creates the set of object keys
-    object_keys = set()
+    # creates the set of instance keys
+    instances_keys = set()
 
     # iterates over all the instances in the
     # instances list (to clear retrieve the object keys)
@@ -583,25 +430,25 @@ def __object_flush_null(instances_list):
         # retrieves the keys (names) for the instance
         instance_keys = __object_keys(instance)
 
-        # retrieves the object keys from the
+        # retrieves the instances keys from the
         # union of the instance keys element
-        object_keys = object_keys.union(instance_keys)
+        instances_keys = instances_keys.union(instance_keys)
 
     # iterates over all the instances in
     # the instance list
     for instance in instances_list:
-        # iterates over all the object keys
-        # in the object keys list
-        for object_key in object_keys:
-            # in case the instance does not contains
-            # the object key
-            if __object_has_attr(instance, object_key):
+        # iterates over all the instances keys
+        # in the instances keys list
+        for instances_key in instances_keys:
+            # in case the instance already contains
+            # the instances key
+            if __object_has_attr(instance, instances_key):
                 # continues the loop
                 continue
 
             # sets the object key in the instance
             # as null (none)
-            __object_set_attr(instance, object_key, None)
+            __object_set_attr(instance, instances_key, None)
 
 def __object_flatten_product(first_list, second_list, flattening_map):
     """
@@ -660,3 +507,181 @@ def __object_flatten_product(first_list, second_list, flattening_map):
     # returns the (instance) product
     # list (result of multiplication)
     return product_list
+
+def __object_has_attr(instance, attribute_name):
+    """
+    Checks if an attribute with the given name
+    exists in the given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in ojects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to be checked
+    for attribute.
+    @type attribute_name: String
+    @param attribute_name: The name of the attribute
+    to be checked in the instance.
+    @rtype: bool
+    @return: The result of the has attribute testing
+    in the instance.
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # checks if the attribute name exists in
+        # instance (map)
+        return attribute_name in instance
+    # otherwise the instance is a "normal" instance
+    else:
+        # calls the normal has attr function
+        # in the instance
+        return hasattr(instance, attribute_name)
+
+def __object_get_attr(instance, attribute_name):
+    """
+    Retrieves an attribute with the given name from the
+    given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in objects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to retrieve the
+    attribute.
+    @type attribute_name: String
+    @param attribute_name: The name of the attribute
+    to be retrieved from the instance.
+    @rtype: Object
+    @return: The retrieved attribute from the instance.
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # returns the attribute from the map
+        # (dictionary) with the normal accessor
+        return instance[attribute_name]
+    # otherwise the instance is a "normal" instance
+    else:
+        # calls the normal has getattr function
+        # in the instance
+        return getattr(instance, attribute_name)
+
+def __object_set_attr(instance, attribute_name, attribute):
+    """
+    Sets an attribute with the given name in the
+    given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in objects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to retrieve the
+    attribute.
+    @type attribute_name: String
+    @param attribute_name: The name of the attribute
+    to be set in the instance.
+    @type attribute: Object
+    @param attribute: The attribute (value) to be set in
+    the instance.
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # sets the attribute using the normal
+        # map setter
+        instance[attribute_name] = attribute
+    # otherwise the instance is a "normal" instance
+    else:
+        # uses the typical setattr function to set
+        # the attribute in the instance
+        setattr(instance, attribute_name, attribute)
+
+def __object_del_attr(instance, attribute_name):
+    """
+    Deletes the attribute with the given name from the
+    given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in objects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to delete the
+    attribute.
+    @type attribute_name: String
+    @param attribute_name: The name of the attribute
+    to be deleted.
+    @rtype: Object
+    @return: The retrieved attribute from the instance.
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # calls the del operator in the instance
+        # map (dictionary)
+        del instance[attribute_name]
+    # otherwise the instance is a "normal" instance
+    else:
+        # deletes the attribute from the instance
+        # using the delattr function
+        delattr(instance, attribute_name)
+
+def __object_keys(instance):
+    """
+    Retrieves a list with all the instance names (keys),
+    from the given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in objects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to retrieve the keys
+    list (names list).
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # returns the instance (map) keys values
+        # using the normal map method
+        return instance.keys()
+    # otherwise the instance is a "normal" instance
+    else:
+        # returns the instance dictionary keys
+        # (the instance names)
+        return instance.__dict__.keys()
+
+def __object_items(instance):
+    """
+    Retrieves a list with all the instance value and keys (items),
+    from the given instance.
+    This method provides an additional layer of abstraction
+    that allows it to be used in objects or in maps.
+
+    @type instance: Object
+    @param instance: The instance to retrieve the values
+    and keys list (items list).
+    """
+
+    # retrieves the instance type
+    instance_type = type(instance)
+
+    # in case the instance type is dictionary
+    if instance_type == types.DictionaryType:
+        # returns the instance (map) keys values
+        # using the normal map method
+        return instance.items()
+    # otherwise the instance is a "normal" instance
+    else:
+        # returns the instance dictionary keys
+        # (the instance names)
+        return instance.__dict__.items()
