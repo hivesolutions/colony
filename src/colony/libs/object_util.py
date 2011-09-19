@@ -222,6 +222,9 @@ def _object_flatten(instances_list, flattening_map):
     # flushes the "topper" map in the instances list
     __object_flush_topper(instances_list)
 
+    # flushes the null elements in the instances list
+    __object_flush_null(instances_list)
+
     # returns the list of flatten instances
     return instances_list
 
@@ -253,22 +256,19 @@ def __object_flatten_to_one(base_instance, instance, flattening_map):
         # is no such instance value (attribute)
         instance_value = hasattr(instance, key) and getattr(instance, key) or None
 
+        # in case the instance value is not set
+        if instance_value == None:
+            # continues the loop
+            continue
+
         # in case the value if of type string
         # (a leaf of the flattening structure)
         if value_type == types.StringType:
-            # sets the default instance value (not set value
-            # in case it's not present)
-            instance_value = not instance_value == None and instance_value or NOT_SET_VALUE
-
             # sets the leaf value in the base instance
             setattr(base_instance, value, instance_value)
         # in case the value is of type dictionary
         # (defined to one relation)
         elif value_type == types.DictionaryType:
-            # sets the default instance value (empty object
-            # in case it's not present)
-            instance_value = not instance_value == None and instance_value or object()
-
             # "flattens" the to one instance relation (recursion)
             __object_flatten_to_one(base_instance, instance_value, value)
 
@@ -300,22 +300,19 @@ def __object_flatten_to_one_map(base_map, instance, flattening_map):
         # is no such instance value (attribute)
         instance_value = hasattr(instance, key) and getattr(instance, key) or None
 
+        # in case the instance value is not set
+        if instance_value == None:
+            # continues the loop
+            continue
+
         # in case the value if of type string
         # (a leaf of the flattening structure)
         if value_type == types.StringType:
-            # sets the default instance value (not set value
-            # in case it's not present)
-            instance_value = not instance_value == None and instance_value or NOT_SET_VALUE
-
             # sets the leaf value in the base map
             base_map[value] = instance_value
         # in case the value is of type dictionary
         # (defined to one relation)
         elif value_type == types.DictionaryType:
-            # sets the default instance value (empty object
-            # in case it's not present)
-            instance_value = not instance_value == None and instance_value or object()
-
             # "flattens" the to one instance relation (recursion)
             __object_flatten_to_one_map(base_map, instance_value, value)
 
@@ -411,6 +408,47 @@ def __object_flush_topper(instances_list):
         # deletes the (temporary) "topper"
         # map value
         delattr(instance, TOPPER_VALUE)
+
+def __object_flush_null(instances_list):
+    """
+    Flushes (clears) the elements in the objects
+    which don't have any value defined.
+    This method allows every object to become uniform
+    with the others.
+
+    @type instances_list: List
+    @param instances_list: The list of instances to have
+    the null values flushed.
+    """
+
+    # creates the set of object keys
+    object_keys = set()
+
+    # iterates over all the instances in the
+    # instances list (to clear retrieve the object keys)
+    for instance in instances_list:
+        # retrieves the keys (names) for the instance
+        instance_keys = instance.__dict__.keys()
+
+        # retrieves the object keys from the
+        # union of the instance keys element
+        object_keys = object_keys.union(instance_keys)
+
+    # iterates over all the instances in
+    # the instance list
+    for instance in instances_list:
+        # iterates over all the object keys
+        # in the object keys list
+        for object_key in object_keys:
+            # in case the instance does not contains
+            # the object key
+            if hasattr(instance, object_key):
+                # continues the loop
+                continue
+
+            # sets the object key in the instance
+            # as null (none)
+            setattr(instance, object_key, None)
 
 def __object_flatten_product(first_list, second_list, flattening_map):
     """
