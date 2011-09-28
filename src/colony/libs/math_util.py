@@ -139,3 +139,64 @@ def fast_exponentiation(base, exponent, modulus):
 
     # returns the result
     return result
+
+def item_set_total(item_set):
+    """
+    Calculates the total value from the
+    given item set (map).
+    The total is calculated summing the value
+    parts of the map.
+
+    @type item_set: Dictionary
+    @param item_set: The item set (map) to calculate
+    the total from its values.
+    @rtype: float
+    @return: The total value from the item set.
+    """
+
+    # retrieves the item set values
+    item_set_values = item_set.values()
+
+    # calculates the total value
+    total_value = sum(item_set_values)
+
+    # returns the total value
+    return total_value
+
+def item_set_percentage(item_name, item_set):
+    """
+    Calculates the relative percentage value of
+    the value of the item with the given name,
+    in relation to the total value of the item set.
+
+    @type item_name: String
+    @param item_name: The name of the item to retrieve
+    the relative percentage value.
+    @type item_set: Dictionary
+    @param item_set: The item set (map) to be used
+    as base (total) for relative calculation.
+    @rtype: float
+    @return: The relative percentage value of the item
+    in relation to the total value of the item set.
+    """
+
+    # retrieves the item value from the give
+    # item name
+    item_value = item_set.get(item_name, None)
+
+    # in case the item value is not defined
+    # or is zero
+    if not item_value:
+        # returns zero (avoids division by zero)
+        return 0
+
+    # calculates the total value from the
+    # item set
+    total_value = item_set_total(item_set)
+
+    # calculates the percentage value from the
+    # total value (multiplication by on hundred)
+    percentage_value = float(item_value) / total_value * 100
+
+    # returns the percentage value
+    return percentage_value
