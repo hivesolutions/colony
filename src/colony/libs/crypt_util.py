@@ -73,8 +73,32 @@ INTEGER_TO_ASCII_64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 PASSWORD_VALUE_REGEX_VALUE = "^\{(?P<hash>\w+)\}(?P<value>.+)$"
 """ The password value regex value """
 
+NUMBER_REGEX_VALUE = "\d+"
+""" The number regex value """
+
+LETTER_LOWER_REGEX_VALUE = "[a-z]"
+""" The letter lower regex value """
+
+LETTER_UPPER_REGEX_VALUE = "[A-Z]"
+""" The letter upper regex value """
+
+SPECIAL_CHARACTER_REGEX_VALUE = ".[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]"
+""" The special character regex value """
+
 PASSWORD_VALUE_REGEX = re.compile(PASSWORD_VALUE_REGEX_VALUE)
 """ The password value regex """
+
+NUMBER_REGEX = re.compile(NUMBER_REGEX_VALUE)
+""" The number regex """
+
+LETTER_LOWER_REGEX = re.compile(LETTER_LOWER_REGEX_VALUE)
+""" The letter lower regex """
+
+LETTER_UPPER_REGEX = re.compile(LETTER_UPPER_REGEX_VALUE)
+""" The letter upper regex """
+
+SPECIAL_CHARACTER_REGEX = re.compile(SPECIAL_CHARACTER_REGEX_VALUE)
+""" The special character regex """
 
 def password_crypt(password, salt = "", hash_method = MD5_VALUE):
     """
@@ -185,6 +209,77 @@ def password_match(password_hash, password, salt = ""):
 
     # returns if both password match
     return passwords_match
+
+def password_strength(password):
+    """
+    Calculates the "theoretical" password strength
+    from the given password.
+    The returned value is an integer ranging from the lowest
+    zero value (unsafest) to a limit value (safest).
+
+    @type password: String
+    @param password: The password to be measured for strength.
+    @rtype: int
+    @return: An integer describing the strength
+    level of the given password.
+    """
+
+    # starts the strength value
+    # counter to the minimum value (zero)
+    strength_value = 1
+
+    # retrieves the length of the password
+    password_length = len(password)
+
+    # in case the password is not set
+    # (empty password)
+    if password_length < 1:
+        # returns the strength value
+        # immediately
+        return strength_value
+
+    # increments the strength value
+    strength_value += 1
+
+    # in case the password length is less
+    # than a minimum of four
+    if password_length < 4:
+        # returns the strength value
+        # immediately
+        return strength_value
+
+    # in case the password length is more
+    # or equal to eight
+    if password_length >= 8:
+        # increments the strength value
+        strength_value += 1
+
+    # in case the password length is more
+    # or equal to eleven
+    if password_length >= 11:
+        # increments the strength value
+        strength_value += 1
+
+    # in case the password contains at least
+    # a number in it
+    if NUMBER_REGEX.search(password):
+        # increments the strength value
+        strength_value += 1
+
+    # in case the password contains both lower case and
+    # upper case letters
+    if LETTER_LOWER_REGEX.search(password) and LETTER_UPPER_REGEX.search(password):
+        # increments the strength value
+        strength_value +=  1
+
+    # in case the password contains special characters
+    # in it (extra security)
+    if SPECIAL_CHARACTER_REGEX.search(password):
+        # increments the strength value
+        strength_value += 1
+
+    # returns the strength value
+    return strength_value
 
 def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     """
