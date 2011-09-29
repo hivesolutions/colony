@@ -226,7 +226,7 @@ def password_strength(password):
 
     # starts the strength value
     # counter to the minimum value (zero)
-    strength_value = 1
+    strength_value = 0
 
     # retrieves the length of the password
     password_length = len(password)
