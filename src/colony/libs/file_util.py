@@ -392,7 +392,7 @@ class FileContext:
 
             # checks the directory for items and removes
             # the directory in the path (recursively)
-            not directory_items and os.removedirs(directory_path)
+            not directory_items and os.path.exists(directory_path) and os.removedirs(directory_path)
 
     def remove_file(self, file_path):
         """
