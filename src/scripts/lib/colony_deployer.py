@@ -748,6 +748,19 @@ class Deployer:
             # copies the resource file as the new resource file
             shutil.copy(resource_file_path, new_resource_file_path)
 
+        # in case the sub type is plugin system
+        if sub_type == PLUGIN_SYSTEM_VALUE:
+            # deploys the plugin system package, using the current paths
+            self.deploy_plugin_system_package(package_path, temporary_path)
+        # in case the sub type is library
+        elif sub_type == LIBRARY_VALUE:
+            # deploys the library package, using the current paths
+            self.deploy_library_package(package_path, temporary_path)
+        # in case the sub type is configuration
+        elif sub_type == CONFIGURATION_VALUE:
+            # deploys the configuration package, using the current paths
+            self.deploy_configuration_package(package_path, temporary_path)
+
         # persists the duplicates structure
         self._persist_duplicates_structure(duplicates_structure)
 
@@ -768,19 +781,6 @@ class Deployer:
 
         # copies the package file to the registry
         shutil.copy(package_path, registry_path + "/containers")
-
-        # in case the sub type is plugin system
-        if sub_type == PLUGIN_SYSTEM_VALUE:
-            # deploys the plugin system package, using the current paths
-            self.deploy_plugin_system_package(package_path, temporary_path)
-        # in case the sub type is library
-        elif sub_type == LIBRARY_VALUE:
-            # deploys the library package, using the current paths
-            self.deploy_library_package(package_path, temporary_path)
-        # in case the sub type is configuration
-        elif sub_type == CONFIGURATION_VALUE:
-            # deploys the configuration package, using the current paths
-            self.deploy_configuration_package(package_path, temporary_path)
 
     def deploy_plugin_system_package(self, package_path, temporary_path):
         """
@@ -1444,15 +1444,6 @@ class Deployer:
             # removes the directories in the directory path
             os.removedirs(directory_path)
 
-        # prints a log message
-        self.log("Removing container file '%s'" % container_path)
-
-        # removes the container file
-        os.remove(container_path)
-
-        # removes the container item
-        self._remove_container_item(package_id)
-
         # in case the sub type is plugin system
         if sub_type == PLUGIN_SYSTEM_VALUE:
             # removes the plugin system package
@@ -1465,6 +1456,15 @@ class Deployer:
         elif sub_type == CONFIGURATION_VALUE:
             # removes the configuration package
             self.removes_configuration_package(package_id, package_version, specification)
+
+        # prints a log message
+        self.log("Removing container file '%s'" % container_path)
+
+        # removes the container file
+        os.remove(container_path)
+
+        # removes the container item
+        self._remove_container_item(package_id)
 
     def remove_plugin_system_package(self, package_id, package_version, specification):
         """
