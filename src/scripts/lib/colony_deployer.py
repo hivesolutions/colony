@@ -1427,6 +1427,19 @@ class Deployer:
                 # directory path list
                 directory_path_list.append(resource_file_directory_path)
 
+        # in case the sub type is plugin system
+        if sub_type == PLUGIN_SYSTEM_VALUE:
+            # removes the plugin system package
+            self.remove_plugin_system_package(package_id, package_version, specification)
+        # in case the sub type is library
+        elif sub_type == LIBRARY_VALUE:
+            # removes the library package
+            self.remove_library_package(package_id, package_version, specification)
+        # in case the sub type is configuration
+        elif sub_type == CONFIGURATION_VALUE:
+            # removes the configuration package
+            self.removes_configuration_package(package_id, package_version, specification)
+
         # persists the duplicates structure
         self._persist_duplicates_structure(duplicates_structure)
 
@@ -1443,19 +1456,6 @@ class Deployer:
 
             # removes the directories in the directory path
             os.removedirs(directory_path)
-
-        # in case the sub type is plugin system
-        if sub_type == PLUGIN_SYSTEM_VALUE:
-            # removes the plugin system package
-            self.remove_plugin_system_package(package_id, package_version, specification)
-        # in case the sub type is library
-        elif sub_type == LIBRARY_VALUE:
-            # removes the library package
-            self.remove_library_package(package_id, package_version, specification)
-        # in case the sub type is configuration
-        elif sub_type == CONFIGURATION_VALUE:
-            # removes the configuration package
-            self.removes_configuration_package(package_id, package_version, specification)
 
         # prints a log message
         self.log("Removing container file '%s'" % container_path)
