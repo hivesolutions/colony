@@ -2963,6 +2963,7 @@ class PluginManager:
 
             # acquires the ready semaphore for the beginning of the unloading process
             plugin.acquire_ready_semaphore()
+        # otherwise it's a normal plugin type unload
         else:
             try:
                 # calls the unload plugin method in the plugin (plugin shutdown process)
