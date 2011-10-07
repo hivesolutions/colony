@@ -1713,6 +1713,8 @@ class PluginManager:
     def unload_system(self, thread_safe = True):
         """
         Unloads the plugin system from memory, exiting the system.
+        A timer is installed to exit the system in a forced way
+        (avoid locking of the process resources).
 
         @type thread_safe: bool
         @param thread_safe: If the unloading should use the event mechanism
@@ -1763,6 +1765,18 @@ class PluginManager:
         self.kill_system_timer.cancel()
 
     def reload_system(self, thread_safe = True, flush_deploy = False):
+        """
+        Reloads the current plugin system, all the memory resources
+        are releases and then the process is restarted.
+
+        @type thread_safe: bool
+        @param thread_safe: If the unloading should use the event mechanism
+        to provide thread safety.
+        @type flush_deploy: bool
+        @param flush_deploy: If a flush on the current container in the
+        deploy directory should be done (upgrade).
+        """
+
         # unloads the system
         self.unload_system(thread_safe)
 
@@ -1774,23 +1788,6 @@ class PluginManager:
         # re-launches the system (with the
         # new settings)
         self._relaunch_system()
-
-    def _flush_deploy(self):
-        # creates the arguments list for the deploy directory
-        # flush of the contents (deploys all the containers)
-        args = [sys.executable, self.manager_path + "/scripts/all/colony_deploy.py", "--flush"]
-
-        # creates the "deployer" process and waits
-        # for it to finish
-        process = subprocess.Popen(args)
-        process.wait()
-
-    def _relaunch_system(self):
-        # "re-starts the system with the current environment
-        # argument values
-        args = [sys.executable]
-        args.extend(sys.argv)
-        subprocess.Popen(args)
 
     def main_loop(self):
         """
@@ -5125,6 +5122,33 @@ class PluginManager:
         return (
             self.get_environment_variable(*arguments),
         )
+
+    def _flush_deploy(self):
+        """
+        Runs a flush in the deploy directory to deploy
+        all the current containers in that directory.
+        """
+
+        # creates the arguments list for the deploy directory
+        # flush of the contents (deploys all the containers)
+        args = [sys.executable, self.manager_path + "/scripts/all/colony_deploy.py", "--flush"]
+
+        # creates the "deployer" process and waits
+        # for it to finish
+        process = subprocess.Popen(args)
+        process.wait()
+
+    def _relaunch_system(self):
+        """
+        Re-launches the system through the creation
+        of a new process.
+        """
+
+        # "re-starts the system with the current environment
+        # argument values
+        args = [sys.executable]
+        args.extend(sys.argv)
+        subprocess.Popen(args)
 
     def _kill_system_signal_handler(self, signum, frame):
         """
