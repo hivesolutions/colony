@@ -49,6 +49,7 @@ import inspect
 import tempfile
 import threading
 import traceback
+import subprocess
 
 import __builtin__
 
@@ -1760,6 +1761,36 @@ class PluginManager:
 
         # cancels the kill system timer
         self.kill_system_timer.cancel()
+
+    def reload_system(self, thread_safe = True, flush_deploy = False):
+        # unloads the system
+        self.unload_system(thread_safe)
+
+        # in case the flush deploy flag is set
+        # the containers in the deploy directory
+        # are deployed
+        flush_deploy and self._flush_deploy()
+
+        # re-launches the system (with the
+        # new settings)
+        self._relaunch_system()
+
+    def _flush_deploy(self):
+        # creates the arguments list for the deploy directory
+        # flush of the contents (deploys all the containers)
+        args = [sys.executable, self.manager_path + "/scripts/all/colony_deploy.py", "--flush"]
+
+        # creates the "deployer" process and waits
+        # for it to finish
+        process = subprocess.Popen(args)
+        process.wait()
+
+    def _relaunch_system(self):
+        # "re-starts the system with the current environment
+        # argument values
+        args = [sys.executable]
+        args.extend(sys.argv)
+        subprocess.Popen(args)
 
     def main_loop(self):
         """
