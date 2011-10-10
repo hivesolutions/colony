@@ -1260,8 +1260,12 @@ class Deployer:
                 # continues the loop
                 continue
 
-            # removes the directories in the directory path
-            os.removedirs(directory_path)
+            try:
+                # removes the directories in the directory path
+                os.removedirs(directory_path)
+            except:
+                # prints a log message
+                self.log("Problem removing directory path: %s" % directory_path)
 
         # prints a log message
         self.log("Removing plugin file '%s'" % plugin_path)
@@ -1454,8 +1458,12 @@ class Deployer:
                 # continues the loop
                 continue
 
-            # removes the directories in the directory path
-            os.removedirs(directory_path)
+            try:
+                # removes the directories in the directory path
+                os.removedirs(directory_path)
+            except:
+                # prints a log message
+                self.log("Problem removing directory path: %s" % directory_path)
 
         # prints a log message
         self.log("Removing container file '%s'" % container_path)
@@ -1539,8 +1547,12 @@ class Deployer:
                 # continues the loop
                 continue
 
-            # removes the directories in the directory path
-            os.removedirs(directory_path)
+            try:
+                # removes the directories in the directory path
+                os.removedirs(directory_path)
+            except:
+                # prints a log message
+                self.log("Problem removing directory path: %s" % directory_path)
 
     def remove_library_package(self, package_id, package_version, specification):
         """
@@ -1615,8 +1627,12 @@ class Deployer:
                 # continues the loop
                 continue
 
-            # removes the directories in the directory path
-            os.removedirs(directory_path)
+            try:
+                # removes the directories in the directory path
+                os.removedirs(directory_path)
+            except:
+                # prints a log message
+                self.log("Problem removing directory path: %s" % directory_path)
 
     def remove_configuration_package(self, package_id, package_version, specification):
         """
