@@ -136,12 +136,14 @@ def map_remove(removal_map, destiny_map):
         # removes the key item from the destiny map
         del destiny_map[key]
 
-def map_extend(base_map, extension_map, override = True, copy_base_map = True):
+def map_extend(base_map, extension_map, override = True, recursive = False, copy_base_map = True):
     """
     Extends the given map with the extension map,
     retrieving a map resulting of the merge of both maps.
     In case the override flag is set the values are overridden
     in case they already exist in the base map.
+    An optional recursive flag allows the extension to be
+    made recursive in case the value is a map.
     The base map may be changed or left untouched based on
     the copy base map flag.
 
@@ -154,6 +156,10 @@ def map_extend(base_map, extension_map, override = True, copy_base_map = True):
     @type override: bool
     @param override: If a value should be overridden in
     case it already exists in the base map.
+    @type recursive: bool
+    @param recursive: If a value should be extended in
+    case it already exists in the base map (recursive
+    extension).
     @type copy_base_map: bool
     @param copy_base_map: If the base map should be copied before
     being extended in order to avoid loss of data.
@@ -173,7 +179,21 @@ def map_extend(base_map, extension_map, override = True, copy_base_map = True):
             # continues the loop
             continue
 
-        # sets the extension value in the result map
+        # retrieves the type for the value
+        value_type = type(value)
+
+        # in case the value is a map and the
+        # recursive flag is set
+        if recursive and value_type == types.DictType:
+            # retrieves the result map value in
+            # case it's set
+            result_map_value = result_map.get(key, {})
+
+            # extends the map that is currently
+            # in the result map with the new value (recursive step)
+            value = map_extend(result_map_value, value, override, recursive, copy_base_map)
+
+        # sets the (extension) value in the result map
         result_map[key] = value
 
     # returns the result map
