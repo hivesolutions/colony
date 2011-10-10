@@ -1017,13 +1017,17 @@ class FileTransactionContext(FileContext):
         # iterates over all the path tuples in
         # path tuples list
         for path_tuple in self.path_tuples_list:
-            # unpacks the path tuple
-            operation, _file_path, _recursive = path_tuple
+            # retrieves the first item from the path
+            # tuple, the operation value
+            operation = path_tuple[0]
 
             # in case the operation is not of type remove
             if not operation == REMOVE_OPERATION:
                 # continues the loop
                 continue
+
+            # unpacks the path tuple (for a remove operation)
+            operation, _file_path, _handle_exception, _recursive = path_tuple
 
             # checks if the current iteration file path is
             # a parent path to the path being checked
