@@ -1265,7 +1265,7 @@ class Deployer:
                 os.removedirs(directory_path)
             except:
                 # prints a log message
-                self.log("Problem removing directory path: %s" % directory_path)
+                self.log("Problem removing directory '%s'" % directory_path)
 
         # prints a log message
         self.log("Removing plugin file '%s'" % plugin_path)
@@ -1463,7 +1463,7 @@ class Deployer:
                 os.removedirs(directory_path)
             except:
                 # prints a log message
-                self.log("Problem removing directory path: %s" % directory_path)
+                self.log("Problem removing directory '%s'" % directory_path)
 
         # prints a log message
         self.log("Removing container file '%s'" % container_path)
@@ -1552,7 +1552,7 @@ class Deployer:
                 os.removedirs(directory_path)
             except:
                 # prints a log message
-                self.log("Problem removing directory path: %s" % directory_path)
+                self.log("Problem removing directory '%s'" % directory_path)
 
     def remove_library_package(self, package_id, package_version, specification):
         """
@@ -1632,7 +1632,7 @@ class Deployer:
                 os.removedirs(directory_path)
             except:
                 # prints a log message
-                self.log("Problem removing directory path: %s" % directory_path)
+                self.log("Problem removing directory '%s'" % directory_path)
 
     def remove_configuration_package(self, package_id, package_version, specification):
         """
