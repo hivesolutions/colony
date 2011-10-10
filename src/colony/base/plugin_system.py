@@ -1764,7 +1764,7 @@ class PluginManager:
         # cancels the kill system timer
         self.kill_system_timer.cancel()
 
-    def reload_system(self, thread_safe = True, flush_deploy = False):
+    def reload_system(self, thread_safe = True):
         """
         Reloads the current plugin system, all the memory resources
         are releases and then the process is restarted.
@@ -1772,18 +1772,10 @@ class PluginManager:
         @type thread_safe: bool
         @param thread_safe: If the unloading should use the event mechanism
         to provide thread safety.
-        @type flush_deploy: bool
-        @param flush_deploy: If a flush on the current container in the
-        deploy directory should be done (upgrade).
         """
 
         # unloads the system
         self.unload_system(thread_safe)
-
-        # in case the flush deploy flag is set
-        # the containers in the deploy directory
-        # are deployed
-        flush_deploy and self._flush_deploy()
 
         # re-launches the system (with the
         # new settings)
@@ -5122,21 +5114,6 @@ class PluginManager:
         return (
             self.get_environment_variable(*arguments),
         )
-
-    def _flush_deploy(self):
-        """
-        Runs a flush in the deploy directory to deploy
-        all the current containers in that directory.
-        """
-
-        # creates the arguments list for the deploy directory
-        # flush of the contents (deploys all the containers)
-        args = [sys.executable, self.manager_path + "/scripts/all/colony_deploy.py", "--flush"]
-
-        # creates the "deployer" process and waits
-        # for it to finish
-        process = subprocess.Popen(args)
-        process.wait()
 
     def _relaunch_system(self):
         """
