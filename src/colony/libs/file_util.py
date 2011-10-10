@@ -376,49 +376,70 @@ class FileContext:
             # closes the file
             file.close()
 
-    def remove_directory(self, directory_path):
+    def remove_directory(self, directory_path, handle_exception = True):
         """
         Removes the directory in the given path.
 
         @type directory_path: String
         @param directory_path: The path to the directory
         to be removed.
+        @type handle_exception: bool
+        @param handle_exception: If an eventual raised exception shall
+        be handled gracefully.
         """
 
-        # in case the directory path exists
-        if os.path.exists(directory_path):
-            # retrieves the directory items
-            directory_items = os.listdir(directory_path)
+        # in case the directory path does not exists
+        if not os.path.exists(directory_path):
+            # returns immediately
+            return
 
+        # retrieves the directory items
+        directory_items = os.listdir(directory_path)
+
+        try:
             # checks the directory for items and removes
             # the directory in the path (recursively)
             not directory_items and os.removedirs(directory_path)
+        except BaseException, exception:
+            if not handle_exception: raise exception
 
-    def remove_file(self, file_path):
+    def remove_file(self, file_path, handle_exception = False):
         """
         Removes the file in the given path.
 
         @type directory_path: String
         @param directory_path: The path to the file
         to be removed.
+        @type handle_exception: bool
+        @param handle_exception: If an eventual raised exception shall
+        be handled gracefully.
         """
 
-        # in case the file path exists
-        if os.path.exists(file_path):
+        # in case the file path does not exists
+        if not os.path.exists(file_path):
+            # returns immediately
+            return
+
+        try:
             # removes the file path
             os.remove(file_path)
+        except BaseException, exception:
+            if not handle_exception: raise exception
 
-    def remove_directory_immediate(self, directory_path):
+    def remove_directory_immediate(self, directory_path, handle_exception = True):
         """
         Removes the directory in the given directory path.
 
         @type directory_path: String
         @param directory_path: The path to the directory
         to be removed.
+        @type handle_exception: bool
+        @param handle_exception: If an eventual raised exception shall
+        be handled gracefully.
         """
 
         # removes the directory in the (real) directory path
-        path_util.remove_directory(directory_path)
+        path_util.remove_directory(directory_path, handle_exception)
 
     def get_file_path(self, file_path):
         """
@@ -632,7 +653,7 @@ class FileTransactionContext(FileContext):
         # adds the path tuple
         self._add_path_tuple(path_tuple)
 
-    def remove_directory(self, directory_path):
+    def remove_directory(self, directory_path, handle_exception = True):
         """
         Removes the directory in the given path.
         This removal is not persisted immediately and
@@ -641,6 +662,9 @@ class FileTransactionContext(FileContext):
         @type directory_path: String
         @param directory_path: The path to the directory
         to be removed.
+        @type handle_exception: bool
+        @param handle_exception: If an eventual raised exception shall
+        be handled gracefully.
         """
 
         # retrieves the virtual directory path for the file path
@@ -651,22 +675,26 @@ class FileTransactionContext(FileContext):
             # retrieves the (virtual) directory items
             virtual_directory_items = os.listdir(virtual_directory_path)
 
-            # checks the virtual directory for items and removes
-            # the directory in the virtual path (recursively)
-            not virtual_directory_items and os.removedirs(virtual_directory_path)
+            try:
+                # checks the virtual directory for items and removes
+                # the directory in the virtual path (recursively)
+                not virtual_directory_items and os.removedirs(virtual_directory_path)
+            except BaseException, exception:
+                if not handle_exception: raise exception
 
         # creates a path tuple with the directory path
         # the operation remove, the recursive flag is set
         path_tuple = (
             REMOVE_OPERATION,
             directory_path,
+            handle_exception,
             True
         )
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
 
-    def remove_file(self, file_path):
+    def remove_file(self, file_path, handle_exception = False):
         """
         Removes the file in the given path.
         This removal is not persisted immediately and
@@ -675,6 +703,9 @@ class FileTransactionContext(FileContext):
         @type directory_path: String
         @param directory_path: The path to the file
         to be removed.
+        @type handle_exception: bool
+        @param handle_exception: If an eventual raised exception shall
+        be handled gracefully.
         """
 
         # retrieves the virtual file path for the file path
@@ -682,21 +713,25 @@ class FileTransactionContext(FileContext):
 
         # in case the virtual file path exists
         if os.path.exists(virtual_file_path):
-            # removes the virtual file path
-            os.remove(virtual_file_path)
+            try:
+                # removes the virtual file path
+                os.remove(virtual_file_path)
+            except BaseException, exception:
+                if not handle_exception: raise exception
 
         # creates a path tuple with the file path
         # the operation remove, the recursive flag is unset
         path_tuple = (
             REMOVE_OPERATION,
             file_path,
+            handle_exception,
             True
         )
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
 
-    def remove_directory_immediate(self, directory_path):
+    def remove_directory_immediate(self, directory_path, handle_exception = True):
         """
         Removes the directory in the given directory path.
         In case a transaction exists the directory to be
@@ -705,13 +740,19 @@ class FileTransactionContext(FileContext):
         @type directory_path: String
         @param directory_path: The path to the directory
         to be removed.
+        @type handle_exception: bool
+        @param handle_exception: If an eventual raised exception shall
+        be handled gracefully.
         """
 
         # resolves the directory path (real directory path)
         real_directory_path = self.resolve_file_path(directory_path)
 
-        # removes the directory in the (real) directory path
-        path_util.remove_directory(real_directory_path)
+        try:
+            # removes the directory in the (real) directory path
+            path_util.remove_directory(real_directory_path)
+        except BaseException, exception:
+            if not handle_exception: raise exception
 
     def get_file_path(self, file_path, replace_files = True):
         """
@@ -1073,7 +1114,7 @@ class FileTransactionContext(FileContext):
         """
 
         # unpacks the path tuple
-        _operation, file_path, recursive = path_tuple
+        _operation, file_path, handle_exception, recursive = path_tuple
 
         # in case the path does not exist (no need to proceed
         # with removal)
@@ -1088,18 +1129,27 @@ class FileTransactionContext(FileContext):
 
             # in case the recursive mode is active
             if recursive:
-                # checks the directory for items and removes
-                # the directory in the path (recursively)
-                not directory_items and os.removedirs(file_path)
+                try:
+                    # checks the directory for items and removes
+                    # the directory in the path (recursively)
+                    not directory_items and os.removedirs(file_path)
+                except BaseException, exception:
+                    if not handle_exception: raise exception
             # in case the removal is not recursive
             else:
-                # checks the directory for items and removes
-                # the directory in the path
-                not directory_items and os.remove(file_path)
+                try:
+                    # checks the directory for items and removes
+                    # the directory in the path
+                    not directory_items and os.remove(file_path)
+                except BaseException, exception:
+                    if not handle_exception: raise exception
         # otherwise it must be a "normal" file
         else:
-            # removes the file path
-            os.remove(file_path)
+            try:
+                # removes the file path
+                os.remove(file_path)
+            except BaseException, exception:
+                if not handle_exception: raise exception
 
     def _call_commit_callbacks(self):
         """
