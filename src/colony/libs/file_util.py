@@ -376,7 +376,7 @@ class FileContext:
             # closes the file
             file.close()
 
-    def remove_directory(self, directory_path, handle_exception = True):
+    def remove_directory(self, directory_path, handle_exception = False):
         """
         Removes the directory in the given path.
 
@@ -426,7 +426,7 @@ class FileContext:
         except BaseException, exception:
             if not handle_exception: raise exception
 
-    def remove_directory_immediate(self, directory_path, handle_exception = True):
+    def remove_directory_immediate(self, directory_path, handle_exception = False):
         """
         Removes the directory in the given directory path.
 
@@ -653,7 +653,7 @@ class FileTransactionContext(FileContext):
         # adds the path tuple
         self._add_path_tuple(path_tuple)
 
-    def remove_directory(self, directory_path, handle_exception = True):
+    def remove_directory(self, directory_path, handle_exception = False):
         """
         Removes the directory in the given path.
         This removal is not persisted immediately and
@@ -731,7 +731,7 @@ class FileTransactionContext(FileContext):
         # adds the path tuple
         self._add_path_tuple(path_tuple)
 
-    def remove_directory_immediate(self, directory_path, handle_exception = True):
+    def remove_directory_immediate(self, directory_path, handle_exception = False):
         """
         Removes the directory in the given directory path.
         In case a transaction exists the directory to be
