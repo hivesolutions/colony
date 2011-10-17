@@ -171,8 +171,8 @@ RELATIVE_CONTAINERS_PATH = "containers"
 RELATIVE_LIBRARIES_PATH = "libraries"
 """ The path relative to the manager path for the libraries """
 
-RELATIVE_META_PATH = "meta"
-""" The path relative to the manager path for the meta """
+RELATIVE_CONFIGURATION_PATH = "meta"
+""" The path relative to the manager path for the configuration """
 
 RELATIVE_REGISTRY_PATH = "var/registry"
 """ The path relative to the manager path for the registry """
@@ -957,7 +957,7 @@ class Deployer:
         """
 
         # retrieves the target path
-        target_path = os.path.normpath(self.manager_path + "/" + RELATIVE_META_PATH)
+        target_path = os.path.normpath(self.manager_path + "/" + RELATIVE_CONFIGURATION_PATH)
 
         # creates the specification file path
         specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
@@ -1724,8 +1724,8 @@ class Deployer:
         # prints a log message
         self.log("Removing configuration package '%s' v'%s'" % (package_id, package_version))
 
-        # creates the meta path
-        meta_path = os.path.normpath(self.manager_path + "/" + RELATIVE_META_PATH)
+        # creates the configuration path
+        configuration_path = os.path.normpath(self.manager_path + "/" + RELATIVE_CONFIGURATION_PATH)
 
         # retrieves the configuration id
         configuration_id = specification.get(CONFIGURATION_ID_VALUE, [])
@@ -1740,7 +1740,7 @@ class Deployer:
         extra_resources = specification.get(EXTRA_RESOURCES_VALUE, [])
 
         # "calculates" the configuration exclusive path to be used for unique usage
-        configuration_exclusive_path = os.path.normpath(meta_path + "/" + configuration_id)
+        configuration_exclusive_path = os.path.normpath(configuration_path + "/" + configuration_id)
 
         # extends the resources list with the extra resources
         resources = [value for value in resources if not value in keep_resources]
