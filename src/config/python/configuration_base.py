@@ -89,6 +89,11 @@ prefix_paths = {
 }
 """ The prefix path maps """
 
+plugin_path_list = [
+    "plugins"
+]
+""" The list of plugin paths """
+
 library_path_list = [
     "libraries",
     "%colony_language_prefix_path%/pt.hive.colony.language.generator/src/colony",
@@ -97,10 +102,10 @@ library_path_list = [
 ]
 """ The list of library paths """
 
-plugin_path_list = [
-    "plugins"
+configuration_path_list = [
+    "meta"
 ]
-""" The list of plugin paths """
+""" The list of configuration paths """
 
 logger_path = "log"
 """ The path to the logger directory """
