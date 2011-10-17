@@ -72,6 +72,9 @@ SUB_TYPE_VALUE = "sub_type"
 VERSION_VALUE = "version"
 """ The version value """
 
+CONFIGURATION_ID_VALUE = "configuration_id"
+""" The configuration id value """
+
 PLUGINS_VALUE = "plugins"
 """ The plugins value """
 
@@ -167,6 +170,9 @@ RELATIVE_CONTAINERS_PATH = "containers"
 
 RELATIVE_LIBRARIES_PATH = "libraries"
 """ The path relative to the manager path for the libraries """
+
+RELATIVE_META_PATH = "meta"
+""" The path relative to the manager path for the meta """
 
 RELATIVE_REGISTRY_PATH = "var/registry"
 """ The path relative to the manager path for the registry """
@@ -950,7 +956,78 @@ class Deployer:
         the contents of the package.
         """
 
-        pass
+        # retrieves the target path
+        target_path = os.path.normpath(self.manager_path + "/" + RELATIVE_META_PATH)
+
+        # creates the specification file path
+        specification_file_path = os.path.normpath(temporary_path + "/" + SPECIFICATION_FILE_NAME)
+
+        # opens the specification from the specification file path
+        specification = self._open_specification(specification_file_path)
+
+        # retrieves the id
+        id = specification[ID_VALUE]
+
+        # retrieves the version
+        version = specification[VERSION_VALUE]
+
+        # retrieves the configuration id
+        configuration_id = specification[CONFIGURATION_ID_VALUE]
+
+        # retrieves the resources
+        resources = specification[RESOURCES_VALUE]
+
+        # retrieves the keep resources
+        keep_resources = specification.get(KEEP_RESOURCES_VALUE, [])
+
+        # retrieves the target (exclusive) path to be used
+        # uniquely by this container
+        target_exclusive_path = os.path.normpath(target_path + "/" + configuration_id)
+
+        # prints a log message
+        self.log("Deploying configuration package '%s' v'%s'" % (id, version))
+
+        # prints a log message
+        self.log("Moving resources from '%s' to '%s'" % (temporary_path, target_exclusive_path))
+
+        # iterates over all the resources
+        for resource in resources:
+            # checks if the current resource is of type
+            # keep resource
+            is_keep_resource = resource in keep_resources
+
+            # retrieves the resource file path
+            resource_file_path = os.path.normpath(temporary_path + "/resources/" + resource)
+
+            # creates the new resource file path
+            new_resource_file_path = os.path.normpath(target_exclusive_path + "/" + resource)
+
+            # retrieves the new resource directory path
+            new_resource_directory_path = os.path.dirname(new_resource_file_path)
+
+            # checks if the new resource file path already exists
+            new_resource_file_path_exists = os.path.exists(new_resource_file_path)
+
+            # in case the new resource file path exists
+            # and the resource should be kept
+            if new_resource_file_path_exists and is_keep_resource:
+                # prints a log message
+                self.log("Skipping resource file (keep) '%s'" % resource_file_path)
+
+                # continues the loop (no need
+                # to run a copy)
+                continue
+
+            # prints a log message
+            self.log("Moving resource file '%s' to '%s'" % (resource_file_path, new_resource_file_path))
+
+            # in case the new resource directory path does not exist
+            if not os.path.exists(new_resource_directory_path):
+                # creates the new resource directory path (directories)
+                os.makedirs(new_resource_directory_path)
+
+            # copies the resource file as the new resource file
+            shutil.copy(resource_file_path, new_resource_file_path)
 
     def remove_package(self, package_id, package_version = None):
         """
@@ -1442,7 +1519,7 @@ class Deployer:
         # in case the sub type is configuration
         elif sub_type == CONFIGURATION_VALUE:
             # removes the configuration package
-            self.removes_configuration_package(package_id, package_version, specification)
+            self.remove_configuration_package(package_id, package_version, specification)
 
         # persists the duplicates structure
         self._persist_duplicates_structure(duplicates_structure)
@@ -1644,7 +1721,81 @@ class Deployer:
         @param package_version: The version of the configuration package to be removed.
         """
 
-        pass
+        # prints a log message
+        self.log("Removing configuration package '%s' v'%s'" % (package_id, package_version))
+
+        # creates the meta path
+        meta_path = os.path.normpath(self.manager_path + "/" + RELATIVE_META_PATH)
+
+        # retrieves the configuration id
+        configuration_id = specification.get(CONFIGURATION_ID_VALUE, [])
+
+        # retrieves the resources
+        resources = specification[RESOURCES_VALUE]
+
+        # retrieves the keep resources
+        keep_resources = specification.get(KEEP_RESOURCES_VALUE, [])
+
+        # retrieves the extra resources
+        extra_resources = specification.get(EXTRA_RESOURCES_VALUE, [])
+
+        # "calculates" the configuration exclusive path to be used for unique usage
+        configuration_exclusive_path = os.path.normpath(meta_path + "/" + configuration_id)
+
+        # extends the resources list with the extra resources
+        resources = [value for value in resources if not value in keep_resources]
+        resources.extend(extra_resources)
+
+        # creates the list of directory paths for (possible)
+        # later removal
+        directory_path_list = []
+
+        # iterates over all the resources
+        for resource in resources:
+            # creates the (complete) resource file path
+            resource_file_path = os.path.normpath(configuration_exclusive_path + "/" + resource)
+
+            # in case the resource file path does not exists
+            if not os.path.exists(resource_file_path):
+                # prints a log message
+                self.log("Skipping resource file '%s'" % resource_file_path)
+
+                # continues the loop
+                continue
+
+            # prints a log message
+            self.log("Removing resource file '%s'" % resource_file_path)
+
+            # removes the resource file in the resource file path
+            os.remove(resource_file_path)
+
+            # retrieves the resource file directory path
+            resource_file_directory_path = os.path.dirname(resource_file_path)
+
+            # in case the resource file directory path is not yet
+            # present in the directory path list
+            if not resource_file_directory_path in directory_path_list:
+                # adds the file directory path to the
+                # directory path list
+                directory_path_list.append(resource_file_directory_path)
+
+        # prints a log message
+        self.log("Removing empty directories for library file")
+
+        # iterates over all the directory paths
+        for directory_path in directory_path_list:
+            # in case the directory path does not refers
+            # a directory or in case it contains element
+            if not os.path.isdir(directory_path) or os.listdir(directory_path):
+                # continues the loop
+                continue
+
+            try:
+                # removes the directories in the directory path
+                os.removedirs(directory_path)
+            except:
+                # prints a log message
+                self.log("Problem removing directory '%s'" % directory_path)
 
     def validate_specification(self, specification):
         """
