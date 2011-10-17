@@ -102,9 +102,6 @@ INSTALLED_PLUGINS_VALUE = "installed_plugins"
 INSTALLED_CONTAINERS_VALUE = "installed_containers"
 """ The installed containers value """
 
-VERSION_VALUE = "version"
-""" The version value """
-
 TIMESTAMP_VALUE = "timestamp"
 """ The timestamp value """
 
