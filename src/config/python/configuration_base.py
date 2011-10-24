@@ -85,6 +85,29 @@ prefix_paths = {
         "bargania" : "../../../../../hive-local/com.bargania/trunk",
         "escolinhas" : "../../../../../hive-local/pt.escolinhas/trunk",
         "first_day" : "../../../../../hive-local/pt.first-day/trunk"
+    },
+    "repository_windows" : {
+        "colony" : "../../../colony",
+        "colony_extras" : "../../../colony_extras",
+        "colony_language" : "../../../colony_language",
+        "colony_configuration" : "../../../colony_configuration",
+        "omni" : "../../../omni",
+        "colony_demo" : "../../../colony_demo",
+        "colony_site" : "../../../colony_site",
+        "hive_site" : "../../../hive_site",
+        "hive_blog" : "../../../hive_blog",
+        "hive_development" : "../../../hive_development",
+        "hive_openid" : "../../../hive_openid",
+        "take_the_bill" : "../../../take_the_bill",
+        "take_the_bill_site" : "../../../take_the_bill_site",
+        "a_la_carte" : "../../../a_la_carte",
+        "pecway" : "../../../pecway",
+        "products" : "../../../products",
+        "toolbox" : "../../../toolbox",
+        "panzerini" : "../../../panzerini",
+        "bargania" : "../../../bargania",
+        "escolinhas" : "../../../escolinhas",
+        "first_day" : "../../../first_day"
     }
 }
 """ The prefix path maps """
