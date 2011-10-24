@@ -161,7 +161,7 @@ def main():
         option_arguments = sys.argv[2:]
 
     # processes the arguments options
-    options, _args = getopt.getopt(option_arguments, "hrfivm:", ["help", "remove", "flush", "info", "verbose", "manager_dir="])
+    options, _args = getopt.getopt(option_arguments, "hrfisvm:", ["help", "remove", "flush", "info", "silent", "verbose", "manager_dir="])
 
     # retrieves the file system encoding
     file_system_encoding = sys.getfilesystemencoding()
@@ -170,6 +170,7 @@ def main():
     remove = False
     flush = False
     info = False
+    silent = False
     verbose = False
 
     # retrieves the manager path
@@ -186,6 +187,8 @@ def main():
             flush = True
         elif option in ("-i", "--info"):
             info = True
+        elif option in ("-s", "--silent"):
+            silent = True
         elif option in ("-v", "--verbose"):
             verbose = True
         elif option in ("-m", "--manager_dir"):
@@ -200,8 +203,10 @@ def main():
     # retrieves the logger
     logger = logging.getLogger("default")
 
-    # retrieves the logger level to be used
-    logger_level = verbose and logging.DEBUG or logging.INFO
+    # retrieves the logger level to be used based on
+    # the silent and verbose flags
+    logger_level = silent and logging.WARN or logging.INFO
+    logger_level = verbose and logging.DEBUG or logger_level
 
     # sets the logger level
     logger.setLevel(logger_level)
