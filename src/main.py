@@ -320,7 +320,8 @@ def main():
         else:
             assert False, "unhandled option"
 
-    # parses the configuration options
+    # parses the configuration options, retrieving the various values that
+    # control the execution of the plugin system
     verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, logger_path, library_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, plugin_path, manager_path)
 
     # configures the system using the layout mode, the run mode
