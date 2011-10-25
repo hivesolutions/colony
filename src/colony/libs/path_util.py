@@ -94,6 +94,15 @@ def normalize_path(path):
         # removes the long path prefix from the path
         path = path[4:]
 
+    # checks if the path is absolute
+    is_absolute_path = os.path.isabs(path)
+
+    # in case the path is not absolute (creates problem in windows
+    # long path support)
+    if os_name in WINDOWS_PLATFORMS_VALUE and not is_absolute_path:
+        # converts the path to absolute
+        path = os.path.abspath(path)
+
     # normalizes the path
     normalized_path = os.path.normpath(path)
 
