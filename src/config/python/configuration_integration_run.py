@@ -40,7 +40,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 from configuration_base import * #@UnusedWildImport
 from configuration_base_integration import * #@UnusedWildImport
 
-layout_mode = "repository_svn"
+layout_mode = "repository_flat"
 """ The project layout mode """
 
 run_mode = "integration_run"
