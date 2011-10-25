@@ -84,11 +84,18 @@ def normalize_path(path):
     @return: The normalized path.
     """
 
-    # normalizes the path
-    normalized_path = os.path.normpath(path)
-
     # retrieves the current os name
     os_name = os.name
+
+    # in case the current operative system is windows based and
+    # the normalized path does start with the long path prefix it
+    # must be removed to allow a "normal" path normalization
+    if os_name in WINDOWS_PLATFORMS_VALUE and path.startswith(LONG_PATH_PREFIX):
+        # removes the long path prefix from the path
+        path = path[4:]
+
+    # normalizes the path
+    normalized_path = os.path.normpath(path)
 
     # in case the current operative system is windows based and
     # the normalized path does not start with the long path prefix
