@@ -148,12 +148,12 @@ library_path_list = [
 ]
 """ The list of library paths """
 
-configuration_path_list = [
+meta_path_list = [
     "meta",
     "%colony_configuration_prefix_path%/pt.hive.colony.configuration.all",
     "%colony_configuration_prefix_path%/pt.hive.colony.configuration.development"
 ]
-""" The list of configuration paths """
+""" The list of meta paths """
 
 logger_path = "log"
 """ The path to the logger directory """
