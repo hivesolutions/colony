@@ -1372,7 +1372,7 @@ class PluginManager:
     event_plugins_fired_loaded_map = {}
     """ The map with the plugin associated with the name of the event fired """
 
-    def __init__(self, manager_path = None, logger_path = None, library_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+    def __init__(self, manager_path = None, logger_path = None, library_paths = None, meta_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
         """
         Constructor of the class.
 
@@ -1382,6 +1382,8 @@ class PluginManager:
         @param logger_path: The manager base path for logger.
         @type library_paths: List
         @param library_paths: The list of directory paths for the loading of the external libraries.
+        @type meta_paths: List
+        @param meta_paths: The list of directory paths for the loading of the external metadata information.
         @type plugin_paths: List
         @param plugin_paths: The list of directory paths for the loading of the plugins.
         @type platform: int
@@ -1411,6 +1413,7 @@ class PluginManager:
         self.manager_path = manager_path
         self.logger_path = logger_path
         self.library_paths = library_paths
+        self.meta_paths = meta_paths
         self.plugin_paths = plugin_paths
         self.platform = platform
         self.init_complete_handlers = init_complete_handlers
@@ -1691,6 +1694,7 @@ class PluginManager:
             # defines the plugin system configuration
             plugin_system_configuration = {
                 "library_paths" : self.library_paths,
+                "meta_paths" : self.meta_paths,
                 "plugin_paths" : self.plugin_paths,
                 "plugins" : self.referred_modules
             }
@@ -4232,12 +4236,19 @@ class PluginManager:
         # returns the normalized temporary plugin generated path
         return normalized_temporary_plugin_generated_path
 
-    def get_plugin_configuration_paths_by_id(self, plugin_id):
+    def get_plugin_configuration_paths_by_id(self, plugin_id, extra_paths = False):
         """
         Retrieves the plugin configuration paths for the given plugin id.
+        The returned tuple contains a set of directories that may be used
+        for plugin configuration purposes.
+        The extra paths flag controls if all the "global" configuration paths
+        shall be returned.
 
         @type plugin_id: String
         @param plugin_id: The id of the plugin to retrieve the configuration paths.
+        @type extra_paths: bool
+        @param extra_paths: If the complete set of "global" paths should be retrieved
+        or if only the first one shall be retrieved.
         @rtype: List
         @return: The plugin configuration paths for the plugin with the given id.
         """
@@ -4248,7 +4259,35 @@ class PluginManager:
         # retrieves the current workspace path
         workspace_path = self.get_workspace_path()
 
-        return (configuration_path + "/" + plugin_id, workspace_path + "/" + plugin_id)
+        # retrieves the both the "global" configuration path
+        # and the workspace (private) configuration path
+        global_configuration_path = os.path.join(configuration_path, plugin_id)
+        workspace_configuration_path = os.path.join(workspace_path, plugin_id)
+
+        # retrieves the "meta" configuration paths according to the
+        # value of the extra paths flag
+        meta_configuration_paths = extra_paths and self.get_meta_paths() or []
+
+        # starts the list of extra configuration paths
+        # to be filled with the extra paths for the plugin id
+        extra_configuration_paths = []
+
+        # iterates over all the meta configuration paths to create
+        # (the specific) extra configuration path for the meta
+        # configuration path
+        for meta_configuration_path in meta_configuration_paths:
+            # retrieves the (specific) extra configuration path from the plugin
+            # if, creating the extra configuration path
+            extra_configuration_path = os.path.join(meta_configuration_path, plugin_id)
+            extra_configuration_paths.append(extra_configuration_path)
+
+        # creates a list containing all the configuration paths
+        # and the converts it into a list
+        configuration_paths_list = [global_configuration_path, workspace_configuration_path] + extra_configuration_paths
+        configuration_paths_tuple = tuple(configuration_paths_list)
+
+        # returns a tuple containing all the configuration paths
+        return configuration_paths_tuple
 
     def get_plugin_configuration_file_by_id(self, plugin_id, configuration_file_path):
         """
@@ -4273,15 +4312,18 @@ class PluginManager:
         for plugin_configuration_path in plugin_configuration_paths:
             # creates the configuration file full path from the configuration
             # file and the configuration file path
-            configuration_file_full_path = plugin_configuration_path + "/" + configuration_file_path
+            configuration_file_full_path = os.path.join(plugin_configuration_path, configuration_file_path)
 
-            # in case the configuration file full path exists
-            if os.path.exists(configuration_file_full_path):
-                # opens the configuration file
-                configuration_file = open(configuration_file_full_path)
+            # in case the configuration file full path does not exist
+            if not os.path.exists(configuration_file_full_path):
+                # continues the loop (not found)
+                continue
 
-                # returns the configuration file
-                return configuration_file
+            # opens the configuration file
+            configuration_file = open(configuration_file_full_path)
+
+            # returns the configuration file
+            return configuration_file
 
     def get_plugin_module_name_by_id(self, plugin_id):
         """
@@ -4721,6 +4763,17 @@ class PluginManager:
         """
 
         return os.path.join(self.manager_path, self.configuration_path)
+
+
+    def get_meta_paths(self):
+        """
+        Retrieves the current meta paths.
+
+        @rtype: String
+        @return: The current meta paths.
+        """
+
+        return [os.path.join(self.manager_path, meta_path) for meta_path in self.meta_paths]
 
     def get_workspace_path(self):
         """
