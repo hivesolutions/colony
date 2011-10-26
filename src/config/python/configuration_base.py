@@ -149,7 +149,6 @@ library_path_list = [
 """ The list of library paths """
 
 meta_path_list = [
-    "meta",
     "%colony_configuration_prefix_path%/pt.hive.colony.configuration.all",
     "%colony_configuration_prefix_path%/pt.hive.colony.configuration.development"
 ]
