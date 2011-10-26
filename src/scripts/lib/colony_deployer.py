@@ -78,6 +78,9 @@ CONFIGURATION_ID_VALUE = "configuration_id"
 PLUGINS_VALUE = "plugins"
 """ The plugins value """
 
+CONTAINERS_VALUE = "containers"
+""" The containers value """
+
 MAIN_FILE_VALUE = "main_file"
 """ The main file value """
 
@@ -443,23 +446,23 @@ class Deployer:
         version = specification[VERSION_VALUE]
 
         # retrieves the plugins
-        plugins = specification[PLUGINS_VALUE]
+        plugins = specification.get(PLUGINS_VALUE, [])
+
+        # retrieves the containers
+        containers = specification.get(CONTAINERS_VALUE, [])
 
         # prints a log message
         self.log("Deploying bundle package '%s' v'%s'" % (id, version))
 
         # iterates over all the plugins
         for plugin in plugins:
-            # retrieves the plugin id
+            # retrieves the plugin id and version
             plugin_id = plugin[ID_VALUE]
-
-            # retrieves the plugin version
             plugin_version = plugin[VERSION_VALUE]
 
-            # creates the plugin file name
+            # creates the plugin file name and then uses
+            # it to creates the plugin file path
             plugin_file_name = plugin_id + "_" + plugin_version + COLONY_PLUGIN_FILE_EXTENSION
-
-            # retrieves the plugin file path
             plugin_file_path = os.path.normpath(temporary_path + "/plugins/" + plugin_file_name)
 
             # unpacks the package to a temporary (plugin) path
@@ -485,6 +488,47 @@ class Deployer:
             package_item_value = {
                 TYPE_VALUE : PLUGIN_VALUE,
                 VERSION_VALUE : plugin_version,
+                HASH_DIGEST_VALUE : hash_digest_map
+            }
+
+            # adds the package with the given key and value
+            self._add_package_item(package_item_key, package_item_value)
+
+        # iterates over all the containers,
+        # to deploy them
+        for container in containers:
+            # retrieves the container id and version
+            container_id = container[ID_VALUE]
+            container_version = container[VERSION_VALUE]
+
+            # creates the container file name and then uses
+            # it to creates the container file path
+            container_file_name = container_id + "_" + container_version + COLONY_CONTAINER_FILE_EXTENSION
+            container_file_path = os.path.normpath(temporary_path + "/containers/" + container_file_name)
+
+            # unpacks the package to a temporary (container) path
+            temporary_container_path = self._unzip_package(container_file_path)
+
+            try:
+                # deploys the container package, using the current paths
+                self.deploy_container_package(container_file_path, temporary_container_path)
+            finally:
+                # prints a log message
+                self.log("Removing temporary (container) path '%s'" % temporary_container_path)
+
+                # removes the temporary (container) path (directory)
+                colony_file.remove_directory(temporary_container_path)
+
+            # retrieves the package item key
+            package_item_key = container_id
+
+            # generates the hash digest map for the package file
+            hash_digest_map = colony_crypt.generate_hash_digest_map(container_file_path)
+
+            # creates the package item value
+            package_item_value = {
+                TYPE_VALUE : CONTAINER_VALUE,
+                VERSION_VALUE : container_version,
                 HASH_DIGEST_VALUE : hash_digest_map
             }
 
