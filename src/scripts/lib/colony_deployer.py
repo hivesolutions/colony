@@ -1187,7 +1187,10 @@ class Deployer:
         self.validate_specification(specification)
 
         # retrieves the plugins
-        plugins = specification[PLUGINS_VALUE]
+        plugins = specification.get(PLUGINS_VALUE, [])
+
+        # retrieves the containers
+        containers = specification.get(CONTAINERS_VALUE, [])
 
         # iterates over all the plugins
         for plugin in plugins:
@@ -1202,6 +1205,23 @@ class Deployer:
 
             # retrieves the package item key
             package_item_key = plugin_id
+
+            # remove the package with the given key
+            self._remove_package_item(package_item_key)
+
+        # iterates over all the containers
+        for container in containers:
+            # retrieves the container id
+            container_id = container[ID_VALUE]
+
+            # retrieves the container version
+            container_version = container[VERSION_VALUE]
+
+            # removes the container with the given id
+            self.remove_plugin_package(container_id, container_version)
+
+            # retrieves the package item key
+            package_item_key = container_id
 
             # remove the package with the given key
             self._remove_package_item(package_item_key)
