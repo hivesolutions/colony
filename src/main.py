@@ -162,7 +162,7 @@ def print_information():
     # prints some help information
     print HELP_TEXT
 
-def run(manager_path, logger_path, library_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -172,6 +172,8 @@ def run(manager_path, logger_path, library_path, plugin_path, verbose = False, d
     @param logger_path: The manager base path for logger.
     @type library_path: String
     @param library_path: The set of paths to the various library locations separated by a semi-column.
+    @type meta_path: String
+    @param meta_path: The set of paths to the various meta locations separated by a semi-column.
     @type plugin_path: String
     @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
     @type verbose: bool
@@ -205,13 +207,19 @@ def run(manager_path, logger_path, library_path, plugin_path, verbose = False, d
     # print the branding information text
     print_information()
 
-    # checks if the library path is not empty
+    # checks if the library path is not valid
     if not library_path == None:
         library_paths = library_path.split(";")
     else:
         library_paths = []
 
-    # checks if the plugin path is not empty
+    # checks if the meta path is not valid
+    if not meta_path == None:
+        meta_paths = meta_path.split(";")
+    else:
+        meta_paths = []
+
+    # checks if the plugin path is not valid
     if not plugin_path == None:
         plugin_paths = plugin_path.split(";")
     else:
@@ -224,7 +232,7 @@ def run(manager_path, logger_path, library_path, plugin_path, verbose = False, d
     platform = colony.base.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.base.plugin_system.PluginManager(manager_path, logger_path, library_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
+    plugin_manager = colony.base.plugin_system.PluginManager(manager_path, logger_path, library_paths, meta_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
 
     # sets the logging level for the plugin manager logger
     if debug:
@@ -248,7 +256,7 @@ def main():
     """
 
     try:
-        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:o:a:f:d:m:g:i:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "daemon_pid=", "attributes=", "configuration_file=", "daemon_file=", "manager_dir=", "logger_dir=", "library_dir=", "plugin_dir=", "execution_command="])
+        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:o:a:f:d:m:g:i:t:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "daemon_pid=", "attributes=", "configuration_file=", "daemon_file=", "manager_dir=", "logger_dir=", "library_dir=", "meta_dir=", "plugin_dir=", "execution_command="])
     except getopt.GetoptError, error:
         # prints the error description
         print str(error)
@@ -277,6 +285,7 @@ def main():
     manager_path = os.environ.get(COLONY_HOME_ENVIRONMENT, DEFAULT_MANAGER_PATH_VALUE).decode(file_system_encoding)
     logger_path = DEFAULT_LOGGER_PATH_VALUE
     library_path = None
+    meta_path = None
     plugin_path = None
     execution_command = None
 
@@ -313,6 +322,8 @@ def main():
             logger_path = value.decode(file_system_encoding)
         elif option in ("-i", "--library_dir"):
             library_path = value.decode(file_system_encoding)
+        elif option in ("-t", "--meta_dir"):
+            meta_path = value.decode(file_system_encoding)
         elif option in ("-p", "--plugin_dir"):
             plugin_path = value.decode(file_system_encoding)
         elif option in ("-e", "--execution_command"):
@@ -322,7 +333,7 @@ def main():
 
     # parses the configuration options, retrieving the various values that
     # control the execution of the plugin system
-    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, logger_path, library_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, plugin_path, manager_path)
+    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, logger_path, library_path, meta_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, meta_path, plugin_path, manager_path)
 
     # configures the system using the layout mode, the run mode
     # and the  manager path
@@ -341,11 +352,14 @@ def main():
     # strips the library path around the semi-colon character
     library_path_striped = library_path.strip(";")
 
+    # strips the meta path around the semi-colon character
+    meta_path_striped = meta_path.strip(";")
+
     # strips the plugin path around the semi-colon character
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    return_code = run(manager_path, logger_path, library_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
+    return_code = run(manager_path, logger_path, library_path_striped, meta_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
 
     # exits the process with return code
     exit(return_code)
@@ -379,7 +393,7 @@ def parse_attributes(attributes_string):
     # returns the attributes map
     return attributes_map
 
-def parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, plugin_path, manager_path):
+def parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, meta_path, plugin_path, manager_path):
     """
     Parses the configuration using the given values as default values.
     The configuration file used is given as a parameter to the function.
@@ -402,6 +416,8 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     @param logger_path: The path to the logger.
     @type library_path: String
     @param library_path: The set of paths to the various library locations separated by a semi-column.
+    @type meta_path: String
+    @param meta_path: The set of paths to the various meta locations separated by a semi-column.
     @type plugin_path: String
     @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
     @type manager_path: String
@@ -479,6 +495,14 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
         # creates a new library path string
         library_path = ""
 
+    # in case the meta path is defined
+    if meta_path:
+        # appends a separator to the meta path
+        meta_path += ";"
+    else:
+        # creates a new meta path string
+        meta_path = ""
+
     # in case the plugin path is defined
     if plugin_path:
         # appends a separator to the plugin path
@@ -496,6 +520,13 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
 
     # adds the extra library path to the library path
     library_path += extra_library_path
+
+    # retrieves the extra meta path as the dereferenced values from the colony
+    # configuration meta path list
+    extra_meta_path = convert_reference_path_list(manager_path, current_prefix_paths, colony_configuration.meta_path_list)
+
+    # adds the extra meta path to the meta path
+    meta_path += extra_meta_path
 
     # loads the plugin paths file path
     plugin_paths_file_path = load_plugin_paths_file(manager_path)
@@ -520,6 +551,7 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
         daemon_file_path,
         logger_path,
         library_path,
+        meta_path,
         plugin_path
     )
 
