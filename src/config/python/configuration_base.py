@@ -155,6 +155,7 @@ library_path_list = [
 meta_path_list = [
     "%colony_configuration_prefix_path%/pt.hive.colony.configuration.all",
     "%colony_configuration_prefix_path%/pt.hive.colony.configuration.development",
+    "%colony_configuration_prefix_path%/pt.hive.colony.configuration.production",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.all",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.development",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.production"
