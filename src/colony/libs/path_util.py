@@ -152,6 +152,10 @@ def copy_directory(source_path, target_path, replace_files = True):
     in case duplicate files are found.
     """
 
+    # normalizes both the target and source paths
+    source_path = normalize_path(source_path)
+    target_path = normalize_path(target_path)
+
     # in case the source path is not a directory
     if not os.path.isdir(source_path):
         # raises an exception
@@ -208,6 +212,10 @@ def copy_file(source_path, target_path, replace_file = True):
     in existent files is found.
     """
 
+    # normalizes both the target and source paths
+    source_path = normalize_path(source_path)
+    target_path = normalize_path(target_path)
+
     # checks if the target path (file) exists
     target_file_exists = os.path.exists(target_path)
 
@@ -252,6 +260,9 @@ def remove_directory(directory_path):
     @type directory_path: String
     @param directory_path: The path to the directory to be removed.
     """
+
+    # normalizes the directory path
+    directory_path = normalize_path(directory_path)
 
     # creates the list of paths for the directory path
     paths_list = [os.path.join(directory_path, file_path) for file_path in os.listdir(directory_path)]
@@ -335,6 +346,11 @@ def ensure_file_path(file_path, default_file_path):
     @param default_file_path: The path to the file to be
     used in case the file path does not exist.
     """
+
+    # normalizes both the base and default
+    # file paths
+    file_path = normalize_path(file_path)
+    default_file_path = normalize_path(default_file_path)
 
     # checks if the file exists
     file_exists = os.path.exists(file_path)
