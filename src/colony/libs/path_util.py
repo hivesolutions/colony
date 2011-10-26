@@ -153,6 +153,7 @@ def copy_directory(source_path, target_path, replace_files = True):
     """
 
     # normalizes both the target and source paths
+    # (avoids path problems in various platforms)
     source_path = normalize_path(source_path)
     target_path = normalize_path(target_path)
 
@@ -178,11 +179,13 @@ def copy_directory(source_path, target_path, replace_files = True):
     # directory list
     for entry_name in directory_list:
         # creates the entry full path from the source path
-        # and the entry name
+        # and the entry name and normalizes it
         entry_full_path = os.path.join(source_path, entry_name)
+        entry_full_path = normalize_path(entry_full_path)
 
-        # creates the target full path
+        # creates the target full path and normalizes it
         target_full_path = os.path.join(target_path, entry_name)
+        target_full_path = normalize_path(target_full_path)
 
         # retrieves the mode
         mode = os.stat(entry_full_path)[stat.ST_MODE]
@@ -213,6 +216,7 @@ def copy_file(source_path, target_path, replace_file = True):
     """
 
     # normalizes both the target and source paths
+    # (avoids path problems in various platforms)
     source_path = normalize_path(source_path)
     target_path = normalize_path(target_path)
 
@@ -262,6 +266,7 @@ def remove_directory(directory_path):
     """
 
     # normalizes the directory path
+    # (avoids path problems in various platforms)
     directory_path = normalize_path(directory_path)
 
     # creates the list of paths for the directory path
@@ -270,10 +275,15 @@ def remove_directory(directory_path):
     # iterates over all the paths in the paths
     # list to remove them
     for path in paths_list:
+        # normalizes the path (avoids
+        # problems in various platforms)
+        path = normalize_path(path)
+
         # in case the path is a directory
         if os.path.isdir(path):
             # removes the directory
             remove_directory(path)
+        # otherwise it must be a "normal" file
         else:
             # removes the path
             os.remove(path)
@@ -348,7 +358,8 @@ def ensure_file_path(file_path, default_file_path):
     """
 
     # normalizes both the base and default
-    # file paths
+    # file paths (avoids path problems in
+    # various platforms)
     file_path = normalize_path(file_path)
     default_file_path = normalize_path(default_file_path)
 
