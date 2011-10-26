@@ -158,6 +158,7 @@ meta_path_list = [
     "%colony_configuration_prefix_path%/pt.hive.colony.configuration.production",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.all",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.development",
+    "%products_configuration_prefix_path%/pt.hive.products.configuration.extras",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.production"
 ]
 """ The list of meta paths """
