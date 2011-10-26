@@ -57,6 +57,7 @@ prefix_paths = {
         "a_la_carte" : "../..",
         "pecway" : "../..",
         "products" : "../..",
+        "products_configuration" : "../..",
         "toolbox" : "../..",
         "panzerini" : "../..",
         "bargania" : "../..",
@@ -80,6 +81,7 @@ prefix_paths = {
         "a_la_carte" : "../../../../../hive-local/pt.hive.a_la_carte/trunk",
         "pecway" : "../../../../../hive-local/pt.hive.pecway/trunk",
         "products" : "../../../../../hive-local/pt.hive.products/trunk",
+        "products_configuration" : "../../../../../hive-local/pt.hive.products.configuration/trunk",
         "toolbox" : "../../../../../hive-local-sandbox/pt.hive.toolbox/trunk",
         "panzerini" : "../../../../../hive-sandbox/pt.hive.panzerini/trunk",
         "bargania" : "../../../../../hive-local/com.bargania/trunk",
@@ -103,6 +105,7 @@ prefix_paths = {
         "a_la_carte" : "../../../../pt.hive.a_la_carte/trunk",
         "pecway" : "../../../../pt.hive.pecway/trunk",
         "products" : "../../../../pt.hive.products/trunk",
+        "products_configuration" : "../../../../pt.hive.products.configuration/trunk",
         "toolbox" : "../../../../pt.hive.toolbox/trunk",
         "panzerini" : "../../../../pt.hive.panzerini/trunk",
         "bargania" : "../../../../com.bargania/trunk",
@@ -126,6 +129,7 @@ prefix_paths = {
         "a_la_carte" : "../../../a_la_carte",
         "pecway" : "../../../pecway",
         "products" : "../../../products",
+        "products_configuration" : "../../../products_configuration",
         "toolbox" : "../../../toolbox",
         "panzerini" : "../../../panzerini",
         "bargania" : "../../../bargania",
@@ -151,6 +155,7 @@ library_path_list = [
 meta_path_list = [
     "%colony_configuration_prefix_path%/pt.hive.colony.configuration.all",
     "%colony_configuration_prefix_path%/pt.hive.colony.configuration.development"
+    "%products_configuration_prefix_path%/pt.hive.products.configuration.development"
 ]
 """ The list of meta paths """
 
