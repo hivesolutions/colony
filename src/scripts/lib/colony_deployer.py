@@ -1218,7 +1218,7 @@ class Deployer:
             container_version = container[VERSION_VALUE]
 
             # removes the container with the given id
-            self.remove_plugin_package(container_id, container_version)
+            self.remove_container_package(container_id, container_version)
 
             # retrieves the package item key
             package_item_key = container_id
