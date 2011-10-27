@@ -210,6 +210,7 @@ plugin_path_list = [
     "%hive_development_prefix_path%/pt.hive.hive_development.plugins.web_dropbox/src/hive_development/plugins",
     "%hive_development_prefix_path%/pt.hive.hive_development.plugins.web_toolbar/src/hive_development/plugins",
     "%products_prefix_path%/pt.hive.products.plugins.build.automation.items/src/products/plugins",
+    "%products_extras_prefix_path%/pt.hive.products.bundles.plugins.configuration.bundles/src/colony/plugins",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.plugins.all/src/products/plugins",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.plugins.development/src/products/plugins",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.plugins.extras/src/products/plugins",

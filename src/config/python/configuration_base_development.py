@@ -220,6 +220,7 @@ plugin_path_list = [
     "%a_la_carte_prefix_path%/pt.hive.a_la_carte.plugins.main/src/a_la_carte/plugins",
     "%pecway_prefix_path%/pt.hive.pecway.plugins.main/src/pecway/plugins",
     "%products_prefix_path%/pt.hive.products.plugins.build.automation.items/src/products/plugins",
+    "%products_extras_prefix_path%/pt.hive.products.bundles.plugins.configuration.bundles/src/colony/plugins",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.plugins.all/src/products/plugins",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.plugins.development/src/products/plugins",
     "%products_configuration_prefix_path%/pt.hive.products.configuration.plugins.extras/src/products/plugins",
