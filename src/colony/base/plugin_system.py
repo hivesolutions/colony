@@ -1046,9 +1046,15 @@ class Plugin(object):
             self.version
         )
 
-    def log_stack_trace(self):
+    def log_stack_trace(self, level = logging.DEBUG):
         """
-        Logs the current stack trace to the plugin manager logger.
+        Logs the current stack trace to the logger.
+        The verbosity level may be controlled using
+        the level parameter.
+
+        @type level: int
+        @param level: The verbosity level to be used
+        in the logging.
         """
 
         # retrieves the execution information
@@ -1061,13 +1067,14 @@ class Plugin(object):
         else:
             formated_traceback = ()
 
-        # iterates over the traceback lines
+        # iterates over the traceback lines to log
+        # them into the current logger
         for formated_traceback_line in formated_traceback:
             # strips the formated traceback line
             formated_traceback_line_stripped = formated_traceback_line.rstrip()
 
-            # prints an debug message with the formated traceback line
-            self.logger.debug(formated_traceback_line_stripped)
+            # prints a log message with the formated traceback line
+            self.logger.log(level, formated_traceback_line_stripped)
 
     def debug(self, message):
         """
@@ -4610,9 +4617,15 @@ class PluginManager:
             "environment" : self.get_environment()
         }
 
-    def log_stack_trace(self):
+    def log_stack_trace(self, level = logging.DEBUG):
         """
         Logs the current stack trace to the logger.
+        The verbosity level may be controlled using
+        the level parameter.
+
+        @type level: int
+        @param level: The verbosity level to be used
+        in the logging.
         """
 
         # retrieves the execution information
@@ -4625,13 +4638,14 @@ class PluginManager:
         else:
             formated_traceback = ()
 
-        # iterates over the traceback lines
+        # iterates over the traceback lines to log
+        # them into the current logger
         for formated_traceback_line in formated_traceback:
             # strips the formated traceback line
             formated_traceback_line_stripped = formated_traceback_line.rstrip()
 
-            # prints an debug message with the formated traceback line
-            self.logger.debug(formated_traceback_line_stripped)
+            # prints a log message with the formated traceback line
+            self.logger.log(level, formated_traceback_line_stripped)
 
     def debug(self, message):
         """
