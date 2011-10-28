@@ -40,6 +40,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import re
 import sys
+import copy
 import stat
 import time
 import types
@@ -588,7 +589,9 @@ class Plugin(object):
         Unregisters all the plugin manager events in self.
         """
 
-        for event_name in self.event_plugin_manager_registered_loaded_list:
+        event_plugin_manager_registered_loaded_list = copy.copy(self.event_plugin_manager_registered_loaded_list)
+
+        for event_name in event_plugin_manager_registered_loaded_list:
             self.unregister_for_plugin_manager_event(event_name)
 
     def register_for_plugin_event(self, plugin, event_name):
