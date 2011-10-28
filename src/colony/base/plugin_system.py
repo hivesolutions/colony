@@ -2679,8 +2679,8 @@ class PluginManager:
             # prints an error message
             self.error("Error while executing command: " + unicode(exception))
 
-            # logs the stack trace
-            self.log_stack_trace()
+            # logs the stack trace (error level verbosity)
+            self.log_stack_trace(logging.ERROR)
 
             # sets the return code to error
             self.return_code = 1
