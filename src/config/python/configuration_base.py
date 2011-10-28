@@ -41,6 +41,7 @@ prefix_paths = {
     "default" : {
     },
     "workspace_eclipse" : {
+        "base" : "../..",
         "colony" : "../..",
         "colony_extras" : "../..",
         "colony_language" : "../..",
@@ -69,6 +70,7 @@ prefix_paths = {
         "first_day" : "../.."
     },
     "repository_svn" : {
+        "base" : "../../../../../hive-main/pt.hive.colony/trunk",
         "colony" : "../../../../../hive-main/pt.hive.colony.plugins/trunk",
         "colony_extras" : "../../../../../hive-main/pt.hive.colony.extras/trunk",
         "colony_language" : "../../../../../hive-main/pt.hive.colony.language/trunk",
@@ -97,6 +99,7 @@ prefix_paths = {
         "first_day" : "../../../../../hive-local/pt.first-day/trunk"
     },
     "repository_flat" : {
+        "base" : "../../../../pt.hive.colony/trunk",
         "colony" : "../../../../pt.hive.colony.plugins/trunk",
         "colony_extras" : "../../../../pt.hive.colony.extras/trunk",
         "colony_language" : "../../../../pt.hive.colony.language/trunk",
@@ -125,6 +128,7 @@ prefix_paths = {
         "first_day" : "../../../../pt.first-day/trunk"
     },
     "repository_windows" : {
+        "base" : "../../../base",
         "colony" : "../../../colony",
         "colony_extras" : "../../../colony_extras",
         "colony_language" : "../../../colony_language",
