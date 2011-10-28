@@ -1267,6 +1267,9 @@ class PluginManager:
     execution_command = None
     """ The command to be executed on start (script mode) """
 
+    prefix_paths = []
+    """ The list of manager path relative paths to be used as reference for sub-projects """
+
     configuration_path = DEFAULT_CONFIGURATION_PATH
     """ The current configuration path """
 
@@ -1375,7 +1378,7 @@ class PluginManager:
     event_plugins_fired_loaded_map = {}
     """ The map with the plugin associated with the name of the event fired """
 
-    def __init__(self, manager_path = None, logger_path = None, library_paths = None, meta_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+    def __init__(self, manager_path = None, logger_path = None, library_paths = None, meta_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
         """
         Constructor of the class.
 
@@ -1403,6 +1406,8 @@ class PluginManager:
         @param run_mode: The run mode used in the plugin loading.
         @type container: String
         @param container: The name of the plugin manager container.
+        @type prefix_paths: List
+        @param prefix_paths: The list of manager path relative paths to be used as reference for sub-projects.
         @type daemon_pid: int
         @param daemon_pid: The pid of the daemon process running the instance of plugin manager.
         @type daemon_file_path: String
@@ -1425,6 +1430,7 @@ class PluginManager:
         self.layout_mode = layout_mode
         self.run_mode = run_mode
         self.container = container
+        self.prefix_paths = prefix_paths
         self.daemon_pid = daemon_pid
         self.daemon_file_path = daemon_file_path
         self.execution_command = execution_command
@@ -4743,6 +4749,18 @@ class PluginManager:
             # prints the plugin
             print plugin
 
+    def get_prefix_paths(self):
+        """
+        Retrieves the list of manager path relative paths
+        to be used as reference for sub-projects.
+
+        @rtype: String
+        @return: The list of manager path relative paths
+        to be used as reference for sub-projects.
+        """
+
+        return self.prefix_paths
+
     def get_environment_variable(self, environment_variable_name):
         """
         Retrieves the environment variable for the given
@@ -5168,6 +5186,20 @@ class PluginManager:
 
         return (
             self.get_environment_variable(*arguments),
+        )
+
+    def process_command_prefix(self, arguments):
+        """
+        The process command method for the prefix command.
+
+        @type arguments: String
+        @param arguments: The arguments to the process command method.
+        @rtype: Object
+        @return: The result of the command processing.
+        """
+
+        return (
+            os.path.join(self.manager_path, self.prefix_paths.get(*arguments) or ""),
         )
 
     def _relaunch_system(self):
