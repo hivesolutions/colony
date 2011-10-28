@@ -162,7 +162,7 @@ def print_information():
     # prints some help information
     print HELP_TEXT
 
-def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -192,6 +192,8 @@ def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose
     @param noloop: If the plugin manager is going to run in a loop.
     @type container: String
     @param container: The name of the plugin manager container.
+    @type prefix_paths: List
+    @param prefix_paths: The list of manager path relative paths to be used as reference for sub-projects.
     @type daemon_pid: int
     @param daemon_pid: The pid of the daemon process running the instance of plugin manager.
     @type daemon_file_path: String
@@ -232,7 +234,7 @@ def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose
     platform = colony.base.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.base.plugin_system.PluginManager(manager_path, logger_path, library_paths, meta_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
+    plugin_manager = colony.base.plugin_system.PluginManager(manager_path, logger_path, library_paths, meta_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, prefix_paths, daemon_pid, daemon_file_path, execution_command, attributes_map)
 
     # sets the logging level for the plugin manager logger
     if debug:
@@ -333,7 +335,7 @@ def main():
 
     # parses the configuration options, retrieving the various values that
     # control the execution of the plugin system
-    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, daemon_file_path, logger_path, library_path, meta_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, meta_path, plugin_path, manager_path)
+    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, prefix_paths, daemon_file_path, logger_path, library_path, meta_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, meta_path, plugin_path, manager_path)
 
     # configures the system using the layout mode, the run mode
     # and the  manager path
@@ -359,7 +361,7 @@ def main():
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    return_code = run(manager_path, logger_path, library_path_striped, meta_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, daemon_pid, daemon_file_path, execution_command, attributes_map)
+    return_code = run(manager_path, logger_path, library_path_striped, meta_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, prefix_paths, daemon_pid, daemon_file_path, execution_command, attributes_map)
 
     # exits the process with return code
     exit(return_code)
@@ -548,6 +550,7 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
         layout_mode,
         run_mode,
         stop_on_cycle_error,
+        current_prefix_paths,
         daemon_file_path,
         logger_path,
         library_path,
