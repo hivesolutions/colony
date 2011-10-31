@@ -77,7 +77,7 @@ prefix_paths = {
         "colony_language" : "../../../../../hive-main/pt.hive.colony.language/trunk",
         "colony_configuration" : "../../../../../hive-main/pt.hive.colony.configuration/trunk",
         "omni" : "../../../../../hive-main/pt.hive.omni/trunk",
-        "omni_data" : "../../../../../hive-main/pt.hive.data/trunk",
+        "omni_data" : "../../../../../hive-main/pt.hive.omni.data/trunk",
         "omni_web" : "../../../../../hive-main/pt.hive.omni.web/trunk",
         "colony_web" : "../../../../../hive-main/pt.hive.colony.web/trunk",
         "colony_web_ui" : "../../../../../hive-main/pt.hive.colony.web.ui/trunk",
