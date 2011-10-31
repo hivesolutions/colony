@@ -25,7 +25,7 @@ And remember this is just the base runtime, to understand the kind of things you
 
 ## Contributing
 
-Altough Colony is still in an early stage we're welcoming help for all kinds of work.
+Although Colony is still in an early stage we're welcoming help for all kinds of work.
 The best ways to get involved:
 
 1. Join the [mailing list](http://groups.google.com/group/colony-users).
