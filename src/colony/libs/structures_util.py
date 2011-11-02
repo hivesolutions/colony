@@ -48,36 +48,34 @@ class OrderedMap:
     tuples_list = None
     """ The list of tuples """
 
-    map = None
-    """ The map """
+    _map = None
+    """ The map to be used internally for virtual access """
 
-    def __init__(self):
+    _keys = None
+    """ The internal keys list for ordered keys retrieval """
+
+    def __init__(self, ordered_keys = False):
         """
         Constructor of the class.
+
+        @type ordered_keys: bool
+        @param ordered_keys: If the keys should also be provided
+        in an ordered fashion (expensive remove operation).
         """
 
         self.tuples_list = []
-        self.map = {}
+        self._map = {}
+
+        if ordered_keys: self._keys = []
 
     def __len__(self):
-        return self.map.__len__()
+        return self._map.__len__()
 
     def __getitem__(self, key):
-        return self.map[key]
+        return self._map[key]
 
     def __setitem__(self, key, value):
-        # in case the key (item) exists
-        # in the map
-        if key in self.map:
-            # removes the item from the internal
-            # structures (using the key)
-            self.__remove_item(key)
-
-        # adds the tuple to the tuples list
-        self.tuples_list.append((key, value))
-
-        # sets the value in the map
-        self.map[key] = value
+        self.__add_item(key, value)
 
     def __delitem__(self, key):
         self.__remove_item(key)
@@ -86,13 +84,13 @@ class OrderedMap:
         return OrderedMapIterator(self)
 
     def __contains__(self, item):
-        return self.map.__contains__(item)
+        return self._map.__contains__(item)
 
-    def keys(self):
-        return self.map.keys()
+    def get(self, key, default_value):
+        return self._map.get(key, default_value)
 
     def values(self):
-        return self.map.values()
+        return self._map.values()
 
     def items(self):
         return self.tuples_list
@@ -102,6 +100,49 @@ class OrderedMap:
         for key, value in map.items():
             # sets the item in the structure
             self.__setitem__(key, value)
+
+    def keys(self):
+        # in case the keys (list) is not
+        # defined (no ordered keys used)
+        if self._keys == None:
+            keys = self._map.keys()
+        # otherwise the ordered keys list
+        # is available and must be used
+        else:
+            keys = self._keys
+
+        # returns the valid keys
+        return keys
+
+    def __add_item(self, key, value):
+        """
+        Adds an item with the given key to the
+        internal structures.
+
+        @type key: String
+        @param key: The key of the element to be added
+        to the internal structures.
+        @type value: Object
+        @param value: The value of the element to be added
+        to the internal structures.
+        """
+
+        # in case the key (item) exists
+        # in the map
+        if key in self._map:
+            # removes the item from the internal
+            # structures (using the key)
+            self.__remove_item(key)
+
+        # adds the tuple to the tuples list
+        self.tuples_list.append((key, value))
+
+        # sets the value in the map
+        self._map[key] = value
+
+        # adds the key to the keys list (only in case
+        # the keys list is available and set)
+        if not self._keys == None: self._keys.append(key)
 
     def __remove_item(self, key):
         """
@@ -114,13 +155,17 @@ class OrderedMap:
         """
 
         # retrieves the value for the key
-        value = self.map[key]
+        value = self._map[key]
 
         # removes the tuple from the tuples list
         self.tuples_list.remove((key, value))
 
         # removes the value from the map
-        del self.map[key]
+        del self._map[key]
+
+        # removes the key from the keys list (only in case
+        # the keys list is available and set)
+        if not self._keys == None: self._keys.remove(key)
 
 class OrderedMapIterator:
     """
@@ -177,8 +222,8 @@ class MultipleValueMap:
     the first value to the key's value.
     """
 
-    map = {}
-    """ The map """
+    _map = None
+    """ The map to be used internally for virtual access """
 
     def __init__(self):
         """
@@ -186,14 +231,14 @@ class MultipleValueMap:
         """
 
         # initializes the map
-        self.map = {}
+        self._map = {}
 
     def __len__(self):
-        return self.map.__len__()
+        return self._map.__len__()
 
     def __getitem__(self, key):
         # returns the value
-        values = self.map.get(key)
+        values = self._map.get(key)
 
         # returns in case no
         # value was found
@@ -208,31 +253,34 @@ class MultipleValueMap:
 
     def __setitem__(self, key, value):
         # retrieves the values
-        values = self.map.get(key, [])
+        values = self._map.get(key, [])
 
         # adds the value to the list
         values.append(value)
 
         # sets the values in the map
-        self.map[key] = values
+        self._map[key] = values
 
     def __delitem__(self, key):
-        del self.map[key]
+        del self._map[key]
 
     def __iter__(self):
-        return self.map.__iter__()
+        return self._map.__iter__()
 
     def __contains__(self, item):
-        return self.map.__contains__(item)
+        return self._map.__contains__(item)
 
-    def keys(self):
-        return self.map.keys()
+    def get(self, key, default_value):
+        return self._map.get(key, default_value)
 
     def values(self):
-        return self.map.values()
+        return self._map.values()
 
     def items(self):
-        return self.map.items()
+        return self.tuples_list
+
+    def keys(self):
+        return self._map.keys()
 
     def unset(self, key, value):
         """
@@ -245,7 +293,7 @@ class MultipleValueMap:
         """
 
         # retrieves the values
-        values = self.map[key]
+        values = self._map[key]
 
         # removes the value
         values.remove(value)
