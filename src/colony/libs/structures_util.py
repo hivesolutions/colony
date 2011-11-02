@@ -141,8 +141,9 @@ class OrderedMap:
         self._map[key] = value
 
         # adds the key to the keys list (only in case
-        # the keys list is available and set)
-        if not self._keys == None: self._keys.append(key)
+        # the keys list is available and set and the key
+        # is not present in the keys list)
+        if not self._keys == None and not key in self._keys: self._keys.append(key)
 
     def __remove_item(self, key):
         """
