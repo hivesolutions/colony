@@ -902,7 +902,7 @@ class FileTransactionContext(FileContext):
         upon the final commit.
         """
 
-        if callback in self.commit_callbacks_list: return
+        self.remove_commit_callback(callback)
         self.commit_callbacks_list.append(callback)
 
     def remove_commit_callback(self, callback):
@@ -928,7 +928,7 @@ class FileTransactionContext(FileContext):
         upon the final rollback.
         """
 
-        if callback in self.rollback_callbacks_list: return
+        self.remove_rollback_callback(callback)
         self.rollback_callbacks_list.append(callback)
 
     def remove_rollback_callback(self, callback):
