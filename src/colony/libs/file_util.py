@@ -493,7 +493,10 @@ class FileTransactionContext(FileContext):
     """ The list of path tuples associated with the transaction """
 
     commit_callbacks_list = []
-    """ The list of callback to be called upon commit """
+    """ The list of callbacks to be called upon commit """
+
+    rollback_callbacks_list = []
+    """ The list of callbacks to be called upon rollback """
 
     access_lock = None
     """ The lock controlling the access to the file transaction """
@@ -512,6 +515,7 @@ class FileTransactionContext(FileContext):
 
         self.path_tuples_list = []
         self.commit_callbacks_list = []
+        self.rollback_callbacks_list = []
         self.access_lock = threading.RLock()
 
     def resolve_file_path(self, file_path):
@@ -880,6 +884,9 @@ class FileTransactionContext(FileContext):
 
             # runs the reset
             self._reset()
+
+            # calls the "final" rollback callbacks
+            self._call_rollback_callbacks()
         finally:
             # releases the access lock
             self.access_lock.release()
@@ -895,6 +902,7 @@ class FileTransactionContext(FileContext):
         upon the final commit.
         """
 
+        if callback in self.commit_callbacks_list: return
         self.commit_callbacks_list.append(callback)
 
     def remove_commit_callback(self, callback):
@@ -906,7 +914,35 @@ class FileTransactionContext(FileContext):
         upon the final commit.
         """
 
+        if not callback in self.commit_callbacks_list: return
         self.commit_callbacks_list.remove(callback)
+
+    def add_rollback_callback(self, callback):
+        """
+        Adds a new rollback callback.
+        This callback will be called upon the final
+        rollback is passed.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final rollback.
+        """
+
+        if callback in self.rollback_callbacks_list: return
+        self.rollback_callbacks_list.append(callback)
+
+    def remove_rollback_callback(self, callback):
+        """
+        Removes an existing rollback callback.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final rollback.
+        """
+
+        if not callback in self.rollback_callbacks_list: return
+        self.rollback_callbacks_list.remove(callback)
+
 
     def _reset(self):
         """
@@ -1170,3 +1206,19 @@ class FileTransactionContext(FileContext):
 
         # empties the commit callbacks
         self.commit_callbacks_list = []
+
+    def _call_rollback_callbacks(self):
+        """
+        Calls all the rollback callback functions
+        in the current list.
+        This method should be called at the
+        end of a rollback.
+        """
+
+        # iterates over all the rollback callback functions
+        for rollback_callback in self.rollback_callbacks_list:
+            # calls the the rollback callback
+            rollback_callback()
+
+        # empties the rollback callbacks
+        self.rollback_callbacks_list = []
