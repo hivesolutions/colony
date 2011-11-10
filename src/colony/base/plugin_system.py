@@ -3600,22 +3600,82 @@ class PluginManager:
         # returns the loaded plugins instances
         return loaded_plugins_instances
 
-    def get_plugin(self, plugin):
+    def assert_plugin(self, plugin):
         """
-        Retrieves a plugin and loads it if necessary.
+        "Asserts" the plugin and loads it if necessary.
+        This method provides a mechanism for verified plugin
+        loaded state.
 
         @type plugin: Plugin
-        @param plugin: The plugin to retrieve.
+        @param plugin: The plugin to be "assert" for loading.
         @rtype: Plugin
-        @return: The retrieved plugin.
+        @return: The "asserted" and loaded plugin.
         """
 
         # in case the plugin is not loaded
+        # (loading is required)
         if not plugin.is_loaded():
-            # loads the plugin
+            # loads the plugin (as defined by the
+            # assert request)
             self._load_plugin(plugin)
 
         # returns the (loaded) plugin
+        return plugin
+
+    def get_plugin(self, plugin_id, plugin_version = None):
+        """
+        Retrieves an instance of a plugin with the given id.
+        The retrieval of the plugin only uses the version is it's
+        specified.
+
+        @type plugin_id: String
+        @param plugin_id: The id of the plugin to retrieve.
+        @type plugin_version: String
+        @param plugin_version: The version of the plugin to retrieve.
+        @rtype: Plugin
+        @return: The plugin with the given id and optionally version.
+        """
+
+        # retrieves the plugin (not sure about loading) and then
+        # asserts it to be sure it's loaded (if possible)
+        plugin = self._get_plugin(plugin_id, plugin_version)
+        plugin = plugin and self.assert_plugin(plugin) or plugin
+
+        # returns the plugin (instance)
+        return plugin
+
+    def _get_plugin(self, plugin_id, plugin_version = None):
+        """
+        Retrieves an instance (not verified to be loaded) of
+        a plugin with the given id.
+        The retrieval of the plugin only uses the version is it's
+        specified.
+
+        @type plugin_id: String
+        @param plugin_id: The id of the plugin to retrieve.
+        @type plugin_version: String
+        @param plugin_version: The version of the plugin to retrieve.
+        @rtype: Plugin
+        @return: The plugin with the given id and optionally version.
+        """
+
+        # in case the plugin does not exists in the plugin
+        # instances map (not found)
+        if not plugin_id in self.plugin_instances_map:
+            # returns invalid
+            return None
+
+        # retrieves the plugin from the plugin instances map for
+        # the given plugin id
+        plugin = self.plugin_instances_map[plugin_id]
+
+        # in case the plugin version is specified and
+        # it does not match the retrieved plugin version
+        if plugin_version and not plugin.version == plugin_version:
+            # returns invalid
+            return None
+
+        # returns the plugin (instance)
         return plugin
 
     def get_plugin_by_id(self, plugin_id):
@@ -3630,7 +3690,7 @@ class PluginManager:
 
         if plugin_id in self.plugin_instances_map:
             plugin = self.plugin_instances_map[plugin_id]
-            return self.get_plugin(plugin)
+            return self.assert_plugin(plugin)
 
     def _get_plugin_by_id(self, plugin_id):
         """
@@ -3661,7 +3721,7 @@ class PluginManager:
         if plugin_id in self.plugin_instances_map:
             plugin = self.plugin_instances_map[plugin_id]
             if plugin.version == plugin_version:
-                return self.get_plugin(plugin)
+                return self.assert_plugin(plugin)
 
     def _get_plugin_by_id_and_version(self, plugin_id, plugin_version):
         """
@@ -3707,7 +3767,7 @@ class PluginManager:
                 # capability of the capability structure
                 if capability_structure.is_capability_or_sub_capability(plugin_capability_structure):
                     # adds the plugin to the results list
-                    result.append(self.get_plugin(plugin))
+                    result.append(self.assert_plugin(plugin))
 
         # returns the results list
         return result
@@ -3722,7 +3782,8 @@ class PluginManager:
         @return: The list of plugins for the given capability and sub capabilities.
         """
 
-        # the results list
+        # creates the results list to hold
+        # the various plugin instances
         result = []
 
         # in case the capability does not exist in the capabilities sub capabilities map
@@ -3755,7 +3816,8 @@ class PluginManager:
         @return: The list of plugins for the given capability and sub capabilities.
         """
 
-        # the results list
+        # creates the results list to hold
+        # the various plugin instances
         result = []
 
         # the capability converter to internal capability structure
@@ -3784,7 +3846,7 @@ class PluginManager:
         result = []
         for plugin in self.plugin_instances:
             if capability in plugin.capabilities:
-                result.append(self.get_plugin(plugin))
+                result.append(self.assert_plugin(plugin))
         return result
 
     def get_plugins_by_capability_allowed(self, capability_allowed):
@@ -3808,7 +3870,7 @@ class PluginManager:
 
             for plugin_capability_structure in plugin_capabilities_structure:
                 if capability_structure.is_capability_or_sub_capability(plugin_capability_structure):
-                    result.append(self.get_plugin(plugin))
+                    result.append(self.assert_plugin(plugin))
 
         return result
 
@@ -3843,7 +3905,7 @@ class PluginManager:
 
         for plugin in self.plugin_instances:
             if event_fired in plugin.events_fired:
-                result.append(self.get_plugin(plugin))
+                result.append(self.assert_plugin(plugin))
 
         return result
 
@@ -3863,7 +3925,7 @@ class PluginManager:
 
         for plugin in self.plugin_instances:
             if event_handled in plugin.events_handled:
-                result.append(self.get_plugin(plugin))
+                result.append(self.assert_plugin(plugin))
 
         return result
 
@@ -3899,7 +3961,7 @@ class PluginManager:
                     # in case the dependency plugin id is the same
                     if dependency.plugin_id == plugin_id:
                         # appends the plugin to the result
-                        result.append(self.get_plugin(plugin))
+                        result.append(self.assert_plugin(plugin))
         return result
 
     def _get_plugins_by_dependency(self, plugin_id):
@@ -3951,7 +4013,7 @@ class PluginManager:
 
             for plugin_capability_structure in plugin_capabilities_structure:
                 if plugin_capability_structure.is_capability_or_sub_capability(capability_structure):
-                    result.append(self.get_plugin(plugin))
+                    result.append(self.assert_plugin(plugin))
 
         return result
 
