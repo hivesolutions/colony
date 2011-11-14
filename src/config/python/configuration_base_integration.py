@@ -177,6 +177,7 @@ plugin_path_list = [
     "%colony_prefix_path%/pt.hive.colony.plugins.web.mvc.resources.ui/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.web.mvc.wiki/src/colony/plugins",
     "%colony_prefix_path%/pt.hive.colony.plugins.web.nanger/src/colony/plugins",
+    "%colony_site_prefix_path%/pt.hive.colony_site.plugins.main/src/colony_site/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.authentication/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.base.data/src/omni/plugins",
     "%omni_prefix_path%/pt.hive.omni.plugins.base.logic/src/omni/plugins",
