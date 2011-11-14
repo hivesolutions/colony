@@ -38,7 +38,6 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 from configuration_base import * #@UnusedWildImport
-from configuration_base_development import * #@UnusedWildImport
 
 layout_mode = "default"
 """ The project layout mode """
