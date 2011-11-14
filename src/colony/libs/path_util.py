@@ -135,13 +135,15 @@ def align_path(path):
     # returns the aligned path
     return aligned_path
 
-def copy_directory(source_path, target_path, replace_files = True):
+def copy_directory(source_path, target_path, replace_files = True, copy_hidden = True):
     """
     Copies the directory in the given source path to the
     target path.
     The copy is recursive and so the sub directories are copied too.
     The directory in the target path is created if not existent
     or overwritten if existent.
+    It's possible to control the copying of hidden files using the
+    optional copy hidden flag parameter.
 
     @type source_path: String
     @param source_path: The path to the source directory.
@@ -150,6 +152,9 @@ def copy_directory(source_path, target_path, replace_files = True):
     @type replace_files: bool
     @param replace_files: If the files should be replaced
     in case duplicate files are found.
+    @type copy_hidden: bool
+    @param copy_hidden: If the files considered by the os to
+    be of type hidden should be copied..
     """
 
     # normalizes both the target and source paths
@@ -187,13 +192,23 @@ def copy_directory(source_path, target_path, replace_files = True):
         target_full_path = os.path.join(target_path, entry_name)
         target_full_path = normalize_path(target_full_path)
 
+        # retrieve the base name for the current entry
+        # for hidden checking
+        entry_base_name = os.path.basename(entry_full_path)
+
+        # in case the copy hidden flag is not set and the base
+        # name refers a hidden file or directory
+        if not copy_hidden and entry_base_name.startswith("."):
+            # continues the loop (no copy)
+            continue
+
         # retrieves the mode
         mode = os.stat(entry_full_path)[stat.ST_MODE]
 
         # in case it is a directory
         if stat.S_ISDIR(mode):
             # copies the (sub) directory
-            copy_directory(entry_full_path, target_full_path, replace_files)
+            copy_directory(entry_full_path, target_full_path, replace_files, copy_hidden)
         # otherwise it's a file and must be copied
         else:
             # copies the entry to the target path
