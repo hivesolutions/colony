@@ -931,6 +931,32 @@ class FileTransactionContext(FileContext):
         if not callback in self.commit_callbacks_list: return
         self.commit_callbacks_list.remove(callback)
 
+    def add_pre_commit_callback(self, callback):
+        """
+        Adds a new pre commit callback.
+        This callback will be called upon the final
+        commit is started.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final commit.
+        """
+
+        self.remove_pre_commit_callback(callback)
+        self.pre_commit_callbacks_list.append(callback)
+
+    def remove_pre_commit_callback(self, callback):
+        """
+        Removes an existing pre commit callback.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final commit.
+        """
+
+        if not callback in self.pre_commit_callbacks_list: return
+        self.pre_commit_callbacks_list.remove(callback)
+
     def add_rollback_callback(self, callback):
         """
         Adds a new rollback callback.
@@ -957,6 +983,31 @@ class FileTransactionContext(FileContext):
         if not callback in self.rollback_callbacks_list: return
         self.rollback_callbacks_list.remove(callback)
 
+    def add_pre_rollback_callback(self, callback):
+        """
+        Adds a new pre rollback callback.
+        This callback will be called upon the final
+        rollback is started.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final rollback.
+        """
+
+        self.remove_pre_rollback_callback(callback)
+        self.pre_rollback_callbacks_list.append(callback)
+
+    def remove_pre_rollback_callback(self, callback):
+        """
+        Removes an existing pre rollback callback.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final rollback.
+        """
+
+        if not callback in self.pre_rollback_callbacks_list: return
+        self.pre_rollback_callbacks_list.remove(callback)
 
     def _reset(self):
         """

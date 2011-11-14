@@ -1,5 +1,16 @@
 {
-    "last_modified_timestamp" : 0,
-    "last_modified_date" : "",
-    "installed_packages" : {}
+    "last_modified_timestamp" : 1321295639.69,
+    "last_modified_date" : "14-11-2011 18:33:59",
+    "installed_packages" : {
+        "pt.hive.colony.plugins.build.automation.items.colony_base" : {
+            "hash_digest" : {
+                "sha256" : "f7ca0e56c04670484e7221536f7b139458980586de3eee44f6cafe9f57ae1de8",
+                "sha1" : "f4777331dc2f302ffa12be75718ddf1af2812bcb",
+                "md5" : "1f6e8085ab9b35b91cd604ae2943c211"
+            },
+            "version" : "1.0.0",
+            "type" : "plugin",
+            "timestamp" : 1321295639.69
+        }
+    }
 }
