@@ -495,8 +495,14 @@ class FileTransactionContext(FileContext):
     commit_callbacks_list = []
     """ The list of callbacks to be called upon commit """
 
+    pre_commit_callbacks_list = []
+    """ The list of callbacks to be called before commit """
+
     rollback_callbacks_list = []
     """ The list of callbacks to be called upon rollback """
+
+    pre_rollback_callbacks_list = []
+    """ The list of callbacks to be called before rollback """
 
     access_lock = None
     """ The lock controlling the access to the file transaction """
@@ -515,7 +521,9 @@ class FileTransactionContext(FileContext):
 
         self.path_tuples_list = []
         self.commit_callbacks_list = []
+        self.pre_commit_callbacks_list = []
         self.rollback_callbacks_list = []
+        self.pre_rollback_callbacks_list = []
         self.access_lock = threading.RLock()
 
     def resolve_file_path(self, file_path):
@@ -831,6 +839,9 @@ class FileTransactionContext(FileContext):
                 # raises the runtime error
                 raise RuntimeError("Invalid transaction level")
 
+            # calls the pre (before) commit callbacks
+            self._call_pre_commit_callbacks()
+
             # iterates over all the path tuples in
             # path tuples list
             for path_tuple in self.path_tuples_list:
@@ -878,6 +889,9 @@ class FileTransactionContext(FileContext):
             elif self.transaction_level < 0:
                 # raises the runtime error
                 raise RuntimeError("Invalid transaction level")
+
+            # calls the pre (before) rollback callbacks
+            self._call_pre_rollback_callbacks()
 
             # runs the cleanup
             self._cleanup()
@@ -1207,6 +1221,22 @@ class FileTransactionContext(FileContext):
         # empties the commit callbacks
         self.commit_callbacks_list = []
 
+    def _call_pre_commit_callbacks(self):
+        """
+        Calls all the pre commit callback functions
+        in the current list.
+        This method should be called at the
+        beginning of a commit.
+        """
+
+        # iterates over all the pre commit callback functions
+        for pre_commit_callback in self.pre_commit_callbacks_list:
+            # calls the the pre commit callback
+            pre_commit_callback()
+
+        # empties the pre commit callbacks
+        self.pre_commit_callbacks_list = []
+
     def _call_rollback_callbacks(self):
         """
         Calls all the rollback callback functions
@@ -1222,3 +1252,19 @@ class FileTransactionContext(FileContext):
 
         # empties the rollback callbacks
         self.rollback_callbacks_list = []
+
+    def _call_pre_rollback_callbacks(self):
+        """
+        Calls all the pre rollback callback functions
+        in the current list.
+        This method should be called at the
+        beginning of a rollback.
+        """
+
+        # iterates over all the pre rollback callback functions
+        for pre_rollback_callback in self.pre_rollback_callbacks_list:
+            # calls the the pre rollback callback
+            pre_rollback_callback()
+
+        # empties the pre rollback callbacks
+        self.pre_rollback_callbacks_list = []
