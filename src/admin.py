@@ -50,13 +50,13 @@ no use for them in the target colony instance """
 def clone():
     # directory path
     target = sys.argv[1]
-    
+
     # retrieves the complete (and normalized) colony
     # path and then uses it to create the new instance
     # (cloned from the current instance)
     colony_path = os.path.normpath(os.path.dirname(__file__))
     shutil.copytree(colony_path, target)
-    
+
     # iterates over all the paths to be removed from
     # the newly creates intance (not required anymore)
     for path in REMOVALS:

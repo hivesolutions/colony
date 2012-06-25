@@ -138,8 +138,8 @@ setuptools.setup(
     scripts = [
         "scripts/pypi/colony.bat",
         "scripts/pypi/colony_admin.bat",
-        "scripts/pypi/colony_admin.py"
-        "scripts/pypi/colony_pypi.py",
+        "scripts/pypi/colony_admin.py",
+        "scripts/pypi/colony_pypi.py"
     ],
     py_modules = [
         "admin",
