@@ -45,6 +45,10 @@ DEFAULT_TARGET = "colony"
 """ The default directory to be used as target in
 case no target path is provided (default name) """
 
+DEFAULT_ROOT = "COLONY_ROOT"
+""" The default name for the file to be used to 
+indicate the root directory of a colony instance """
+
 REMOVALS = (
     "colony.egg-info",
     "EGG-INFO"
@@ -57,7 +61,7 @@ def clone():
     # deduction of the target path uses the provided
     # parameters otherwise used the default name
     # for the target path
-    if len(sys.argv) > 1: target = sys.argv[2]
+    if len(sys.argv) > 2: target = sys.argv[2]
     else: target = DEFAULT_TARGET
 
     # retrieves the complete (and normalized) colony
@@ -79,6 +83,11 @@ def clone():
     # so that unnecessary files are removed
     _cleanup(target)
 
+    # opens the colony instance reference file (this
+    # file indicates the root of the colony instance)
+    root_file = file(target + "/" + COLONY_ROOT, "a")
+    root_file.close()
+
 def cleanup():
     """
     Cleans the target colony instance removing all the
@@ -95,20 +104,36 @@ def cleanup():
     # deduction of the target path uses the provided
     # parameters otherwise used the default name
     # for the target path
-    if len(sys.argv) > 1: target = sys.argv[2]
+    if len(sys.argv) > 2: target = sys.argv[2]
     else: target = DEFAULT_TARGET
 
     # runs the cleanup command on the target path
     # so that all the non required files are removed
     _cleanup(target)
+    
+def pack():
+    # TENHO DE FAZER PACKING EM UM ZIP PARA FAZER
+    # DISTRIBUICAO O MAIS FACIL POSSIVEL
+    
+    pass
 
 def _cleanup(path):
+    # lists all the entries in the provided path
+    # in order to filter the ones to be removed
     entries = os.listdir(path)
 
+    # iterates over all the entries to treat them
+    # in case it's necessary
     for entry in entries:
+        # joins the path with the entry to create
+        # the complete entry path, then runs the
+        # appropriate iteration loop operations
         _path = os.path.join(path, entry)
-        if os.path.isdir(_path): _cleanup(_path)
+        if os.path.isdir(_path): _cleanup(_path); continue
         if _path.endswith(".pyc"): os.remove(_path)
+        
+def _pack(path):
+    pass
 
 def main():
     # retrieves the operation from the provided arguments
