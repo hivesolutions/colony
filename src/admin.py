@@ -47,7 +47,7 @@ REMOVALS = (
 """ The list of paths to be removed because there's
 no use for them in the target colony instance """
 
-def clone()
+def clone():
     # directory path
     target = sys.argv[1]
     
