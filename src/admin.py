@@ -43,6 +43,7 @@ import shutil
 
 REMOVALS = (
     "colony.egg-info",
+    "EGG-INFO"
 )
 """ The list of paths to be removed because there's
 no use for them in the target colony instance """
