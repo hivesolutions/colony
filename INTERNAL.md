@@ -13,3 +13,4 @@ In order to build it for source distribution used:
 Note that the account currently in use for colony is the joamag account.
 
 For more information refer to [setuptools](http://packages.python.org/distribute/setuptools.html)
+For internal reference in the [setup() command](http://docs.python.org/distutils/apiref.html#module-distutils.command.build_scripts)
