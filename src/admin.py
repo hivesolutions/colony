@@ -58,14 +58,22 @@ REMOVALS = (
 no use for them in the target colony instance """
 
 def get_base_path(path):
-
+    # iterates continuously while the root path is not
+    # reached or a root file paths is not found
     while True:
+        # creates the possible root file path and then
+        # tests for its existence in such case returns
+        # the directory path as the base one (found)
+        # otherwise must continue the loop (top directory)
+        # but only if this is not the top level root directory
         root_file_path = os.path.join(path, DEFAULT_ROOT)
         if os.path.exists(root_file_path): return path
         if os.path.dirname(path) == path: break
         path = os.path.join(path, "..")
         path = os.path.normpath(path)
 
+    # returns invalid no base path was found
+    # not possible to find it
     return None
 
 def clone():
