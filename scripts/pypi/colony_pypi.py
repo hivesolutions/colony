@@ -37,7 +37,16 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import os
+import sys
 import main
 
 if __name__ == "__main__":
-    main.main()
+    path = os.path.dirname(main.__file__)
+    _path = os.getcwd()
+    try:
+        sys.path.insert(0, _path)
+        os.chdir(path)
+        main.main()
+    finally:
+        os.chdir(_path)
