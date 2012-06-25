@@ -42,10 +42,4 @@ import sys
 import admin
 
 if __name__ == "__main__":
-    path = os.path.dirname(main.__file__)
-    _path = os.getcwd()
-    try:
-        os.chdir(path)
-        admin.main()
-    finally:
-        os.chdir(_path)
+    admin.main()
