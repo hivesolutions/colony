@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
+__author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
 __version__ = "1.0.0"
@@ -40,13 +40,14 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import sys
 import shutil
+import zipfile
 
 DEFAULT_TARGET = "colony"
 """ The default directory to be used as target in
 case no target path is provided (default name) """
 
 DEFAULT_ROOT = "COLONY_ROOT"
-""" The default name for the file to be used to 
+""" The default name for the file to be used to
 indicate the root directory of a colony instance """
 
 REMOVALS = (
@@ -55,6 +56,17 @@ REMOVALS = (
 )
 """ The list of paths to be removed because there's
 no use for them in the target colony instance """
+
+def get_base_path(path):
+
+    while True:
+        root_file_path = os.path.join(path, DEFAULT_ROOT)
+        if os.path.exists(root_file_path): return path
+        if os.path.dirname(path) == path: break
+        path = os.path.join(path, "..")
+        path = os.path.normpath(path)
+
+    return None
 
 def clone():
     # in case there are enough arguments for the
@@ -85,7 +97,8 @@ def clone():
 
     # opens the colony instance reference file (this
     # file indicates the root of the colony instance)
-    root_file = file(target + "/" + COLONY_ROOT, "a")
+    root_file_path = os.path.join(target, DEFAULT_ROOT)
+    root_file = file(root_file_path, "a")
     root_file.close()
 
 def cleanup():
@@ -100,24 +113,56 @@ def cleanup():
     the process will not remove the file.
     """
 
+    # retrieves the current working directory (cwd)
+    # in order to be used in as fallback case
+    cwd = os.getcwd()
+
     # in case there are enough arguments for the
     # deduction of the target path uses the provided
     # parameters otherwise used the default name
     # for the target path
     if len(sys.argv) > 2: target = sys.argv[2]
-    else: target = DEFAULT_TARGET
+    else: target = get_base_path(cwd)
+
+    # in case not target path is defined must raise
+    # a runtime error
+    if not target: raise RuntimeError("no instance found")
 
     # runs the cleanup command on the target path
     # so that all the non required files are removed
     _cleanup(target)
-    
+
 def pack():
-    # TENHO DE FAZER PACKING EM UM ZIP PARA FAZER
-    # DISTRIBUICAO O MAIS FACIL POSSIVEL
-    
-    pass
+    # retrieves the current working directory (cwd)
+    # in order to be used in as fallback case
+    cwd = os.getcwd()
+
+    # in case there are enough arguments for the
+    # deduction of the target path uses the provided
+    # parameters otherwise used the default name
+    # for the target path
+    if len(sys.argv) > 2: target = sys.argv[2]
+    else: target = get_base_path(cwd)
+
+    # in case not target path is defined must raise
+    # a runtime error
+    if not target: raise RuntimeError("no instance found")
+
+    # runs the pack command on the target path
+    # to create the packed file for the colony instance
+    _pack(target)
 
 def _cleanup(path):
+    # retrieves the path to the series of sub
+    # directories to be "cleaned"
+    log_path = os.path.join(path, "log")
+
+    # removes the files using extension based rules
+    # on the defined directories
+    _cleanup_files(path, ".pyc")
+    _cleanup_files(log_path, ".log")
+
+def _cleanup_files(path, extension):
     # lists all the entries in the provided path
     # in order to filter the ones to be removed
     entries = os.listdir(path)
@@ -129,11 +174,29 @@ def _cleanup(path):
         # the complete entry path, then runs the
         # appropriate iteration loop operations
         _path = os.path.join(path, entry)
-        if os.path.isdir(_path): _cleanup(_path); continue
-        if _path.endswith(".pyc"): os.remove(_path)
-        
+        if os.path.isdir(_path): _cleanup_files(_path, extension); continue
+        if _path.endswith(extension): os.remove(_path)
+
 def _pack(path):
-    pass
+    _cleanup(path)
+
+    _path = os.path.join(path, "..")
+    archive_path = os.path.join(_path, "colony.zip")
+
+    file = zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED)
+    try: _zip_directory(path, "/", file)
+    finally: file.close()
+
+def _zip_directory(path, relative, file):
+    print "Packing %s" % path
+
+    entries = os.listdir(path)
+
+    for entry in entries:
+        p1 = os.path.join(path, entry)
+        p2 = os.path.join(relative, entry)
+        if os.path.isdir(p1): _zip_directory(p1, p2, file)
+        else: file.write(p1, p2)
 
 def main():
     # retrieves the operation from the provided arguments
