@@ -136,8 +136,8 @@ setuptools.setup(
     keywords = "colony plugin framework web",
     url = "http://getcolony.com",
     scripts = [
-        "src/scripts/win32/colony.bat",
-        "src/scripts/win32/colony_pypi.py"
+        "scripts/pypi/colony.bat",
+        "scripts/pypi/colony_pypi.py"
     ],
     py_modules = [
         "main",
