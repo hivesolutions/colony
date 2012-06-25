@@ -154,5 +154,5 @@ rm "$TMP_PATH/colony_1.0.0_all.zip"
 rm "$TMP_PATH/colony-base-plugins_1.0.0_all.zip"
 rm "$TMP_PATH/colony-base-containers_1.0.0_all.zip"
 
-# prints an infromation message
+# prints an information message
 echo "Finished colony web install"
