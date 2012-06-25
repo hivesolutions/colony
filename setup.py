@@ -137,9 +137,9 @@ setuptools.setup(
     url = "http://getcolony.com",
     scripts = [
         "scripts/pypi/colony.bat",
-        "scripts/pypi/colony.py",
         "scripts/pypi/colony_admin.bat",
         "scripts/pypi/colony_admin.py"
+        "scripts/pypi/colony_pypi.py",
     ],
     py_modules = [
         "admin",
