@@ -41,6 +41,10 @@ import os
 import sys
 import shutil
 
+DEFAULT_TARGET = "colony"
+""" The default directory to be used as target in
+case no target path is provided (default name) """
+
 REMOVALS = (
     "colony.egg-info",
     "EGG-INFO"
@@ -49,8 +53,12 @@ REMOVALS = (
 no use for them in the target colony instance """
 
 def clone():
-    # directory path
-    target = sys.argv[1]
+    # in case there are enough arguments for the
+    # deduction of the target path uses the provided
+    # parameters otherwise used the default name
+    # for the target path
+    if len(sys.argv) > 1: target = sys.argv[2]
+    else: target = DEFAULT_TARGET
 
     # retrieves the complete (and normalized) colony
     # path and then uses it to create the new instance
@@ -67,8 +75,49 @@ def clone():
         if not os.path.exists(_path): continue
         shutil.rmtree(_path)
 
+    # runs the cleanup process on the target path
+    # so that unnecessary files are removed
+    _cleanup(target)
+
+def cleanup():
+    """
+    Cleans the target colony instance removing all the
+    non mandatory files from the various internal directories.
+
+    The removed files include python compiled files, extra
+    directories, etc.
+
+    The strategy used is conservative so whenever in doubt
+    the process will not remove the file.
+    """
+
+    # in case there are enough arguments for the
+    # deduction of the target path uses the provided
+    # parameters otherwise used the default name
+    # for the target path
+    if len(sys.argv) > 1: target = sys.argv[2]
+    else: target = DEFAULT_TARGET
+
+    # runs the cleanup command on the target path
+    # so that all the non required files are removed
+    _cleanup(target)
+
+def _cleanup(path):
+    entries = os.listdir(path)
+
+    for entry in entries:
+        _path = os.path.join(path, entry)
+        if os.path.isdir(_path): _cleanup(_path)
+        if _path.endswith(".pyc"): os.remove(_path)
+
 def main():
-    clone()
+    # retrieves the operation from the provided arguments
+    # and retrieves the associated function to be executed
+    operation = sys.argv[1]
+    _globals = globals()
+    function = _globals.get(operation, None)
+    if function: function()
+    else: raise RuntimeError("invalid operation")
 
 if __name__ == "__main__":
     main()
