@@ -128,7 +128,7 @@ data_files = BASE_DATA_FILES + scripts_data_files + config_data_files
 
 setuptools.setup (
     name = "colony",
-    version = "1.0.0",
+    version = "1.0.1",
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
     description = "Hive Colony Framework",
