@@ -71,7 +71,7 @@ def quote(string_value, safe = "/"):
 
     try:
         # in case the cache key is not defined
-        # in the quote sage maps creates a new entry
+        # in the quote safe maps, creates a new entry
         safe_map = QUOTE_SAFE_MAPS[cache_key]
     except KeyError:
         # adds the "base" quote safe characters to the
@@ -87,7 +87,7 @@ def quote(string_value, safe = "/"):
             # given index
             character = chr(index)
 
-            # adds the "valid" character ot the safe mao entry
+            # adds the "valid" character or the safe map entry
             safe_map[character] = (character in safe) and character or ("%%%02X" % index)
 
         # sets the safe map in the cache quote safe maps

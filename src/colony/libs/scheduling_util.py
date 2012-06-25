@@ -52,8 +52,11 @@ class Scheduler(threading.Thread):
     sleep_step = None
     """ The amount of time to be used during a sleep iteration """
 
-    continue_flag = True
+    continue_flag = False
     """ Flag controlling the execution of the scheduler """
+
+    busy_flag = False
+    """ Flag controlling the busy state of the scheduler """
 
     timestamp_queue = []
     """ Ordered list (queue) of timestamps for callables """
@@ -63,6 +66,9 @@ class Scheduler(threading.Thread):
 
     timestamp_lock = None
     """ The lock that controls the access to the timestamp structures """
+
+    action_lock = None
+    """ The lock that controls the access to the start and stop actions """
 
     def __init__(self, sleep_step = DEFAULT_SLEEP_STEP):
         """
@@ -82,6 +88,7 @@ class Scheduler(threading.Thread):
         self.timestamp_queue = []
         self.timestamp_map = {}
         self.timestamp_lock = threading.RLock()
+        self.action_lock = threading.RLock()
 
     def run(self):
         # iterates while the continue
@@ -118,18 +125,32 @@ class Scheduler(threading.Thread):
                     # for the timestamp
                     callable_list = self.timestamp_map[timestamp]
 
-                    # iterates over all the callables to call
-                    # them
-                    for callable in callable_list:
-                        # calls the callable (element)
-                        callable()
-
                     # removes the callable list for the timestmap
+                    # (done before the calling to avoid race condition)
                     del self.timestamp_map[timestamp]
 
                     # pops (removes first element) the timestamp
-                    # from the timestamp queue
+                    # from the timestamp queue (done before the
+                    # calling to avoid race condition)
                     self.timestamp_queue.pop(0)
+
+                    # sets the busy flag and releases the timestamp
+                    # lock (avoids waiting for callables)
+                    self.busy_flag = True
+                    self.timestamp_lock.release()
+
+                    try:
+                        # iterates over all the callables to call
+                        # them (calls the proper function)
+                        for callable in callable_list:
+                            # calls the callable (element)
+                            # this can be of long duration
+                            callable()
+                    finally:
+                        # acquires the timestamp lock (back)
+                        # and unsets the busy flag
+                        self.timestamp_lock.acquire()
+                        self.busy_flag = False
             finally:
                 # releases the timestamp lock
                 self.timestamp_lock.release()
@@ -146,6 +167,10 @@ class Scheduler(threading.Thread):
         This method creates a new thread for scheduling.
         """
 
+        # if the scheduler is already running avoids
+        # duplicate starting, returns immediately
+        if self.continue_flag: return
+
         # sets the continue flag
         self.continue_flag = True
 
@@ -158,6 +183,10 @@ class Scheduler(threading.Thread):
         This method is asynchronous and the stopping of
         the scheduler is not immediate.
         """
+
+        # if the scheduler is already stopped avoids
+        # duplicate stopping, returns immediately
+        if not self.continue_flag: return
 
         # unsets the continue flag
         self.continue_flag = False
@@ -172,7 +201,7 @@ class Scheduler(threading.Thread):
         stopping of the scheduler.
         """
 
-        self.continue_flag = True
+        self.continue_flag = False
         self.timestamp_queue = []
         self.timestamp_map = {}
         self.timestamp_lock = threading.RLock()
@@ -230,3 +259,25 @@ class Scheduler(threading.Thread):
         finally:
             # releases the timestamp lock
             self.timestamp_lock.release()
+
+    def is_busy(self):
+        """
+        Checks if the scheduler is currently in a busy status
+        meaning that it's executing some sort of work.
+
+        @rtype: bool
+        @return: If the scheduler is executing any kind of work.
+        """
+
+        return self.busy_flag
+
+    def is_running(self):
+        """
+        Checks if the scheduler is currently running, the scheduler
+        is considered to be running if the continue flag is set.
+
+        @rtype: bool
+        @return: If the scheduler is currently running.
+        """
+
+        return self.continue_flag

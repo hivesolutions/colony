@@ -1,0 +1,7 @@
+{
+    "1.0.4" : ["New version util file added"],
+    "1.0.3" : ["Support for replacing feature in file path linking"],
+    "1.0.2" : ["Support for copy link for files in the windows platform"],
+    "1.0.1" : ["New support for wildcard based versions"],
+    "1.0.0" : ["Initial release version"]
+}

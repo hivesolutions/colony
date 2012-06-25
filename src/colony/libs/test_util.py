@@ -37,6 +37,7 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import types
 import unittest
 
 import xml.dom.minidom
@@ -68,13 +69,16 @@ class ColonyTestCase(unittest.TestCase):
             # raises a failure exception
             raise self.failureException("value is of type %s instead of expected type %s" % (value_type, expected_type))
 
-    def assert_raises(self, expected_exception_name, function, *args, **kwargs):
+    def assert_raises(self, expected_exception, function, *args, **kwargs):
         """
         Tests that the specified exception is raised when invoking
         the provided function with the respective arguments.
 
-        @type expected_exception_name: String
-        @param expected_exception_name: The name of the exception
+        The expected exception parameter may contain the type of the
+        expected exception or the name of it.
+
+        @type expected_exception: Exception/String
+        @param expected_exception: The type or name of the exception
         that should be raised by the function.
         @type function: Function
         @param function: The function to be invoked.
@@ -88,20 +92,31 @@ class ColonyTestCase(unittest.TestCase):
             # invokes the function
             function(*args, **kwargs)
         except Exception, exception:
-            # retrieves the exception class
-            exception_class = exception.__class__
+            # checks if the current exception assert mode is string or value
+            # oriented and then uses the string mode flag to find out the correct
+            # expected exception name (for exception string description)
+            string_mode = type(expected_exception) in types.StringTypes and True or False
+            expected_exception_name = string_mode and expected_exception or expected_exception.__name__
 
-            # retrieves the exception class name
-            exception_class_name = exception_class.__name__
+            # retrieves the exception class and then uses it
+            # to retrieve the exception name
+            exception_class = exception.__class__
+            exception_name = exception_class.__name__
 
             # raises a failure exception in case the
             # raised exception was not the expected one
-            if not exception_class_name == expected_exception_name:
+            if string_mode and not exception_name == expected_exception:
                 # raises a failure exception
-                raise self.failureException("raised exception %s instead of expected exception %s" % (exception_class_name, expected_exception_name))
+                raise self.failureException("raised exception %s instead of expected exception %s" % (exception_name, expected_exception_name))
+
+            # raises a failure exception in case the
+            # raised exception was not the expected one
+            if not string_mode and not exception_class == expected_exception:
+                # raises a failure exception
+                raise self.failureException("raised exception %s instead of expected exception %s" % (exception_name, expected_exception_name))
         else:
             # raises a failure exception in case no exception was raised
-            raise self.failureException("%s exception was not raised" % expected_exception_name)
+            raise self.failureException("%s exception was not raised" % expected_exception)
 
     def assert_valid_xml(self, xml_data):
         """

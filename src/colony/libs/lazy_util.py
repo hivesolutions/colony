@@ -25,10 +25,10 @@ __author__ = "João Magalhães <joamag@hive.pt>"
 __version__ = "1.0.0"
 """ The version of the module """
 
-__revision__ = "$LastChangedRevision: 10411 $"
+__revision__ = "$LastChangedRevision: 3219 $"
 """ The revision number of the module """
 
-__date__ = "$LastChangedDate: 2010-09-14 19:26:03 +0100 (ter, 14 Set 2010) $"
+__date__ = "$LastChangedDate: 2009-05-26 11:52:00 +0100 (ter, 26 Mai 2009) $"
 """ The last change date of the module """
 
 __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
@@ -37,46 +37,52 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-class ColonyException(Exception):
+class LazyClass(object):
     """
-    The top level colony exception.
-    """
-
-    def __unicode__(self):
-        """
-        Returns the unicode representation of the class.
-
-        @rtype: String
-        @return: The unicode representation of the class.
-        """
-
-        return self.__str__()
-
-class DeployerException(ColonyException):
-    """
-    The deployer exception class.
+    Class representing a lazy loaded symbol, objects
+    from this class may be used to represent a lazy
+    loaded symbol to the end developer.
     """
 
-    message = None
-    """ The exception's message """
+    def __repr__(self):
+        return "<lazy>"
 
-    def __init__(self, message):
-        """
-        Constructor of the class.
+    def __eq__(self, other):
+        if other == None:
+            return True
 
-        @type message: String
-        @param message: The message to be printed.
-        """
+        return hash(self) == hash(other)
 
-        ColonyException.__init__(self)
-        self.message = message
+    def __nonzero__(self):
+        return False
 
-    def __str__(self):
-        """
-        Returns the string representation of the class.
+    def __len__(self):
+        return 0
 
-        @rtype: String
-        @return: The string representation of the class.
-        """
+    def __iter__(self):
+        return LazyIterator
 
-        return "Deployer exception - %s" % self.message
+class LazyIteratorClass(object):
+    """
+    Class representing an "empty" iterator to be used
+    to provider iterator capabilities to the lazy
+    object.
+
+    This way it's possible to "iterate" over the globally
+    available lazy object.
+    """
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        raise StopIteration()
+
+# creates the global unique reference
+# to the object to be used for lazy
+# loaded symbols
+Lazy = LazyClass()
+
+# creates the global unique reference
+# to the lazy iterator (singleton object)
+LazyIterator = LazyIteratorClass()

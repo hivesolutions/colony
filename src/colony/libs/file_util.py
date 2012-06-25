@@ -41,6 +41,7 @@ import os
 import tempfile
 import threading
 
+import list_util
 import path_util
 
 PATH_TUPLE_PROCESS_METHOD_PREFIX = "_process_path_tuple_"
@@ -477,7 +478,261 @@ class FileContext:
         # creates the various required directories
         os.makedirs(directory_path)
 
-class FileTransactionContext(FileContext):
+class TransactionContext:
+    """
+    Generic transaction abstraction that hild the logic
+    to the calling od the various transaction section
+    callbacks for a "normal" workflow.
+    """
+
+    commit_callbacks_list = []
+    """ The list of callbacks to be called upon commit """
+
+    pre_commit_callbacks_list = []
+    """ The list of callbacks to be called before commit """
+
+    rollback_callbacks_list = []
+    """ The list of callbacks to be called upon rollback """
+
+    pre_rollback_callbacks_list = []
+    """ The list of callbacks to be called before rollback """
+
+    def __init__(self):
+        """
+        Constructor of the class.
+        """
+
+        self.commit_callbacks_list = []
+        self.pre_commit_callbacks_list = []
+        self.rollback_callbacks_list = []
+        self.pre_rollback_callbacks_list = []
+
+    def add_commit_callback(self, callback):
+        """
+        Adds a new commit callback.
+        This callback will be called upon the final
+        commit is passed.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final commit.
+        """
+
+        self.remove_commit_callback(callback)
+        self.commit_callbacks_list.append(callback)
+
+    def remove_commit_callback(self, callback):
+        """
+        Removes an existing commit callback.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final commit.
+        """
+
+        if not callback in self.commit_callbacks_list: return
+        self.commit_callbacks_list.remove(callback)
+
+    def add_pre_commit_callback(self, callback):
+        """
+        Adds a new pre commit callback.
+        This callback will be called upon the final
+        commit is started.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final commit.
+        """
+
+        self.remove_pre_commit_callback(callback)
+        self.pre_commit_callbacks_list.append(callback)
+
+    def remove_pre_commit_callback(self, callback):
+        """
+        Removes an existing pre commit callback.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final commit.
+        """
+
+        if not callback in self.pre_commit_callbacks_list: return
+        self.pre_commit_callbacks_list.remove(callback)
+
+    def add_rollback_callback(self, callback):
+        """
+        Adds a new rollback callback.
+        This callback will be called upon the final
+        rollback is passed.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final rollback.
+        """
+
+        self.remove_rollback_callback(callback)
+        self.rollback_callbacks_list.append(callback)
+
+    def remove_rollback_callback(self, callback):
+        """
+        Removes an existing rollback callback.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final rollback.
+        """
+
+        if not callback in self.rollback_callbacks_list: return
+        self.rollback_callbacks_list.remove(callback)
+
+    def add_pre_rollback_callback(self, callback):
+        """
+        Adds a new pre rollback callback.
+        This callback will be called upon the final
+        rollback is started.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final rollback.
+        """
+
+        self.remove_pre_rollback_callback(callback)
+        self.pre_rollback_callbacks_list.append(callback)
+
+    def remove_pre_rollback_callback(self, callback):
+        """
+        Removes an existing pre rollback callback.
+
+        @type callback: Function
+        @param callback: The callback function to be called
+        upon the final rollback.
+        """
+
+        if not callback in self.pre_rollback_callbacks_list: return
+        self.pre_rollback_callbacks_list.remove(callback)
+
+    def _call_commit_callbacks(self):
+        """
+        Calls all the commit callback functions
+        in the current list.
+        This method should be called at the
+        end of a commit.
+        """
+
+        # iterates over all the commit callback functions
+        for commit_callback in self.commit_callbacks_list:
+            # calls the the commit callback
+            commit_callback()
+
+        # empties the commit callbacks
+        self.commit_callbacks_list = []
+
+    def _call_pre_commit_callbacks(self):
+        """
+        Calls all the pre commit callback functions
+        in the current list.
+        This method should be called at the
+        beginning of a commit.
+        """
+
+        # iterates over all the pre commit callback functions
+        for pre_commit_callback in self.pre_commit_callbacks_list:
+            # calls the the pre commit callback
+            pre_commit_callback()
+
+        # empties the pre commit callbacks
+        self.pre_commit_callbacks_list = []
+
+    def _call_rollback_callbacks(self):
+        """
+        Calls all the rollback callback functions
+        in the current list.
+        This method should be called at the
+        end of a rollback.
+        """
+
+        # iterates over all the rollback callback functions
+        for rollback_callback in self.rollback_callbacks_list:
+            # calls the the rollback callback
+            rollback_callback()
+
+        # empties the rollback callbacks
+        self.rollback_callbacks_list = []
+
+    def _call_pre_rollback_callbacks(self):
+        """
+        Calls all the pre rollback callback functions
+        in the current list.
+        This method should be called at the
+        beginning of a rollback.
+        """
+
+        # iterates over all the pre rollback callback functions
+        for pre_rollback_callback in self.pre_rollback_callbacks_list:
+            # calls the the pre rollback callback
+            pre_rollback_callback()
+
+        # empties the pre rollback callbacks
+        self.pre_rollback_callbacks_list = []
+
+class FileImmediateContext(FileContext, TransactionContext):
+    """
+    The file immediate context class that controls
+    an immediate transaction involving the file system.
+    """
+
+    def __init__(self):
+        """
+        Constructor of the class.
+        """
+
+        FileContext.__init__(self)
+        TransactionContext.__init__(self)
+
+    def open(self):
+        """
+        Opens a new transaction context.
+        """
+
+        pass
+
+    def commit(self, remove_duplicates = True):
+        """
+        Commits a new transaction context.
+        All the pending file operations
+        will be persisted.
+
+        An optional argument may be unset if
+        the duplicate operation are not meant
+        to be removed.
+
+        @type remove_duplicates: bool
+        @param remove_duplicats: If duplicate operations
+        are meant to be removed so that no duplicate
+        operation are performed (performance impact).
+        """
+
+        # calls the pre (before) commit callbacks
+        self._call_pre_commit_callbacks()
+
+        # calls the "final" commit callbacks
+        self._call_commit_callbacks()
+
+    def rollback(self):
+        """
+        Reverts all the pending operations in
+        the current transaction context.
+        All the data pending persistence will
+        be dropped.
+        """
+
+        # calls the pre (before) rollback callbacks
+        self._call_pre_rollback_callbacks()
+
+        # calls the "final" rollback callbacks
+        self._call_rollback_callbacks()
+
+class FileTransactionContext(FileContext, TransactionContext):
     """
     The file transaction context class that controls
     a transaction involving the file system.
@@ -492,18 +747,6 @@ class FileTransactionContext(FileContext):
     path_tuples_list = []
     """ The list of path tuples associated with the transaction """
 
-    commit_callbacks_list = []
-    """ The list of callbacks to be called upon commit """
-
-    pre_commit_callbacks_list = []
-    """ The list of callbacks to be called before commit """
-
-    rollback_callbacks_list = []
-    """ The list of callbacks to be called upon rollback """
-
-    pre_rollback_callbacks_list = []
-    """ The list of callbacks to be called before rollback """
-
     access_lock = None
     """ The lock controlling the access to the file transaction """
 
@@ -517,13 +760,10 @@ class FileTransactionContext(FileContext):
         """
 
         FileContext.__init__(self)
+        TransactionContext.__init__(self)
         self.temporary_path = temporary_path or tempfile.mkdtemp()
 
         self.path_tuples_list = []
-        self.commit_callbacks_list = []
-        self.pre_commit_callbacks_list = []
-        self.rollback_callbacks_list = []
-        self.pre_rollback_callbacks_list = []
         self.access_lock = threading.RLock()
 
     def resolve_file_path(self, file_path):
@@ -737,7 +977,7 @@ class FileTransactionContext(FileContext):
             REMOVE_OPERATION,
             file_path,
             handle_exception,
-            True
+            False
         )
 
         # adds the path tuple
@@ -816,11 +1056,20 @@ class FileTransactionContext(FileContext):
             # releases the access lock
             self.access_lock.release()
 
-    def commit(self):
+    def commit(self, remove_duplicates = True):
         """
         Commits a new transaction context.
         All the pending file operations
         will be persisted.
+
+        An optional argument may be unset if
+        the duplicate operation are not meant
+        to be removed.
+
+        @type remove_duplicates: bool
+        @param remove_duplicats: If duplicate operations
+        are meant to be removed so that no duplicate
+        operation are performed (performance impact).
         """
 
         # acquires the access lock
@@ -842,9 +1091,14 @@ class FileTransactionContext(FileContext):
             # calls the pre (before) commit callbacks
             self._call_pre_commit_callbacks()
 
+            # creates a no duplicates list from the path tuples
+            # list, this will ensure that no duplicate operations
+            # exist (this is a critical performance trick)
+            path_tuples_list = remove_duplicates and list_util.list_no_duplicates(self.path_tuples_list) or self.path_tuples_list
+
             # iterates over all the path tuples in
             # path tuples list
-            for path_tuple in self.path_tuples_list:
+            for path_tuple in path_tuples_list:
                 # retrieves the operation (name)
                 operation = path_tuple[0]
 
@@ -904,110 +1158,6 @@ class FileTransactionContext(FileContext):
         finally:
             # releases the access lock
             self.access_lock.release()
-
-    def add_commit_callback(self, callback):
-        """
-        Adds a new commit callback.
-        This callback will be called upon the final
-        commit is passed.
-
-        @type callback: Function
-        @param callback: The callback function to be called
-        upon the final commit.
-        """
-
-        self.remove_commit_callback(callback)
-        self.commit_callbacks_list.append(callback)
-
-    def remove_commit_callback(self, callback):
-        """
-        Removes an existing commit callback.
-
-        @type callback: Function
-        @param callback: The callback function to be called
-        upon the final commit.
-        """
-
-        if not callback in self.commit_callbacks_list: return
-        self.commit_callbacks_list.remove(callback)
-
-    def add_pre_commit_callback(self, callback):
-        """
-        Adds a new pre commit callback.
-        This callback will be called upon the final
-        commit is started.
-
-        @type callback: Function
-        @param callback: The callback function to be called
-        upon the final commit.
-        """
-
-        self.remove_pre_commit_callback(callback)
-        self.pre_commit_callbacks_list.append(callback)
-
-    def remove_pre_commit_callback(self, callback):
-        """
-        Removes an existing pre commit callback.
-
-        @type callback: Function
-        @param callback: The callback function to be called
-        upon the final commit.
-        """
-
-        if not callback in self.pre_commit_callbacks_list: return
-        self.pre_commit_callbacks_list.remove(callback)
-
-    def add_rollback_callback(self, callback):
-        """
-        Adds a new rollback callback.
-        This callback will be called upon the final
-        rollback is passed.
-
-        @type callback: Function
-        @param callback: The callback function to be called
-        upon the final rollback.
-        """
-
-        self.remove_rollback_callback(callback)
-        self.rollback_callbacks_list.append(callback)
-
-    def remove_rollback_callback(self, callback):
-        """
-        Removes an existing rollback callback.
-
-        @type callback: Function
-        @param callback: The callback function to be called
-        upon the final rollback.
-        """
-
-        if not callback in self.rollback_callbacks_list: return
-        self.rollback_callbacks_list.remove(callback)
-
-    def add_pre_rollback_callback(self, callback):
-        """
-        Adds a new pre rollback callback.
-        This callback will be called upon the final
-        rollback is started.
-
-        @type callback: Function
-        @param callback: The callback function to be called
-        upon the final rollback.
-        """
-
-        self.remove_pre_rollback_callback(callback)
-        self.pre_rollback_callbacks_list.append(callback)
-
-    def remove_pre_rollback_callback(self, callback):
-        """
-        Removes an existing pre rollback callback.
-
-        @type callback: Function
-        @param callback: The callback function to be called
-        upon the final rollback.
-        """
-
-        if not callback in self.pre_rollback_callbacks_list: return
-        self.pre_rollback_callbacks_list.remove(callback)
 
     def _reset(self):
         """
@@ -1102,11 +1252,14 @@ class FileTransactionContext(FileContext):
         """
         Checks if the given file path has been removed in
         the current context.
-        The fact the that the file has been removed in the
+        The fact that the file has been removed in the
         current context foes not imply that it does not exists
         in the context.
         If a write operation has been made after a removal
         the file should be accounted as existent.
+
+        This is a very slow operation and should be used carefully
+        otherwise the operation may become clogged.
 
         @type file_path: String
         @param file_path: The path to the file to be checked
@@ -1116,28 +1269,32 @@ class FileTransactionContext(FileContext):
         """
 
         # iterates over all the path tuples in
-        # path tuples list
+        # path tuples list to check for the ones
+        # that may remove the path
         for path_tuple in self.path_tuples_list:
             # retrieves the first item from the path
             # tuple, the operation value
             operation = path_tuple[0]
 
             # in case the operation is not of type remove
-            if not operation == REMOVE_OPERATION:
-                # continues the loop
-                continue
+            # continues the loop no removal
+            if not operation == REMOVE_OPERATION: continue
 
             # unpacks the path tuple (for a remove operation)
-            operation, _file_path, _handle_exception, _recursive = path_tuple
+            operation, _file_path, _handle_exception, recursive = path_tuple
+
+            # in case the recursive flag is not set (possibly just a
+            # normal file an not a directory) and the file path does
+            # not matches the one required skips extra verification
+            if not recursive and not file_path == _file_path: continue
 
             # checks if the current iteration file path is
             # a parent path to the path being checked
             is_parent_path = path_util.is_parent_path(file_path, _file_path)
 
-            # in case it's not a parent path
-            if not is_parent_path:
-                # continues the loop
-                continue
+            # in case it's not a parent path continues
+            # the loop no removal detected
+            if not is_parent_path: continue
 
             # removal detected
             return True
@@ -1255,67 +1412,3 @@ class FileTransactionContext(FileContext):
                 os.remove(file_path)
             except BaseException, exception:
                 if not handle_exception: raise exception
-
-    def _call_commit_callbacks(self):
-        """
-        Calls all the commit callback functions
-        in the current list.
-        This method should be called at the
-        end of a commit.
-        """
-
-        # iterates over all the commit callback functions
-        for commit_callback in self.commit_callbacks_list:
-            # calls the the commit callback
-            commit_callback()
-
-        # empties the commit callbacks
-        self.commit_callbacks_list = []
-
-    def _call_pre_commit_callbacks(self):
-        """
-        Calls all the pre commit callback functions
-        in the current list.
-        This method should be called at the
-        beginning of a commit.
-        """
-
-        # iterates over all the pre commit callback functions
-        for pre_commit_callback in self.pre_commit_callbacks_list:
-            # calls the the pre commit callback
-            pre_commit_callback()
-
-        # empties the pre commit callbacks
-        self.pre_commit_callbacks_list = []
-
-    def _call_rollback_callbacks(self):
-        """
-        Calls all the rollback callback functions
-        in the current list.
-        This method should be called at the
-        end of a rollback.
-        """
-
-        # iterates over all the rollback callback functions
-        for rollback_callback in self.rollback_callbacks_list:
-            # calls the the rollback callback
-            rollback_callback()
-
-        # empties the rollback callbacks
-        self.rollback_callbacks_list = []
-
-    def _call_pre_rollback_callbacks(self):
-        """
-        Calls all the pre rollback callback functions
-        in the current list.
-        This method should be called at the
-        beginning of a rollback.
-        """
-
-        # iterates over all the pre rollback callback functions
-        for pre_rollback_callback in self.pre_rollback_callbacks_list:
-            # calls the the pre rollback callback
-            pre_rollback_callback()
-
-        # empties the pre rollback callbacks
-        self.pre_rollback_callbacks_list = []

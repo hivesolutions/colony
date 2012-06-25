@@ -19,13 +19,16 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
+__author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
+""" The author(s) of the module """
+
 __version__ = "1.0.0"
 """ The version of the module """
 
-__revision__ = "$LastChangedRevision: 72 $"
+__revision__ = "$LastChangedRevision: 3219 $"
 """ The revision number of the module """
 
-__date__ = "$LastChangedDate: 2008-10-21 23:29:54 +0100 (Tue, 21 Oct 2008) $"
+__date__ = "$LastChangedDate: 2009-05-26 11:52:00 +0100 (ter, 26 Mai 2009) $"
 """ The last change date of the module """
 
 __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
@@ -34,8 +37,26 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from barcode_util_test import *
-from gtin_util_test import *
-from lazy_util_test import *
-from number_util_test import *
-from structures_util_test import *
+from configuration_development import * #@UnusedWildImport
+from configuration_base_development import * #@UnusedWildImport
+
+layout_mode = "repository_windows"
+""" The project layout mode """
+
+run_mode = "test"
+""" The project run mode """
+
+verbose = False
+""" The verbose flag """
+
+debug = True
+""" The debug flag """
+
+silent = False
+""" The silent flag """
+
+stop_on_cycle_error = True
+""" The stop on cycle error flag """
+
+daemon_file_path = None
+""" The daemon file path """

@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "João Magalhães <joamag@hive.pt>"
+__author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
 """ The author(s) of the module """
 
 __version__ = "1.0.0"
@@ -37,40 +37,26 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import sys
+from configuration_base import * #@UnusedWildImport
+from configuration_base_development import * #@UnusedWildImport
 
-GLOBALS_REFERENCE_VALUE = "_globals"
-""" The globals reference value """
+layout_mode = "repository_windows"
+""" The project layout mode """
 
-LOCALS_REFERENCE_VALUE = "_locals"
-""" The locals reference value """
+run_mode = "omni"
+""" The project run mode """
 
-def __importer__(module_name):
-    """
-    Importer function to be used in the process of importing
-    a module referred in inverted way.
-    This function should be used in cases where the inversion injection
-    was made using the data helper.
+verbose = False
+""" The verbose flag """
 
-    @type module_name: String
-    @param module_name: The name of the module to be imported.
-    @rtype: Module
-    @return: The imported module.
-    """
+debug = False
+""" The debug flag """
 
-    # retrieves the caller of the importer method
-    caller = sys._getframe(1)
+silent = False
+""" The silent flag """
 
-    # in case the module name exists in the globals map
-    # of the caller
-    if module_name in caller.f_globals[GLOBALS_REFERENCE_VALUE]:
-        # retrieves the module from the globals map of the caller
-        module = caller.f_globals[GLOBALS_REFERENCE_VALUE][module_name]
-    # in case the module name exists in the locals map
-    # of the caller
-    elif module_name in caller.f_globals[LOCALS_REFERENCE_VALUE]:
-        # retrieves the module from the locals map of the caller
-        module = caller.f_globals[LOCALS_REFERENCE_VALUE][module_name]
+stop_on_cycle_error = False
+""" The stop on cycle error flag """
 
-    # returns the module
-    return module
+daemon_file_path = None
+""" The daemon file path """

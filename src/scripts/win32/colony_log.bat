@@ -18,8 +18,8 @@
 
 :: __author__    = João Magalhães <joamag@hive.pt>
 :: __version__   = 1.0.0
-:: __revision__  = $LastChangedRevision: 15121 $
-:: __date__      = $LastChangedDate: 2011-07-11 13:14:10 +0100 (seg, 11 Jul 2011) $
+:: __revision__  = $LastChangedRevision: 9888 $
+:: __date__      = $LastChangedDate: 2010-08-27 14:11:37 +0100 (sex, 27 Ago 2010) $
 :: __copyright__ = Copyright (c) 2008 Hive Solutions Lda.
 :: __license__   = GNU General Public License (GPL), Version 3
 
@@ -27,8 +27,8 @@
 @echo off
 
 :: sets the temporary variables
-set RELATIVE_PATH=../../
-set SCRIPT_NAME=main.py
+set RELATIVE_PATH=../all/
+set SCRIPT_NAME=colony_log.py
 
 :: executes the initial python script with
 :: the provided arguments

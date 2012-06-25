@@ -22,7 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
+__version__ = "1.0.3"
 """ The version of the module """
 
 __revision__ = "$LastChangedRevision: 3219 $"
@@ -203,16 +203,53 @@ def copy_directory(source_path, target_path, replace_files = True, copy_hidden =
             continue
 
         # retrieves the mode
-        mode = os.stat(entry_full_path)[stat.ST_MODE]
+        mode = os.lstat(entry_full_path)[stat.ST_MODE]
 
         # in case it is a directory
         if stat.S_ISDIR(mode):
             # copies the (sub) directory
             copy_directory(entry_full_path, target_full_path, replace_files, copy_hidden)
+        # in case it is a symbolic link (special
+        # care must be taken in such case)
+        elif stat.S_ISLNK(mode):
+            # copies the symbolic link to the target path
+            copy_link(entry_full_path, target_full_path, replace_files)
         # otherwise it's a file and must be copied
         else:
             # copies the entry to the target path
             copy_file(entry_full_path, target_full_path, replace_files)
+
+def copy_link(source_path, target_path, replace_file = True):
+    """
+    Copies a symbolic link in the given source path to the
+    target path.
+    The symbolic link in the target path is created if not existent
+    or overwritten if existent.
+
+    @type source_path: String
+    @param source_path: The path to the source symbolic link.
+    @type target_path: String
+    @param target_path: The path to the target symbolic link.
+    @type replace_file: bool
+    @param replace_file: If the file should be replaced
+    in existent symbolic link is found.
+    """
+
+    # checks if the target path (symbolic link) exists
+    target_file_exists = os.path.exists(target_path)
+
+    # in case the replace file flag is not set and the
+    # target path (symbolic link) exists (avoids
+    # replacing symbolic link)
+    if not replace_file and target_file_exists:
+        # returns immediately (no copy)
+        return
+
+    # reads the link target (path) from the source path
+    # and then uses that value to create the link in the
+    # target path (link copy)
+    link_target = os.readlink(source_path) #@UndefinedVariable
+    os.symlink(link_target, target_path) #@UndefinedVariable
 
 def copy_file(source_path, target_path, replace_file = True):
     """
@@ -306,12 +343,16 @@ def remove_directory(directory_path):
     # removes the directory
     os.rmdir(directory_path)
 
-def link(target_path, link_path, link_name = True):
+def link(target_path, link_path, link_name = True, replace = False):
     """
     Creates a link between the target path and the link
     path given.
     In case the link name flag is set the link is relative
-    and only the base name of the link path is used.
+    and only the base name of the link path is used, this
+    should provide extra flexibility to the link.
+
+    An optional replace flag may be set so that the link is
+    removed in case it already exists.
 
     @type target_path: String
     @param target_path: The target path to the link.
@@ -320,12 +361,25 @@ def link(target_path, link_path, link_name = True):
     @type link_name: bool
     @param link_name: If the link base name should be used
     instead of the full path.
+    @type replace: bool
+    @param replace: If the link path should be replace (overwritten)
+    in case it already exists (file overlapping).
     """
+
+    # in case there is an existent link in the link path
+    # it must be removed (the link may be a directory), this
+    # behavior is only accomplished when the replace flag
+    # parameter is set
+    if replace and os.path.islink(link_path): os.remove(link_path)
+    elif replace and os.path.isdir(link_path): remove_directory(link_path)
 
     # in case the current platform is windows
     if os.name == NT_PLATFORM_VALUE:
-        # copies the directory (copy link)
-        copy_link(target_path, link_path)
+        # copies the directory (symbolic link through
+        # the copy method)
+        link_copy(target_path, link_path)
+    # otherwise the platform probably supports the
+    # normal file linking system (symbolic link)
     else:
         # retrieves the base name of the target path
         # as the target path name
@@ -338,7 +392,7 @@ def link(target_path, link_path, link_name = True):
         # using the link path
         os.symlink(target_path, link_path) #@UndefinedVariable
 
-def copy_link(target_path, link_path):
+def link_copy(target_path, link_path):
     """
     Copies the target path into the path defined
     in the link path.
@@ -355,8 +409,15 @@ def copy_link(target_path, link_path):
         # removes the directory in the link path
         remove_directory(link_path)
 
-    # copies the directory in the target path to the link path
-    copy_directory(target_path, link_path)
+    # in case the target path reference a directory
+    # a directory copy must be done
+    if os.path.isdir(target_path):
+        # copies the directory in the target path to the link path
+        copy_directory(target_path, link_path)
+    # otherwise a "simple" file copy is done
+    else:
+        # copies the file in the target path to the link path
+        copy_file(target_path, link_path)
 
 def ensure_file_path(file_path, default_file_path):
     """
@@ -476,7 +537,7 @@ def relative_path_windows(path, start_path = CURRENT_DIRECTORY):
     if path_is_unc ^ start_is_unc:
         # raises a value error
         raise ValueError("cannot mix unc and non-unc paths %s and %s" % (path, start_path))
-    # in
+
     if path_prefix.lower() != start_prefix.lower():
         if path_is_unc:
             # raises a value error

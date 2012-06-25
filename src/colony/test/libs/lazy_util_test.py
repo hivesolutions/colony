@@ -19,13 +19,16 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
+__author__ = "João Magalhães <joamag@hive.pt>"
+""" The author(s) of the module """
+
 __version__ = "1.0.0"
 """ The version of the module """
 
-__revision__ = "$LastChangedRevision: 72 $"
+__revision__ = "$LastChangedRevision: 3219 $"
 """ The revision number of the module """
 
-__date__ = "$LastChangedDate: 2008-10-21 23:29:54 +0100 (Tue, 21 Oct 2008) $"
+__date__ = "$LastChangedDate: 2009-05-26 11:52:00 +0100 (ter, 26 Mai 2009) $"
 """ The last change date of the module """
 
 __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
@@ -34,8 +37,29 @@ __copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from barcode_util_test import *
-from gtin_util_test import *
-from lazy_util_test import *
-from number_util_test import *
-from structures_util_test import *
+import colony.libs.test_util
+import colony.libs.lazy_util
+
+class LazyClassTest(colony.libs.test_util.ColonyTestCase):
+    """
+    Class that tests the gtin calculation method.
+    """
+
+    def test_equals(self):
+        """
+        Tests the "equals" value function.
+        """
+
+        # verifies that the global lazy reference is
+        # "equivalent" to a null reference
+        self.assertEqual(colony.libs.lazy_util.Lazy, None)
+
+        # creates a new lazy class instance to check the
+        # comparisons against it
+        lazy = colony.libs.lazy_util.LazyClass()
+
+        # verifies that the new instance is equivalent to
+        # a null object, itself and the global lazy reference
+        self.assertEqual(lazy, None)
+        self.assertEqual(lazy, lazy)
+        self.assertEqual(lazy, colony.libs.lazy_util.Lazy)

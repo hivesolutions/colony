@@ -79,7 +79,7 @@ class PluginSystemException(ColonyException):
         @return: The string representation of the class.
         """
 
-        return "Plugin system exception: %s" % self.message
+        return "Plugin system exception - %s" % self.message
 
 class PluginClassNotAvailable(PluginSystemException):
     """
@@ -105,7 +105,7 @@ class PluginClassNotAvailable(PluginSystemException):
         @return: The string representation of the class.
         """
 
-        return "Plugin class not available: %s" % self.message
+        return "Plugin class not available - %s" % self.message
 
 class InvalidCommand(PluginSystemException):
     """
@@ -131,7 +131,7 @@ class InvalidCommand(PluginSystemException):
         @return: The string representation of the class.
         """
 
-        return "Invalid command: %s" % self.message
+        return "Invalid command - %s" % self.message
 
 class InvalidArgument(PluginSystemException):
     """
@@ -157,4 +157,30 @@ class InvalidArgument(PluginSystemException):
         @return: The string representation of the class.
         """
 
-        return "Invalid argument: %s" % self.message
+        return "Invalid argument - %s" % self.message
+
+class OperationNotComplete(PluginSystemException):
+    """
+    The operation not complete class.
+    """
+
+    def __init__(self, message):
+        """
+        Constructor of the class.
+
+        @type message: String
+        @param message: The message to be printed.
+        """
+
+        PluginSystemException.__init__(self, message)
+        self.message = message
+
+    def __str__(self):
+        """
+        Returns the string representation of the class.
+
+        @rtype: String
+        @return: The string representation of the class.
+        """
+
+        return "Operation not complete - %s" % self.message

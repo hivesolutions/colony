@@ -183,3 +183,33 @@ def capitalize_all(string_value):
 
     # returns the string value capitalized
     return string_value_capitalized
+
+def join(first_value, second_value, join_value = "/"):
+    """
+    Joins two string making sure that the join value is
+    not repeated in the "join point" (no double join).
+    The "join point" is guaranteed to be unique.
+
+    @type first_value: String
+    @param first_value: The first string to be joined.
+    @type second_value: String
+    @param second_value: The second string to be joined.
+    @type join_value: String
+    @param join_value: The join value to be verifies and
+    used in the "join point".
+    @rtype: String
+    @return: The joined string ensured to be with a single
+    join point (not repeated).
+    """
+
+    # removes the join value from both the first and second value
+    # to avoid duplicate values in the joining
+    first_value = not first_value.endswith(join_value) and first_value or first_value[:-1]
+    second_value = not second_value.startswith(join_value) and second_value or second_value[1:]
+
+    # joins the first and second values using the join
+    # value from the join point
+    string_value = join_value.join((first_value, second_value))
+
+    # returns the "resulting" stirng value
+    return string_value

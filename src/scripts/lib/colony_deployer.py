@@ -550,8 +550,10 @@ class Deployer:
         # adds the bundle with the given key and value
         self._add_bundle_item(bundle_item_key, bundle_item_value)
 
-        # copies the package file to the registry
-        shutil.copy(package_path, registry_path + "/bundles")
+        # creates the proper bundle file name from the id and version of the bundle
+        # and then uses it in the copy of the package file into the registry
+        bundle_file_name = id + "_" + version + COLONY_BUNDLE_FILE_EXTENSION
+        shutil.copy(package_path, registry_path + "/bundles/" + bundle_file_name)
 
     def deploy_plugin_package(self, package_path, temporary_path):
         """
@@ -678,8 +680,10 @@ class Deployer:
         # adds the plugin with the given key and value
         self._add_plugin_item(plugin_item_key, plugin_item_value)
 
-        # copies the package file to the registry
-        shutil.copy(package_path, registry_path + "/plugins")
+        # creates the proper plugin file name from the id and version of the plugin
+        # and then uses it in the copy of the package file into the registry
+        plugin_file_name = id + "_" + version + COLONY_PLUGIN_FILE_EXTENSION
+        shutil.copy(package_path, registry_path + "/plugins/" + plugin_file_name)
 
     def deploy_container_package(self, package_path, temporary_path):
         """
@@ -826,8 +830,10 @@ class Deployer:
         # adds the container with the given key and value
         self._add_container_item(container_item_key, container_item_value)
 
-        # copies the package file to the registry
-        shutil.copy(package_path, registry_path + "/containers")
+        # creates the proper container file name from the id and version of the container
+        # and then uses it in the copy of the package file into the registry
+        container_file_name = id + "_" + version + COLONY_CONTAINER_FILE_EXTENSION
+        shutil.copy(package_path, registry_path + "/containers/" + container_file_name)
 
     def deploy_plugin_system_package(self, package_path, temporary_path):
         """
@@ -1168,10 +1174,8 @@ class Deployer:
         bundle_version = package_version or bundle[VERSION_VALUE]
 
         # creates the bundle file name from the bundle
-        # id and version
+        # id and version and uses it to create the full bundle path
         bundle_file_name = bundle_id + "_" + bundle_version + COLONY_BUNDLE_FILE_EXTENSION
-
-        # creates the bundle path from the
         bundle_path = os.path.normpath(registry_path + "/" + RELATIVE_BUNDLES_PATH + "/" + bundle_file_name)
 
         # creates a new zip (manager)
@@ -1277,10 +1281,8 @@ class Deployer:
         plugin_version = package_version or plugin[VERSION_VALUE]
 
         # creates the plugin file name from the plugin
-        # id and version
+        # id and version and uses it to create the full plugin path
         plugin_file_name = plugin_id + "_" + plugin_version + COLONY_PLUGIN_FILE_EXTENSION
-
-        # creates the plugin path from the
         plugin_path = os.path.normpath(registry_path + "/" + RELATIVE_PLUGINS_PATH + "/" + plugin_file_name)
 
         # creates a new zip (manager)
@@ -1459,10 +1461,8 @@ class Deployer:
         container_version = package_version or container[VERSION_VALUE]
 
         # creates the container file name from the container
-        # id and version
+        # id and version and uses it to create the full container path
         container_file_name = container_id + "_" + container_version + COLONY_CONTAINER_FILE_EXTENSION
-
-        # creates the container path from the
         container_path = os.path.normpath(registry_path + "/" + RELATIVE_CONTAINERS_PATH + "/" + container_file_name)
 
         # creates a new zip (manager)

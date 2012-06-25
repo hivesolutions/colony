@@ -254,6 +254,16 @@ def timestamp_datetime(timestamp_string):
     @param timestamp_string The timestamp value as string.
     """
 
+    # retrieves the type of the timestamp string
+    timestamp_string_type = type(timestamp_string)
+
+    # in case the timestamp string is already
+    # a date time object
+    if timestamp_string_type == datetime.datetime:
+        # returns the timestamp string itself
+        # (no conversion required)
+        return timestamp_string
+
     # converts the timestamp string to float
     timestamp_float = float(timestamp_string)
 

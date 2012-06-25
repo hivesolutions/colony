@@ -39,10 +39,150 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import types
 
-class OrderedMap:
+class JournaledList(list):
+    """
+    List structure that keeps track of the append and
+    remove operation in a jounalized format.
+    This structures is relevant for use cases where
+    "diffs" around a base list must be kept.
+    """
+
+    _appends = []
+    """ The list containing the various appends to the list (journal) """
+
+    _removes = []
+    """ The list containing the various removes from the list (journal) """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Constructor of the class, this constructor
+        may be used together with a previously "simple" list
+        to start the jounalized list with initial (non logged)
+        values.
+        """
+
+        list.__init__(self, *args, **kwargs)
+
+        self._appends = []
+        self._removes = []
+
+    def append(self, object):
+        """
+        Appends an object to the list, keeping the registry
+        of the operation in the appends list.
+
+        @type object: Object
+        @param object: The object to be appended to the list.
+        """
+
+        # appends the object to the list
+        list.append(self, object)
+
+        # in case the object is present in the removes
+        # list it must be removed (previous reverse operations
+        # should reverted)
+        if object in self._removes:
+            # removes the object from the removes list
+            # (reversion of operation)
+            self._removes.remove(object)
+        # otherwise the object must be added to the
+        # appends list (normal behavior)
+        else:
+            # appends the object to the appends list
+            # (for logging)
+            self._appends.append(object)
+
+    def remove(self, object):
+        """
+        Removes an object from the list, keeping the registry
+        of the operation in the removes list.
+
+        @type object: Object
+        @param object: The object to be removed from the list.
+        """
+
+        # removes the object from the list, an exception
+        # should be raises in case it fails
+        list.remove(self, object)
+
+        # in case the object is present in the appends
+        # list it must be removed (previous reverse operations
+        # should reverted)
+        if object in self._appends:
+            # removes the object from the appends list
+            # (reversion of operation)
+            self._appends.remove(object)
+        # otherwise the object must be added to the
+        # removes list (normal behavior)
+        else:
+            # appends the object to the removes list
+            # (for logging)
+            self._removes.append(object)
+
+    def clear_jounal(self):
+        """
+        Clears the jounal, reseting it to the original
+        state (iternal structures state).
+        This method should be called whenever a new jounalized
+        unit is required for a new phase
+        """
+
+        self._appends[:] = []
+        self._removes[:] = []
+
+    def get_appends(self):
+        """
+        Retrieves the list of the current (valid) append operations
+        from the journaled list.
+
+        @rtype: List
+        @return: The list of the current (valid) append operations
+        from the journaled list.
+        """
+
+        return self._appends
+
+    def get_removes(self):
+        """
+        Retrieves the list of the current (valid) remove operations
+        from the journaled list.
+
+        @rtype: List
+        @return: The list of the current (valid) remove operations
+        from the journaled list.
+        """
+
+        return self._removes
+
+    def _append(self, object):
+        """
+        Appends an object to the list, avoiding the keeping
+        of a log on that operation (simple operation).
+
+        @type object: Object
+        @param object: The object to be appended to the list.
+        """
+
+        list.append(self, object)
+
+    def _remove(self, object):
+        """
+        Removes an object from the list, avoiding the keeping
+        of a log on that operation (simple operation).
+
+        @type object: Object
+        @param object: The object to be removed from the list.
+        """
+
+        list.remove(self, object)
+
+class OrderedMap(object):
     """
     Structure that allow the usage of a map
     like syntax to create ordered elements.
+
+    The ordered map uses a composing strategy to
+    achieve the extra behavior for order in map.
     """
 
     tuples_list = None
@@ -168,7 +308,7 @@ class OrderedMap:
         # the keys list is available and set)
         if not self._keys == None: self._keys.remove(key)
 
-class OrderedMapIterator:
+class OrderedMapIterator(object):
     """
     The iterator for the ordered map.
     """
@@ -216,7 +356,7 @@ class OrderedMapIterator:
         # returns the current key value
         return key
 
-class MultipleValueMap:
+class MultipleValueMap(object):
     """
     Map that holds multiple values for
     each key, and considers
@@ -319,11 +459,125 @@ def is_dictionary(object):
         # returns true
         return True
 
-    # in case the object type is instance and
-    # the class is ordered map
-    if object_type == types.InstanceType and object.__class__ == OrderedMap:
+    # in case the object type id ordered map
+    # (this is the custom dictionary class)
+    if object_type == OrderedMap:
         # returns true
         return True
 
     # returns false
     return False
+
+class FormatTuple(object):
+    """
+    Tuple based structure that may be used to represent
+    a string to be formated with a series of values.
+    This structure provides a portable way of passing
+    the base format string and a series of arguments.
+    """
+
+    format_string = None
+    """ The (base) format string to be used in the
+    process of formatting the final string """
+
+    arguments = ()
+    """ The tuple containing the various arguments to
+    be used during the formatting of the string """
+
+    def __init__(self, format_string, *args):
+        """
+        Constructor of the class.
+
+        @type format_string: String
+        @param format_string: The format string to be
+        used during the process of formatting.
+        """
+
+        self.format_string = format_string
+        self.arguments = args
+
+    @staticmethod
+    def build(format_string, *args):
+        """
+        Builds (constructs) a new format tuple from the provided
+        format string and (optional) series of arguments for the
+        formatting.
+
+        @type format_string: String
+        @param format_string: The string to be used for formatting of
+        the string result.
+        @rtype: FormatTuple
+        @return: The resulting format tuple object from the
+        building "generated" from the provided arguments.
+        """
+
+        return FormatTuple(format_string, *args)
+
+    def __hash__(self):
+        return hash(self.format_string)
+
+    def __str__(self):
+        return self.format()
+
+    def __eq__(self, other):
+        if other == self.format_string:
+            return True
+
+        return False
+
+    def __add__(self, other):
+        return self.format() + other
+
+    def __radd__(self, other):
+        return other + self.format()
+
+    def __replace__(self, value):
+        self.set_format_string(value)
+
+    def format(self, format_string = None):
+        """
+        Formats the current format tuple using the currently loaded
+        attributes and the provided format string.
+
+        In case no format string is provided the default format
+        string is used instead.
+
+        @type format_string: String
+        @param format_string: The string to be used for formatting of
+        the final string result.
+        @rtype: String
+        @return: The "final" resulting string after the format of it.
+        """
+
+        # retrieves the "final" format string, using the
+        # provided format string or the "original" and
+        # default format string
+        format_string = format_string or self.format_string
+
+        # uses the format string to format the string using
+        # the currently available arguments, then returns
+        # the resulting string value
+        return format_string % self.arguments
+
+    def get_format_string(self):
+        """
+        Retrieves the currently associated string for formatting
+        in the current format tuple.
+
+        @rtype: String
+        @return: The currently available format string.
+        """
+
+        return self.format_string
+
+    def set_format_string(self, format_string):
+        """
+        Sets the currently associated string for formatting
+        in the current format tuple.
+
+        @type: String
+        @param: The string to be set as the currently
+        available format string.
+        """
+
+        self.format_string = format_string

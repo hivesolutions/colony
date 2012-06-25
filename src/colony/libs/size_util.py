@@ -48,7 +48,7 @@ SIZE_UNIT_COEFFICIENT = 1024
 DEFAULT_MINIMUM = 1024
 """ The default minimum value """
 
-def size_round_unit(size_value, minimum = DEFAULT_MINIMUM, depth = 0):
+def size_round_unit(size_value, minimum = DEFAULT_MINIMUM, space = False, depth = 0):
     """
     Rounds the size unit, returning a string representation
     of the value with a good rounding precision.
@@ -58,6 +58,9 @@ def size_round_unit(size_value, minimum = DEFAULT_MINIMUM, depth = 0):
     @param size_value: The current size value (in bytes).
     @type minimum: int
     @param minimum: The minimum value to be used.
+    @type space: bool
+    @param space: If a space character must be used deviding
+    the value from the unit symbol.
     @type depth: int
     @param depth: The current iteration depth value.
     @rtype: String
@@ -77,9 +80,13 @@ def size_round_unit(size_value, minimum = DEFAULT_MINIMUM, depth = 0):
         # retrieves the size unit (string mode)
         size_unit = SIZE_UNITS_LIST[depth]
 
+        # retrieves the appropriate separator based
+        # on the value of the space flag
+        separator = space and " " or ""
+
         # creates the size value string appending the rounded
         # size value string and the size unit
-        size_value_string = rounded_size_value_string + size_unit
+        size_value_string = rounded_size_value_string + separator + size_unit
 
         # returns the size value string
         return size_value_string
@@ -93,4 +100,4 @@ def size_round_unit(size_value, minimum = DEFAULT_MINIMUM, depth = 0):
         new_depth = depth + 1
 
         # runs the size round unit again with the new values
-        return size_round_unit(new_size_value, minimum, new_depth)
+        return size_round_unit(new_size_value, minimum, space, new_depth)

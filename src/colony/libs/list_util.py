@@ -90,6 +90,39 @@ def list_extend(base_list, extension_list, copy_base_list = True):
     # returns the result list
     return result_list
 
+def list_exclude(base_list, exclusion_list, copy_base_list = True):
+    """
+    Excludes a series of items from the given base list,
+    the resulting list (without the items) is returned.
+    The base list may be changed or left untouched based on
+    the copy base list flag.
+
+    @type base_list: List
+    @param base_list: The list to be used as base for
+    the exclusion.
+    @type exclusion_list: List
+    @param exclusion_list: The list to be used as model for
+    the exclusion of items
+    @type copy_base_list: bool
+    @param copy_base_list: If the base list should be copied before
+    the exclusion process in order to avoid loss of data.
+    @rtype: List
+    @return: The list that result of the exclusion of the given
+    list from the provided base list.
+    """
+
+    # copies the base list to create the initial result list (optional)
+    result_list = copy_base_list and copy.copy(base_list) or base_list
+
+    # iterates over all the items in the exclusion list
+    # to remove them from the "result" list
+    for exclusion_item in exclusion_list:
+        # removes the exclusion item from  the result list
+        result_list.remove(exclusion_item)
+
+    # returns the result list
+    return result_list
+
 def list_no_duplicates(list):
     """
     Removes the duplicated values from the given list.

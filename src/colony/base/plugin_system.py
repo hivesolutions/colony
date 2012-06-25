@@ -22,7 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 """ The version of the module """
 
 __revision__ = "$LastChangedRevision: 9958 $"
@@ -57,10 +57,11 @@ import __builtin__
 import logging.handlers
 
 import colony.libs.path_util
+import colony.libs.version_util
 import colony.libs.string_buffer_util
 
 import colony.base.dummy_input
-
+import colony.base.loggers
 import colony.base.util
 
 import colony.base.plugin_system_exceptions
@@ -894,6 +895,24 @@ class Plugin(object):
 
         return self.attributes.get(attribute_name, None)
 
+    def has_capability(self, capability):
+        """
+        Checks if the given capability (name) is contained in the
+        current set of capabilities for the plugin.
+
+        This checking is made recursively and so any sub capability is
+        also going to be matched.
+
+        @type capability: String
+        @param capability: The capability to be checked for existence
+        in the current plugin.
+        @rtype: bool
+        @return: If the provided capability (name) exists in the current
+        plugin context.
+        """
+
+        return capability in self.capabilities
+
     def contains_metadata(self):
         """
         Returns the result of the metadata test.
@@ -1193,9 +1212,10 @@ class Plugin(object):
         """
 
         # starts the capabilities allowed names
+        # list to hold the various allowed capabilities
         capabilities_allowed_names = []
 
-        # iterates over all the capability allowed
+        # iterates over all the capabilities allowed
         for capability_allowed in self.capabilities_allowed:
             # retrieves the capability allowed type
             capability_allowed_type = type(capability_allowed)
@@ -1526,8 +1546,9 @@ class PluginManager:
         # retrieves the plugin class
         plugin_class = self.plugin_classes_map[plugin_id]
 
-        # in case the plugin version is not the same
-        if not plugin_class.version == plugin_version:
+        # in case the plugin version is not the same (uses
+        # the defined version comparison)
+        if not colony.libs.version_util.version_cmp(plugin_class.version, plugin_version):
             # raises the plugin class not available exception
             raise colony.base.plugin_system_exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
 
@@ -1636,43 +1657,45 @@ class PluginManager:
         # creates the logger file path
         logger_file_path = self.logger_path + "/" + logger_file_name
 
-        # retrieves the logger
+        # retrieves the logger, sets the logger propagation
+        # to avoid propagation and then updates the logger
+        # level to the minimal log level
         logger = logging.getLogger(DEFAULT_LOGGER)
-
-        # sets the logger propagation to avoid propagation
         logger.propagate = 0
-
-        # sets the logger level to the minimal log level
         logger.setLevel(minimal_log_level)
 
-        # creates the stream handler
+        # creates the stream handler and sets the logger level
+        # for the stream handler (the currently selected log level)
+        # avoids extra "verbosity"
         stream_handler = logging.StreamHandler()
-
-        # sets the logger level for the stream handler (the currently selected log level)
         stream_handler.setLevel(log_level)
 
         # creates the rotating file handler
         rotating_file_handler = logging.handlers.RotatingFileHandler(logger_file_path, DEFAULT_LOGGING_FILE_MODE, DEFAULT_LOGGING_FILE_SIZE, DEFAULT_LOGGING_FILE_BACKUP_COUNT)
 
-        # retrieves the logging format
-        logging_format = plugin_manager_configuration.get("logging_format", DEFAULT_LOGGING_FORMAT)
+        # creates the broadcast handler so that the logging messages
+        # may be sent to the world
+        broadcast_handler = colony.base.loggers.BroadcastHandler()
 
-        # creates the logging formatter
+        # retrieves the logging format and uses it
+        # to create the proper logging formatter
+        logging_format = plugin_manager_configuration.get("logging_format", DEFAULT_LOGGING_FORMAT)
         formatter = logging.Formatter(logging_format)
 
-        # sets the formatter in the stream handler
+        # sets the formatter in the stream and rotating
+        # file handlers (correctly formats the message)
         stream_handler.setFormatter(formatter)
-
-        # sets the formatter in the rotating file handler
         rotating_file_handler.setFormatter(formatter)
 
-        # adds the stream handler to the logger
+        broadcast_handler.setFormatter(formatter)
+
+        # adds the stream and rotating file handlers
+        # to the logger
         logger.addHandler(stream_handler)
-
-        # adds the rotating file handler to the logger
         logger.addHandler(rotating_file_handler)
+        logger.addHandler(broadcast_handler)
 
-        # sets the logger
+        # sets the logger in the current context
         self.logger = logger
 
     def load_system(self):
@@ -2057,7 +2080,8 @@ class PluginManager:
             # in case the plugin module is not currently loaded
             if not plugin in sys.modules:
                 try:
-                    # imports the plugin module file
+                    # imports the plugin module file into the
+                    # current environment
                     __import__(plugin)
                 except BaseException, exception:
                     # prints an error message
@@ -2103,10 +2127,9 @@ class PluginManager:
             # sets the plugin class in the plugin classes map
             self.plugin_classes_map[plugin_id] = plugin
 
-            # tests the plugin for loading
-            if not plugin in self.loaded_plugins:
-                # starts the plugin
-                self.start_plugin(plugin)
+            # starts the plugin (creating the singleton) in
+            # case the plugin is not currently loaded
+            if not plugin in self.loaded_plugins: self.start_plugin(plugin)
 
     def start_plugin(self, plugin):
         """
@@ -3671,7 +3694,7 @@ class PluginManager:
 
         # in case the plugin version is specified and
         # it does not match the retrieved plugin version
-        if plugin_version and not plugin.version == plugin_version:
+        if plugin_version and not colony.libs.version_util.version_cmp(plugin.version, plugin_version):
             # returns invalid
             return None
 
@@ -3720,7 +3743,7 @@ class PluginManager:
 
         if plugin_id in self.plugin_instances_map:
             plugin = self.plugin_instances_map[plugin_id]
-            if plugin.version == plugin_version:
+            if colony.libs.version_util.version_cmp(plugin.version, plugin_version):
                 return self.assert_plugin(plugin)
 
     def _get_plugin_by_id_and_version(self, plugin_id, plugin_version):
@@ -3737,7 +3760,7 @@ class PluginManager:
 
         if plugin_id in self.plugin_instances_map:
             plugin = self.plugin_instances_map[plugin_id]
-            if plugin.version == plugin_version:
+            if colony.libs.version_util.version_cmp(plugin.version, plugin_version):
                 return plugin
 
     def get_plugins_by_capability(self, capability):
@@ -5551,26 +5574,25 @@ class PluginDependency(Dependency):
         Dependency.test_dependency(self, manager)
 
         # in case some of the conditions are not fulfilled plugin
-        if not self.test_conditions():
-            return True
+        # the loading of the plugin fails
+        if not self.test_conditions(): return True
 
-        # retrieves the plugin id for the plugin dependency
+        # retrieves the plugin id and version for the
+        # plugin dependency so that it can be tested
+        # for version matching
         plugin_id = self.plugin_id
-
-        # retrieves the plugin version for the plugin dependency
         plugin_version = self.plugin_version
 
-        if not plugin_id in manager.loaded_plugins_map:
-            return False
-
+        # in case the plugin is not present in the loaded
+        # plugins map, returns immediately in failure, otherwise
+        # retrieves the plugin from the map and then tries to fund
+        # out if there is a version missmatch
+        if not plugin_id in manager.loaded_plugins_map: return False
         plugin = manager.loaded_plugins_map[plugin_id]
-
-        if not plugin.version == plugin_version:
-            return False
+        if not colony.libs.version_util.version_cmp(plugin.version, plugin_version): return False
 
         # in case the plugin load test is not successful
-        if not manager.test_plugin_load(plugin):
-            return False
+        if not manager.test_plugin_load(plugin): return False
 
         return True
 
