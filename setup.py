@@ -126,7 +126,7 @@ config_data_files = find_data_files("src/config", "config", ["general/*", "pytho
 # creates the "complete" data files
 data_files = BASE_DATA_FILES + scripts_data_files + config_data_files
 
-setuptools.setup (
+setuptools.setup(
     name = "colony",
     version = "1.0.1",
     author = "Hive Solutions Lda.",
@@ -135,6 +135,10 @@ setuptools.setup (
     license = "GNU General Public License (GPL), Version 3",
     keywords = "colony plugin framework web",
     url = "http://getcolony.com",
+    scripts = [
+        "src/scripts/win32/colony.bat",
+        "src/scripts/win32/colony_pypi.py"
+    ],
     py_modules = [
         "main",
         "script"
