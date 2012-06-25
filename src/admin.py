@@ -59,7 +59,7 @@ def clone():
     shutil.copytree(colony_path, target)
 
     # iterates over all the paths to be removed from
-    # the newly creates intance (not required anymore)
+    # the newly creates instance (not required anymore)
     for path in REMOVALS:
         # joins the path for the removal with the target
         # path and then in case it exists removes it
