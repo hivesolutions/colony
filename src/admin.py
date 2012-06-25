@@ -98,8 +98,8 @@ def clone():
     # opens the colony instance reference file (this
     # file indicates the root of the colony instance)
     root_file_path = os.path.join(target, DEFAULT_ROOT)
-    root_file = file(root_file_path, "a")
-    root_file.close()
+    try: root_file = file(root_file_path, "a")
+    finally: root_file.close()
 
 def cleanup():
     """
