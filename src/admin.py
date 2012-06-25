@@ -188,8 +188,6 @@ def _pack(path):
     finally: file.close()
 
 def _zip_directory(path, relative, file):
-    print "Packing %s" % path
-
     entries = os.listdir(path)
 
     for entry in entries:
