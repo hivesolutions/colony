@@ -193,10 +193,10 @@ def _zip_directory(path, relative, file):
     entries = os.listdir(path)
 
     for entry in entries:
-        p1 = os.path.join(path, entry)
-        p2 = os.path.join(relative, entry)
-        if os.path.isdir(p1): _zip_directory(p1, p2, file)
-        else: file.write(p1, p2)
+        _path = os.path.join(path, entry)
+        _relative = os.path.join(relative, entry)
+        if os.path.isdir(_path): _zip_directory(_path, _relative, file)
+        else: file.write(_path, _relative)
 
 def main():
     # retrieves the operation from the provided arguments
