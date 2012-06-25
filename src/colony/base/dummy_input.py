@@ -42,7 +42,7 @@ import time
 class DummyInput:
     """
     Dummy input file used to overcome the problem
-    with being stuck in the console input
+    with being stuck in the console input.
     """
 
     def readline(self):
