@@ -45,7 +45,6 @@ if __name__ == "__main__":
     path = os.path.dirname(main.__file__)
     _path = os.getcwd()
     try:
-        sys.path.insert(0, path)
         os.chdir(path)
         main.main()
     finally:
