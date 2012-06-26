@@ -205,6 +205,7 @@ setuptools.setup(
     license = "GNU General Public License (GPL), Version 3",
     keywords = "colony plugin framework web",
     url = "http://getcolony.com",
+    zip_safe = False,
     scripts = [
         "scripts/pypi/colony.bat",
         "scripts/pypi/colony_admin.bat",
