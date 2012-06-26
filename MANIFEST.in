@@ -1,6 +1,6 @@
 include src/colony.json
 include src/colony_container.json
-include src/colony_container_log.json
+include src/colony_container.log.json
 recursive-include scripts *
 recursive-include src/colony *
 recursive-include src/config *
