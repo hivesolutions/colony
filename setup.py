@@ -42,8 +42,6 @@ import glob
 import datetime
 import setuptools
 
-import info
-
 BASE_DATA_FILES = [
     ("config", ["src/config/README"]),
     ("containers", ["src/containers/README"]),
@@ -160,7 +158,6 @@ class ProcessCommand(setuptools.Command):
         self.cwd = os.getcwd()
 
     def run(self):
-        self._replace("info.py", "src/colony.json")
         self._replace("src/colony/base/plugin_system_information.py", "src/colony.json")
 
     def _replace(self, file_path, json_path):
@@ -209,7 +206,7 @@ class ProcessCommand(setuptools.Command):
         
 setuptools.setup(
     name = "colony",
-    version = info.VERSION,
+    version = "1.0.1",
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
     description = "Colony Framework",
