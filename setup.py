@@ -198,11 +198,11 @@ class ProcessCommand(setuptools.Command):
         finally: file.close()
 
 setuptools.setup(
-    name = "colony",
+    name = "Colony",
     version = "1.0.1",
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
-    description = "Hive Colony Framework",
+    description = "Colony Framework",
     license = "GNU General Public License (GPL), Version 3",
     keywords = "colony plugin framework web",
     url = "http://getcolony.com",
@@ -230,12 +230,21 @@ setuptools.setup(
         "" : "src"
     },
     package_data = {
+        "" : "src"
     },
     data_files = data_files,
     classifiers = [
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
         "License :: OSI Approved :: GNU General Public License (GPL)",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.5",
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
+        "Topic :: Internet :: WWW/HTTP",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        "Topic :: Internet :: WWW/HTTP :: WSGI"
     ],
     cmdclass = {
         "process" : ProcessCommand
