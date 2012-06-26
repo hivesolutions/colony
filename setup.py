@@ -87,7 +87,8 @@ def find_data_files(source_path, target_path, patterns):
     # creates the data files map
     data_files_map = {}
 
-    # iterates over all the patterns
+    # iterates over all the patterns to be able to filter
+    # the file that match the provided patterns
     for pattern in patterns:
         # joins the source path and the pattern
         # to create the "complete" pattern
@@ -96,10 +97,9 @@ def find_data_files(source_path, target_path, patterns):
         # iterates over all the filenames in the
         # glob pattern
         for file_name in glob.glob(pattern):
-            # in case there is no file
-            if not os.path.isfile(file_name):
-                # continues the loop
-                continue
+            # in case there is no file to be read
+            # must skip the current loop
+            if not os.path.isfile(file_name): continue
 
             # retrieves the relative file path between
             # the source path and the file name
@@ -115,10 +115,9 @@ def find_data_files(source_path, target_path, patterns):
             # adds the filename to the data files map
             data_files_map.setdefault(path, []).append(file_name)
 
-    # retrieves the data files items
+    # retrieves the data files items and then sorts
+    # them according to the default order
     data_files_items = data_files_map.items()
-
-    # sorts the data files items
     data_files_items = sorted(data_files_items)
 
     # returns the data files items
