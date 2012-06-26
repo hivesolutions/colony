@@ -39,6 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import os
 import glob
+import datetime
 import setuptools
 
 BASE_DATA_FILES = [
@@ -54,6 +55,12 @@ BASE_DATA_FILES = [
     ("var", ["src/var/README"])
 ]
 """ The base data files to be used """
+
+DATE_FORMAT = "%b %d %Y"
+""" The format used to convert dates to strings """
+
+DATE_TIME_FORMAT = "%b %d %Y %H:%M:%S"
+""" The format used to convert date times to strings """
 
 def find_data_files(source_path, target_path, patterns):
     """
@@ -126,6 +133,66 @@ config_data_files = find_data_files("src/config", "config", ["general/*", "pytho
 # creates the "complete" data files
 data_files = BASE_DATA_FILES + scripts_data_files + config_data_files
 
+class ProcessCommand(setuptools.Command):
+
+    description = "custom process command to modify a series of files with the\
+    appropriate template values"
+
+    user_options = []
+
+    def initialize_options(self):
+        self.cwd = None
+
+    def finalize_options(self):
+        self.cwd = os.getcwd()
+
+    def run(self):
+        self._replace("src/colony/base/plugin_system_information.py", "src/colony.json")
+
+    def _replace(self, file_path, json_path):
+        # tries to import the json module, it may
+        # fails as older version of the python
+        # interpreter do not contain it
+        import json
+
+        # opens the json symbols file and loads the
+        # description map from it to be used to populate
+        # the template input
+        json_file = open(json_path, "rb")
+        try: symbols = json.load(json_file, "utf-8")
+        finally: json_file.close()
+
+        # opens the file in the file path for reading
+        # in the binary forms, then reads all the contents
+        # from it so that they may be replaced by template
+        file = open(file_path, "rb")
+        try: file_contents = file.read()
+        finally: file.close()
+
+        # retrieves the current datetime and formats it
+        # according to the two pre-defined formats
+        current_datetime = datetime.datetime.utcnow()
+        current_date_string = current_datetime.strftime(DATE_FORMAT)
+        current_date_time_string = current_datetime.strftime(DATE_TIME_FORMAT)
+
+        # sets both the date string and the date time string
+        # in the symbols map for template reference
+        symbols["date"] = current_date_string
+        symbols["date_time"] = current_date_time_string
+
+        # decodes the file contents and then runs the formatting
+        # engine on top of it so that the symbols are exposed
+        # to the string then re-encodes it back to be written
+        file_contents = file_contents.decode("utf-8")
+        result_contents = file_contents % symbols
+        result_contents = result_contents.encode("utf-8")
+
+        # opens the (output) file path and writes the resulting
+        # contents into it closing it at the end
+        file = open(file_path, "wb")
+        try: file.write(result_contents)
+        finally: file.close()
+
 setuptools.setup(
     name = "colony",
     version = "1.0.1",
@@ -165,5 +232,8 @@ setuptools.setup(
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
         "License :: OSI Approved :: GNU General Public License (GPL)",
-    ]
+    ],
+    cmdclass = {
+        "process" : ProcessCommand
+    }
 )
