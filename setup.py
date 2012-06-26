@@ -235,7 +235,7 @@ setuptools.setup(
     ],
     test_suite = "colony.test.colony_test",
     package_dir = {
-        "" : "src"
+        "" : os.path.normpath("src")
     },
     data_files = data_files,
     classifiers = [
