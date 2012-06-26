@@ -39,19 +39,19 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import sys
 
-VERSION = "${out value=colony_version /}"
+VERSION = "%(version)s"
 """ The version value """
 
-RELEASE = "${out value=release_version /}"
+RELEASE = "%(version)s"
 """ The release value """
 
-BUILD = "${out value=build_version /}"
+BUILD = "%(build)s"
 """ The build value """
 
-RELEASE_DATE = "${out value=date /}"
+RELEASE_DATE = "%(date)s"
 """ The release date value """
 
-RELEASE_DATE_TIME = "${out value=date_time /}"
+RELEASE_DATE_TIME = "%(date_time)s"
 """ The release date time value """
 
 ENVIRONMENT_VERSION = str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "." + str(sys.version_info[2]) + "-" + str(sys.version_info[3])
