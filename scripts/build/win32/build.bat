@@ -90,7 +90,7 @@ python setup.py process sdist
 if %ERRORLEVEL% neq 0 ( cd %CURRENT_DIR% && exit /b %ERRORLEVEL% )
 
 :: runs the colony admin pack colony command to generate the
-:: appropriate package file for the colony container 
+:: appropriate package file for the colony container
 call colony_admin pack_colony src\colony_container.json
 
 :: in case the previous command didn't exit properly

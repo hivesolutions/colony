@@ -203,7 +203,7 @@ class ProcessCommand(setuptools.Command):
         file = open(file_path, "wb")
         try: file.write(result_contents)
         finally: file.close()
-        
+
 setuptools.setup(
     name = "colony",
     version = "1.0.1",
@@ -236,8 +236,6 @@ setuptools.setup(
     test_suite = "colony.test.colony_test",
     package_dir = {
         "" : "src"
-    },
-    package_data = {
     },
     data_files = data_files,
     classifiers = [
