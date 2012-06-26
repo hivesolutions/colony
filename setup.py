@@ -137,8 +137,12 @@ class ProcessCommand(setuptools.Command):
 
     description = "custom process command to modify a series of files with the\
     appropriate template values"
+    """ The text based description for the current module,
+    it's going to be displayed in the command line help """
 
     user_options = []
+    """ The list containing the various user provided
+    options from the command line """
 
     def initialize_options(self):
         self.cwd = None
