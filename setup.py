@@ -195,8 +195,6 @@ class ProcessCommand(setuptools.Command):
         file = open(file_path, "wb")
         try: file.write(result_contents)
         finally: file.close()
-
-print data_files
         
 setuptools.setup(
     name = "colony",
