@@ -82,9 +82,10 @@ def find_data_files(source_path, target_path, patterns):
     # a glob pattern
     if glob.has_magic(source_path) or glob.has_magic(target_path):
         # raises an exception
-        raise ValueError("Magic not allowed in source and target")
+        raise ValueError("magic not allowed in source and target")
 
-    # creates the data files map
+    # creates the data files map, responsible for mapping
+    # the various directories with the existent data files
     data_files_map = {}
 
     # iterates over all the patterns to be able to filter
