@@ -106,10 +106,9 @@ def find_data_files(source_path, target_path, patterns):
             relative_file_path = os.path.relpath(file_name, source_path)
 
             # creates the target file path using the
-            # target path and the relative path
+            # target path and the relative path and then
+            # retrieves its directory name as the path
             target_file_path = os.path.join(target_path, relative_file_path)
-
-            # retrieves the directory name from the target path
             path = os.path.dirname(target_file_path)
 
             # adds the filename to the data files map
@@ -196,6 +195,8 @@ class ProcessCommand(setuptools.Command):
         try: file.write(result_contents)
         finally: file.close()
 
+print data_files
+        
 setuptools.setup(
     name = "colony",
     version = "1.0.1",
@@ -229,7 +230,6 @@ setuptools.setup(
         "" : "src"
     },
     package_data = {
-        "" : "src"
     },
     data_files = data_files,
     classifiers = [
