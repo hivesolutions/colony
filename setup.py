@@ -132,6 +132,14 @@ config_data_files = find_data_files("src/config", "config", ["general/*", "pytho
 # creates the "complete" data files
 data_files = BASE_DATA_FILES + scripts_data_files + config_data_files
 
+# retrieves the current root directory (from the
+# currently executing file) and in case its not
+# the top level root directory changed the current
+# executing directory into it (avoids relative path
+# problems in executing setuptools)
+root_directory = os.path.dirname(__file__)
+if not root_directory == "": os.chdir(root_directory)
+
 class ProcessCommand(setuptools.Command):
 
     description = "custom process command to modify a series of files with the\
