@@ -54,6 +54,14 @@ PACK_FILE = "colony.zip"
 """ The name of the file that will be the packing
 reference of the instance """
 
+EXTENSIONS = {
+    "bundle" : ".cbx",
+    "plugin" : ".cpx",
+    "container" : ".ccx"
+}
+""" The map associating the various types of
+colony packages with the associated extension """
+
 REMOVALS = (
     "colony.egg-info",
     "EGG-INFO"
@@ -164,6 +172,17 @@ def pack():
     # to create the packed file for the colony instance
     _pack(target)
 
+def pack_colony():
+    # in case there're not enough arguments to be
+    # able to retrieve the specification file raises
+    # a runtime error
+    if len(sys.argv) < 3: raise RuntimeError("no descriptor provided")
+
+    # retrieves the target file from the arguments and\
+    # uses it to run the packing structure
+    target = sys.argv[2]
+    _pack_colony(target)
+
 def _cleanup(path):
     # retrieves the path to the series of sub
     # directories to be "cleaned"
@@ -205,6 +224,54 @@ def _pack(path):
     file = zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED)
     try: _zip_directory(path, "/", file)
     finally: file.close()
+
+def _pack_colony(path):
+    # imports the json module so that it's possible
+    # to parse the colony descriptor file
+    import json
+
+    # opens the descriptor file to be read in the binary
+    # format and loads its json contents to be used
+    file = open(path, "rb")
+    try: descriptor = json.load(file, "utf-8")
+    finally: file.close()
+
+    # retrieves the various attributes from the descriptor
+    # file and uses them to infer in some properties
+    type = descriptor["type"]
+    id = descriptor["id"]
+    resources = descriptor.get("resources", [])
+    extension = EXTENSIONS.get(type, ".cpx")
+
+    # retrieves the resources directory for the resources
+    # from the base directory of the json descriptor and
+    # then creates the name of the file from the id
+    resources_directory = os.path.dirname(path)
+    name = id + extension
+
+    # opens the target zip file to be used in write
+    # mode (it's going to receive the data)
+    file = zipfile.ZipFile(name, "w", zipfile.ZIP_DEFLATED)
+
+    try:
+        # iterates over all the resources to be written
+        # in the packing file to zip them
+        for resource in resources:
+            # creates the full path to the resource from the
+            # resources directory and the re-calculates the
+            # the resources path with a prefix and writes
+            # the resource into the target file
+            _resource = os.path.join(resources_directory, resource)
+            _relative = "resources/" + resource
+            file.write(_resource, _relative)
+
+        # writes the specification file into the packing file
+        # to be used as meta data information
+        file.write(path, "specification.json")
+    finally:
+        # closes the file to avoid any leak of file
+        # descriptors and to flush the pending data
+        file.close()
 
 def _zip_directory(path, relative, file):
     # retrieves the list of entries for the path to
