@@ -1,0 +1,6 @@
+{
+    "name" : "Colony Framework",
+    "description" : "Automation script for binaries and source code of colony",
+    "file" : "build.bat",
+    "recursion" : [0, 0, 1, 0, 0]
+}
