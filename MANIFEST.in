@@ -1,0 +1,11 @@
+recursive-include scripts *
+recursive-include src/config *
+recursive-include src/containers *
+recursive-include src/deploy *
+recursive-include src/libraries *
+recursive-include src/log *
+recursive-include src/meta *
+recursive-include src/plugins *
+recursive-include src/scripts *
+recursive-include src/tmp *
+recursive-include src/var *
