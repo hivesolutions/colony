@@ -50,6 +50,10 @@ DEFAULT_ROOT = "COLONY_ROOT"
 """ The default name for the file to be used to
 indicate the root directory of a colony instance """
 
+PACK_FILE = "colony.zip"
+""" The name of the file that will be the packing
+reference of the instance """
+
 REMOVALS = (
     "colony.egg-info",
     "EGG-INFO"
@@ -186,21 +190,39 @@ def _cleanup_files(path, extension):
         if _path.endswith(extension): os.remove(_path)
 
 def _pack(path):
+    # runs the cleanup process for the provided path
+    # in order to prepare the current structure for
+    # the packing of the files
     _cleanup(path)
 
+    # joins the current path with the top level reference
+    # path and then joins the pack file name to it
     _path = os.path.join(path, "..")
-    archive_path = os.path.join(_path, "colony.zip")
+    archive_path = os.path.join(_path, PACK_FILE)
 
+    # opens the archive path as a zip file for writing and
+    # then writes the current "instance" directory into the zip
     file = zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED)
     try: _zip_directory(path, "/", file)
     finally: file.close()
 
 def _zip_directory(path, relative, file):
+    # retrieves the list of entries for the path to
+    # be compressed into the zip
     entries = os.listdir(path)
 
+    # iterates over the list of entries to zip them
+    # or enter in a new recursion level
     for entry in entries:
+        # create the fill entry path by joining the entry
+        # name to the (base) path of the directory and
+        # then creates also the relative path
         _path = os.path.join(path, entry)
         _relative = os.path.join(relative, entry)
+
+        # checks if the path is a directory and in such case runs
+        # the recursion step, otherwise writes the file directly
+        # into the "target" zip file
         if os.path.isdir(_path): _zip_directory(_path, _relative, file)
         else: file.write(_path, _relative)
 
