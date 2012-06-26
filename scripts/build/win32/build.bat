@@ -69,35 +69,49 @@ xcopy /q /y /a /e /k %REPO_DIR% %TEMP_DIR%\%NAME_SRC%\
 xcopy /q /y /a /e /k %REPO_DIR%\src %RESULT_DIR%\
 xcopy /q /y /a /e /k %REPO_DIR%\src %TEMP_DIR%\%NAME%\
 
+:: changes the current directory to the repository directory
+:: to run a series of tests and build steps
 cd %REPO_DIR%
+
+:: runs the unit testing scripts to ensure that there is no
+:: problem in the build process
 python setup.py test
 
 :: in case the previous command didn't exit properly
 :: must return immediately with the error
 if %ERRORLEVEL% neq 0 ( cd %CURRENT_DIR% && exit /b %ERRORLEVEL% )
 
+:: runs the source distribution package using the setuptools
+:: utility to provide a good distribution package
 python setup.py process sdist
 
 :: in case the previous command didn't exit properly
 :: must return immediately with the error
 if %ERRORLEVEL% neq 0 ( cd %CURRENT_DIR% && exit /b %ERRORLEVEL% )
 
+:: runs the colony admin pack colony command to generate the
+:: appropriate package file for the colony container 
 call colony_admin pack_colony src\colony_container.json
-
-echo %ERRORLEVEL% 
 
 :: in case the previous command didn't exit properly
 :: must return immediately with the error
 if %ERRORLEVEL% neq 0 ( cd %CURRENT_DIR% && exit /b %ERRORLEVEL% )
 
+:: changes the name of the source distribution file in
+:: order to avoid any name collision then copies it
+:: and the colony package file to the distribution directory
 move %REPO_DIR%\dist\%NAME%.zip dist\%NAME%_pypi.zip
 xcopy /q /y /k dist\%NAME%_pypi.zip %DIST_DIR%
 xcopy /q /y /k %ID%.ccx %DIST_DIR%
 
+:: copies the complete set of result contents into the
+:: raw tar file in order to be used in capsule construction
 cd %RESULT_DIR%
 tar -cf %NAME_RAW%.tar *
 move %NAME_RAW%.tar %DIST_DIR%
 
+:: changes the directory in order to group the files and then
+:: returns the "original" build directory
 cd %TEMP_DIR%
 zip -qr %NAME%.zip %NAME%
 tar -cf %NAME%.tar %NAME%
