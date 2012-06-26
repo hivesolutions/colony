@@ -197,7 +197,7 @@ class ProcessCommand(setuptools.Command):
         finally: file.close()
 
 setuptools.setup(
-    name = "Colony",
+    name = "colony",
     version = "1.0.1",
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
