@@ -181,10 +181,7 @@ plugin_path_list = [
 """ The list of plugin paths """
 
 library_path_list = [
-    "libraries",
-    "%colony_language_prefix_path%/pt.hive.colony.language.generator/src/colony",
-    "%colony_language_prefix_path%/pt.hive.colony.language.settler/src/colony",
-    "%colony_language_prefix_path%/pt.hive.colony.language.wiki/src/colony"
+    "libraries"
 ]
 """ The list of library paths """
 

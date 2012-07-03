@@ -39,6 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import os
 import sys
+import glob
 import getopt
 import logging
 
@@ -575,30 +576,39 @@ def convert_reference_path_list(manager_path, current_prefix_paths, reference_pa
     @return: A string converted reference path containing all the dereferenced paths.
     """
 
-    # initializes the converted reference path
+    # initializes the converted reference path, this is the value
+    # to be returned by this function with the complete path string
+    # to be used by the plugin system
     converted_reference_path = str()
 
-    # iterates over all the reference paths
+    # iterates over all the reference paths, in order to normalize
+    # resolver and integrate them into the reference path
     for reference_path in reference_path_list:
         # sets the initial dereferenced path
         dereferenced_path = manager_path + "/" + reference_path
 
-        # iterates over all the current prefix paths
+        # iterates over all the current prefix paths to dereference
+        # them into the path "along" the various prefix paths
         for current_prefix_path in current_prefix_paths:
-            # retrieves the current prefix path name
+            # retrieves the current prefix path name and value
+            # to be used in the dereferencing of the path, then
+            # executes the dereferencing operation substituting the
+            # "wildcard" references in the paths
             current_prefix_path_name = PREFIX_PATH_PREFIX_VALUE + current_prefix_path + PREFIX_PATH_SUFIX_VALUE
-
-            # retrieves the current prefix path value
             current_prefix_path_value = current_prefix_paths[current_prefix_path]
-
-            # replaces the current prefix path name with the current prefix path
             dereferenced_path = dereferenced_path.replace(current_prefix_path_name, current_prefix_path_value)
 
-        # resolves the dereferenced path as an absolute path
-        dereferenced_path = os.path.abspath(dereferenced_path)
-
-        # adds the dereferenced path to the converted reference path
-        converted_reference_path += dereferenced_path + ";"
+        # runs the glob based resolver to resolver the "wildcard" patterns
+        # that may be present in the path, this operation should return
+        # a list of paths from the resolved "wildcard" them iterates over
+        # these paths to add them to the converted reference path
+        dereferenced_paths = glob.glob(dereferenced_path)
+        for dereferenced_path in dereferenced_paths:
+            # resolves the dereferenced path as an absolute path and
+            # adds it to the converted reference string path (linear
+            # version of the path separated by tokens)
+            dereferenced_path = os.path.abspath(dereferenced_path)
+            converted_reference_path += dereferenced_path + ";"
 
     # returns the converted reference path
     return converted_reference_path
