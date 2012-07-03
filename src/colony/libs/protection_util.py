@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (C) 2008 Hive Solutions Lda.
+# Copyright (c) 2008-2012 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework.
 #
@@ -25,13 +25,13 @@ __author__ = "João Magalhães <joamag@hive.pt>"
 __version__ = "1.0.0"
 """ The version of the module """
 
-__revision__ = "$LastChangedRevision: 12730 $"
+__revision__ = "$LastChangedRevision$"
 """ The revision number of the module """
 
 __date__ = "$LastChangedDate: 2011-01-15 17:29:58 +0000 (sÃ¡b, 15 Jan 2011) $"
 """ The last change date of the module """
 
-__copyright__ = "Copyright (c) 2008 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2012 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "GNU General Public License (GPL), Version 3"

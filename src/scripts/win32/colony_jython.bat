@@ -1,5 +1,5 @@
 :: Hive Colony Framework
-:: Copyright (C) 2008 Hive Solutions Lda.
+:: Copyright (c) 2008-2012 Hive Solutions Lda.
 ::
 :: This file is part of Hive Colony Framework.
 ::
@@ -18,9 +18,9 @@
 
 :: __author__    = João Magalhães <joamag@hive.pt>
 :: __version__   = 1.0.0
-:: __revision__  = $LastChangedRevision: 15121 $
-:: __date__      = $LastChangedDate: 2011-07-11 13:14:10 +0100 (seg, 11 Jul 2011) $
-:: __copyright__ = Copyright (c) 2008 Hive Solutions Lda.
+:: __revision__  = $LastChangedRevision$
+:: __date__      = $LastChangedDate$
+:: __copyright__ = Copyright (c) 2008-2012 Hive Solutions Lda.
 :: __license__   = GNU General Public License (GPL), Version 3
 
 :: turns off the echo
