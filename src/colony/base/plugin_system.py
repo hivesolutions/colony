@@ -1724,10 +1724,9 @@ class PluginManager:
 
             # gets all modules from all plugin paths
             for plugin_path in self.plugin_paths:
-                # retrieves all the modules from the plugin path
-                plugin_path_modules = self.get_all_modules(plugin_path)
-
-                # extends the referred modules with all the plugin modules
+                # retrieves all the modules from the plugin path and uses them
+                # to extend the referred modules list
+                plugin_path_modules = self.get_all_modules(plugin_path, suffix = "plugin")
                 self.referred_modules.extend(plugin_path_modules)
 
             # defines the plugin system configuration
@@ -1930,12 +1929,20 @@ class PluginManager:
             # sets the standard input as a dummy input object (for no blocking)
             sys.stdin = colony.base.dummy_input.DummyInput()
 
-    def get_all_modules(self, path):
+    def get_all_modules(self, path, suffix = None):
         """
-        Retrieves all the modules in a given path.
+        Retrieves all the modules in a given path, the modules
+        are considered to be the files that have the correct
+        python file extension.
+
+        An optional argument may be provided to filter the modules
+        to be retrieved to the ones that match the proved suffix.
 
         @type path: String
         @param path: The path to retrieve the modules.
+        @type suffix: String
+        @param suffix: The optional suffix argument used to filter
+        the modules according to their suffix in the name.
         @rtype: List
         @return: All the modules in the given path.
         """
@@ -1960,24 +1967,24 @@ class PluginManager:
             # retrieves the file mode
             mode = os.stat(full_path)[stat.ST_MODE]
 
-            # in case the file is not a directory
-            if not stat.S_ISDIR(mode):
-                # splits the path
-                split = os.path.splitext(file_name)
+            # in case the current file in iteration
+            # is a directory no need to continue, must
+            # skip the current iteration
+            if stat.S_ISDIR(mode): continue
 
-                # retrieves the extension
-                extension = split[-1]
+            # splits the name of the file currently in
+            # iteration and retrieves the extension from it
+            module_name, extension = os.path.splitext(file_name)
 
-                # in case the extension is a valid python extension
-                if extension == ".py" or extension == ".pyc":
-                    # retrieves the module name from the file name
-                    module_name = "".join(split[:-1])
+            # in case the extension of the file is not a valid
+            # one must skip the current iteration
+            if not extension in (".py", ".pyc"): continue
+            if suffix and not module_name.endswith(suffix): continue
 
-                    # in case the module name is not defined
-                    # in the modules list
-                    if not module_name in modules:
-                        # adds the module name to the modules list
-                        modules.append(module_name)
+            # checks if the module name is currently present
+            # in the list of modules and in case it's not
+            # adds the module into it
+            if not module_name in modules: modules.append(module_name)
 
         # returns the modules list
         return modules

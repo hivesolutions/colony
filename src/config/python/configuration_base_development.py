@@ -39,7 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 plugin_path_list = [
     "plugins",
-    "../../*/src/colony/plugins",
-    "../../*/*/src/colony/plugins"
+    "../../*/src",
+    "../../*/*/src"
 ]
 """ The list of plugin paths """
