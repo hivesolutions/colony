@@ -37,7 +37,7 @@ __copyright__ = "Copyright (c) 2008-2012 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import plugin_system
+import system
 
 METHOD_NAME_VALUE = "method_name"
 """ The method name value """
@@ -207,7 +207,7 @@ def load_allowed(function):
             # checks if the capability is a valid capability for the plugin
             # currently being handled and skips the current iteration
             # in case it's not
-            if not plugin_system.is_capability_or_sub_capability(capability_key, capability):
+            if not system.is_capability_or_sub_capability(capability_key, capability):
                 # continues the loop
                 continue
 
@@ -318,7 +318,7 @@ def unload_allowed(function):
             # checks if the capability is a valid capability for the plugin
             # currently being handled and skips the current iteration
             # in case it's not
-            if not plugin_system.is_capability_or_sub_capability(capability_key, capability):
+            if not system.is_capability_or_sub_capability(capability_key, capability):
                 # continues the loop
                 continue
 
@@ -560,7 +560,7 @@ def event_handler(function):
             # checks if the event is a valid event for the plugin
             # currently being handled and skips the current iteration
             # in case it's not
-            if not plugin_system.is_event_or_sub_event(event_name_key, event_name):
+            if not system.is_event_or_sub_event(event_name_key, event_name):
                 # continues the loop
                 continue
 
@@ -923,7 +923,7 @@ def create_load_plugin_interceptor(function):
             original_plugin_id = original_plugin.id
 
             # in case the plugin load was unsuccessful
-            if not plugin_manager.load_plugin(original_plugin_id, plugin_system.FULL_LOAD_TYPE):
+            if not plugin_manager.load_plugin(original_plugin_id, system.FULL_LOAD_TYPE):
                 return None
 
         # calls the callback function

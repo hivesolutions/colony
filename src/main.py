@@ -44,8 +44,8 @@ import getopt
 import logging
 
 import colony.base.util
-import colony.base.plugin_system
-import colony.base.plugin_system_information
+import colony.base.system
+import colony.base.information
 
 USAGE = "Help:\n\
 --help[-h] - prints this message\n\
@@ -155,7 +155,12 @@ def print_information():
     """
 
     # print the branding information text
-    print BRANDING_TEXT % (colony.base.plugin_system_information.VERSION, colony.base.plugin_system_information.RELEASE, colony.base.plugin_system_information.BUILD, colony.base.plugin_system_information.RELEASE_DATE)
+    print BRANDING_TEXT % (
+        colony.base.information.VERSION,
+        colony.base.information.RELEASE,
+        colony.base.information.BUILD,
+        colony.base.information.RELEASE_DATE
+    )
 
     # print the python information
     print VERSION_PRE_TEXT + sys.version
@@ -235,7 +240,25 @@ def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose
     platform = colony.base.util.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.base.plugin_system.PluginManager(manager_path, logger_path, library_paths, meta_paths, plugin_paths, platform, [], stop_on_cycle_error, not noloop, layout_mode, run_mode, container, prefix_paths, daemon_pid, daemon_file_path, execution_command, attributes_map)
+    plugin_manager = colony.base.system.PluginManager(
+        manager_path,
+        logger_path,
+        library_paths,
+        meta_paths,
+        plugin_paths,
+        platform,
+        [],
+        stop_on_cycle_error,
+        not noloop,
+        layout_mode,
+        run_mode,
+        container,
+        prefix_paths,
+        daemon_pid,
+        daemon_file_path,
+        execution_command,
+        attributes_map
+    )
 
     # sets the logging level for the plugin manager logger
     if debug:

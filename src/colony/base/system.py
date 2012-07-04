@@ -64,11 +64,11 @@ import colony.base.dummy_input
 import colony.base.loggers
 import colony.base.util
 
-import colony.base.plugin_system_exceptions
-import colony.base.plugin_system_information
-import colony.base.plugin_system_configuration
+import colony.base.exceptions
+import colony.base.information
+import colony.base.configuration
 
-plugin_manager_configuration = colony.base.plugin_system_configuration.plugin_manager_configuration
+plugin_manager_configuration = colony.base.configuration.plugin_manager_configuration
 """ The plugin manager configuration """
 
 CPYTHON_ENVIRONMENT = colony.base.util.CPYTHON_ENVIRONMENT
@@ -490,7 +490,7 @@ class Plugin(object):
         # the allowed loaded capability list
         if plugin_capability_tuple in self.allowed_loaded_capability:
             # raises the plugin system exception
-            raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+            raise colony.base.exceptions.PluginSystemException("invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
         # adds the plugin capability tuple to the allowed loaded capability
         self.allowed_loaded_capability.append(plugin_capability_tuple)
@@ -521,7 +521,7 @@ class Plugin(object):
         # the allowed loaded capability list
         if not plugin_capability_tuple in self.allowed_loaded_capability:
             # raises the plugin system exception
-            raise colony.base.plugin_system_exceptions.PluginSystemException("invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+            raise colony.base.exceptions.PluginSystemException("invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
 
         # removes the plugin capability tuple from the allowed loaded capability
         self.allowed_loaded_capability.remove(plugin_capability_tuple)
@@ -1541,7 +1541,7 @@ class PluginManager:
         # in case the plugin id does not exist in the plugin classes map
         if not plugin_id in self.plugin_classes_map:
             # raises the plugin class not available exception
-            raise colony.base.plugin_system_exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
+            raise colony.base.exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
 
         # retrieves the plugin class
         plugin_class = self.plugin_classes_map[plugin_id]
@@ -1550,7 +1550,7 @@ class PluginManager:
         # the defined version comparison)
         if not colony.libs.version_util.version_cmp(plugin_class.version, plugin_version):
             # raises the plugin class not available exception
-            raise colony.base.plugin_system_exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
+            raise colony.base.exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
 
         # retrieves the generated replica id
         replica_id = self.generate_replica_id()
@@ -1766,7 +1766,7 @@ class PluginManager:
         # in case the system initialization is not complete
         if not self.init_complete:
             # raises a colony exception
-            raise colony.base.plugin_system_exceptions.ColonyException("trying to unload uninitialized plugin system")
+            raise colony.base.exceptions.ColonyException("trying to unload uninitialized plugin system")
 
         # creates the kill system timer, to kill the system
         # if it hangs in shutdown
@@ -2648,7 +2648,7 @@ class PluginManager:
                     argument_value = type_converter_function(argument_value)
             elif argument_split_length > 2:
                 # raises the invalid argument exception
-                raise colony.base.plugin_system_exceptions.InvalidArgument(argument)
+                raise colony.base.exceptions.InvalidArgument(argument)
 
             # adds the argument value to the arguments list
             arguments_list.append(argument_value)
@@ -2678,7 +2678,7 @@ class PluginManager:
             # in case the plugin was not retrieved successfully
             if not plugin:
                 # raises the invalid command exception
-                raise colony.base.plugin_system_exceptions.InvalidCommand("plugin not found '%s'" % plugin_id)
+                raise colony.base.exceptions.InvalidCommand("plugin not found '%s'" % plugin_id)
 
             # loads the plugin
             self.__load_plugin(plugin)
@@ -2686,7 +2686,7 @@ class PluginManager:
             # in case the plugin does not have a method with the given name
             if not hasattr(plugin, method_name):
                 # raises the invalid command exception
-                raise colony.base.plugin_system_exceptions.InvalidCommand("method not found '%s' for plugin '%s'" % (method_name, plugin_id))
+                raise colony.base.exceptions.InvalidCommand("method not found '%s' for plugin '%s'" % (method_name, plugin_id))
 
             # retrieves the method from the plugin
             method = getattr(plugin, method_name)
@@ -2701,7 +2701,7 @@ class PluginManager:
             # than the expected arguments length
             if not argments_length == expected_arguments_length:
                 # raises the invalid command exception
-                raise colony.base.plugin_system_exceptions.InvalidCommand("invalid number of arguments for method '%s' (expected %d given %d)" % (full_method_name, expected_arguments_length, argments_length))
+                raise colony.base.exceptions.InvalidCommand("invalid number of arguments for method '%s' (expected %d given %d)" % (full_method_name, expected_arguments_length, argments_length))
 
             # calls the method with the given arguments
             method(*arguments)
@@ -5164,7 +5164,7 @@ class PluginManager:
         @return: The current base (plugin manager) version.
         """
 
-        return colony.base.plugin_system_information.VERSION
+        return colony.base.information.VERSION
 
     def get_release(self):
         """
@@ -5174,7 +5174,7 @@ class PluginManager:
         @return: The current base (plugin manager) release.
         """
 
-        return colony.base.plugin_system_information.RELEASE
+        return colony.base.information.RELEASE
 
     def get_build(self):
         """
@@ -5184,7 +5184,7 @@ class PluginManager:
         @return: The current base (plugin manager) build.
         """
 
-        return colony.base.plugin_system_information.BUILD
+        return colony.base.information.BUILD
 
     def get_release_date(self):
         """
@@ -5194,7 +5194,7 @@ class PluginManager:
         @return: The current base (plugin manager) release date.
         """
 
-        return colony.base.plugin_system_information.RELEASE_DATE
+        return colony.base.information.RELEASE_DATE
 
     def get_release_date_time(self):
         """
@@ -5204,7 +5204,7 @@ class PluginManager:
         @return: The current base (plugin manager) release date time.
         """
 
-        return colony.base.plugin_system_information.RELEASE_DATE_TIME
+        return colony.base.information.RELEASE_DATE_TIME
 
     def get_environment(self):
         """
@@ -5214,7 +5214,7 @@ class PluginManager:
         @return: The current base (plugin manager) environment.
         """
 
-        return colony.base.plugin_system_information.ENVIRONMENT
+        return colony.base.information.ENVIRONMENT
 
     def get_system_information_map(self):
         """
