@@ -1894,7 +1894,6 @@ class Deployer:
         # retrieves the optional values
         sub_platforms = specification.get("sub_platforms", [])
         name = specification.get("name", "")
-        short_name = specification.get("short_name", "")
         description = specification.get("description", "")
         author = specification.get("author", "")
         capabilities = specification.get("capabilities", [])
@@ -1908,7 +1907,6 @@ class Deployer:
         self.print_value("Sub-Platforms", sub_platforms)
         self.print_value("Id", id)
         self.print_value("Name", name)
-        self.print_value("Short Name", short_name)
         self.print_value("Description", description)
         self.print_value("Version", version)
         self.print_value("Author", author)

@@ -237,9 +237,6 @@ class Plugin(object):
     name = "none"
     """ The name of the plugin """
 
-    short_name = "none"
-    """ The short name of the plugin """
-
     description = "none"
     """ The description of the plugin """
 
@@ -392,7 +389,7 @@ class Plugin(object):
         self.manager.generate_event("plugin_manager.plugin.load_plugin", [self.id, self.version, self])
 
         # prints an info message
-        self.info("Loading plugin '%s' v%s" % (self.short_name, self.version))
+        self.info("Loading plugin '%s' v%s" % (self.name, self.version))
 
     def lazy_load_plugin(self):
         """
@@ -415,7 +412,7 @@ class Plugin(object):
         self.manager.generate_event("plugin_manager.plugin.lazy_load_plugin", [self.id, self.version, self])
 
         # prints an info message
-        self.info("Lazy loading plugin '%s' v%s" % (self.short_name, self.version))
+        self.info("Lazy loading plugin '%s' v%s" % (self.name, self.version))
 
     def end_load_plugin(self):
         """
@@ -425,7 +422,7 @@ class Plugin(object):
         # generates the end load plugin event
         self.manager.generate_event("plugin_manager.plugin.end_load_plugin", [self.id, self.version, self])
 
-        self.info("Loading process for plugin '%s' v%s completed" % (self.short_name, self.version))
+        self.info("Loading process for plugin '%s' v%s completed" % (self.name, self.version))
 
     def unload_plugin(self):
         """
@@ -453,7 +450,7 @@ class Plugin(object):
         self.manager.generate_event("plugin_manager.plugin.unload_plugin", [self.id, self.version, self])
 
         # prints an info message
-        self.info("Unloading plugin '%s' v%s" % (self.short_name, self.version))
+        self.info("Unloading plugin '%s' v%s" % (self.name, self.version))
 
     def end_unload_plugin(self):
         """
@@ -467,7 +464,7 @@ class Plugin(object):
         self.manager.generate_event("plugin_manager.plugin.end_unload_plugin", [self.id, self.version, self])
 
         # prints an info message
-        self.info("Unloading process for plugin '%s' v%s completed" % (self.short_name, self.version))
+        self.info("Unloading process for plugin '%s' v%s completed" % (self.name, self.version))
 
     def load_allowed(self, plugin, capability):
         """
@@ -489,7 +486,7 @@ class Plugin(object):
         # the allowed loaded capability list
         if plugin_capability_tuple in self.allowed_loaded_capability:
             # raises the plugin system exception
-            raise colony.base.exceptions.PluginSystemException("invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+            raise colony.base.exceptions.PluginSystemException("invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
 
         # adds the plugin capability tuple to the allowed loaded capability
         self.allowed_loaded_capability.append(plugin_capability_tuple)
@@ -498,7 +495,7 @@ class Plugin(object):
         self.register_all_handled_events_plugin(plugin)
 
         # prints an info message
-        self.info("Loading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+        self.info("Loading plugin '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
 
     def unload_allowed(self, plugin, capability):
         """
@@ -520,7 +517,7 @@ class Plugin(object):
         # the allowed loaded capability list
         if not plugin_capability_tuple in self.allowed_loaded_capability:
             # raises the plugin system exception
-            raise colony.base.exceptions.PluginSystemException("invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+            raise colony.base.exceptions.PluginSystemException("invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
 
         # removes the plugin capability tuple from the allowed loaded capability
         self.allowed_loaded_capability.remove(plugin_capability_tuple)
@@ -529,7 +526,7 @@ class Plugin(object):
         self.unregister_all_handled_events_plugin(plugin)
 
         # prints an info message
-        self.info("Unloading plugin '%s' v%s in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+        self.info("Unloading plugin '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
 
     def dependency_injected(self, plugin):
         """
@@ -540,14 +537,14 @@ class Plugin(object):
         """
 
         self.dependencies_loaded.append(plugin)
-        self.info("Plugin dependency '%s' v%s injected in '%s' v%s" % (plugin.short_name, plugin.version, self.short_name, self.version))
+        self.info("Plugin dependency '%s' v%s injected in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
 
     def init_complete(self):
         """
         Method called at the end of the plugin manager initialization.
         """
 
-        self.info("Plugin '%s' v%s notified about the end of the plugin manager init process" % (self.short_name, self.version))
+        self.info("Plugin '%s' v%s notified about the end of the plugin manager init process" % (self.name, self.version))
 
     def register_all_handled_events_plugin(self, plugin):
         """
@@ -709,7 +706,7 @@ class Plugin(object):
 
         if not plugin in self.event_plugins_fired_loaded_map[event_name]:
             self.event_plugins_fired_loaded_map[event_name].append(plugin)
-            self.info("Registering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.short_name, plugin.version, self.short_name, self.version))
+            self.info("Registering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.name, plugin.version, self.name, self.version))
 
     def unregister_plugin_event(self, plugin, event_name):
         """
@@ -724,7 +721,7 @@ class Plugin(object):
         if event_name in self.event_plugins_fired_loaded_map:
             if plugin in self.event_plugins_fired_loaded_map[event_name]:
                 self.event_plugins_fired_loaded_map[event_name].remove(plugin)
-                self.info("Unregistering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.short_name, plugin.version, self.short_name, self.version))
+                self.info("Unregistering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.name, plugin.version, self.name, self.version))
 
     def notify_handlers(self, event_name, event_args):
         """
@@ -748,7 +745,7 @@ class Plugin(object):
                 # iterates over all the plugins registered for notification
                 for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
                     # prints an info message
-                    self.info("Notifying '%s' v%s about event '%s' generated in '%s' v%s" % (event_plugin_loaded.short_name, event_plugin_loaded.version, event_name, self.short_name, self.version))
+                    self.info("Notifying '%s' v%s about event '%s' generated in '%s' v%s" % (event_plugin_loaded.name, event_plugin_loaded.version, event_name, self.name, self.version))
 
                     # calls the event handler for the event name with
                     # the given event arguments
@@ -768,7 +765,7 @@ class Plugin(object):
             return
 
         # prints an info message
-        self.info("Event '%s' generated in '%s' v%s" % (event_name, self.short_name, self.version))
+        self.info("Event '%s' generated in '%s' v%s" % (event_name, self.name, self.version))
 
         # notifies the event handlers
         self.notify_handlers(event_name, event_args)
@@ -784,7 +781,7 @@ class Plugin(object):
         """
 
         # prints an info message
-        self.info("Event '%s' caught in '%s' v%s" % (event_name, self.short_name, self.version))
+        self.info("Event '%s' caught in '%s' v%s" % (event_name, self.name, self.version))
 
     def reload_main_modules(self):
         """
@@ -792,7 +789,7 @@ class Plugin(object):
         """
 
         # prints an info message
-        self.info("Reloading main modules in '%s' v%s" % (self.short_name, self.version))
+        self.info("Reloading main modules in '%s' v%s" % (self.name, self.version))
 
         # iterates over all the main modules
         for main_module in self.main_modules:
@@ -826,7 +823,7 @@ class Plugin(object):
         @param property: The property name to set.
         """
 
-        self.info("Setting configuration property '%s' in '%s' v%s" % (property_name, self.short_name, self.version))
+        self.info("Setting configuration property '%s' in '%s' v%s" % (property_name, self.name, self.version))
 
         self.configuration_map[property_name] = property
 
@@ -838,7 +835,7 @@ class Plugin(object):
         @param property_name: The property name to unset the property.
         """
 
-        self.info("Unsetting configuration property '%s' from '%s' v%s" % (property_name, self.short_name, self.version))
+        self.info("Unsetting configuration property '%s' from '%s' v%s" % (property_name, self.name, self.version))
 
         del self.configuration_map[property_name]
 
@@ -976,7 +973,7 @@ class Plugin(object):
         """
 
         # prints and info message
-        self.info("Exception '%s' generated in '%s' v%s" % (str(exception), self.short_name, self.version))
+        self.info("Exception '%s' generated in '%s' v%s" % (str(exception), self.name, self.version))
 
         # unloads the plugin
         self.manager.unload_plugin(self.id)
@@ -2747,7 +2744,7 @@ class PluginManager:
         # in case the plugin does not pass the test plugin load
         if not self.test_plugin_load(plugin):
             # prints an info message
-            self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
+            self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.name, plugin.version))
 
             # returns false
             return False
@@ -2811,7 +2808,7 @@ class PluginManager:
         # in case the plugin load is not successful
         if not self.test_plugin_load(plugin):
             # prints an info message
-            self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
+            self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.name, plugin.version))
 
             # returns false
             return False
@@ -2828,7 +2825,7 @@ class PluginManager:
                 plugin_thread = self.plugin_threads_map[plugin.id]
 
                 # prints an info message
-                self.info("Thread restarted for plugin '%s' v%s" % (plugin.short_name, plugin.version))
+                self.info("Thread restarted for plugin '%s' v%s" % (plugin.name, plugin.version))
             else:
                 # creates a new tread to run the main plugin
                 plugin_thread = PluginThread(plugin)
@@ -2843,7 +2840,7 @@ class PluginManager:
                 self.plugin_threads_map[plugin.id] = plugin_thread
 
                 # prints an info message
-                self.info("New thread started for plugin '%s' v%s" % (plugin.short_name, plugin.version))
+                self.info("New thread started for plugin '%s' v%s" % (plugin.name, plugin.version))
 
             # sets the plugin load as not completed
             plugin_thread.set_load_complete(False)
@@ -2889,7 +2886,7 @@ class PluginManager:
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.error("Problem loading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
+            self.error("Problem loading plugin '%s' v%s '%s'" % (plugin.name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the loading process
             return False
@@ -2937,7 +2934,7 @@ class PluginManager:
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.error("Problem end loading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
+            self.error("Problem end loading plugin '%s' v%s '%s'" % (plugin.name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the loading process
             return False
@@ -3050,7 +3047,7 @@ class PluginManager:
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.error("Problem unloading plugin '%s' v%s '%s'" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
+            self.error("Problem unloading plugin '%s' v%s '%s'" % (plugin.name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the unloading process
             return False
@@ -3085,7 +3082,7 @@ class PluginManager:
         # in case the plugin is in an error state
         if plugin.error_state:
             # prints the error message
-            self.error("Problem end unloading plugin '%s' v%s %s" % (plugin.short_name, plugin.version, unicode(plugin.exception)))
+            self.error("Problem end unloading plugin '%s' v%s %s" % (plugin.name, plugin.version, unicode(plugin.exception)))
 
             # returns false in the unloading process
             return False
@@ -3125,11 +3122,10 @@ class PluginManager:
         if not self.plugin_manager_plugin_execute("test_plugin_load", [plugin]):
             return False
 
-        # retrieves the plugin id
+        # retrieves the plugin id (identifier) and name to be used
+        # in some printing operations (value reference)
         plugin_id = plugin.id
-
-        # retrieves the plugin short name
-        plugin_short_name = plugin.short_name
+        plugin_name = plugin.name
 
         # retrieves the plugin version
         plugin_version = plugin.version
@@ -3137,7 +3133,7 @@ class PluginManager:
         # tests the plugin against the current platform
         if not self.test_platform_compatible(plugin):
             # prints an info message
-            self.info("Current platform (%s) not compatible with plugin '%s' v%s" % (self.platform, plugin_short_name, plugin_version))
+            self.info("Current platform (%s) not compatible with plugin '%s' v%s" % (self.platform, plugin_name, plugin_version))
 
             # returns false
             return False
@@ -3145,7 +3141,7 @@ class PluginManager:
         # tests the plugin for the availability of the dependencies
         if not self.test_dependencies_available(plugin):
             # prints an info message
-            self.info("Missing dependencies for plugin '%s' v%s" % (plugin_short_name, plugin_version))
+            self.info("Missing dependencies for plugin '%s' v%s" % (plugin_name, plugin_version))
 
             # returns false
             return False
@@ -3177,7 +3173,7 @@ class PluginManager:
             # in case the test dependency tests fails
             if not plugin_dependency.test_dependency(self):
                 # prints an info message
-                self.info("Problem with dependency for plugin '%s' v%s" % (plugin.short_name, plugin.version))
+                self.info("Problem with dependency for plugin '%s' v%s" % (plugin.name, plugin.version))
 
                 # returns false
                 return False
@@ -3549,7 +3545,7 @@ class PluginManager:
 
         # test the plugin
         if not self.test_plugin_load(plugin):
-            self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.short_name, plugin.version))
+            self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.name, plugin.version))
             return False
 
         if MAIN_TYPE in plugin.capabilities:
@@ -4524,7 +4520,7 @@ class PluginManager:
             self.event_plugins_fired_loaded_map[event_name].append(plugin)
 
             # prints an info message
-            self.info("Registering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
+            self.info("Registering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.name, plugin.version))
 
     def unregister_plugin_manager_event(self, plugin, event_name):
         """
@@ -4541,7 +4537,7 @@ class PluginManager:
                 self.event_plugins_fired_loaded_map[event_name].remove(plugin)
 
                 # prints an info message
-                self.info("Unregistering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.short_name, plugin.version))
+                self.info("Unregistering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.name, plugin.version))
 
     def notify_handlers(self, event_name, event_args):
         """
@@ -4564,7 +4560,7 @@ class PluginManager:
             if event_or_super_event in self.event_plugins_fired_loaded_map:
                 # iterates over all the plugins registered for notification
                 for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
-                    self.info("Notifying '%s' v%s about event '%s' generated in plugin manager" % (event_plugin_loaded.short_name, event_plugin_loaded.version, event_name))
+                    self.info("Notifying '%s' v%s about event '%s' generated in plugin manager" % (event_plugin_loaded.name, event_plugin_loaded.version, event_name))
 
                     # calls the event handler for the event and the event arguments
                     event_plugin_loaded.event_handler(event_name, *event_args)
