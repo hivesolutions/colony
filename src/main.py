@@ -704,13 +704,11 @@ def configure_system(layout_mode, run_mode, manager_path):
     @param manager_path: The manager path to configure the system.
     """
 
-    # sets the layout mode as the colony layout mode
+    # sets the various colony related environment variables
+    # so that the current process may expose them to any
+    # created child process (context exposure)
     os.environ[COLONY_LAYOUT_MODE_ENVIRONMENT] = layout_mode
-
-    # sets the run mode as the colony run mode
     os.environ[COLONY_RUN_MODE_ENVIRONMENT] = run_mode
-
-    # sets the manager path as the colony home
     os.environ[COLONY_HOME_ENVIRONMENT] = manager_path
 
     # constructs the library path and normalizes it
