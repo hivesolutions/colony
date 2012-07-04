@@ -65,21 +65,26 @@ OTHER_OS = "other"
 UID_PRECISION = 8
 """ Unique id precision """
 
-class DummyInput:
+class WaitInput:
     """
-    Dummy input file used to overcome the problem
+    Wait input file used to overcome the problem
     with being stuck in the console input.
+    This file like object reads something as a virtual
+    timeout object avoid the proper read and unblocking
+    the current inout operation.
     """
 
     def readline(self):
         """
-        Reads a "line" from the dummy input.
+        Reads a "line" from the wait input.
+        This is an empty read as all it does
+        is wait for a while and then return.
         """
 
         # sleeps for a little bit
         time.sleep(1.0)
 
-        # returns an empty (dummy string)
+        # returns an empty (wait string)
         return ""
 
 class Event:
