@@ -1919,14 +1919,14 @@ class PluginManager:
     def check_standard_input(self):
         """
         Checks if the standard input to be used should
-        be changed to a dummy one in order to avoid possible
+        be changed to a wait one in order to avoid possible
         blocking.
         """
 
         # in case there the execution of type script or is a daemon
         if self.execution_command or self.daemon_pid or self.daemon_file_path:
-            # sets the standard input as a dummy input object (for no blocking)
-            sys.stdin = colony.base.util.DummyInput()
+            # sets the standard input as a wait input object (for no blocking)
+            sys.stdin = colony.base.util.WaitInput()
 
     def get_all_modules(self, path, suffix = None):
         """
