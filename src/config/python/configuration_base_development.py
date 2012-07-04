@@ -45,7 +45,6 @@ plugin_path_list = [
 """ The list of plugin paths """
 
 meta_path_list = [
-    "../../*config/src",
-    "../../*config/*/src"
+    "../../*config/*"
 ]
 """ The list of meta paths """
