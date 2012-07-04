@@ -65,6 +65,23 @@ OTHER_OS = "other"
 UID_PRECISION = 8
 """ Unique id precision """
 
+class DummyInput:
+    """
+    Dummy input file used to overcome the problem
+    with being stuck in the console input.
+    """
+
+    def readline(self):
+        """
+        Reads a "line" from the dummy input.
+        """
+
+        # sleeps for a little bit
+        time.sleep(1.0)
+
+        # returns an empty (dummy string)
+        return ""
+
 class Event:
     """
     The class that describes an event to be used in a generic event queue.

@@ -60,7 +60,6 @@ import colony.libs.path_util
 import colony.libs.version_util
 import colony.libs.string_buffer_util
 
-import colony.base.dummy_input
 import colony.base.loggers
 import colony.base.util
 
@@ -1927,7 +1926,7 @@ class PluginManager:
         # in case there the execution of type script or is a daemon
         if self.execution_command or self.daemon_pid or self.daemon_file_path:
             # sets the standard input as a dummy input object (for no blocking)
-            sys.stdin = colony.base.dummy_input.DummyInput()
+            sys.stdin = colony.base.util.DummyInput()
 
     def get_all_modules(self, path, suffix = None):
         """
