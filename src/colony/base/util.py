@@ -137,12 +137,9 @@ def get_environment():
 
     platform = sys.platform
 
-    if platform.find("java") != -1:
-        return JYTHON_ENVIRONMENT
-    elif platform.find("cli") != -1:
-        return IRON_PYTHON_ENVIRONMENT
-    else:
-        return CPYTHON_ENVIRONMENT
+    if platform.find("java") != -1: return JYTHON_ENVIRONMENT
+    elif platform.find("cli") != -1: return IRON_PYTHON_ENVIRONMENT
+    else: return CPYTHON_ENVIRONMENT
 
 def get_operative_system():
     """
@@ -155,12 +152,9 @@ def get_operative_system():
     # retrieves the current os name
     os_name = os.name
 
-    if os_name == "nt" or os_name == "dos":
-        return WINDOWS_OS
-    elif os_name == "mac":
-        return MAC_OS
-    elif os_name == "posix":
-        return UNIX_OS
+    if os_name == "nt" or os_name == "dos": return WINDOWS_OS
+    elif os_name == "mac": return MAC_OS
+    elif os_name == "posix": return UNIX_OS
 
     return OTHER_OS
 
