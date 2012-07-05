@@ -261,14 +261,10 @@ def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose
     )
 
     # sets the logging level for the plugin manager logger
-    if debug:
-        plugin_manager.start_logger(logging.DEBUG)
-    elif verbose:
-        plugin_manager.start_logger(logging.INFO)
-    elif silent:
-        plugin_manager.start_logger(logging.ERROR)
-    else:
-        plugin_manager.start_logger(logging.WARN)
+    if debug: plugin_manager.start_logger(logging.DEBUG)
+    elif verbose: plugin_manager.start_logger(logging.INFO)
+    elif silent: plugin_manager.start_logger(logging.ERROR)
+    else: plugin_manager.start_logger(logging.WARN)
 
     # starts and loads the plugin system
     return_code = plugin_manager.load_system()
@@ -282,7 +278,30 @@ def main():
     """
 
     try:
-        options, _args = getopt.getopt(sys.argv[1:], "hvdsnl:r:c:o:a:f:d:m:g:i:t:p:e:", ["help", "verbose", "debug", "silent", "noloop", "layout_mode=", "run_mode=", "container=", "daemon_pid=", "attributes=", "configuration_file=", "daemon_file=", "manager_dir=", "logger_dir=", "library_dir=", "meta_dir=", "plugin_dir=", "execution_command="])
+        options, _args = getopt.getopt(
+            sys.argv[1:],
+            "hvdsnl:r:c:o:a:f:d:m:g:i:t:p:e:",
+            [
+                 "help",
+                 "verbose",
+                 "debug",
+                 "silent",
+                 "noloop",
+                 "layout_mode=",
+                 "run_mode=",
+                 "container=",
+                 "daemon_pid=",
+                 "attributes=",
+                 "configuration_file=",
+                 "daemon_file=",
+                 "manager_dir=",
+                 "logger_dir=",
+                 "library_dir=",
+                 "meta_dir=",
+                 "plugin_dir=",
+                 "execution_command="
+            ]
+        )
     except getopt.GetoptError, error:
         # prints the error description
         print str(error)
@@ -366,26 +385,40 @@ def main():
     configure_system(layout_mode, run_mode, manager_path)
 
     # in case the daemon file path is valid and not an absolute path
+    # must the (complete) daemon file path prepending the manager path
     if daemon_file_path and not os.path.isabs(daemon_file_path):
-        # creates the (complete) daemon file path prepending the manager path
         daemon_file_path = manager_path + "/" + daemon_file_path
 
-    # in case the logger path is not an absolute path
-    if not os.path.isabs(logger_path):
-        # creates the (complete) logger path prepending the manager path
-        logger_path = manager_path + "/" + logger_path
+    # in case the logger path is not an absolute path, must create
+    # the (complete) logger path prepending the manager path
+    if not os.path.isabs(logger_path): logger_path = manager_path + "/" + logger_path
 
-    # strips the library path around the semi-colon character
+    # strips the various component location paths around the
+    # semi-colon character so that it's possible to send them
     library_path_striped = library_path.strip(";")
-
-    # strips the meta path around the semi-colon character
     meta_path_striped = meta_path.strip(";")
-
-    # strips the plugin path around the semi-colon character
     plugin_path_striped = plugin_path.strip(";")
 
     # starts the running process
-    return_code = run(manager_path, logger_path, library_path_striped, meta_path_striped, plugin_path_striped, verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, noloop, container, prefix_paths, daemon_pid, daemon_file_path, execution_command, attributes_map)
+    return_code = run(
+        manager_path,
+        logger_path,
+        library_path_striped,
+        meta_path_striped,
+        plugin_path_striped,
+        verbose,
+        debug,
+        silent,
+        layout_mode,
+        run_mode,
+        stop_on_cycle_error,
+        noloop, container,
+        prefix_paths,
+        daemon_pid,
+        daemon_file_path,
+        execution_command,
+        attributes_map
+    )
 
     # exits the process with return code
     exit(return_code)
@@ -458,7 +491,8 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
 
     # in case the configuration directory path is not an absolute path
     if not os.path.isabs(configuration_directory_path):
-        # creates the (complete) configuration directory path prepending the manager path
+        # creates the (complete) configuration directory path
+        # prepending the manager path
         configuration_directory_path = os.path.normpath(manager_path + "/" + configuration_directory_path)
 
     # in case the configuration directory path is valid inserts it into the system path
@@ -467,11 +501,10 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     # retrieves the configuration file base path from the configuration file path
     configuration_file_base_path = os.path.basename(configuration_file_path)
 
-    # retrieves the configuration module name and the configuration module extension by splitting the
-    # configuration base path into base name and extension
+    # retrieves the configuration module name and the configuration
+    # module extension by splitting the configuration base path into
+    # base name and extension and then imports the referring module
     configuration_module_name, _configuration_module_extension = os.path.splitext(configuration_file_base_path)
-
-    # imports the colony configuration module
     colony_configuration = __import__(configuration_module_name)
 
     # retrieves the colony configuration contents
@@ -497,74 +530,83 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     if run_mode == DEFAULT_STRING_VALUE and RUN_MODE_VALUE in colony_configuration_contents:
         run_mode = colony_configuration.run_mode
 
-    # in case the prefix paths variable is defined in the colony configuration
+    # in case the prefix paths variable is defined in the
+    # colony configuration
     if PREFIX_PATHS_VALUE in colony_configuration_contents:
         prefix_paths = colony_configuration.prefix_paths
 
-    # in case the stop on cycle error variable is defined in the colony configuration
+    # in case the stop on cycle error variable is defined
+    # in the colony configuration
     if STOP_ON_CYCLE_ERROR_VALUE in colony_configuration_contents:
         stop_on_cycle_error = colony_configuration.stop_on_cycle_error
 
-    # in case the daemon file path variable is defined in the colony configuration
+    # in case the daemon file path variable is defined
+    # in the colony configuration
     if DAEMON_FILE_PATH_VALUE in colony_configuration_contents:
         daemon_file_path = colony_configuration.daemon_file_path
 
-    # in case the logger path variable is defined in the colony configuration
+    # in case the logger path variable is defined in the
+    # colony configuration
     if LOGGER_PATH_VALUE in colony_configuration_contents:
         logger_path = colony_configuration.logger_path
 
-    # in case the library path is defined
-    if library_path:
-        # appends a separator to the library path
-        library_path += ";"
-    else:
-        # creates a new library path string
-        library_path = ""
+    # in case the library path is defined, must appends a
+    # separator to the library path to mark the initial separation
+    # otherwise creates a new library path string initializing the
+    # value to an empty string so that it can be extended
+    if library_path: library_path += ";"
+    else: library_path = ""
 
-    # in case the meta path is defined
-    if meta_path:
-        # appends a separator to the meta path
-        meta_path += ";"
-    else:
-        # creates a new meta path string
-        meta_path = ""
+    # in case the meta path is defined, must appends a
+    # separator to the meta path to mark the initial separation
+    # otherwise creates a new meta path string initializing the
+    # value to an empty string so that it can be extended
+    if meta_path: meta_path += ";"
+    else: meta_path = ""
 
-    # in case the plugin path is defined
-    if plugin_path:
-        # appends a separator to the plugin path
-        plugin_path += ";"
-    else:
-        # creates a new plugin path string
-        plugin_path = ""
+    # in case the plugin path is defined, must appends a
+    # separator to the plugin path to mark the initial separation
+    # otherwise creates a new plugin path string initializing the
+    # value to an empty string so that it can be extended
+    if plugin_path: plugin_path += ";"
+    else: plugin_path = ""
 
     # retrieves the current prefix paths
     current_prefix_paths = prefix_paths[layout_mode]
 
-    # retrieves the extra library path as the dereferenced values from the colony
-    # configuration library path list
-    extra_library_path = convert_reference_path_list(manager_path, current_prefix_paths, colony_configuration.library_path_list)
-
-    # adds the extra library path to the library path
+    # retrieves the extra library path as the dereferenced values
+    # from the colony configuration library path list and adds the
+    # extra library path to the library path
+    extra_library_path = convert_reference_path_list(
+        manager_path,
+        current_prefix_paths,
+        colony_configuration.library_path_list
+    )
     library_path += extra_library_path
 
-    # retrieves the extra meta path as the dereferenced values from the colony
-    # configuration meta path list
-    extra_meta_path = convert_reference_path_list(manager_path, current_prefix_paths, colony_configuration.meta_path_list)
-
-    # adds the extra meta path to the meta path
+    # retrieves the extra meta path as the dereferenced values
+    # from the colony configuration meta path list and adds the
+    # extra meta path to the meta path
+    extra_meta_path = convert_reference_path_list(
+        manager_path,
+        current_prefix_paths,
+        colony_configuration.meta_path_list
+    )
     meta_path += extra_meta_path
 
-    # loads the plugin paths file path
+    # loads the plugin paths file path and adds the plugin paths
+    # file path to the plugin path
     plugin_paths_file_path = load_plugin_paths_file(manager_path)
-
-    # adds the plugin paths file path to the plugin path
     plugin_path += plugin_paths_file_path
 
-    # retrieves the extra plugin path as the dereferenced values from the colony
-    # configuration plugin path list
-    extra_plugin_path = convert_reference_path_list(manager_path, current_prefix_paths, colony_configuration.plugin_path_list)
-
-    # adds the extra plugin path to the plugin path
+    # retrieves the extra plugin path as the dereferenced values
+    # from the colony configuration plugin path list and adds the
+    # extra plugin path to the plugin path
+    extra_plugin_path = convert_reference_path_list(
+        manager_path,
+        current_prefix_paths,
+        colony_configuration.plugin_path_list
+    )
     plugin_path += extra_plugin_path
 
     return (
@@ -650,28 +692,24 @@ def load_plugin_paths_file(manager_path):
     # creates the config general path from the manager path
     config_general_path = manager_path + "/" + CONFIG_DIRECTORY + "/" + GENERAL_DIRECTORY
 
-    # crates the plugin paths file path (from the config genal path)
+    # crates the plugin paths file path (from the config general path)
     plugin_paths_file_path = config_general_path + "/" + PLUGIN_PATHS_FILE
 
-    # in case the plugin paths file does not exists (not mandatory)
-    if not os.path.exists(plugin_paths_file_path):
-        # returns immediately
-        return
+    # in case the plugin paths file does not exists (the
+    # file is not mandatory) must return immediately because
+    # no further processing is taking place
+    if not os.path.exists(plugin_paths_file_path): return
 
-    # opens the plugin paths file for reading
+    # opens the plugin paths file for reading then reads the
+    # plugin path files contents, and the closes file to avoid
+    # any further reading that could cause memory leaks
     plugin_paths_file = open(plugin_paths_file_path, "r")
+    try: plugin_paths_file_contents =  plugin_paths_file.read()
+    finally: plugin_paths_file.close()
 
-    try:
-        # reads the plugin paths file contents
-        plugin_paths_file_contents =  plugin_paths_file.read()
-    finally:
-        # closes the plugin paths file
-        plugin_paths_file.close()
-
-    # splits the paths over the newline character
+    # splits the paths over the newline character and then
+    # filters the invalid values (white spaces)
     paths = plugin_paths_file_contents.split("\n")
-
-    # filters the "invalid" path values
     paths = [value for value in paths if value]
 
     # initializes the converted reference path
@@ -681,12 +719,10 @@ def load_plugin_paths_file(manager_path):
     # plugins paths string
     for path in paths:
         # in case the path is not an absolute path
-        if not os.path.isabs(path):
-            # creates the (complete) path prepending the manager path
-            path = manager_path + "/" + path
-
-        # adds the path to the plugin paths string
-        # value
+        # creates the (complete) path prepending
+        # the manager path and then adds the path
+        # to the plugin paths string value
+        if not os.path.isabs(path): path = manager_path + "/" + path
         plugin_paths_string_value += path + ";"
 
     # returns the plugin paths string value

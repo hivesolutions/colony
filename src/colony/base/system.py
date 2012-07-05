@@ -1401,7 +1401,7 @@ class PluginManager:
     event_plugins_fired_loaded_map = {}
     """ The map with the plugin associated with the name of the event fired """
 
-    def __init__(self, manager_path = None, logger_path = None, library_paths = None, meta_paths = None, plugin_paths = None, platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, main_loop_active = True, layout_mode = "default", run_mode = "default", container = "default", prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+    def __init__(self, manager_path = "", logger_path = "log", library_paths = [], meta_paths = [], plugin_paths = [], platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, loop = True, layout_mode = "default", run_mode = "default", container = "default", prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
         """
         Constructor of the class.
 
@@ -1410,19 +1410,23 @@ class PluginManager:
         @type logger_path: String
         @param logger_path: The manager base path for logger.
         @type library_paths: List
-        @param library_paths: The list of directory paths for the loading of the external libraries.
+        @param library_paths: The list of directory paths for the loading
+        of the external libraries.
         @type meta_paths: List
-        @param meta_paths: The list of directory paths for the loading of the external metadata information.
+        @param meta_paths: The list of directory paths for the loading
+        of the external metadata information.
         @type plugin_paths: List
-        @param plugin_paths: The list of directory paths for the loading of the plugins.
+        @param plugin_paths: The list of directory paths for the loading
+        of the plugins.
         @type platform: int
         @param platform: The current executing platform.
         @type init_complete_handlers: List
-        @param init_complete_handlers: The list of handlers to be called at the end of the plugin manager initialization.
+        @param init_complete_handlers: The list of handlers to be called at
+        the end of the plugin manager initialization.
         @type stop_on_cycle_error: bool
         @param stop_on_cycle_error: The boolean value for the stop on cycle error.
-        @type main_loop_active: bool
-        @param main_loop_active: The boolean value for the main loop activation.
+        @type loop: bool
+        @param loop: The boolean value for the main loop activation.
         @type layout_mode: String
         @param layout_mode: The layout mode used in the plugin loading.
         @type run_mode: String
@@ -1430,15 +1434,19 @@ class PluginManager:
         @type container: String
         @param container: The name of the plugin manager container.
         @type prefix_paths: List
-        @param prefix_paths: The list of manager path relative paths to be used as reference for sub-projects.
+        @param prefix_paths: The list of manager path relative paths to be
+        sed as reference for sub-projects.
         @type daemon_pid: int
-        @param daemon_pid: The pid of the daemon process running the instance of plugin manager.
+        @param daemon_pid: The pid of the daemon process running the instance
+        of plugin manager.
         @type daemon_file_path: String
-        @param daemon_file_path: The file path to the daemon file, for information control.
+        @param daemon_file_path: The file path to the daemon file, for
+        information control.
         @type execution_command: String
         @param execution_command: The command to be executed on start (script mode).
         @type attributes_map: Dictionary
-        @param attributes_map: The map associating the attribute key and the attribute value.
+        @param attributes_map: The map associating the attribute key and the
+        attribute value.
         """
 
         self.manager_path = manager_path
@@ -1449,7 +1457,7 @@ class PluginManager:
         self.platform = platform
         self.init_complete_handlers = init_complete_handlers
         self.stop_on_cycle_error = stop_on_cycle_error
-        self.main_loop_active = main_loop_active
+        self.main_loop_active = loop
         self.layout_mode = layout_mode
         self.run_mode = run_mode
         self.container = container
@@ -1647,8 +1655,9 @@ class PluginManager:
         # retrieves the minimal log level between the current log level and the default one
         minimal_log_level = DEFAULT_LOGGING_LEVEL < log_level and DEFAULT_LOGGING_LEVEL or log_level
 
-        # creates the logger file name
-        logger_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX + DEFAULT_LOGGING_FILE_NAME_SEPARATOR + self.run_mode + DEFAULT_LOGGING_FILE_NAME_EXTENSION
+        # creates the (complete) logger file name
+        logger_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX + DEFAULT_LOGGING_FILE_NAME_SEPARATOR +\
+            self.run_mode + DEFAULT_LOGGING_FILE_NAME_EXTENSION
 
         # creates the logger file path
         logger_file_path = self.logger_path + "/" + logger_file_name
@@ -1667,7 +1676,12 @@ class PluginManager:
         stream_handler.setLevel(log_level)
 
         # creates the rotating file handler
-        rotating_file_handler = logging.handlers.RotatingFileHandler(logger_file_path, DEFAULT_LOGGING_FILE_MODE, DEFAULT_LOGGING_FILE_SIZE, DEFAULT_LOGGING_FILE_BACKUP_COUNT)
+        rotating_file_handler = logging.handlers.RotatingFileHandler(
+            logger_file_path,
+            DEFAULT_LOGGING_FILE_MODE,
+            DEFAULT_LOGGING_FILE_SIZE,
+            DEFAULT_LOGGING_FILE_BACKUP_COUNT
+        )
 
         # creates the broadcast handler so that the logging messages
         # may be sent to the world
@@ -1739,6 +1753,13 @@ class PluginManager:
             # starts the main loop
             self.main_loop()
         except BaseException, exception:
+            import traceback
+
+            print "Exception in user code:"
+            print '-'*60
+            traceback.print_exc(file=sys.stdout)
+            print '-'*60
+
             # handles the system exception
             self._handle_system_exception(exception)
 
@@ -2046,26 +2067,32 @@ class PluginManager:
         """
 
         # iterates over all the library paths in library paths
+        # to insert them into the appropriate interpreter
+        # structures for further loading of the modules
         for library_path in library_paths:
-            # if the path is not in the python lib
-            # path inserts the path into it
-            if not library_path in sys.path:
-                # normalizes the library path
-                library_path = os.path.normpath(library_path)
+            # in case the library path already exits in the
+            # system path no need to continue with the proces
+            if library_path in sys.path: continue
 
-                # inserts the library path in the system path
-                sys.path.insert(0, library_path)
+            # normalizes the library path and inserts the
+            # library path into the system path so that the
+            # modules from it may be imported
+            library_path = os.path.normpath(library_path)
+            sys.path.insert(0, library_path)
 
         # iterates over all the plugin paths in plugin paths
+        # to insert them into the appropriate interpreter
+        # structures for further loading of the modules
         for plugin_path in plugin_paths:
-            # if the path is not in the python lib
-            # path inserts the path into it
-            if not plugin_path in sys.path:
-                # normalizes the library path
-                plugin_path = os.path.normpath(plugin_path)
+            # in case the plugin path already exits in the
+            # system path no need to continue with the proces
+            if plugin_path in sys.path: continue
 
-                # inserts the plugin path in the system path
-                sys.path.insert(0, plugin_path)
+            # normalizes the plugin path and inserts the
+            # library path into the system path so that the
+            # modules from it may be imported
+            plugin_path = os.path.normpath(plugin_path)
+            sys.path.insert(0, plugin_path)
 
     def load_plugins(self, plugins):
         """
@@ -2095,7 +2122,8 @@ class PluginManager:
 
     def start_plugin_manager_plugins(self):
         """
-        Starts all the available plugin manager plugins, creating a singleton instance for each of them.
+        Starts all the available plugin manager plugins, creating a
+        singleton instance for each of them.
         """
 
         # retrieves all the plugin manager plugin classes available
@@ -2564,29 +2592,29 @@ class PluginManager:
         """
 
         # in case the daemon file path is not defined
-        if not self.daemon_file_path:
-            # returns immediately
-            return
+        # there's no need to notify the file, must return
+        # immediately to the caller method
+        if not self.daemon_file_path: return
 
-        # opens the file in write mode
+        # opens the file in write mode, so that it's possible
+        # to write the pid value into it
         file = open(self.daemon_file_path, "wb")
 
         try:
-            # in case the daemon pid is defined
-            if self.daemon_pid:
-                # sets the pid as the daemon pid
-                pid = self.daemon_pid
-            else:
-                # retrieves the current process pid
-                pid = os.getpid()
+            # in case the daemon pid is defined sets the
+            # pid value with this value
+            if self.daemon_pid: pid = self.daemon_pid
+            # otherwise must retrieve the current process
+            # pid value and use it instead
+            else: pid = os.getpid()
 
-            # converts the pid to string
+            # converts the pid to string and write it into
+            # the file (notification process)
             pid_string = str(pid)
-
-            # writes the pid string to the file
             file.write(pid_string)
         finally:
-            # closes the file
+            # closes the file, no firther writing is allowed
+            # on this file (avoids leaks)
             file.close()
 
     def execute_command(self):
@@ -2790,15 +2818,15 @@ class PluginManager:
         if self.exists_plugin_manager_plugin_execute_conditional("_load_plugin", [plugin, type, loading_type]):
             return self.plugin_manager_plugin_execute_conditional("_load_plugin", [plugin, type, loading_type])
 
-        # in case the return from the handler of the initialization of the plugin load returns false
+        # in case the return from the handler of the initialization
+        # of the plugin load returns in error must propagate this
+        # error to the caller method
         if not self.plugin_manager_plugin_execute("init_plugin_load", [plugin, type, loading_type]):
-            # returns false
             return False
 
-        # in case the plugin is loaded
-        if plugin.is_loaded():
-            # returns true
-            return True
+        # in case the plugin is already loaded no need
+        # to load it again, returns in success
+        if plugin.is_loaded(): return True
 
         # in case the plugin is lazy loaded
         if (plugin.loading_type == LAZY_LOADING_TYPE and not type == FULL_LOAD_TYPE) and plugin.is_lazy_loaded():
@@ -2813,10 +2841,9 @@ class PluginManager:
             # returns false
             return False
 
-        # in case a type is defined
-        if type:
-            # prints an info message
-            self.info("Loading of type: '%s'" % (type))
+        # in case a type is defined, prints an information
+        # message about this loading type
+        if type: self.info("Loading of type: '%s'" % (type))
 
         # in case the plugin to be loaded is either of type main or thread
         if loading_type == MAIN_TYPE or loading_type == THREAD_TYPE:
@@ -4742,10 +4769,13 @@ class PluginManager:
         @param message: The debug message to be added to the logger.
         """
 
-        # formats the logger message
-        logger_message = self.format_logger_message(message)
+        # in case no logger is defined it's not possible
+        # to print the message as a debug
+        if not self.logger: return
 
-        # prints the debug message
+        # formats the logger message and prints it
+        # as a debu message into the logger
+        logger_message = self.format_logger_message(message)
         self.logger.debug(logger_message)
 
     def info(self, message):
@@ -4756,10 +4786,13 @@ class PluginManager:
         @param message: The info message to be added to the logger.
         """
 
-        # formats the logger message
-        logger_message = self.format_logger_message(message)
+        # in case no logger is defined it's not possible
+        # to print the message as an info
+        if not self.logger: return
 
-        # prints the info message
+        # formats the logger message and prints it
+        # as an info message into the logger
+        logger_message = self.format_logger_message(message)
         self.logger.info(logger_message)
 
     def warning(self, message):
@@ -4770,10 +4803,13 @@ class PluginManager:
         @param message: The warning message to be added to the logger.
         """
 
-        # formats the logger message
-        logger_message = self.format_logger_message(message)
+        # in case no logger is defined it's not possible
+        # to print the message as a warning
+        if not self.logger: return
 
-        # prints the warning message
+        # formats the logger message and prints it
+        # as a warning message into the logger
+        logger_message = self.format_logger_message(message)
         self.logger.warning(logger_message)
 
         # logs the stack trace
@@ -4787,10 +4823,13 @@ class PluginManager:
         @param message: The error message to be added to the logger.
         """
 
-        # formats the logger message
-        logger_message = self.format_logger_message(message)
+        # in case no logger is defined it's not possible
+        # to print the message as an error
+        if not self.logger: return
 
-        # prints the error message
+        # formats the logger message and prints it
+        # as an error message into the logger
+        logger_message = self.format_logger_message(message)
         self.logger.error(logger_message)
 
         # logs the stack trace
@@ -4845,10 +4884,9 @@ class PluginManager:
         Prints all the loaded plugins descriptions.
         """
 
-        # iterates over all the plugin instances
-        for plugin in self.plugin_instances:
-            # prints the plugin
-            print plugin
+        # iterates over all the plugin instances to
+        # print their default description
+        for plugin in self.plugin_instances: print plugin
 
     def get_prefix_paths(self):
         """
