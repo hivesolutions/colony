@@ -5740,6 +5740,7 @@ class PackageDependency(Dependency):
                 # tries to find (import) the given module
                 __import__(package_import_name)
             except ImportError:
+                if not manager.logger: return False
                 manager.logger.info("Package '%s' v%s does not exist in your system" % (package_name, package_version))
                 if not package_url == "none":
                     manager.logger.info("You can download the package at %s" % package_url)
@@ -5751,6 +5752,7 @@ class PackageDependency(Dependency):
                     # tries to find (import) the given module
                     __import__(package_import_name_item)
                 except ImportError:
+                    if not manager.logger: return False
                     manager.logger.info("Package '%s' v%s does not exist in your system" % (package_name, package_version))
                     if not package_url == "none":
                         manager.logger.info("You can download the package at %s" % package_url)
