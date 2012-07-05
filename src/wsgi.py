@@ -72,6 +72,10 @@ plugin_manager = colony.base.system.PluginManager(
 return_code = plugin_manager.load_system()
 
 def application(environ, start_response):
+    # retrieves the wsgi plugin and uses it to handle
+    # the wsgi request (request redirection) any inner
+    # exception should be handled and an error http
+    # message should be returned to the end user
     wsgi_plugin = plugin_manager.get_plugin_by_id("pt.hive.colony.plugins.wsgi")
     return wsgi_plugin.handle(environ, start_response)
 
