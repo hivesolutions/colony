@@ -40,7 +40,11 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import sys
 import glob
+import atexit
 
+# retrieves the base path for the current file and uses
+# it to insert it in the current system path in case it's
+# not already present (required for module importing)
 base_path = os.path.dirname(__file__)
 if not base_path in sys.path: sys.path.insert(0, base_path)
 
@@ -78,6 +82,14 @@ def application(environ, start_response):
     # message should be returned to the end user
     wsgi_plugin = plugin_manager.get_plugin_by_id("pt.hive.colony.plugins.wsgi")
     return wsgi_plugin.handle(environ, start_response)
+
+@atexit.register
+def stop_thread():
+    # unloads the plugin manager system releasing all
+    # the used resources and killing all the threads
+    # this should be enough to return the control to
+    # the embedding process
+    plugin_manager.unload_system()
 
 if __name__ == "__main__":
     import wsgiref.simple_server
