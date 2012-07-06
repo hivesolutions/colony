@@ -1753,13 +1753,6 @@ class PluginManager:
             # starts the main loop
             self.main_loop()
         except BaseException, exception:
-            import traceback
-
-            print "Exception in user code:"
-            print '-'*60
-            traceback.print_exc(file=sys.stdout)
-            print '-'*60
-
             # handles the system exception
             self._handle_system_exception(exception)
 
@@ -1786,10 +1779,9 @@ class PluginManager:
             raise colony.base.exceptions.ColonyException("trying to unload uninitialized plugin system")
 
         # creates the kill system timer, to kill the system
-        # if it hangs in shutdown
+        # if it hangs in shutdown and starts it so that the
+        # system will be able to kill itself after a timeout
         self.kill_system_timer = threading.Timer(DEFAULT_UNLOAD_SYSTEM_TIMEOUT, self._kill_system_timeout)
-
-        # starts the kill system timer
         self.kill_system_timer.start()
 
         # iterates over all the plugin instances
