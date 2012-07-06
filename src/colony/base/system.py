@@ -917,10 +917,8 @@ class Plugin(object):
         @return: The result of the metadata test (if the plugin contains metadata or not).
         """
 
-        if hasattr(self, "metadata_map"):
-            return True
-        else:
-            return False
+        if hasattr(self, "metadata_map"): return True
+        else: return False
 
     def contains_metadata_key(self, metadata_key):
         """
@@ -933,12 +931,9 @@ class Plugin(object):
         """
 
         if self.contains_metadata():
-            if metadata_key in self.metadata_map:
-                return True
-            else:
-                return False
-        else:
-            return False
+            if metadata_key in self.metadata_map: return True
+            else: return False
+        else: return False
 
     def get_metadata(self):
         """
@@ -948,8 +943,7 @@ class Plugin(object):
         @return: The metadata of the plugin.
         """
 
-        if self.contains_metadata():
-            return self.metadata_map
+        if self.contains_metadata(): return self.metadata_map
 
     def get_metadata_key(self, metadata_key):
         """
@@ -961,8 +955,7 @@ class Plugin(object):
         @return: The metadata key of the plugin.
         """
 
-        if self.contains_metadata_key(metadata_key):
-            return self.metadata_map[metadata_key]
+        if self.contains_metadata_key(metadata_key): return self.metadata_map[metadata_key]
 
     def treat_exception(self, exception):
         """
@@ -1267,10 +1260,15 @@ class PluginManager:
     """ The initialization complete flag """
 
     init_complete_handlers = []
-    """ The list of handlers to be called at the end of the plugin manager initialization """
+    """ The list of handlers to be called at the end of
+    the plugin manager initialization """
 
     main_loop_active = True
     """ The boolean value for the main loop activation """
+
+    allow_threads = True
+    """ The boolean value indicating if threads are allowed
+    to be created for the context of the plugin manager """
 
     layout_mode = "default"
     """ The layout mode used in the plugin loading """
@@ -1282,7 +1280,8 @@ class PluginManager:
     """ The name of the plugin manager container """
 
     daemon_pid = None
-    """ The pid of the daemon process running the instance of plugin manager  """
+    """ The pid of the daemon process running the instance
+    of plugin manager  """
 
     daemon_file_path = None
     """ The file path to the daemon file, for information control """
@@ -1291,7 +1290,8 @@ class PluginManager:
     """ The command to be executed on start (script mode) """
 
     prefix_paths = []
-    """ The list of manager path relative paths to be used as reference for sub-projects """
+    """ The list of manager path relative paths to be used as
+    reference for sub-projects """
 
     configuration_path = DEFAULT_CONFIGURATION_PATH
     """ The current configuration path """
@@ -1401,7 +1401,7 @@ class PluginManager:
     event_plugins_fired_loaded_map = {}
     """ The map with the plugin associated with the name of the event fired """
 
-    def __init__(self, manager_path = "", logger_path = "log", library_paths = [], meta_paths = [], plugin_paths = [], platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, loop = True, layout_mode = "default", run_mode = "default", container = "default", prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+    def __init__(self, manager_path = "", logger_path = "log", library_paths = [], meta_paths = [], plugin_paths = [], platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, loop = True, threads = True, layout_mode = "default", run_mode = "default", container = "default", prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
         """
         Constructor of the class.
 
@@ -1427,6 +1427,9 @@ class PluginManager:
         @param stop_on_cycle_error: The boolean value for the stop on cycle error.
         @type loop: bool
         @param loop: The boolean value for the main loop activation.
+        @type threads: bool
+        @param threads: The boolean indicating if threads may be used in the
+        manager for both plugins and control.
         @type layout_mode: String
         @param layout_mode: The layout mode used in the plugin loading.
         @type run_mode: String
@@ -1458,6 +1461,7 @@ class PluginManager:
         self.init_complete_handlers = init_complete_handlers
         self.stop_on_cycle_error = stop_on_cycle_error
         self.main_loop_active = loop
+        self.allow_threads = threads
         self.layout_mode = layout_mode
         self.run_mode = run_mode
         self.container = container
@@ -1696,7 +1700,6 @@ class PluginManager:
         # file handlers (correctly formats the message)
         stream_handler.setFormatter(formatter)
         rotating_file_handler.setFormatter(formatter)
-
         broadcast_handler.setFormatter(formatter)
 
         # adds the stream and rotating file handlers
@@ -1803,10 +1806,9 @@ class PluginManager:
 
         # in case thread safety is requested
         if thread_safe:
-            # creates the exit event
+            # creates the exit event and adds it to the
+            # event queue to be executed in back thread
             exit_event = colony.base.util.Event(EXIT_VALUE)
-
-            # adds the exit event to the event queue
             self.add_event(exit_event)
         else:
             # unloads the thread based plugins
@@ -2517,34 +2519,34 @@ class PluginManager:
         Loads the set of startup plugins, starting the system bootup process.
         """
 
-        # in case an execution command is defined
-        if self.execution_command:
-            # returns immediately
-            return
+        # in case an execution command is defined must
+        # return immeditely because startup plugins are
+        # not mean to be loaded in execution command
+        if self.execution_command: return
 
         # iterates over all the plugin instances
         for plugin in self.plugin_instances:
             # searches for the startup type in the plugin capabilities
-            if STARTUP_TYPE in plugin.capabilities:
-                # loads the plugin
-                self._load_plugin(plugin, None, STARTUP_TYPE)
+            # in case the plugins contains such capability must load
+            # it because it's considered to be a startup plugin
+            if STARTUP_TYPE in plugin.capabilities: self._load_plugin(plugin, None, STARTUP_TYPE)
 
     def load_main_plugins(self):
         """
         Loads the set of main plugins, starting the system bootup process.
         """
 
-        # in case an execution command is defined
-        if self.execution_command:
-            # returns immediately
-            return
+        # in case an execution command is defined must
+        # return immeditely because main plugins are
+        # not mean to be loaded in execution command
+        if self.execution_command: return
 
         # iterates over all the plugin instances
         for plugin in self.plugin_instances:
             # searches for the main type in the plugin capabilities
-            if MAIN_TYPE in plugin.capabilities:
-                # loads the plugin
-                self._load_plugin(plugin, None, MAIN_TYPE)
+            # in case the plugins contains such capability must load
+            # it because it's considered to be a main plugin
+            if MAIN_TYPE in plugin.capabilities: self._load_plugin(plugin, None, MAIN_TYPE)
 
     def install_signal_handlers(self):
         """
@@ -2789,9 +2791,11 @@ class PluginManager:
     def _load_plugin(self, plugin, type = None, loading_type = None):
         """
         Loads the given plugin with the given type and loading type.
-        The loading of the plugin consists in the test for pre-conditions (dependencies),
-        creation of thread (if necessary), loading (if necessary) and injection of dependencies, loading
-        of the plugin resources and loading (if necessary) and injection of allowed plugins.
+        The loading of the plugin consists in the test for pre-conditions
+        (dependencies),
+        creation of thread (if necessary), loading (if necessary) and
+        injection of dependencies, loading  of the plugin resources and
+        loading (if necessary) and injection of allowed plugins.
 
         @type plugin: Plugin
         @param plugin: The plugin to be loaded.
@@ -2839,6 +2843,7 @@ class PluginManager:
 
         # in case the plugin to be loaded is either of type main or thread
         if loading_type == MAIN_TYPE or loading_type == THREAD_TYPE:
+
             if plugin.id in self.plugin_threads_map:
                 # retrieves the available thread for the plugin
                 plugin_thread = self.plugin_threads_map[plugin.id]
@@ -3150,6 +3155,14 @@ class PluginManager:
         plugin_version = plugin.version
 
         # tests the plugin against the current platform
+        if not self.test_threads(plugin):
+            # prints an info message
+            self.info("Current thread permissions is not compatible with plugin '%s' v%s" % (plugin_name, plugin_version))
+
+            # returns false
+            return False
+
+        # tests the plugin against the current platform
         if not self.test_platform_compatible(plugin):
             # prints an info message
             self.info("Current platform (%s) not compatible with plugin '%s' v%s" % (self.platform, plugin_name, plugin_version))
@@ -3222,6 +3235,41 @@ class PluginManager:
         else:
             # returns false
             return False
+
+    def test_threads(self, plugin):
+        """
+        Tests if the current thread permissions, allow the give plugin to
+        be executed in the current environment.
+
+        This test is only executed if the current manager does not allows
+        threads creation and execution.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to be tested for threads compatibility.
+        @rtype: bool
+        @return: The result of the plugin thread permissions check.
+        """
+
+        # in case the current environment does allows threads there's
+        # no need to run the text and returns immediately in success
+        if self.allow_threads: return True
+
+        # iterates over all the capabilities that imply the creation of
+        # threads in the current environment to teste the current plugin
+        # for the containing of such capabilities
+        for capability in ("main", "thread", "threads"):
+            # in case the plugin does not have the thread creation
+            # capability the test should continue othewrise the test fails
+            # and so a log message is printed and the function returns to
+            # the calling method in failure
+            if not capability in plugin.capabilities: continue
+            self.info("Threads not allowed for plugin '%s' v%s" % (plugin.name, plugin.version))
+            return False
+
+        # returns value as all the tests have passed with success
+        # the plugin should not create any threads as a consequence
+        # of its execution in the environment
+        return True
 
     def resolve_capabilities(self, plugin):
         """

@@ -168,7 +168,7 @@ def print_information():
     # prints some help information
     print HELP_TEXT
 
-def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, noloop = False, container = DEFAULT_STRING_VALUE, prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, loop = False, threads = True, container = DEFAULT_STRING_VALUE, prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -194,8 +194,10 @@ def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose
     @param run_mode: The run mode to be used by the plugin system.
     @type stop_on_cycle_error: bool
     @param stop_on_cycle_error: If the plugin system should stop on cycle error.
-    @type noloop: bool
-    @param noloop: If the plugin manager is going to run in a loop.
+    @type loop: bool
+    @param loop: If the plugin manager is going to run in a loop.
+    @type threads: bool
+    @param threads: If the plugin manager is going to allow threads.
     @type container: String
     @param container: The name of the plugin manager container.
     @type prefix_paths: List
@@ -249,7 +251,8 @@ def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose
         platform,
         [],
         stop_on_cycle_error,
-        not noloop,
+        loop,
+        threads,
         layout_mode,
         run_mode,
         container,
@@ -319,7 +322,8 @@ def main():
     verbose = False
     debug = False
     silent = False
-    noloop = False
+    loop = True
+    threads = True
     layout_mode = DEFAULT_STRING_VALUE
     run_mode = DEFAULT_STRING_VALUE
     container = DEFAULT_STRING_VALUE
@@ -346,7 +350,7 @@ def main():
         elif option in ("-s", "--silent"):
             silent = True
         elif option in ("-n", "--noloop"):
-            noloop = True
+            loop = False
         elif option in ("-l", "--layout_mode"):
             layout_mode = value
         elif option in ("-r", "--run_mode"):
@@ -412,7 +416,9 @@ def main():
         layout_mode,
         run_mode,
         stop_on_cycle_error,
-        noloop, container,
+        loop,
+        threads,
+        container,
         prefix_paths,
         daemon_pid,
         daemon_file_path,

@@ -76,6 +76,7 @@ plugin_manager = colony.base.system.PluginManager(
     plugin_paths = plugin_paths,
     meta_paths = meta_paths,
     loop = False,
+    threads = False,
     run_mode = "development"
 )
 return_code = plugin_manager.load_system()
