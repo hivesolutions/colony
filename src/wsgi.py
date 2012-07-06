@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
+__author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
 __version__ = "1.0.0"
@@ -87,6 +87,11 @@ def application(environ, start_response):
     # exception should be handled and an error http
     # message should be returned to the end user
     wsgi_plugin = plugin_manager.get_plugin_by_id("pt.hive.colony.plugins.wsgi")
+    _plugins = plugin_manager.get_all_loaded_plugins();
+    print _plugins
+    print "" 
+    print "================================================================="
+    print ""
     return wsgi_plugin.handle(environ, start_response)
 
 @atexit.register
