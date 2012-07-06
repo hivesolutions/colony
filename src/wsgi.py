@@ -84,7 +84,7 @@ def application(environ, start_response):
     return wsgi_plugin.handle(environ, start_response)
 
 @atexit.register
-def stop_thread():
+def unload_system():
     # unloads the plugin manager system releasing all
     # the used resources and killing all the threads
     # this should be enough to return the control to
