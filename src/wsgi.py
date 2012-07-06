@@ -41,6 +41,7 @@ import os
 import sys
 import glob
 import atexit
+import warnings
 
 # retrieves the base path for the current file and uses
 # it to insert it in the current system path in case it's
@@ -49,6 +50,10 @@ base_path = os.path.dirname(__file__)
 if not base_path in sys.path: sys.path.insert(0, base_path)
 
 import colony.base.system
+
+# registers the ignore flag in the deprecation warnings so that
+# no message with this kind of warning is printed (clean console)
+warnings.filterwarnings("ignore", category = DeprecationWarning)
 
 ############## REFACTOR #####################
 
