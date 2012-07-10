@@ -40,7 +40,7 @@ COLONY_DAEMON_FILE=/var/colony/colony.daemon
 COLONY_DAEMON_CHECK_TIMEOUT=120
 
 # launches the colony and redirects the standard output and error
-setsid $COLONY_PATH --configuration_file=$COLONY_CONFIGURATION 1> $LOG_FILE_STDOUT 2> $LOG_FILE_STDERR &
+setsid $COLONY_PATH --config_file=$COLONY_CONFIGURATION 1> $LOG_FILE_STDOUT 2> $LOG_FILE_STDERR &
 
 # saves the pid value
 PID_VALUE=$!
