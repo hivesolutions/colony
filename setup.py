@@ -180,6 +180,16 @@ class ProcessCommand(setuptools.Command):
         try: file_contents = file.read()
         finally: file.close()
 
+        # tries to find the separation string (token) in the
+        # file contents and if it's not possible to find it
+        # returns immediately to avoid problems
+        index = file_contents.find("### % END_INFORMATION % ###")
+        if index == -1: return
+
+        # sets the file contents as the sub string comprehending
+        # the contents until the separation string
+        file_contents = file_contents[:index]
+
         # retrieves the current datetime and formats it
         # according to the two pre-defined formats
         current_datetime = datetime.datetime.utcnow()
