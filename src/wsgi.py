@@ -43,6 +43,15 @@ import glob
 import atexit
 import warnings
 
+CONFIG_FILE_ENV = "COLONY_CONFIG_FILE"
+""" The name of the environment variable to be used
+to retrieve the path to the configuration file """
+
+DEFAULT_CONFIG_PATH = "config/python/development.py"
+""" The path to the default configuration file to be
+used in case no path is specified using the environment
+variable bases strategy """
+
 # retrieves the base path for the current file and uses
 # it to insert it in the current system path in case it's
 # not already present (required for module importing)
@@ -55,16 +64,49 @@ import colony.base.system
 # no message with this kind of warning is printed (clean console)
 warnings.filterwarnings("ignore", category = DeprecationWarning)
 
-############## REFACTOR #####################
+# tries to retrieve the configuration file from the environment
+# variable associated in case it fails uses the default configuration
+# file path then joins the "relative" file path to the base path
+# and resolves it as an absolute path
+config_file_path = os.environ.get(CONFIG_FILE_ENV, None) or DEFAULT_CONFIG_PATH
+config_file_path = os.path.join(base_path, config_file_path)
+config_file_path = os.path.abspath(config_file_path)
 
-plugin_paths = glob.glob(os.path.join(base_path, "../../*/src"))
-plugin_paths += glob.glob(os.path.join(base_path, "../../*/*/src"))
+# retrieves the name of the directory containing the configuration
+# files and adds it to the system path, so that it's possible to
+# import the configuration file module
+configuration_directory_path = os.path.dirname(config_file_path)
+sys.path.insert(0, configuration_directory_path)
+
+# retrieves the configuration file base path from the configuration
+# file path, this values is going to be used to retrieve the "final"
+# module name to be imported in the python interpreter
+config_file_base_path = os.path.basename(config_file_path)
+
+# retrieves the configuration module name and the configuration
+# module extension by splitting the configuration base path into
+# base name and extension and then imports the referring module
+configuration_module_name, _configuration_module_extension = os.path.splitext(config_file_base_path)
+colony_configuration = __import__(configuration_module_name)
+
+# initializes the lists that will contain both the path to the
+# plugins and the paths to the configuration (meta) files
+plugin_paths = []
+meta_paths = []
+
+# iterates over each of the plugin paths to resolve them using
+# the glob based approach then "takes" the final list into a
+# final step of absolute path normalization
+for plugin_path in colony_configuration.plugin_path_list:
+    plugin_paths += glob.glob(os.path.join(base_path, plugin_path))
 plugin_paths = [os.path.abspath(plugin_path) for plugin_path in plugin_paths]
 
-meta_paths = glob.glob(os.path.join(base_path, "../../*config/*"))
+# iterates over each of the meta paths to resolve them using
+# the glob based approach then "takes" the final list into a
+# final step of absolute path normalization
+for meta_path in colony_configuration.meta_path_list:
+    meta_paths += glob.glob(os.path.join(base_path, meta_path))
 meta_paths = [os.path.abspath(meta_path) for meta_path in meta_paths]
-
-############## REFACTOR #####################
 
 # creates the plugin manager instance with the current file path
 # as the manager path and the corresponding relative log path,
@@ -88,11 +130,6 @@ def application(environ, start_response):
     # exception should be handled and an error http
     # message should be returned to the end user
     wsgi_plugin = plugin_manager.get_plugin_by_id("pt.hive.colony.plugins.wsgi")
-    _plugins = plugin_manager.get_all_loaded_plugins();
-    print _plugins
-    print ""
-    print "================================================================="
-    print ""
     return wsgi_plugin.handle(environ, start_response)
 
 @atexit.register
