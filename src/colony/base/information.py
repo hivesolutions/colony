@@ -57,7 +57,7 @@ RELEASE_DATE_TIME = "%(date_time)s"
 ENVIRONMENT_VERSION = str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "." + str(sys.version_info[2]) + "-" + str(sys.version_info[3])
 """ The environment version """
 
-ENVIRONMENT = "python-" + sys.platform + "-" + ENVIRONMENT_VERSION
+ENVIRONMENT = "python-" + sys.platform + " " + ENVIRONMENT_VERSION
 """ The environment """
 
 __GENERATED__ = "%(generated)s"
