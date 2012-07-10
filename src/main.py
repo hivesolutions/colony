@@ -58,7 +58,7 @@ USAGE = "Help:\n\
 --container[-c]=default - sets the container to be used\n\
 --daemon_pid[-o]=(DAEMON_PID) - sets the pid of the parent daemon\n\
 --attributes[-a]=... - sets the attributes to be used\n\
---configuration_file[-f]=(CONFIGURATION_FILE) - sets the file path to the configuration file\n\
+--config_file[-f]=(CONFIGURATION_FILE) - sets the file path to the configuration file\n\
 --daemon_file[-d]=(DAEMON_FILE) - sets the file path to the daemon file\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the manager\n\
 --logger_dir[-g]=(LOGGER_DIR) - sets the logger directory to be used by the manager for the logger\n\
@@ -295,7 +295,7 @@ def main():
                  "container=",
                  "daemon_pid=",
                  "attributes=",
-                 "configuration_file=",
+                 "config_file=",
                  "daemon_file=",
                  "manager_dir=",
                  "logger_dir=",
@@ -329,7 +329,7 @@ def main():
     container = DEFAULT_STRING_VALUE
     daemon_pid = None
     attributes_map = None
-    configuration_file_path = DEFAULT_CONFIGURATION_FILE_PATH_VALUE
+    config_file_path = DEFAULT_CONFIGURATION_FILE_PATH_VALUE
     daemon_file_path = None
     manager_path = os.environ.get(COLONY_HOME_ENVIRONMENT, DEFAULT_MANAGER_PATH_VALUE).decode(file_system_encoding)
     logger_path = DEFAULT_LOGGER_PATH_VALUE
@@ -361,8 +361,8 @@ def main():
             daemon_pid = int(value)
         elif option in ("-a", "--attributes"):
             attributes_map = parse_attributes(value)
-        elif option in ("-f", "--configuration_file"):
-            configuration_file_path = value.decode(file_system_encoding)
+        elif option in ("-f", "--config_file"):
+            config_file_path = value.decode(file_system_encoding)
         elif option in ("-d", "--daemon_file"):
             daemon_file_path = value.decode(file_system_encoding)
         elif option in ("-m", "--manager_dir"):
@@ -382,7 +382,7 @@ def main():
 
     # parses the configuration options, retrieving the various values that
     # control the execution of the plugin system
-    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, prefix_paths, daemon_file_path, logger_path, library_path, meta_path, plugin_path = parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, meta_path, plugin_path, manager_path)
+    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, prefix_paths, daemon_file_path, logger_path, library_path, meta_path, plugin_path = parse_configuration(config_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, meta_path, plugin_path, manager_path)
 
     # configures the system using the layout mode, the run mode
     # and the  manager path
@@ -458,13 +458,13 @@ def parse_attributes(attributes_string):
     # returns the attributes map
     return attributes_map
 
-def parse_configuration(configuration_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, meta_path, plugin_path, manager_path):
+def parse_configuration(config_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, meta_path, plugin_path, manager_path):
     """
     Parses the configuration using the given values as default values.
     The configuration file used is given as a parameter to the function.
 
-    @type configuration_file_path: Sting
-    @param configuration_file_path: The path to the configuration file.
+    @type config_file_path: Sting
+    @param config_file_path: The path to the configuration file.
     @type verbose: bool
     @param verbose: If the log is going to be of type verbose.
     @type debug: bool
@@ -493,7 +493,7 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
 
     # retrieves the configuration directory from the configuration
     # file path (the directory is going to be used to include the module)
-    configuration_directory_path = os.path.dirname(configuration_file_path)
+    configuration_directory_path = os.path.dirname(config_file_path)
 
     # in case the configuration directory path is not an absolute path
     if not os.path.isabs(configuration_directory_path):
@@ -505,12 +505,12 @@ def parse_configuration(configuration_file_path, verbose, debug, silent, layout_
     configuration_directory_path and sys.path.insert(0, configuration_directory_path)
 
     # retrieves the configuration file base path from the configuration file path
-    configuration_file_base_path = os.path.basename(configuration_file_path)
+    config_file_base_path = os.path.basename(config_file_path)
 
     # retrieves the configuration module name and the configuration
     # module extension by splitting the configuration base path into
     # base name and extension and then imports the referring module
-    configuration_module_name, _configuration_module_extension = os.path.splitext(configuration_file_base_path)
+    configuration_module_name, _configuration_module_extension = os.path.splitext(config_file_base_path)
     colony_configuration = __import__(configuration_module_name)
 
     # retrieves the colony configuration contents
