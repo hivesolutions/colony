@@ -1,5 +1,6 @@
 {
     "name" : "colony",
     "version" : "1.0.1",
+    "release" : "101",
     "build" : "final"
 }

@@ -232,36 +232,36 @@ class System(object):
     plugin system classes may inherit to obtain some
     generalized behavior on the plugin access.
     """
-    
+
     plugin = None
     """ The reference to the plugin that "owns" this
     system object, this may be used to reference the
     top level manager functions """
-    
+
     def __init__(self, plugin):
         """
         Constructor of the class, received the "owner"
         plugin as the first argument to be stored for
         latter usage.
-        
+
         @type plugin: Plugin
         @param plugin: The owner plugin for the system
         object to be created.
         """
-        
+
         self.plugin = plugin
-        
+
     def get_manager(self):
         """
         Retrieves the plugin manager reference associated
         with the current system, this method call depends
         on the definition of the owner plugin.
-        
+
         @rtype: PluginManager
         @return: The plugin manager instance associated with
         the current execution context.
         """
-        
+
         return self.plugin.manager
 
 class Plugin(object):

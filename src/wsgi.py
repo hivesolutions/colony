@@ -90,7 +90,7 @@ def application(environ, start_response):
     wsgi_plugin = plugin_manager.get_plugin_by_id("pt.hive.colony.plugins.wsgi")
     _plugins = plugin_manager.get_all_loaded_plugins();
     print _plugins
-    print "" 
+    print ""
     print "================================================================="
     print ""
     return wsgi_plugin.handle(environ, start_response)

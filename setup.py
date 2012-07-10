@@ -191,6 +191,10 @@ class ProcessCommand(setuptools.Command):
         symbols["date"] = current_date_string
         symbols["date_time"] = current_date_time_string
 
+        # sets the generated flag in the symbols table to indicate
+        # that the symbols have been already generated (performance)
+        symbols["generated"] = "generated"
+
         # decodes the file contents and then runs the formatting
         # engine on top of it so that the symbols are exposed
         # to the string then re-encodes it back to be written
