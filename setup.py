@@ -158,7 +158,7 @@ class ProcessCommand(setuptools.Command):
         self.cwd = os.getcwd()
 
     def run(self):
-        self._replace("src/colony/base/plugin_system_information.py", "src/colony.json")
+        self._replace("src/colony/base/information.py", "src/colony.json")
 
     def _replace(self, file_path, json_path):
         # tries to import the json module, it may
@@ -193,7 +193,7 @@ class ProcessCommand(setuptools.Command):
 
         # sets the generated flag in the symbols table to indicate
         # that the symbols have been already generated (performance)
-        symbols["generated"] = "generated"
+        symbols["generated"] = "1"
 
         # decodes the file contents and then runs the formatting
         # engine on top of it so that the symbols are exposed
