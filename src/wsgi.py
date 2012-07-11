@@ -142,5 +142,6 @@ def unload_system():
 
 if __name__ == "__main__":
     import wsgiref.simple_server
-    httpd = wsgiref.simple_server.make_server("", 8000, application)
+    httpd = wsgiref.simple_server.make_server("0.0.0.0", 8080, application)
+    print >> sys.stderr, "Running on http://0.0.0.0:8080/" 
     httpd.serve_forever()
