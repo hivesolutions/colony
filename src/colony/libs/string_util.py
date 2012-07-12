@@ -93,7 +93,7 @@ def xor_string_value(first_string, second_string):
     # returns the xor result
     return xor_result
 
-def convert_underscore(string_value):
+def to_underscore(string_value):
     """
     Converts the given camel cased string value into
     the underscore notation.
@@ -118,7 +118,7 @@ def convert_underscore(string_value):
     # returns the string value in underscore notation
     return string_value_underscore
 
-def convert_camelcase(string_value):
+def to_camelcase(string_value):
     """
     Converts the given underscore notation string value into
     the camel case notation.
