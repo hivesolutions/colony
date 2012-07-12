@@ -57,6 +57,7 @@ import __builtin__
 import logging.handlers
 
 import colony.libs.path_util
+import colony.libs.string_util
 import colony.libs.version_util
 import colony.libs.string_buffer_util
 
@@ -1368,13 +1369,15 @@ class PluginManager:
     """ The manager base path for logger """
 
     library_paths = None
-    """ The set of paths for the external libraries plugins """
+    """ The set of paths for the external libraries
+    plugins """
 
     plugin_paths = None
     """ The set of paths for the loaded plugins """
 
     kill_system_timer = None
-    """ The timer used to kill the system in extreme situations """
+    """ The timer used to kill the system in
+    extreme situations """
 
     referred_modules = []
     """ The referred modules """
@@ -1383,13 +1386,16 @@ class PluginManager:
     """ The loaded plugins """
 
     loaded_plugins_map = {}
-    """ The map with classes associated with strings containing the id of the plugin """
+    """ The map with classes associated with strings
+    containing the id of the plugin """
 
     loaded_plugins_id_map = {}
-    """ The map with the id of the plugin associated with the plugin id """
+    """ The map with the id of the plugin associated
+    with the plugin id """
 
     id_loaded_plugins_map = {}
-    """ The map with the plugin id associated with the id of the plugin """
+    """ The map with the plugin id associated with
+    the id of the plugin """
 
     loaded_plugins_descriptions = []
     """ The descriptions of the loaded plugins """
@@ -1398,46 +1404,63 @@ class PluginManager:
     """ The available plugin classes """
 
     plugin_classes_map = {}
-    """ The map with classes associated with strings containing the id of the plugin """
+    """ The map with classes associated with strings
+    containing the id of the plugin """
 
     plugin_instances = []
     """ The instances of the created plugins """
 
     plugin_instances_map = {}
-    """ The map with instances associated with strings containing the id of the plugin """
+    """ The map with instances associated with strings
+    containing the id of the plugin """
+
+    plugin_names_map = {}
+    """ The map with instances associated with strings
+    containing the name of the plugin, this name is extracted
+    from the original plugin file name (prefix) """
 
     plugin_dirs_map = {}
-    """ The map associating directories with the id of the plugin """
+    """ The map associating directories with th
+     id of the plugin """
 
     capabilities_plugin_instances_map = {}
-    """ The map associating capabilities with plugin instances """
+    """ The map associating capabilities with
+    plugin instances """
 
     capabilities_sub_capabilities_map = {}
-    """ The map associating capabilities with sub capabilities """
+    """ The map associating capabilities with
+    sub capabilities """
 
     plugin_threads = []
     """ The list of active running threads """
 
     plugin_threads_map = {}
-    """ The map associating the active running threads with the id of the plugin """
+    """ The map associating the active running threads
+    with the id of the plugin """
 
     plugin_dependent_plugins_map = {}
-    """ The map associating the plugins that depend on the plugin with the id of the plugin """
+    """ The map associating the plugins that
+    depend on the plugin with the id of the plugin """
 
     plugin_allowed_plugins_map = {}
-    """ The map associating the plugins that allow the plugin with the id of the plugin """
+    """ The map associating the plugins that allow
+    the plugin with the id of the plugin """
 
     capabilities_plugins_map = {}
-    """ The map associating the capabilities with the the plugin that supports the capability """
+    """ The map associating the capabilities with
+    the the plugin that supports the capability """
 
     diffusion_scope_loaded_plugins_map = {}
-    """ The map associating the diffusion scope with the loaded plugins that exist in the scope """
+    """ The map associating the diffusion scope
+    with the loaded plugins that exist in the scope """
 
     deleted_plugin_classes = []
-    """ The list containing the classes for the deleted plugins """
+    """ The list containing the classes for
+    the deleted plugins """
 
     event_plugins_fired_loaded_map = {}
-    """ The map with the plugin associated with the name of the event fired """
+    """ The map with the plugin associated with
+    the name of the event fired """
 
     def __init__(self, manager_path = "", logger_path = "log", library_paths = [], meta_paths = [], plugin_paths = [], platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, loop = True, threads = True, layout_mode = "default", run_mode = "default", container = "default", prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
         """
@@ -1524,6 +1547,7 @@ class PluginManager:
         self.plugin_classes_map = {}
         self.plugin_instances = []
         self.plugin_instances_map = {}
+        self.plugin_names_map = {}
         self.plugin_dirs_map = {}
         self.capabilities_plugin_instances_map = {}
         self.capabilities_sub_capabilities_map = {}
@@ -2202,10 +2226,9 @@ class PluginManager:
         @param plugin: The plugin to start.
         """
 
-        # retrieves the plugin id
+        # retrieves the plugin id and description for the plugin
+        # to be started (main identification values)
         plugin_id = plugin.id
-
-        # retrieves the plugin description
         plugin_description = plugin.description
 
         # instantiates the plugin to create the singleton plugin instance
@@ -2218,13 +2241,19 @@ class PluginManager:
         file_system_encoding = sys.getfilesystemencoding()
 
         # decodes the plugin path using the file system encoding
+        # and retrieves the absolute path from this value
         plugin_path = plugin_path.decode(file_system_encoding)
-
-        # retrieves the absolute path to the plugin file
         absolute_plugin_path = os.path.abspath(plugin_path)
 
         # retrieves the path to the directory containing the plugin file
         plugin_dir = os.path.dirname(absolute_plugin_path)
+
+        # retrieves the name of the plugin as the name of the class converted
+        # to the underscore version of it and then removes the last part of
+        # the string that contains the plugin suffix (this plugin name value
+        # will be used for rapid retrieval of the plugin)
+        plugin_name = colony.libs.string_util.to_underscore(plugin.__name__)[:-7]
+        plugin._name = plugin_name
 
         # starts all the plugin manager structures related with plugins
         self.loaded_plugins.append(plugin)
@@ -2234,6 +2263,7 @@ class PluginManager:
         self.loaded_plugins_descriptions.append(plugin_description)
         self.plugin_instances.append(plugin_instance)
         self.plugin_instances_map[plugin_id] = plugin_instance
+        self.plugin_names_map[plugin_name] = plugin_instance
         self.plugin_dirs_map[plugin_id] = plugin_dir
 
         # sets the plugin instance in the diffusion scope loaded plugins map
@@ -2293,11 +2323,12 @@ class PluginManager:
         @param plugin: The plugin to be removed from the plugin system.
         """
 
-        # retrieves the plugin id
+        # retrieves the plugin id and version and then retrieves
+        # the "hidden" name value that should be computed at the
+        # plugin starting time
         plugin_id = plugin.id
-
-        # retrieves the plugin description
         plugin_description = plugin.description
+        plugin_nane = plugin._name
 
         # retrieves the temporary internal plugin id
         current_id = self.loaded_plugins_id_map[plugin_id]
@@ -2324,6 +2355,7 @@ class PluginManager:
         # removes the generic plugin instance resources
         self.plugin_instances.remove(plugin_instance)
         del self.plugin_instances_map[plugin_id]
+        del self.plugin_names_map[plugin_nane]
         del self.plugin_dirs_map[plugin_id]
 
         # unregisters the plugin capabilities in the plugin manager
@@ -3789,20 +3821,14 @@ class PluginManager:
         @return: The plugin with the given id and optionally version.
         """
 
-        # in case the plugin does not exists in the plugin
-        # instances map (not found)
-        if not plugin_id in self.plugin_instances_map:
-            # returns invalid
-            return None
-
         # retrieves the plugin from the plugin instances map for
         # the given plugin id
-        plugin = self.plugin_instances_map[plugin_id]
+        plugin = self.plugin_names_map.get(plugin_id, None)
+        plugin = self.plugin_instances_map.get(plugin_id, plugin)
 
         # in case the plugin version is specified and
         # it does not match the retrieved plugin version
         if plugin_version and not colony.libs.version_util.version_cmp(plugin.version, plugin_version):
-            # returns invalid
             return None
 
         # returns the plugin (instance)
