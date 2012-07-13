@@ -129,7 +129,7 @@ def application(environ, start_response):
     # the wsgi request (request redirection) any inner
     # exception should be handled and an error http
     # message should be returned to the end user
-    wsgi_plugin = plugin_manager.get_plugin_by_id("pt.hive.colony.plugins.wsgi")
+    wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
     return wsgi_plugin.handle(environ, start_response)
 
 @atexit.register
