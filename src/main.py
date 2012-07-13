@@ -42,6 +42,7 @@ import sys
 import glob
 import getopt
 import logging
+import warnings
 
 import colony.base.util
 import colony.base.system
@@ -141,6 +142,10 @@ DAEMON_FILE_PATH_VALUE = "daemon_file_path"
 
 LOGGER_PATH_VALUE = "logger_path"
 """ The logger path value """
+
+# registers the ignore flag in the deprecation warnings so that
+# no message with this kind of warning is printed (clean console)
+warnings.filterwarnings("ignore", category = DeprecationWarning)
 
 def usage():
     """
