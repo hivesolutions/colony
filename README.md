@@ -41,6 +41,12 @@ The best ways to get involved:
 2. Send pull requests for bug fixes or new features and improvements.
 3. Help make the [docs](http://getcolony.com/docs/colony/) better.
 
+## Extensions
+
+To find python native extension required for some of the plugins used the following sites:
+
+* Unofficial Windows Binaries for Python Extension Packages [link](http://www.lfd.uci.edu/~gohlke/pythonlibs/).
+
 ## Project information
 
 * Colony Base Source: https://github.com/hivesolutions/colony
