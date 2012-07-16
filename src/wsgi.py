@@ -42,6 +42,7 @@ import sys
 import glob
 import atexit
 import warnings
+import traceback
 
 CONFIG_FILE_ENV = "COLONY_CONFIG_FILE"
 """ The name of the environment variable to be used
@@ -63,6 +64,11 @@ import colony.base.system
 # registers the ignore flag in the deprecation warnings so that
 # no message with this kind of warning is printed (clean console)
 warnings.filterwarnings("ignore", category = DeprecationWarning)
+
+# tries to retrieve the run mode from the currently set
+# environment variables, in case of failure defaults to
+# the default value
+run_mode = os.environ.get("run_mode", "development")
 
 # tries to retrieve the configuration file from the environment
 # variable associated in case it fails uses the default configuration
@@ -120,17 +126,33 @@ plugin_manager = colony.base.system.PluginManager(
     meta_paths = meta_paths,
     loop = False,
     threads = False,
-    run_mode = "development"
+    run_mode = run_mode
 )
 return_code = plugin_manager.load_system()
 
 def application(environ, start_response):
-    # retrieves the wsgi plugin and uses it to handle
-    # the wsgi request (request redirection) any inner
-    # exception should be handled and an error http
-    # message should be returned to the end user
-    wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
-    return wsgi_plugin.handle(environ, start_response)
+    try:
+        # retrieves the wsgi plugin and uses it to handle
+        # the wsgi request (request redirection) any inner
+        # exception should be handled and an error http
+        # message should be returned to the end user
+        wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
+        sequence = wsgi_plugin.handle(environ, start_response)
+    except:
+        # in case the run mode is development the exception should
+        # be processed and a description sent to the output
+        if run_mode == "development":
+            # prints a description of the exception and then
+            # sends the traceback of it to the output
+            traceback.print_exc(file = sys.stdout)
+
+        # raises the exception back to the stack to be handled
+        # by the upper levels
+        raise
+
+    # returns the sequence object that may be used by the caller
+    # method to retrieve the contents of the message to be sent
+    return sequence
 
 @atexit.register
 def unload_system():
