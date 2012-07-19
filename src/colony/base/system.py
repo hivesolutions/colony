@@ -5365,6 +5365,32 @@ class PluginManager:
 
         return self.system_information_map
 
+    def is_development(self):
+        """
+        Checks if the current run mode in execution is of type
+        development, this check may be used to action conditional
+        code execution for debugging purposes.
+
+        @rtype: bool
+        @return: Value indicating if the current run mode is of
+        type development (for debugging purposes).
+        """
+
+        return self.run_mode == "development"
+
+    def is_production(self):
+        """
+        Checks if the current run mode in execution is of type
+        production, this check may be used to action conditional
+        code execution for strict execution.
+
+        @rtype: bool
+        @return: Value indicating if the current run mode is of
+        type production (for strict purposes).
+        """
+
+        return self.run_mode == "production"
+
     def echo(self, value = "echo"):
         """
         Returns an echo value.
