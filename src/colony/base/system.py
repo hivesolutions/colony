@@ -1347,6 +1347,11 @@ class PluginManager:
     plugin_manager_plugins_loaded = False
     """ The plugin manager plugins loaded flag """
 
+    plugins = None
+    """ The object that stores the references to all
+    the loaded plugins instances (singletons) indexed
+    in the object by their short name """
+
     current_id = 0
     """ The current id used for the plugin """
 
@@ -1535,6 +1540,7 @@ class PluginManager:
         self.uid = colony.base.util.get_timestamp_uid()
         self.condition = threading.Condition()
 
+        self.plugins = colony.base.util.Plugins()
         self.current_id = 0
         self.event_queue = []
         self.referred_modules = []
@@ -2255,6 +2261,10 @@ class PluginManager:
         plugin_name = colony.libs.string_util.to_underscore(plugin.__name__)[:-7]
         plugin._name = plugin_name
 
+        # sets the plugin instance reference in the plugins object, this will
+        # allow a direct attribute access to the plugins instance
+        setattr(self.plugins, plugin_name, plugin_instance)
+
         # starts all the plugin manager structures related with plugins
         self.loaded_plugins.append(plugin)
         self.loaded_plugins_map[plugin_id] = plugin
@@ -2328,7 +2338,7 @@ class PluginManager:
         # plugin starting time
         plugin_id = plugin.id
         plugin_description = plugin.description
-        plugin_nane = plugin._name
+        plugin_name = plugin._name
 
         # retrieves the temporary internal plugin id
         current_id = self.loaded_plugins_id_map[plugin_id]
@@ -2345,6 +2355,10 @@ class PluginManager:
             else:
                 self._unload_plugin(plugin_instance, FILE_REMOVED_TYPE)
 
+        # removes the previously set plugin instance reference from the
+        # plugins object (no further access allowed)
+        delattr(self.plugins, plugin_name)
+
         # removes all the plugin class resources
         self.loaded_plugins.remove(plugin)
         del self.loaded_plugins_map[plugin_id]
@@ -2355,7 +2369,7 @@ class PluginManager:
         # removes the generic plugin instance resources
         self.plugin_instances.remove(plugin_instance)
         del self.plugin_instances_map[plugin_id]
-        del self.plugin_names_map[plugin_nane]
+        del self.plugin_names_map[plugin_name]
         del self.plugin_dirs_map[plugin_id]
 
         # unregisters the plugin capabilities in the plugin manager

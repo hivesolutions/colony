@@ -89,7 +89,8 @@ class WaitInput:
 
 class Event:
     """
-    The class that describes an event to be used in a generic event queue.
+    The class that describes an event to be
+    used in a generic event queue.
     """
 
     event_name = None
@@ -110,6 +111,14 @@ class Event:
 
         self.event_name = event_name
         self.event_args = event_args
+
+class Plugins:
+    """
+    Class uses as storage for the various plugin
+    instance references indexed by their name.
+    """
+
+    pass
 
 def module_import(module_name):
     """
