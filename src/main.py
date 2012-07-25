@@ -157,6 +157,8 @@ def usage():
 def print_information():
     """
     Prints the system information for the command line.
+    This should be the first string presented to the end
+    used when running the system.
     """
 
     # print the branding information text
