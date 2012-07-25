@@ -2836,7 +2836,7 @@ class PluginManager:
         @type loading_type: String
         @param loading_type: The loading type to be used.
         @rtype: bool
-        @requires: The result of the plugin load.
+        @return: The result of the plugin load.
         """
 
         # in case the plugin is loaded
