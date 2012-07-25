@@ -5770,7 +5770,7 @@ class PluginDependency(Dependency):
         # in case the plugin is not present in the loaded
         # plugins map, returns immediately in failure, otherwise
         # retrieves the plugin from the map and then tries to fund
-        # out if there is a version missmatch
+        # out if there is a version mismatch
         if not plugin_id in manager.loaded_plugins_map: return False
         plugin = manager.loaded_plugins_map[plugin_id]
         if not colony.libs.version_util.version_cmp(plugin.version, plugin_version): return False
