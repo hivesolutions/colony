@@ -114,7 +114,7 @@ class Event:
 
 class Plugins:
     """
-    Class uses as storage for the various plugin
+    Class used as storage for the various plugin
     instance references indexed by their name.
     """
 

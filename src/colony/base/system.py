@@ -5083,8 +5083,8 @@ class PluginManager:
         Sets the timestamp value for the plugin manager.
 
         @type plugin_manager_timestamp: float
-        @param plugin_manager_timestamp: The value to set in the plugin manager as the timestamp,
-        used for loading time purposes.
+        @param plugin_manager_timestamp: The value to set in the plugin
+        manager as the timestamp, used for loading time purposes.
         """
 
         # in case no plugin manager timestamp is defined
