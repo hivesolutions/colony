@@ -271,7 +271,7 @@ class Plugin(object):
     The abstract plugin class.
     Contains most of the basic utility function and handlers
     used during the plugin file cycle.
-    
+
     All the concrete plugin implementation should inherit from
     this class so that they become compatible with the base
     colony specification for python.
@@ -5455,6 +5455,30 @@ class PluginManager:
         """
 
         return self.system_information_map
+
+    def get_uptime(self):
+        """
+        Retrieves a string describing the uptime value for
+        the currently loaded plugin system.
+
+        This string is a descriptive string in english language
+        and should be used for presentation to a non technical
+        user (not enough flexibility).
+
+        @rtype: String
+        @return: The string describing the current plugin system's
+        uptime in english language.
+        """
+
+        # calculates the delta (value) between the current time
+        # value and the saved load timestamp then uses it to create
+        # the uptime message to be returned
+        delta = time.time() - self.plugin_manager_timestamp
+        uptime = colony.libs.time_util.format_seconds_smart(delta, mode = "extended_simple")
+
+        # returns the message containing the description
+        # about the uptime for the current plugin system
+        return uptime
 
     def is_development(self):
         """
