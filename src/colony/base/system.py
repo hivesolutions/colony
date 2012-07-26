@@ -269,6 +269,12 @@ class System(object):
 class Plugin(object):
     """
     The abstract plugin class.
+    Contains most of the basic utility function and handlers
+    used during the plugin file cycle.
+    
+    All the concrete plugin implementation should inherit from
+    this class so that they become compatible with the base
+    colony specification for python.
     """
 
     id = "none"
