@@ -56,6 +56,7 @@ import __builtin__
 
 import logging.handlers
 
+import colony.libs.time_util
 import colony.libs.path_util
 import colony.libs.string_util
 import colony.libs.version_util
@@ -318,6 +319,11 @@ class Plugin(object):
     logger = None
     """ The logger used """
 
+    timestamp = None
+    """ The timestamp that stores the load time
+    of the last load operation, this value is not
+    set in case the plugin is not loaded """
+
     dependencies_loaded = []
     """ The list of dependency plugins loaded """
 
@@ -325,13 +331,16 @@ class Plugin(object):
     """ The list of allowed plugins loaded with capability """
 
     event_plugins_fired_loaded_map = {}
-    """ The map with the plugin associated with the name of the event fired """
+    """ The map with the plugin associated with
+    the name of the event fired """
 
     event_plugins_registered_loaded_map = {}
-    """ The map with the plugin associated with the name of the event registered """
+    """ The map with the plugin associated with
+    the name of the event registered """
 
     event_plugin_manager_registered_loaded_list = []
-    """ The list with all the events registered in the plugin manager """
+    """ The list with all the events registered
+    in the plugin manager """
 
     configuration_map = {}
     """ The configuration of the plugin """
@@ -424,6 +433,11 @@ class Plugin(object):
         # sets the error state as false
         self.error_state = False
 
+        # resets the (load) timestamp value to the current
+        # timestamp, with this value it will be possible to
+        # calculate the uptime for the plugin
+        self.timestamp = time.time()
+
         # generates the load plugin event
         self.manager.generate_event("plugin_manager.plugin.load_plugin", [self.id, self.version, self])
 
@@ -476,6 +490,10 @@ class Plugin(object):
 
         # sets the error state as false
         self.error_state = False
+
+        # restores the timestamp value to the original (unset)
+        # to avoid erroneous calculation of uptime values
+        self.timestamp = None
 
         # resets the dependencies loaded (no dependencies
         # are loaded in the plugin at the end of the unload)
@@ -833,11 +851,12 @@ class Plugin(object):
         # iterates over all the main modules
         for main_module in self.main_modules:
             # in case the main module is already loaded
+            # (contained in the system modules)
             if main_module in sys.modules:
-                # retrieves the main module value
+                # retrieves the main module value and used
+                # the reload function to trigger the reload
+                # of the module (symbol reloading)
                 main_module_value = sys.modules[main_module]
-
-                # reloads the main module
                 reload(main_module_value)
 
     def get_configuration_property(self, property_name):
@@ -1092,6 +1111,53 @@ class Plugin(object):
             self.id,
             self.version
         )
+
+    def get_author_name(self):
+        """
+        Retrieves the name component of the author attribute
+        for the current plugin.
+
+        This method excludes the email part of the author.
+
+        @rtype: String
+        @return: The name component of the author attribute for
+        the current plugin.
+        """
+
+        return self.author.split("<", 1)[0].strip()
+
+    def get_uptime(self):
+        """
+        Retrieves a string describing the uptime value for
+        the current plugin.
+
+        This string is a descriptive string in english language
+        and should be used for presentation to a non technical
+        user (not enough flexibility).
+
+        @rtype: String
+        @return: The string describing the current plugin uptime
+        in english language.
+        """
+
+        # in case the timestamp is not defined, it's not possible
+        # to calculate the uptime string so it must be unset
+        if self.timestamp == None:
+            # sets the uptime string as invalid (not possible)
+            # to calculate it
+            uptime = None
+        # otherwise the (load) timestamp is defined and the
+        # uptime string may be created using it
+        else:
+            # calculates the delta (value) between the current time
+            # value and the saved load timestamp then uses it to create
+            # the uptime message to be returned
+            delta = time.time() - self.timestamp
+            uptime = colony.libs.time_util.format_seconds_smart(delta, mode = "extended_simple")
+
+        # returns the message containing the description
+        # about the uptime for the current plugin
+        return uptime
 
     def log_stack_trace(self, level = logging.DEBUG):
         """
@@ -2264,6 +2330,11 @@ class PluginManager:
         # sets the plugin instance reference in the plugins object, this will
         # allow a direct attribute access to the plugins instance
         setattr(self.plugins, plugin_name, plugin_instance)
+
+        # sets the short name attribute in the plugin class indicating the name
+        # associated with the plugin, this setting provides a simple shortcut
+        # to access the short name concept for within the plugin instance
+        setattr(plugin, "short_name", plugin_name)
 
         # starts all the plugin manager structures related with plugins
         self.loaded_plugins.append(plugin)
