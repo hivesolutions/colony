@@ -270,7 +270,7 @@ def password_strength(password):
     # upper case letters
     if LETTER_LOWER_REGEX.search(password) and LETTER_UPPER_REGEX.search(password):
         # increments the strength value
-        strength_value +=  1
+        strength_value += 1
 
     # in case the password contains special characters
     # in it (extra security)

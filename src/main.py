@@ -717,7 +717,7 @@ def load_plugin_paths_file(manager_path):
     # plugin path files contents, and the closes file to avoid
     # any further reading that could cause memory leaks
     plugin_paths_file = open(plugin_paths_file_path, "r")
-    try: plugin_paths_file_contents =  plugin_paths_file.read()
+    try: plugin_paths_file_contents = plugin_paths_file.read()
     finally: plugin_paths_file.close()
 
     # splits the paths over the newline character and then

@@ -2119,7 +2119,6 @@ class Deployer:
 
         self.__add_structure_item(item_key, item_value, update_time, CONTAINERS_FILE_NAME, INSTALLED_CONTAINERS_VALUE)
 
-
     def _remove_package_item(self, item_key):
         """
         Removes a package item from the packages file structure.

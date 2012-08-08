@@ -632,7 +632,7 @@ def _abspath_split(path):
     # prefix and rest
     path = os.path.normpath(path)
     absolute_path = os.path.abspath(path)
-    prefix, rest = os.path.splitunc(absolute_path)
+    prefix, rest = os.path.splitunc(absolute_path) #@UndefinedVariable
 
     # converts the prefix to boolean for checking
     # if the path is unc based

@@ -124,7 +124,7 @@ def main():
 
     # connects to the defined host, and sets the proper
     # subscription options (only listen to colony messages)
-    socket.connect ("tcp://" + host)
+    socket.connect("tcp://" + host)
     socket.setsockopt(zmq.SUBSCRIBE, "colony")
 
     # iterates continuously to print the received log messages

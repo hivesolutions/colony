@@ -165,7 +165,7 @@ def register_g(operation_mame, handler):
     handlers.append(handler)
     GLOBAL_HANDLERS_MAP[operation_mame] = handlers
 
-def unregister_g(operation_mame, handler = None):
+def unregister_g(operation_name, handler = None):
     """
     Unregisters from operations occurring for the provided name
     in the global system scope.
@@ -181,11 +181,11 @@ def unregister_g(operation_mame, handler = None):
     for the operation with the provided name.
     """
 
-    handlers = GLOBAL_HANDLERS_MAP.get(operation_mame, [])
+    handlers = GLOBAL_HANDLERS_MAP.get(operation_name, [])
     if handler: handlers.remove(handler)
-    else: del GLOBAL_HANDLERS_MAP[operation_mame]
+    else: del GLOBAL_HANDLERS_MAP[operation_name]
 
-def notify_g(operarion_name, *arguments, **named_arguments):
+def notify_g(operation_name, *arguments, **named_arguments):
     """
     Notifies an handler defined in the given handlers map about
     the provided operation.
@@ -203,4 +203,4 @@ def notify_g(operarion_name, *arguments, **named_arguments):
     types of operations.
     """
 
-    return notify(operarion_name, None, *arguments, **named_arguments)
+    return notify(operation_name, None, *arguments, **named_arguments)
