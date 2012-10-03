@@ -3873,7 +3873,7 @@ class PluginManager:
         # indicating the miss behavior
         self.assert_plugin(plugin)
         is_loaded = plugin.is_loaded()
-        if is_loaded: raise RuntimeError("Not possible to load plugin")
+        if is_loaded: raise colony.base.exceptions.ColonyException("not possible to load plugin")
 
     def assert_plugin(self, plugin):
         """
