@@ -2681,7 +2681,7 @@ class PluginManager:
         """
 
         # in case an execution command is defined must
-        # return immeditely because startup plugins are
+        # return immediately because startup plugins are
         # not mean to be loaded in execution command
         if self.execution_command: return
 
@@ -2698,7 +2698,7 @@ class PluginManager:
         """
 
         # in case an execution command is defined must
-        # return immeditely because main plugins are
+        # return immediately because main plugins are
         # not mean to be loaded in execution command
         if self.execution_command: return
 
@@ -2768,7 +2768,7 @@ class PluginManager:
             pid_string = str(pid)
             file.write(pid_string)
         finally:
-            # closes the file, no firther writing is allowed
+            # closes the file, no further writing is allowed
             # on this file (avoids leaks)
             file.close()
 
@@ -3476,7 +3476,7 @@ class PluginManager:
                     # returns false
                     return False
 
-                # in case the dependency plugin isntance is valid
+                # in case the dependency plugin instance is valid
                 if dependency_plugin_instance:
                     # calls the dependency inject method in the plugin
                     # with the dependency plugin instances
@@ -3852,6 +3852,28 @@ class PluginManager:
 
         # returns the loaded plugins instances
         return loaded_plugins_instances
+
+    def ensure(self, plugin):
+        """
+        Ensures that the provided plugin instance is loaded,
+        loading it if required.
+
+        In case the loading was not possible and the plugin
+        remain unloaded at the end of the call an exception is
+        raised indicating the problem.
+
+        @type plugin: Plugin
+        @param plugin: The plugin to be "ensured" to be loaded
+        in the current system context.
+        """
+
+        # asserts that the plugin is loaded, this should load
+        # the plugin properly, in case the plugin is not yet
+        # loaded at the end of the call raises an exception
+        # indicating the miss behavior
+        self.assert_plugin(plugin)
+        is_loaded = plugin.is_loaded()
+        if is_loaded: raise RuntimeError("Not possible to load plugin")
 
     def assert_plugin(self, plugin):
         """
