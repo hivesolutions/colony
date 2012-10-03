@@ -3416,11 +3416,11 @@ class PluginManager:
         if self.allow_threads: return True
 
         # iterates over all the capabilities that imply the creation of
-        # threads in the current environment to teste the current plugin
+        # threads in the current environment to test the current plugin
         # for the containing of such capabilities
         for capability in ("main", "thread", "threads"):
             # in case the plugin does not have the thread creation
-            # capability the test should continue othewrise the test fails
+            # capability the test should continue otherwise the test fails
             # and so a log message is printed and the function returns to
             # the calling method in failure
             if not capability in plugin.capabilities: continue
