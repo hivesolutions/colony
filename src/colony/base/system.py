@@ -1917,8 +1917,8 @@ class PluginManager:
         """
 
         # in case the system initialization is not complete
+        # raises a colony exception to notify the problem
         if not self.init_complete:
-            # raises a colony exception
             raise colony.base.exceptions.ColonyException("trying to unload uninitialized plugin system")
 
         # creates the kill system timer, to kill the system
