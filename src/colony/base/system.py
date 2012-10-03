@@ -3859,7 +3859,7 @@ class PluginManager:
         loading it if required.
 
         In case the loading was not possible and the plugin
-        remain unloaded at the end of the call an exception is
+        remains unloaded at the end of the call an exception is
         raised indicating the problem.
 
         @type plugin: Plugin
@@ -3873,7 +3873,10 @@ class PluginManager:
         # indicating the miss behavior
         self.assert_plugin(plugin)
         is_loaded = plugin.is_loaded()
-        if is_loaded: raise colony.base.exceptions.ColonyException("not possible to load plugin")
+        if not is_loaded:
+            raise colony.base.exceptions.ColonyException(
+                "not possible to load plugin '%s'" % plugin.name
+            )
 
     def assert_plugin(self, plugin):
         """
