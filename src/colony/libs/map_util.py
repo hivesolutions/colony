@@ -40,6 +40,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import sys
 import copy
 import types
+import calendar
+import datetime
 
 def map_clean(map):
     """
@@ -336,3 +338,79 @@ def map_output(map, output_method = sys.stdout.write, indentation = ""):
 
             # outputs the map value string
             output_method(map_value_string)
+
+def map_normalize(item, operation = None):
+    """
+    Normalizes the provided map/item, applying the reduce
+    operation to each of the items.
+    
+    In case no operation is provided, the default reduce
+    map operation is used.
+    
+    This operation may be used to convert "complex" type
+    based maps into simplified type based maps.
+        
+    @type item: Object
+    @param item: The map/item to be normalized.
+    @type operation: Method
+    @param operation: The operation used for normalization
+    (reduce operation).
+    @rtype: Object
+    @return: The normalized map, resulting from the normalization
+    of each of its items.
+    """
+    
+    # sets the (reduce) operation, defaulting
+    # to reduce map in case none is defined
+    operation = operation or _map_reduce
+    
+    # retrieves the type for the current
+    # item in order to percolate it appropriately
+    _type = type(item)
+    
+    # in case the current item is a sequence
+    # must normalize all of its elements
+    if _type in (types.ListType, types.TupleType):
+        return [normalize_map(value, operation) for value in item]
+    
+    # in case the current item is a map
+    # must create a new map with the result
+    # of the normalization of all the elements
+    elif _type == types.DictType:
+        # creates the item map to be populated
+        # with the normalized values
+        _item = {}
+        
+        # iterates over all the items to normalize
+        # them and sets them in the new items map
+        for key, value in item.items():
+            _item[key] = normalize_map(value, operation)
+        return _item
+    
+    # otherwise must be a "single" item and the
+    # (reduce) operation must be performed on it
+    else:
+        return operation(item)
+
+def _map_reduce(value):
+    """
+    Reduces the provided value, converting it into the appropriate
+    value considered to be "raw".
+    
+    @type value: Object
+    @param value: The value to be reduced.
+    @rtype: Object
+    @return: The reduced value affected by the transformed function.
+    """
+    
+    # retrieves the type for the item
+    _type = type(value)
+    
+    # in case the current value is of type datetime then
+    # it must be converted to the corresponding timestamp
+    if _type == datetime.datetime:
+        timetuple = value.utctimetuple()
+        return calendar.timegm(timetuple)
+    
+    # returns the original value (default fallback)
+    return value
