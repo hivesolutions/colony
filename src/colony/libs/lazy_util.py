@@ -57,7 +57,7 @@ class LazyClass(object):
 
     def __radd__(self, other):
         return other
-    
+
     def __nonzero__(self):
         return False
 
