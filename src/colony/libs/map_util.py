@@ -371,7 +371,7 @@ def map_normalize(item, operation = None):
     # in case the current item is a sequence
     # must normalize all of its elements
     if _type in (types.ListType, types.TupleType):
-        return [normalize_map(value, operation) for value in item]
+        return [map_normalize(value, operation) for value in item]
 
     # in case the current item is a map
     # must create a new map with the result
@@ -384,7 +384,7 @@ def map_normalize(item, operation = None):
         # iterates over all the items to normalize
         # them and sets them in the new items map
         for key, value in item.items():
-            _item[key] = normalize_map(value, operation)
+            _item[key] = map_normalize(value, operation)
         return _item
 
     # otherwise must be a "single" item and the
