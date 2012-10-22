@@ -175,7 +175,7 @@ def print_information():
     # prints some help information
     print HELP_TEXT
 
-def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, loop = False, threads = True, container = DEFAULT_STRING_VALUE, prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, loop = False, threads = True, signals = True, container = DEFAULT_STRING_VALUE, prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
     """
     Starts the loading of the plugin manager.
 
@@ -205,6 +205,8 @@ def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose
     @param loop: If the plugin manager is going to run in a loop.
     @type threads: bool
     @param threads: If the plugin manager is going to allow threads.
+    @type signals: bool
+    @param signals: If the plugin manager is going to register signals.
     @type container: String
     @param container: The name of the plugin manager container.
     @type prefix_paths: List
@@ -260,6 +262,7 @@ def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose
         stop_on_cycle_error,
         loop,
         threads,
+        signals,
         layout_mode,
         run_mode,
         container,
@@ -331,6 +334,7 @@ def main():
     silent = False
     loop = True
     threads = True
+    signals = True
     layout_mode = DEFAULT_STRING_VALUE
     run_mode = DEFAULT_STRING_VALUE
     container = DEFAULT_STRING_VALUE
@@ -425,6 +429,7 @@ def main():
         stop_on_cycle_error,
         loop,
         threads,
+        signals,
         container,
         prefix_paths,
         daemon_pid,

@@ -118,7 +118,8 @@ meta_paths = [os.path.abspath(meta_path) for meta_path in meta_paths]
 # as the manager path and the corresponding relative log path,
 # then provides the plugin and meta paths and unsets the global
 # loop strategy (avoids blocking the process), note also that
-# threads are disallowed to avoid creation of extra threads
+# threads are disallowed to avoid creation of extra threads, the
+# signal handlers are disabled to avoid collisions
 plugin_manager = colony.base.system.PluginManager(
     manager_path = base_path,
     logger_path = os.path.join(base_path, "log"),
@@ -126,6 +127,7 @@ plugin_manager = colony.base.system.PluginManager(
     meta_paths = meta_paths,
     loop = False,
     threads = False,
+    signals = False,
     run_mode = run_mode
 )
 return_code = plugin_manager.load_system()

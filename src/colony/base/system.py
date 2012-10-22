@@ -1381,6 +1381,10 @@ class PluginManager:
     """ The boolean value indicating if threads are allowed
     to be created for the context of the plugin manager """
 
+    install_signals = True
+    """ The boolean value indicating if signal handlers should
+    be registered for exiting the plugin manager """
+
     layout_mode = "default"
     """ The layout mode used in the plugin loading """
 
@@ -1539,7 +1543,7 @@ class PluginManager:
     """ The map with the plugin associated with
     the name of the event fired """
 
-    def __init__(self, manager_path = "", logger_path = "log", library_paths = [], meta_paths = [], plugin_paths = [], platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, loop = True, threads = True, layout_mode = "default", run_mode = "default", container = "default", prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+    def __init__(self, manager_path = "", logger_path = "log", library_paths = [], meta_paths = [], plugin_paths = [], platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, loop = True, threads = True, signals = True, layout_mode = "default", run_mode = "default", container = "default", prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
         """
         Constructor of the class.
 
@@ -1568,6 +1572,9 @@ class PluginManager:
         @type threads: bool
         @param threads: The boolean indicating if threads may be used in the
         manager for both plugins and control.
+        @type signals: bool
+        @param signals: The boolean indicating if signal handlers should be
+        registered for the exiting of the system.
         @type layout_mode: String
         @param layout_mode: The layout mode used in the plugin loading.
         @type run_mode: String
@@ -1576,7 +1583,7 @@ class PluginManager:
         @param container: The name of the plugin manager container.
         @type prefix_paths: List
         @param prefix_paths: The list of manager path relative paths to be
-        sed as reference for sub-projects.
+        set as reference for sub-projects.
         @type daemon_pid: int
         @param daemon_pid: The pid of the daemon process running the instance
         of plugin manager.
@@ -1600,6 +1607,7 @@ class PluginManager:
         self.stop_on_cycle_error = stop_on_cycle_error
         self.main_loop_active = loop
         self.allow_threads = threads
+        self.install_signals = signals
         self.layout_mode = layout_mode
         self.run_mode = run_mode
         self.container = container
@@ -2715,7 +2723,13 @@ class PluginManager:
         manager.
         """
 
+        # in case the installation of the signal handlers is
+        # currently disabled returns immediately avoids the
+        # registration of the handlers
+        if not self.install_signals: return
+
         # installs the sigterm handler for plugin manager kill
+        # (may create problems with existing handlers)
         signal.signal(signal.SIGTERM, self._kill_system_signal_handler)
 
     def notify_load_complete_loaded_plugins(self):
