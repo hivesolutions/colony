@@ -100,15 +100,14 @@ def map_copy_deep(source_map, destiny_map):
         # retrieves the source value type
         source_value_type = type(source_value)
 
-        # in case the source value type is dictionary
-        if not source_value_type == types.DictType:
-            # continues the loop
-            continue
+        # in case the source value type is dictionary is
+        # not a dictionary continues the loop, nothing to
+        # be done in current iteration
+        if not source_value_type == types.DictType: continue
 
-        # creates the destiny value map
+        # creates the destiny value map and sets the
+        # destiny value in the destiny map
         destiny_value = {}
-
-        # sets the destiny value in the destiny map
         destiny_map[source_key] = destiny_value
 
         # copies the source value (map) to the destiny value
@@ -130,10 +129,8 @@ def map_remove(removal_map, destiny_map):
     # the removal map
     for key in removal_map:
         # in case the key does not exists in
-        # destiny map
-        if not key in destiny_map:
-            # continues the loop
-            continue
+        # destiny map, continues the loop
+        if not key in destiny_map: continue
 
         # removes the key item from the destiny map
         del destiny_map[key]
