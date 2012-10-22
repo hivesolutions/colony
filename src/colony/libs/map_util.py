@@ -100,9 +100,9 @@ def map_copy_deep(source_map, destiny_map):
         # retrieves the source value type
         source_value_type = type(source_value)
 
-        # in case the source value type is dictionary is
-        # not a dictionary continues the loop, nothing to
-        # be done in current iteration
+        # in case the source value type is not a dictionary
+        # continues the loop, nothing to be done in the
+        # current iteration
         if not source_value_type == types.DictType: continue
 
         # creates the destiny value map and sets the
@@ -112,6 +112,35 @@ def map_copy_deep(source_map, destiny_map):
 
         # copies the source value (map) to the destiny value
         map_copy_deep(source_value, destiny_value)
+
+def map_copy_full(item):
+    # retrieves the type for the current
+    # item in order to percolate it appropriately
+    _type = type(item)
+
+    # in case the current item is a sequence
+    # must normalize all of its elements
+    if _type in (types.ListType, types.TupleType):
+        return [map_copy_full(value) for value in item]
+
+    # in case the current item is a map
+    # must create a new map with the result
+    # of the normalization of all the elements
+    elif _type == types.DictType:
+        # creates the item map to be populated
+        # with the normalized values
+        _item = {}
+
+        # iterates over all the items to normalize
+        # them and sets them in the new items map
+        for key, value in item.items():
+            _item[key] = map_copy_full(value)
+        return _item
+
+    # otherwise must be a "single" item and the
+    # (reduce) operation must be performed on it
+    else:
+        return item
 
 def map_remove(removal_map, destiny_map):
     """
