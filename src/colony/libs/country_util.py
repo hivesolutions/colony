@@ -297,6 +297,7 @@ def country_get(name):
     @rtype: Tuple
     @return: A tuple containing the iso 3166 information for the
     request country.
+    @see: http://en.wikipedia.org/wiki/ISO_3166
     """
 
     return COUNTRIES.get(name, (None, None, None))
