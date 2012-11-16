@@ -37,7 +37,7 @@ __copyright__ = "Copyright (c) 2008-2012 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-COUNTRIES  = {
+COUNTRIES = {
     "aaland islands" : ("AX", "ALA", "248"),
     "afghanistan" : ("AF", "AFG", "004"),
     "albania" : ("AL", "ALB", "008"),
