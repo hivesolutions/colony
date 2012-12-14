@@ -59,7 +59,8 @@ def list_intersect(first_list, second_list):
 def list_extend(base_list, extension_list, copy_base_list = True):
     """
     Extends the list with the the extension list,
-    retrieving a list resulting of the merge of both list.
+    returning a list resulting of the merge of both list.
+    
     Duplicates are avoided to remove additional elements.
     The base list may be changed or left untouched based on
     the copy base list flag.
