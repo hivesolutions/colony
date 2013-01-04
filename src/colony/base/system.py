@@ -6696,7 +6696,6 @@ class PluginThread(threading.Thread):
         self.plugin = plugin
 
         self.daemon = True
-
         self.condition = threading.Condition()
 
         self.event_queue = []
