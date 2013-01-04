@@ -57,6 +57,15 @@ class UpdateThread(threading.Thread):
     call_arguments = []
     """ The call arguments """
 
+    def __init__(self):
+        """
+        Constructor of the class.
+        """
+
+        threading.Thread(self)
+
+        self.daemon = True
+
     def stop(self):
         """
         Stops the update thread.

@@ -85,6 +85,8 @@ class Scheduler(threading.Thread):
 
         self.sleep_step = sleep_step
 
+        self.daemon = True
+
         self.timestamp_queue = []
         self.timestamp_map = {}
         self.timestamp_lock = threading.RLock()

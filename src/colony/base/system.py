@@ -6663,16 +6663,20 @@ class PluginThread(threading.Thread):
     """ The end unload complete flag """
 
     load_plugin_thread = None
-    """ The thread that controls the load plugin method call """
+    """ The thread that controls the load plugin
+    method call """
 
     end_load_plugin_thread = None
-    """ The thread that controls the end load plugin method call """
+    """ The thread that controls the end load
+    plugin method call """
 
     unload_plugin_thread = None
-    """ The thread that controls the unload plugin method call """
+    """ The thread that controls the unload
+    plugin method call """
 
     end_unload_plugin_thread = None
-    """ The thread that controls the end unload plugin method call """
+    """ The thread that controls the end unload
+    plugin method call """
 
     event_queue = []
     """ The queue of events to be processed """
@@ -6690,6 +6694,9 @@ class PluginThread(threading.Thread):
 
         threading.Thread.__init__(self)
         self.plugin = plugin
+
+        self.daemon = True
+
         self.condition = threading.Condition()
 
         self.event_queue = []
@@ -6850,6 +6857,8 @@ class PluginEventThread(threading.Thread):
 
         self.plugin = plugin
         self.method = method
+
+        self.daemon = True
 
     def run(self):
         """
