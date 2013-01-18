@@ -68,3 +68,6 @@ class AESCipher:
         last = value[-1]
         pad_size = ord(last)
         return value[:-pad_size]
+
+    def block_size(self):
+        return BLOCK_SIZE
