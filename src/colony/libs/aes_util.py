@@ -45,26 +45,94 @@ BLOCK_SIZE = 16
 """ The block size to be used for the post operation
 should not be too small or security issues may arise """
 
-class AESCipher:
+class AesCipher:
+    """
+    The class responsible for a proper encryption
+    and decryption system for the aes system.
+
+    The aes include the padding infra-structure for
+    according to pkcs5.
+
+    @see: http://tools.ietf.org/html/rfc2898
+    """
 
     def __init__(self, key = None):
+        """
+        Constructor of the class.
+
+        @type key: String
+        @param key: The symmetric key (secret) to be used
+        in the aes encryption, in case it's not defined
+        a new random key will be created.
+        """
+
         self.key = key or os.urandom(BLOCK_SIZE)
 
     def encrypt(self, raw):
+        """
+        Encrypts the provided raw string value according
+        to the aes and pkcs5 specifications.
+
+        @type raw: String
+        @param raw: The raw string value to be used in
+        the encryption process.
+        @rtype: String
+        @return: The encrypted string according to the aes
+        cryptographic system in ecb mode.
+        """
+
         raw = self.pad(raw)
         cipher = Crypto.Cipher.AES.new(self.key, Crypto.Cipher.AES.MODE_ECB)
         return cipher.encrypt(raw)
 
-    def decrypt(self, enc):
+    def decrypt(self, encoded):
+        """
+        Decrypts the provided encoded (encrypted) string
+        into the raw value.
+
+        @type encoded: String
+        @param encoded: The encrypted string to be used
+        in the decryption process, should be padded according
+        to the pkcs5 schema.
+        @rtype String
+        @return: The decrypted string according to the aes
+        cryptographic system in ecb mode.
+        """
+
         cipher = Crypto.Cipher.AES.new(self.key, Crypto.Cipher.AES.MODE_ECB)
-        return self.unpad(cipher.decrypt(enc))
+        decoded = cipher.decrypt(encoded)
+        return self.unpad(decoded)
 
     def pad(self, value):
+        """
+        Adds the pkcs5 padding to the provided value
+        it should add all the extra padding values to it.
+
+        @type value: String
+        @param value: The base value for which the padded
+        characters will be added.
+        @rtype: String
+        @return: The pkcs5 padded string with the padding
+        characters added to it.
+        """
+
         remaining = BLOCK_SIZE - len(value) % BLOCK_SIZE
         padding = remaining * chr(remaining)
         return value + padding
 
     def unpad(self, value):
+        """
+        Removes the pkcs5 padding from the provided value
+        it should remove all the extra padding values from it.
+
+        @type value: String
+        @param value: The padded value from which all the
+        extra padding characters.
+        @rtype: String
+        @return: The sanitized string without the extra
+        padding characters.
+        """
+
         last = value[-1]
         pad_size = ord(last)
         return value[:-pad_size]
