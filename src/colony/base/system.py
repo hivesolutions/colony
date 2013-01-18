@@ -421,7 +421,7 @@ class Plugin(object):
             self.version,
             self.capabilities,
         )
-
+        
     def load_plugin(self):
         """
         Method called at the beginning of the plugin loading process.
@@ -902,6 +902,21 @@ class Plugin(object):
         self.info("Unsetting configuration property '%s' from '%s' v%s" % (property_name, self.name, self.version))
 
         del self.configuration_map[property_name]
+
+    def ensure(self):
+        """
+        Ensures that the current plugin instance is loaded,
+        loading it if required.
+
+        In case the loading was not possible and the plugin
+        remains unloaded at the end of the call an exception is
+        raised indicating the problem.
+        """
+        
+        # retrieve the (plugin) manager currently associated
+        # with the plugin and uses it to make sure the current
+        # plugin is currently loaded
+        self.manager.ensure(self)
 
     def is_loaded(self):
         """
