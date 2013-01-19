@@ -70,12 +70,14 @@ VERSION_PRE_TEXT = "Python "
 def print_information():
     """
     Prints the system information for the command line.
+    The printed information should simulate the normal
+    copyright and version information present in many
+    unix based commands.
     """
 
-    # print the branding information text
+    # print both the branding information text
+    # and the version information
     print BRANDING_TEXT % (VERSION, RELEASE, BUILD, RELEASE_DATE)
-
-    # print the python information
     print VERSION_PRE_TEXT + sys.version
 
 def usage():

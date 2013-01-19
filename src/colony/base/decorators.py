@@ -731,7 +731,7 @@ def set_configuration_property_method(property_name, load_plugin = False):
         @return: The function to be decorated.
         """
 
-        # retrieves the current set configuration propery function
+        # retrieves the current set configuration property function
         set_configuration_property_current = set_configuration_property.current
 
         # sets the current function for set configuration property
@@ -838,7 +838,7 @@ def unset_configuration_property_method(property_name, load_plugin = False):
         @return: The function to be decorated.
         """
 
-        # retrieves the current unset configuration propery function
+        # retrieves the current unset configuration property function
         unset_configuration_property_current = unset_configuration_property.current
 
         # unsets the current function for unset configuration property

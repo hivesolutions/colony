@@ -39,7 +39,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import os
 
-import Crypto.Cipher.AES
+try: import Crypto.Cipher.AES
+except: Crypto = None
 
 BLOCK_SIZE = 16
 """ The block size to be used for the post operation
