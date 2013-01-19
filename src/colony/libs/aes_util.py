@@ -56,7 +56,15 @@ class AesCipher:
     @see: http://tools.ietf.org/html/rfc2898
     """
 
-    def __init__(self, key = None):
+    key = None
+    """ The symmetric key to be use to encrypt
+    messages under this aes cipher """
+
+    block_size = BLOCK_SIZE
+    """ The size of the encryption block to be
+    used under this cipher instance """
+
+    def __init__(self, key = None, block_size = BLOCK_SIZE):
         """
         Constructor of the class.
 
@@ -64,9 +72,14 @@ class AesCipher:
         @param key: The symmetric key (secret) to be used
         in the aes encryption, in case it's not defined
         a new random key will be created.
+        @type block_size: int
+        @param block_size: The size of the encryption
+        block to be used under this cipher instance, must
+        be a multiple of eight.
         """
 
-        self.key = key or os.urandom(BLOCK_SIZE)
+        self.key = key or os.urandom(block_size)
+        self.block_size = block_size
 
     def encrypt(self, raw):
         """
@@ -116,7 +129,7 @@ class AesCipher:
         characters added to it.
         """
 
-        remaining = BLOCK_SIZE - len(value) % BLOCK_SIZE
+        remaining = self.block_size - len(value) % self.block_size
         padding = remaining * chr(remaining)
         return value + padding
 
@@ -137,5 +150,32 @@ class AesCipher:
         pad_size = ord(last)
         return value[:-pad_size]
 
-    def block_size(self):
-        return BLOCK_SIZE
+    def get_key(self):
+        """
+        Retrieves the symmetric key that is currently set
+        in the aes instance and that is going to be used
+        for encryption and decryption, it should be of the
+        same size as the block.
+
+        @rtype: String
+        @return: The symmetric key that is currently set
+        in the aes instance.
+        """
+
+        return self.key
+
+    def get_block_size(self):
+        """
+        Retrieves the size of the encryption block to be
+        used for encryption and decryption, this value is
+        used for both the generation of the key and for
+        the padding creation.
+
+        The integer value should be a multiple of eight.
+
+        @rtype: int
+        @return: The size of the encryption block to be
+        used for encryption and decryption.
+        """
+
+        return self.block_size
