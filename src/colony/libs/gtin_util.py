@@ -59,14 +59,11 @@ def calculate_control_value(number):
 
     # iterates over the range of the number of digits
     for index in range(number_digits):
-        # in case it's even
-        if index % 2:
-            # sets the multiplier as one
-            multiplier = 1
-        # otherwise it must be odd
-        else:
-            # sets the multiplier as three
-            multiplier = 3
+        # in case it's even, sets the multiplier as one
+        # otherwise it must be odd and the multiplier
+        # should be set as three
+        if index % 2: multiplier = 1
+        else: multiplier = 3
 
         # retrieves the current digit
         current_digit = number_util.get_digit(number, index)
