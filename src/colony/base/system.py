@@ -58,6 +58,7 @@ import logging.handlers
 
 import colony.libs.time_util
 import colony.libs.path_util
+import colony.libs.round_util
 import colony.libs.string_util
 import colony.libs.version_util
 import colony.libs.string_buffer_util
@@ -1889,6 +1890,10 @@ class PluginManager:
             # sets the plugin manager timestamp
             self.set_plugin_manager_timestamp()
 
+            # applies the set of fixes for the context
+            # of execution of the plugin system
+            self.apply_fixes()
+
             # updates the workspace path
             self.update_workspace_path()
 
@@ -2102,6 +2107,21 @@ class PluginManager:
         if self.execution_command or self.daemon_pid or self.daemon_file_path:
             # sets the standard input as a wait input object (for no blocking)
             sys.stdin = colony.base.util.WaitInput()
+
+    def apply_fixes(self):
+        """
+        Applies a series of fixes to the current environment
+        so that operations from this point on will be using an
+        uniform set of features.
+        
+        Most of the fixes use a "monkey patching" approach and
+        should be used carefully to avoid unwanted behavior.
+        """
+        
+        # applies the round fix so that all the python interpreter
+        # version use an uniform rounding strategy and avoid the
+        # typical errors for rounding operations
+        colony.libs.round_util.apply()
 
     def get_all_modules(self, path, suffix = None):
         """
