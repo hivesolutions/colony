@@ -38,11 +38,13 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import sys
-import decimal
+import math
 
 QUANTIFIERS = {}
 """ The map of quantifier strings indexed by
 the number of decimal places for their round """
+
+_round = round
 
 def roundi(value, places):
     """
@@ -71,87 +73,8 @@ def roundi(value, places):
     @see: http://docs.python.org/2/tutorial/floatingpoint.html
     """
 
-    # converts the value into an integer value (to obtain
-    # the integer part from it) and then retrieves the size
-    # of it (in number) by converting it into a string
-    value_i = int(value)
-    integer_size = len(str(value_i))
-
-    # deduces the size of the decimal part of it by decrementing
-    # the float value size to the integer size and creates the
-    # appropriate formatter to retrieve it the float value with
-    # the appropriate decimal places
-    decimal_size = 17 - integer_size
-    value_format = "%%.%df" % decimal_size
-    value_s = value_format % value
-
-    # retrieves the last digit of the float part and verifies if
-    # it's greater that fix for such case a rounding propagation
-    # round must be applies recursively
-    last = int(value_s[-1])
-    if last >= 5:
-        # retrieves the references for both the
-        # integer and the floating part of the number
-        # and then converts the the float part into
-        # a list to be manipulated
-        integer_part = value_s[:integer_size]
-        float_part = value_s[integer_size + 1:]
-        float_part = list(float_part)
-
-        # sets the last digit of the float part as zero
-        # a round will be used and propagated and then
-        # starts the index value to the last character
-        # minus one and start the loop
-        float_part[-1] = "0"
-        index = decimal_size - 2
-        while True:
-            # in case the minus one index has been reached
-            # breaks the loop as no more rounding should be
-            # applied to the number
-            if index == -1: break
-
-            # converts the current digit into an integer and
-            # in case the number is nine continues the round
-            # operation otherwise increments the value and
-            # stops the rounding propagation
-            current = int(float_part[index])
-            if current == 9:
-                float_part[index] = "0"
-                index -= 1
-                continue
-            else:
-                float_part[index] = str(current + 1)
-                break
-
-        # joins the float part list to create the final
-        # float part of the number and joins the integer
-        # a float parts again to create the string value
-        float_part = "".join(float_part)
-        value_s = "%s.%s" % (integer_part, float_part)
-
-    # sets the created string values as the base
-    # value for the "newly" created decimal (avoids
-    # external rounds)
-    value_d = decimal.Decimal(value_s)
-
-    # tries to retrieve the quantifier value from
-    # the quantifier map (fast construction) in case
-    # the value is not found creates a new decimal
-    # with such number of places and sets it in the
-    # quantifiers map (additional accesses will match)
-    quantifier = QUANTIFIERS.get(places, None)
-    if quantifier == None:
-        quantifier_s = "." + ("0" * places) if places else "0"
-        quantifier = decimal.Decimal(quantifier_s)
-        QUANTIFIERS[places] = quantifier
-
-    # rounds the decimal value using the provided quantifier
-    # and then converts the resulted rounded value into the
-    # associated float value, returning the value to the
-    # caller method (old python version compatible)
-    value_d = value_d.quantize(quantifier, rounding = decimal.ROUND_HALF_UP)
-    value_f = float(value_d)
-    return value_f
+    rounder = math.pow(10, places)
+    return _round(value * rounder, 0) / rounder
 
 def apply():
     """
