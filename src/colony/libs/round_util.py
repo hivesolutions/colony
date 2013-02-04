@@ -84,7 +84,8 @@ def roundi(value, places):
     # quantifiers map (additional accesses will match)
     quantifier = QUANTIFIERS.get(places, None)
     if quantifier == None:
-        quantifier = decimal.Decimal("." + ("0" * places))
+        quantifier_s = "." + ("0" * places) if places else "0"
+        quantifier = decimal.Decimal(quantifier_s)
         QUANTIFIERS[places] = quantifier
 
     # rounds the decimal value using the provided quantifier
