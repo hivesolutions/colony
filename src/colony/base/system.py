@@ -2113,11 +2113,11 @@ class PluginManager:
         Applies a series of fixes to the current environment
         so that operations from this point on will be using an
         uniform set of features.
-        
+
         Most of the fixes use a "monkey patching" approach and
         should be used carefully to avoid unwanted behavior.
         """
-        
+
         # applies the round fix so that all the python interpreter
         # version use an uniform rounding strategy and avoid the
         # typical errors for rounding operations
