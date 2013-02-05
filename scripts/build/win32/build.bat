@@ -89,9 +89,9 @@ python setup.py process sdist
 :: must return immediately with the error
 if %ERRORLEVEL% neq 0 ( cd %CURRENT_DIR% && exit /b %ERRORLEVEL% )
 
-:: runs the colony admin pack colony command to generate the
+:: runs the colony admin build command to generate the
 :: appropriate package file for the colony container
-call colony_admin pack_colony src\colony_container.json
+call colony_admin build src\colony_container.json
 
 :: in case the previous command didn't exit properly
 :: must return immediately with the error
