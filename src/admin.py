@@ -37,6 +37,7 @@ __copyright__ = "Copyright (c) 2008-2012 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import re
 import os
 import sys
 import shutil
@@ -143,7 +144,7 @@ def cleanup():
     # for the target path
     if len(sys.argv) > 2: target = sys.argv[2]
     else: target = get_base_path(cwd)
-    
+
     # in case not target was expanded the current directory
     # is used (assumes) the administration file is stored
     # at the same location as the colony instance
@@ -168,7 +169,7 @@ def pack():
     # for the target path
     if len(sys.argv) > 2: target = sys.argv[2]
     else: target = get_base_path(cwd)
-    
+
     # in case not target was expanded the current directory
     # is used (assumes) the administration file is stored
     # at the same location as the colony instance
@@ -193,15 +194,31 @@ def pack_colony():
     target = sys.argv[2]
     _pack_colony(target)
 
-def _cleanup(path):
+def _cleanup(path, empty_extra = True):
     # retrieves the path to the series of sub
     # directories to be "cleaned"
     log_path = os.path.join(path, "log")
+    meta_path = os.path.join(path, "meta")
 
     # removes the files using extension based rules
     # on the defined directories
-    _cleanup_files(path, ".pyc")
-    _cleanup_files(log_path, ".log")
+    _cleanup_files(path, re.compile(".*\.pyc$"))
+    _cleanup_files(log_path, re.compile(".*\.log$"))
+    _cleanup_files(log_path, re.compile(".*\.log.[0-9]+$"))
+    empty_extra and _cleanup_directories(meta_path, re.compile(""))
+
+def _cleanup_directories(path, extension):
+    # lists all the entries in the provided path
+    # in order to filter the ones to be removed
+    entries = os.listdir(path)
+
+    # iterates over all the entries to check the ones
+    # that correspond to directories and run the cleanup
+    # on each of their files
+    for entry in entries:
+        _path = os.path.join(path, entry)
+        if not os.path.isdir(_path): continue
+        _cleanup_files(_path, extension)
 
 def _cleanup_files(path, extension):
     # lists all the entries in the provided path
@@ -216,7 +233,16 @@ def _cleanup_files(path, extension):
         # appropriate iteration loop operations
         _path = os.path.join(path, entry)
         if os.path.isdir(_path): _cleanup_files(_path, extension); continue
-        if _path.endswith(extension): os.remove(_path)
+        if extension.match(_path): os.remove(_path)
+
+    # verifies that the (directory) path exists otherwise
+    # returns immediately then lists the directory to check
+    # if there are still files contained in it and in case
+    # there is returns immediately, then proceeds with the
+    # directory removal for the current path
+    if not os.path.exists(path): return
+    if os.listdir(path): return
+    os.rmdir(path)
 
 def _pack(path):
     # runs the cleanup process for the provided path
