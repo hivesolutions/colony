@@ -21,7 +21,7 @@ To actually do something useful look into [How to Establish your Colony in 3 Eas
 
 Most of the colony operation are run through the `colony_admin` command:
 
-* `colony_admin clone <target>` - clones the base colony instance into the target directory (new project)\
+* `colony_admin clone <target>` - clones the base colony instance into the target directory (new project)
 * `colony_admin cleanup <target>` - cleans the current instance removing extra files
 * `colony_admin pack <target>` - packs the current instance into a zip file
 * `colony_admin pack_colony [target]` - packs the target plugin into a cpx, cbx or ccx file
