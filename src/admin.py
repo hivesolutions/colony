@@ -147,7 +147,7 @@ def cleanup():
     # in case not target was expanded the current directory
     # is used (assumes) the administration file is stored
     # at the same location as the colony instance
-    target = target or os.path.dirname(__file__)
+    target = target or os.path.normpath(os.path.dirname(__file__))
 
     # in case not target path is defined must raise
     # a runtime error
@@ -172,7 +172,7 @@ def pack():
     # in case not target was expanded the current directory
     # is used (assumes) the administration file is stored
     # at the same location as the colony instance
-    target = target or os.path.dirname(__file__)
+    target = target or os.path.normpath(os.path.dirname(__file__))
 
     # in case not target path is defined must raise
     # a runtime error
