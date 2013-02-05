@@ -14,7 +14,7 @@ To actually do something useful look into [How to Establish your Colony in 3 Eas
 
 ## Installation
 
-#### For development
+### For development
 
 * Set `PYTHONPATH` to the `colony/src` path so that the python source files may be included
 * Set `PATH` to the `colony/scripts/pypi` to used the provided base scripts
