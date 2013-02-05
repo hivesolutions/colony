@@ -40,6 +40,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import sys
 import math
 
+import __builtin__
+
 QUANTIFIERS = {}
 """ The map of quantifier strings indexed by
 the number of decimal places for their round """
@@ -102,4 +104,4 @@ def apply():
 
     # updates the built-in round function with the new
     # round function so that the rounds are coherent
-    __builtins__["round"] = roundi
+    __builtin__.round = roundi
