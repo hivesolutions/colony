@@ -89,10 +89,9 @@ def generate_hash_digest_map(file_path, hash_set = DEFAULT_HASH_SET):
             file_contents = file.read(4096)
 
             # in case the file contents are
-            # not valid (end of file)
-            if not file_contents:
-                # breaks the loop
-                break
+            # not valid (end of file) must
+            # break the current loop
+            if not file_contents: break
 
             # iterates over all the hash objects
             # in the hash list to update them
