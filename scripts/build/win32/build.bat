@@ -2,7 +2,7 @@
 @echo off
 
 :: sets the version string constant value
-set VERSION=1.0.1
+set VERSION=1.0.2
 
 :: sets the various global related name values
 :: (going to be used for file construction)

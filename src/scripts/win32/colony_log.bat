@@ -32,7 +32,7 @@ set SCRIPT_NAME=colony_log.py
 
 :: executes the initial python script with
 :: the provided arguments
-python %~dp0/%RELATIVE_PATH%/%SCRIPT_NAME% %*
+python "%~dp0/%RELATIVE_PATH%/%SCRIPT_NAME%" %*
 
 :: exits the process
 exit /b %ERRORLEVEL%
