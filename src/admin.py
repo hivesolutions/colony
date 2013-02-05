@@ -43,6 +43,8 @@ import sys
 import shutil
 import zipfile
 
+import colony.libs.string_util
+
 DEFAULT_TARGET = "colony"
 """ The default directory to be used as target in
 case no target path is provided (default name) """
@@ -183,16 +185,19 @@ def pack():
     # to create the packed file for the colony instance
     _pack(target)
 
-def pack_colony():
+def build():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
     # a runtime error
     if len(sys.argv) < 3: raise RuntimeError("no descriptor provided")
 
-    # retrieves the target file from the arguments and\
-    # uses it to run the packing structure
+    # retrieves the target file from the arguments and
+    # uses it to run the build structure
     target = sys.argv[2]
-    _pack_colony(target)
+    _build(target)
+
+def deploy():
+    pass
 
 def _cleanup(path, empty_extra = True):
     # retrieves the path to the series of sub
@@ -261,7 +266,7 @@ def _pack(path):
     try: _zip_directory(path, "/", file)
     finally: file.close()
 
-def _pack_colony(path):
+def _build(path, short_name = False):
     # imports the json module so that it's possible
     # to parse the colony descriptor file
     import json
@@ -279,11 +284,17 @@ def _pack_colony(path):
     resources = descriptor.get("resources", [])
     extension = EXTENSIONS.get(type, ".cpx")
 
+    # retrieves the base name for the file and removes the
+    # extension from it so that the short name for it is
+    # correctly retrieved
+    base_name = os.path.basename(path)
+    plugin_name = colony.libs.string_util.to_underscore(base_name)[:-12]
+
     # retrieves the resources directory for the resources
     # from the base directory of the json descriptor and
     # then creates the name of the file from the id
     resources_directory = os.path.dirname(path)
-    name = id + extension
+    name = plugin_name + extension if short_name else id + extension
 
     # opens the target zip file to be used in write
     # mode (it's going to receive the data)
