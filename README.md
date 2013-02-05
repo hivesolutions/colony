@@ -29,7 +29,7 @@ Most of the colony operation are run through the `colony_admin` command:
 * `colony_admin cleanup <target>` - cleans the current instance removing extra files
 * `colony_admin pack <target>` - packs the current instance into a zip file
 * `colony_admin build [target]` - builds the target descriptor file into a cbx file
-* `colony_admin deplooy [target]` - deploys the target cbx file into the current instance
+* `colony_admin deploy [target]` - deploys the target cbx file into the current instance
 
 ## Features
 
