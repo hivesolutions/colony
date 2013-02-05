@@ -143,6 +143,11 @@ def cleanup():
     # for the target path
     if len(sys.argv) > 2: target = sys.argv[2]
     else: target = get_base_path(cwd)
+    
+    # in case not target was expanded the current directory
+    # is used (assumes) the administration file is stored
+    # at the same location as the colony instance
+    target = target or os.path.dirname(__file__)
 
     # in case not target path is defined must raise
     # a runtime error
@@ -163,6 +168,11 @@ def pack():
     # for the target path
     if len(sys.argv) > 2: target = sys.argv[2]
     else: target = get_base_path(cwd)
+    
+    # in case not target was expanded the current directory
+    # is used (assumes) the administration file is stored
+    # at the same location as the colony instance
+    target = target or os.path.dirname(__file__)
 
     # in case not target path is defined must raise
     # a runtime error
