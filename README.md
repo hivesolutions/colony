@@ -12,10 +12,14 @@ Colony aims to eliminate the complexity typically associated with the creation o
 
 To actually do something useful look into [How to Establish your Colony in 3 Easy Steps](http://getcolony.com/docs/colony/documentation_how_to_establish_your_colony_in_3_easy_steps.html)
 
-## Install for Development
+## Installation
+
+#### For development
 
 * Set `PYTHONPATH` to the `colony/src` path so that the python source files may be included
 * Set `PATH` to the `colony/scripts/pypi` to used the provided base scripts
+
+### For production
 
 ## Usage
 
