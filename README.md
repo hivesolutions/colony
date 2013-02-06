@@ -55,7 +55,10 @@ The best ways to get involved:
 
 To find python native extension required for some of the plugins used the following sites:
 
+* Python Imaging Library (PIL) [link](http://www.pythonware.com/products/pil/).
+* Reportlab PDF Generator [link](http://www.reportlab.com/).
 * Unofficial Windows Binaries for Python Extension Packages [link](http://www.lfd.uci.edu/~gohlke/pythonlibs/).
+* MySQL driver for Python [link](http://sourceforge.net/projects/mysql-python/).
 
 ## Project information
 
