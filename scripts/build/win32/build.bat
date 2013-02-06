@@ -129,7 +129,7 @@ cd %BUILD_DIR%
 
 echo Building capsule setup package...
 
-:: runs the capsule process adding the viriatum group file
+:: runs the capsule process adding the colony group file
 :: to it in order to create the proper intaller
 capsule clone %DIST_DIR%\%NAME%.exe
 capsule extend %DIST_DIR%\%NAME%.exe Colony "Colony Framework" %DIST_DIR%\%NAME_RAW%.tar
