@@ -1,10 +1,10 @@
 *.pyc
 
-src/containers/
-src/deploy/
-src/libraries/
-src/log/
-src/meta/
-src/plugins/
-src/tmp/
-src/var/
+/src/containers/
+/src/deploy/
+/src/libraries/
+/src/log/
+/src/meta/
+/src/plugins/
+/src/tmp/
+/src/var/
