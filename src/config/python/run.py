@@ -38,12 +38,12 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 from base import * #@UnusedWildImport
-from base_development import * #@UnusedWildImport
+from base_extra import * #@UnusedWildImport
 
 layout_mode = "default"
 """ The project layout mode """
 
-run_mode = "development"
+run_mode = "production"
 """ The project run mode """
 
 verbose = False
