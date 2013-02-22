@@ -1219,10 +1219,9 @@ class Plugin(object):
         @param message: The debug message to be added to the logger.
         """
 
-        # formats the logger message
+        # formats the logger message then prints the
+        # debug message to the current stream
         logger_message = self.format_logger_message(message)
-
-        # prints the debug message
         self.logger.debug(logger_message)
 
     def info(self, message):
@@ -1233,10 +1232,9 @@ class Plugin(object):
         @param message: The info message to be added to the logger.
         """
 
-        # formats the logger message
+        # formats the logger message then prints the
+        # info message to the current stream
         logger_message = self.format_logger_message(message)
-
-        # prints the info message
         self.logger.info(logger_message)
 
     def warning(self, message):
@@ -1247,13 +1245,10 @@ class Plugin(object):
         @param message: The warning message to be added to the logger.
         """
 
-        # formats the logger message
+        # formats the logger message then prints the
+        # warning message and logs the current stack trace
         logger_message = self.format_logger_message(message)
-
-        # prints the warning message
         self.logger.warning(logger_message)
-
-        # logs the stack trace
         self.log_stack_trace()
 
     def error(self, message):
@@ -1264,13 +1259,10 @@ class Plugin(object):
         @param message: The error message to be added to the logger.
         """
 
-        # formats the logger message
+        # formats the logger message then prints the
+        # error message and logs the current stack trace
         logger_message = self.format_logger_message(message)
-
-        # prints the error message
         self.logger.error(logger_message)
-
-        # logs the stack trace
         self.log_stack_trace()
 
     def critical(self, message):
@@ -1281,13 +1273,10 @@ class Plugin(object):
         @param message: The critical message to be added to the logger.
         """
 
-        # formats the logger message
+        # formats the logger message then prints the
+        # critical message and logs the current stack trace
         logger_message = self.format_logger_message(message)
-
-        # prints the critical message
         self.logger.critical(logger_message)
-
-        # logs the stack trace
         self.log_stack_trace()
 
     def format_logger_message(self, message):
