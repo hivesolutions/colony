@@ -314,7 +314,7 @@ def _build(path, short_name = False):
 
         # writes the specification file into the packing file
         # to be used as meta data information
-        file.write(path, "specification.json")
+        file.write(path, "spec.json")
     finally:
         # closes the file to avoid any leak of file
         # descriptors and to flush the pending data

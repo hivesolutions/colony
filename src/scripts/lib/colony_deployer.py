@@ -153,7 +153,7 @@ CONTAINERS_FILE_NAME = "containers.json"
 DUPLICATES_FILE_NAME = "duplicates.json"
 """ The duplicates file name """
 
-SPECIFICATION_FILE_NAME = "specification.json"
+SPECIFICATION_FILE_NAME = "spec.json"
 """ The specification file name """
 
 RELATIVE_DEPLOY_PATH = "deploy"
