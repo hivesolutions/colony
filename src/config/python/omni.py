@@ -37,48 +37,26 @@ __copyright__ = "Copyright (c) 2008-2012 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import sys
+from base import * #@UnusedWildImport
+from base_extra import * #@UnusedWildImport
 
-import main
+layout_mode = "default"
+""" The project layout mode """
 
-USAGE = "Usage: plugin_id:method [argument1[%type1]$argument2[%type2] ...]\n\
-Executes an execution command in the colony plugin manager"
-""" The usage string for the command line arguments """
+run_mode = "omni"
+""" The project run mode """
 
-def usage():
-    """
-    Prints the usage for the command line.
-    """
+verbose = False
+""" The verbose flag """
 
-    print USAGE
+debug = False
+""" The debug flag """
 
-if __name__ == "__main__":
-    # in case the number of arguments is invalid
-    if len(sys.argv) < 2:
-        # prints the description of the error
-        print str("Error: Invalid number of arguments (see --help)")
+silent = False
+""" The silent flag """
 
-        # exits in error
-        sys.exit(2)
+stop_on_cycle_error = False
+""" The stop on cycle error flag """
 
-    if sys.argv[1] == "--help":
-        # prints usage information
-        usage()
-
-        # exits in error
-        sys.exit(2)
-
-    # retrieves the command joining the last part of the command line
-    command = " ".join(sys.argv[1:])
-
-    # sets the new argument values
-    sys.argv = [sys.argv[0]]
-
-    # adds the silent option
-    sys.argv.append("--silent")
-
-    # adds the execution command
-    sys.argv.append("--execution_command=" + command)
-
-    # calls the main function
-    main.main()
+daemon_file_path = None
+""" The daemon file path """

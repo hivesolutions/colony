@@ -39,7 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import os
 import sys
-import admin
+import colony_adm
 
 if __name__ == "__main__":
-    admin.main()
+    colony_adm.main()

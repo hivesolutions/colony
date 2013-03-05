@@ -39,13 +39,13 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import os
 import sys
-import main
+import colony_start
 
 if __name__ == "__main__":
     path = os.path.dirname(main.__file__)
     _path = os.getcwd()
     try:
         os.chdir(path)
-        main.main()
+        colony_start.main()
     finally:
         os.chdir(_path)

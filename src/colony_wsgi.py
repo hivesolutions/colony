@@ -48,7 +48,7 @@ CONFIG_FILE_ENV = "COLONY_CONFIG_FILE"
 """ The name of the environment variable to be used
 to retrieve the path to the configuration file """
 
-DEFAULT_CONFIG_PATH = "config/python/development.py"
+DEFAULT_CONFIG_PATH = "config/python/devel.py"
 """ The path to the default configuration file to be
 used in case no path is specified using the environment
 variable bases strategy """

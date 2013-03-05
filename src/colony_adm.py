@@ -341,6 +341,10 @@ def _zip_directory(path, relative, file):
         else: file.write(_path, _relative)
 
 def main():
+    # in case the number of arguments is not sufficient
+    # raises an exception indicating the problem
+    if len(sys.argv) < 2: raise RuntimeError("operation not defined")
+
     # retrieves the operation from the provided arguments
     # and retrieves the associated function to be executed
     operation = sys.argv[1]

@@ -235,9 +235,9 @@ setuptools.setup(
         "scripts/pypi/colony_admin.bat"
     ],
     py_modules = [
-        "admin",
-        "main",
-        "script"
+        "colony_adm",
+        "colony_start",
+        "colony_wsgi"
     ],
     packages = [
         "colony",
