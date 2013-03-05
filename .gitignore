@@ -1,4 +1,8 @@
 *.pyc
+*.egg
+
+/build/
+/src/colony.egg-info/
 
 /src/containers/
 /src/deploy/
