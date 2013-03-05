@@ -45,6 +45,13 @@ def build(file = None):
     atm.pysdist()
     atm.copy(os.path.join("dist", name_ver + ".zip"), dist_f)
 
+    # changes the current directory to the source directory of the
+    # repository and runs the colony container builder then copies
+    # the result from it to the distribution folder
+    os.chdir(os.path.join(repo_f, "src"))
+    atm.colony(descriptor = "container.json")
+    atm.move("pt.hive.colony.ccx", dist_f)
+
     # changes the current directory to the source one in the result
     # directory (contents are considered the "binaries") and then
     # creates a tar file with its contents (contents should be raw)
