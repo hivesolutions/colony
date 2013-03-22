@@ -1300,10 +1300,9 @@ class Plugin(object):
         if plugin_manager_configuration.get("thread_id_logging", False):
             formatting_message += "[" + str(thread.get_ident()) + "] "
 
-        # appends the formatting message to the logging message
+        # appends the formatting message to the logging message and
+        # returns it to the caller method
         logger_message = formatting_message + message
-
-        # returns the logger message
         return logger_message
 
     def _get_capabilities_allowed_names(self):
