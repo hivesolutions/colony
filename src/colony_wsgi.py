@@ -82,7 +82,8 @@ config_file_path = os.path.abspath(config_file_path)
 # files and adds it to the system path, so that it's possible to
 # import the configuration file module
 configuration_directory_path = os.path.dirname(config_file_path)
-sys.path.insert(0, configuration_directory_path)
+if not configuration_directory_path in sys.path:
+    sys.path.insert(0, configuration_directory_path)
 
 # retrieves the configuration file base path from the configuration
 # file path, this values is going to be used to retrieve the "final"
