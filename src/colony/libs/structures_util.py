@@ -581,3 +581,42 @@ class FormatTuple(object):
         """
 
         self.format_string = format_string
+
+class FileReference(object):
+    """
+    Simple structure for the description of a file in the
+    current file system.
+
+    The structure contains a series of utility methods that
+    allow fast and simple operation on the described file.
+    """
+
+    path = None
+    """ The file to the file that is being described by the
+    the current file reference object """
+
+    def __init__(self, path):
+        """
+        Constructor of the class.
+
+        @type path: String
+        @param path: The path to the file that is being described
+        by the current file reference object to be created.
+        """
+
+        self.path = path
+
+    def read_all(self, mode = "rb"):
+        """
+        Reads the complete set of the contents from the file that
+        is currently being described.
+
+        @type mode: String
+        @param mode: The file open mode to be used for the reading
+        (may control binary/text modes).
+        """
+
+        file = open(self.path, mode)
+        try: data = file.read()
+        finally: data.close
+        return data
