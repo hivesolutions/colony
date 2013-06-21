@@ -594,17 +594,25 @@ class FileReference(object):
     path = None
     """ The file to the file that is being described by the
     the current file reference object """
+    
+    encoding = None
+    """ The encoding used for the file in case the referred
+    file is text based, useful for simple reading operations """
 
-    def __init__(self, path):
+    def __init__(self, path, encoding = None):
         """
         Constructor of the class.
 
         @type path: String
         @param path: The path to the file that is being described
         by the current file reference object to be created.
+        @type encoding: String
+        @param encoding: String describing the encoding used by the
+        referenced file (only for text based).
         """
 
         self.path = path
+        self.encoding = encoding
 
     def read_all(self, mode = "rb"):
         """
@@ -618,5 +626,6 @@ class FileReference(object):
 
         file = open(self.path, mode)
         try: data = file.read()
-        finally: data.close
+        finally: file.close()
+        if self.encoding: data = data.decode(self.encoding)
         return data
