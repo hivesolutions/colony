@@ -594,7 +594,7 @@ class FileReference(object):
     path = None
     """ The file to the file that is being described by the
     the current file reference object """
-    
+
     encoding = None
     """ The encoding used for the file in case the referred
     file is text based, useful for simple reading operations """
