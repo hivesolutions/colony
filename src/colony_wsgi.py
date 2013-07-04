@@ -43,6 +43,7 @@ import glob
 import atexit
 import warnings
 import traceback
+import threading
 
 CONFIG_FILE_ENV = "COLONY_CONFIG_FILE"
 """ The name of the environment variable to be used
@@ -165,6 +166,45 @@ def unload_system():
     # the embedding process
     plugin_manager.unload_system()
 
+class ServerThread(threading.Thread):
+    """
+    Thread class responsible for the handling and management
+    of the server instance that it represents.
+
+    This is considered to be a long running thread and only
+    the exit of the current process "kills" it.
+    """
+
+    def __init__(self, server, host, port, *args, **kwargs):
+        threading.Thread.__init__(self, *args, **kwargs)
+        self.server = server
+        self.host = host
+        self.port = port
+
+    def __repr__(self):
+        return "%s / %s@%d" % (self.server, self.host, self.port)
+
+    def run(self):
+        try:
+            serve(
+                server = self.server,
+                host = self.host,
+                port = self.port
+            )
+        except:
+            print >> sys.stderr, "Problem in '%s'" % str(self)
+            raise
+
+def serve_multiple(server = "waitress", hosts = ("127.0.0.1",), ports = (8080,)):
+    count = len(hosts)
+
+    for index in range(count):
+        host = hosts[index]
+        port = ports[index]
+
+        server_thread = ServerThread(server, host, port)
+        server_thread.start()
+
 def serve(server = "waitress", host = "127.0.0.1", port = 8080):
     _globals = globals()
     print >> sys.stderr, "Starting with '%s' ..." % server
@@ -196,5 +236,13 @@ def serve_legacy(host, port):
 if __name__ == "__main__":
     server = os.environ.get("SERVER", "legacy")
     host = os.environ.get("HOST", "127.0.0.1")
-    port = int(os.environ.get("PORT", "8080"))
-    serve(server = server, host = host, port = port)
+    port = os.environ.get("PORT", "8080")
+
+    hosts = [value.strip() for value in host.split(",")]
+    ports = [int(value.strip()) for value in port.split(",")]
+
+    serve_multiple(
+        server,
+        hosts,
+        ports
+    )
