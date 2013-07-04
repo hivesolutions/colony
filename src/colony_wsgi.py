@@ -66,6 +66,10 @@ import colony.base.system
 # no message with this kind of warning is printed (clean console)
 warnings.filterwarnings("ignore", category = DeprecationWarning)
 
+# retrieves the layout mode that is going to be used for the
+# resolution of resources in the colony infra-structure
+layout_mode = os.environ.get("LAYOUT_MODE", "default")
+
 # tries to retrieve the run mode from the currently set
 # environment variables, in case of failure defaults to
 # the default value
@@ -74,6 +78,11 @@ run_mode = os.environ.get("RUN_MODE", "development")
 # tries to retrieve the prefix to be used to shorten the path
 # resolution in the request handling
 prefix = os.environ.get("PREFIX", None)
+
+# gathers the path to the alias file that contains json information
+# about the mapping prefixes for the http server, the file should
+# contain a set of prefix to resolution prefix values
+alias_path = os.environ.get("ALIAS_PATH", None)
 
 # tries to retrieve the configuration file from the environment
 # variable associated in case it fails uses the default configuration
@@ -134,18 +143,25 @@ plugin_manager = colony.base.system.PluginManager(
     loop = False,
     threads = False,
     signals = False,
+    layout_mode = layout_mode,
     run_mode = run_mode
 )
 return_code = plugin_manager.load_system()
+alias = None
 
 def application(environ, start_response):
     try:
+        # retrieves the currently set alias map, loading
+        # it in case this is the first run, this value may
+        # be unset and no alias mapping is performed
+        alias = get_alias()
+
         # retrieves the wsgi plugin and uses it to handle
         # the wsgi request (request redirection) any inner
         # exception should be handled and an error http
         # message should be returned to the end user
         wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
-        sequence = wsgi_plugin.handle(environ, start_response, prefix)
+        sequence = wsgi_plugin.handle(environ, start_response, prefix, alias)
     except:
         # in case the run mode is development the exception should
         # be processed and a description sent to the output
@@ -161,6 +177,32 @@ def application(environ, start_response):
     # returns the sequence object that may be used by the caller
     # method to retrieve the contents of the message to be sent
     return sequence
+
+def get_alias():
+    global alias
+    global alias_path
+
+    # in case either the alias is defined (file already loaded)
+    # or there's no alias file to be loaded the currently set
+    # alias variable is retrieved (cached value)
+    if alias or not alias_path: return alias
+
+    try:
+        # tries to load the json file using the default python
+        # based json module (may not exist) the closes the file
+        # to avoid any memory reference leak
+        import json
+        file = open(alias_path, "rb")
+        try: alias = json.load(file)
+        finally: file.close()
+    except:
+        # unsets the alias path to avoid any further file reading
+        # avoiding any duplicated reading
+        alias_path = None
+
+    # returns the map containing the alias that were loaded from the
+    # file, this value may be unsets in case there was an error
+    return alias
 
 @atexit.register
 def unload_system():
