@@ -69,7 +69,11 @@ warnings.filterwarnings("ignore", category = DeprecationWarning)
 # tries to retrieve the run mode from the currently set
 # environment variables, in case of failure defaults to
 # the default value
-run_mode = os.environ.get("run_mode", "development")
+run_mode = os.environ.get("RUN_MODE", "development")
+
+# tries to retrieve the prefix to be used to shorten the path
+# resolution in the request handling
+prefix = os.environ.get("PREFIX", None)
 
 # tries to retrieve the configuration file from the environment
 # variable associated in case it fails uses the default configuration
@@ -141,7 +145,7 @@ def application(environ, start_response):
         # exception should be handled and an error http
         # message should be returned to the end user
         wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
-        sequence = wsgi_plugin.handle(environ, start_response)
+        sequence = wsgi_plugin.handle(environ, start_response, prefix)
     except:
         # in case the run mode is development the exception should
         # be processed and a description sent to the output
