@@ -165,8 +165,36 @@ def unload_system():
     # the embedding process
     plugin_manager.unload_system()
 
-if __name__ == "__main__":
+def serve(server = "waitress", host = "127.0.0.1", port = 8080):
+    _globals = globals()
+    print >> sys.stderr, "Starting with '%s' ..." % server
+    method = _globals.get("serve_" + server, serve_legacy)
+    return_value = method(host = host, port = port)
+    print >> sys.stderr, "Stopped in '%s' ..." % server
+    return return_value
+
+def serve_waitress(host, port):
+    import waitress
+    waitress.serve(application, host = host, port = port)
+
+def serve_tornado(host, port):
+    import tornado.wsgi
+    import tornado.httpserver
+
+    container = tornado.wsgi.WSGIContainer(application)
+    server = tornado.httpserver.HTTPServer(container)
+    server.listen(port, address = host)
+    instance = tornado.ioloop.IOLoop.instance()
+    instance.start()
+
+def serve_legacy(host, port):
     import wsgiref.simple_server
-    httpd = wsgiref.simple_server.make_server("0.0.0.0", 8080, application)
-    print >> sys.stderr, "Running on http://0.0.0.0:8080/"
+    httpd = wsgiref.simple_server.make_server(host, port, application)
+    print >> sys.stderr, "Running on http://%s:%d/" % (host, port)
     httpd.serve_forever()
+
+if __name__ == "__main__":
+    server = os.environ.get("SERVER", "legacy")
+    host = os.environ.get("HOST", "127.0.0.1")
+    port = int(os.environ.get("PORT", "8080"))
+    serve(server = server, host = host, port = port)
