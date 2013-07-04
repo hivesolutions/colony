@@ -227,6 +227,16 @@ def serve_tornado(host, port):
     instance = tornado.ioloop.IOLoop.instance()
     instance.start()
 
+def serve_cherry(host, port):
+    import cherrypy.wsgiserver
+
+    server = cherrypy.wsgiserver.CherryPyWSGIServer(
+        (host, port),
+        application
+    )
+    try: server.start()
+    except KeyboardInterrupt: server.stop()
+
 def serve_legacy(host, port):
     import wsgiref.simple_server
     httpd = wsgiref.simple_server.make_server(host, port, application)
