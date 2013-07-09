@@ -160,9 +160,9 @@ def unquote(string_value):
         except UnicodeDecodeError:
             string_value_splitted[index] = unichr(int(item[:2], 16)) + item[2:]
 
-    # returns the joined "partial" string value encoded as
-    # a unicode string, using the utf-8 based decoding
-    return "".join(string_value_splitted).decode("utf-8")
+    # returns the joined "partial" string value, this string should
+    # be encoded using utf-8 as the quote strategy uses that encoding
+    return "".join(string_value_splitted)
 
 def unquote_plus(string_value):
     """
