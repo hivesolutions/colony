@@ -132,8 +132,8 @@ def quote_plus(string_value, safe = ""):
 
 def unquote(string_value):
     """
-    Unquotes the given string value according to
-    the url encoding specification.
+    Unquotes the given string value according to the url
+    encoding specification.
     The implementation is based on the python base library.
 
     @type string_value: String
@@ -142,8 +142,10 @@ def unquote(string_value):
     @return: The unquoted string value.
     """
 
-    # splits the string value around
-    # percentage value
+    # forces the encoding of the string value as a string and
+    # then splits the string value around percentage value
+    # so that the various partial encoded values are decoded
+    string_value = str(string_value)
     string_value_splitted = string_value.split("%")
 
     # iterates over all the "percentage values" range
@@ -158,8 +160,9 @@ def unquote(string_value):
         except UnicodeDecodeError:
             string_value_splitted[index] = unichr(int(item[:2], 16)) + item[2:]
 
-    # returns the joined "partial" string value
-    return "".join(string_value_splitted)
+    # returns the joined "partial" string value encoded as
+    # a unicode string, using the utf-8 based decoding
+    return "".join(string_value_splitted).decode("utf-8")
 
 def unquote_plus(string_value):
     """
@@ -174,7 +177,8 @@ def unquote_plus(string_value):
     @return: The unquoted string value.
     """
 
-    # replaces the plus sign with a space
+    # replaces the plus sign with a space, this is considered
+    # the default plus symbol substitution
     string_value = string_value.replace("+", " ")
 
     # returns the unquoted string value
