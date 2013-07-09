@@ -151,7 +151,7 @@ alias = None
 
 def application(environ, start_response):
     try:
-        # retrieves the currently set alias map, loading
+        # retrieves the currently set alias list, loading
         # it in case this is the first run, this value may
         # be unset and no alias mapping is performed
         alias = get_alias()
