@@ -41,6 +41,7 @@ import os
 import sys
 import glob
 import atexit
+import logging
 import warnings
 import traceback
 import threading
@@ -146,6 +147,7 @@ plugin_manager = colony.base.system.PluginManager(
     layout_mode = layout_mode,
     run_mode = run_mode
 )
+plugin_manager.start_logger(logging.INFO)
 return_code = plugin_manager.load_system()
 alias = None
 

@@ -1803,6 +1803,8 @@ class PluginManager:
     def start_logger(self, log_level = DEFAULT_LOGGING_LEVEL):
         """
         Starts the logging system with the given log level.
+        The start of the logger implies the creation of the
+        various handlers and the update of their formatters.
 
         @type log_level: int
         @param log_level: The log level of the logger.
@@ -1811,11 +1813,13 @@ class PluginManager:
         # retrieves the minimal log level between the current log level and the default one
         minimal_log_level = DEFAULT_LOGGING_LEVEL < log_level and DEFAULT_LOGGING_LEVEL or log_level
 
-        # creates the (complete) logger file name
+        # creates the (complete) logger file name by concatenating the
+        # various prefixes, name separators, run mode and file name extensions
         logger_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX + DEFAULT_LOGGING_FILE_NAME_SEPARATOR +\
             self.run_mode + DEFAULT_LOGGING_FILE_NAME_EXTENSION
 
-        # creates the logger file path
+        # creates the complete logger file path by adding the "complete"
+        # logger file name to the "base" logger path
         logger_file_path = self.logger_path + "/" + logger_file_name
 
         # retrieves the logger, sets the logger propagation
@@ -1840,12 +1844,16 @@ class PluginManager:
         )
 
         # creates the broadcast handler so that the logging messages
-        # may be sent to the world
+        # may be sent to the world (network broadcast)
         broadcast_handler = colony.base.loggers.BroadcastHandler()
+        memory_handler = colony.base.loggers.MemoryHandler()
 
         # retrieves the logging format and uses it
         # to create the proper logging formatter
-        logging_format = plugin_manager_configuration.get("logging_format", DEFAULT_LOGGING_FORMAT)
+        logging_format = plugin_manager_configuration.get(
+            "logging_format",
+            DEFAULT_LOGGING_FORMAT
+        )
         formatter = logging.Formatter(logging_format)
 
         # sets the formatter in the stream and rotating
@@ -1853,6 +1861,7 @@ class PluginManager:
         stream_handler.setFormatter(formatter)
         rotating_file_handler.setFormatter(formatter)
         broadcast_handler.setFormatter(formatter)
+        memory_handler.setFormatter(formatter)
 
         # adds the stream and rotating file handlers
         # to the logger
@@ -1860,7 +1869,8 @@ class PluginManager:
         logger.addHandler(rotating_file_handler)
         logger.addHandler(broadcast_handler)
 
-        # sets the logger in the current context
+        # sets the logger in the current context, so that
+        # it may be used latter for reference
         self.logger = logger
 
     def load_system(self):
