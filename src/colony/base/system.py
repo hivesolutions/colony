@@ -5041,6 +5041,24 @@ class PluginManager:
             "environment" : self.get_environment()
         }
 
+    def get_log_handler(self, name):
+        """
+        Retrieves the reference to the logger handler
+        with the provided name as reference. In case no
+        logging handler is found an invalid value is
+        returned instead.
+
+        @type name: String
+        @param name: The name of the log handler to be
+        retrieved.
+        @rtype: Handler
+        @return: The logging handler installed in the
+        manager logger with the provided name or and invalid
+        value in case it's not found.
+        """
+
+        return self.logger_handlers.get(name, None)
+
     def log_stack_trace(self, level = logging.DEBUG):
         """
         Logs the current stack trace to the logger.
