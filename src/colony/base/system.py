@@ -324,7 +324,9 @@ class Plugin(object):
     """ The valid flag of the plugin """
 
     logger = None
-    """ The logger used """
+    """ The reference to the logger object that is
+    going to be used by the plugin in the logging
+    operation, this may come from an external source """
 
     timestamp = None
     """ The timestamp that stores the load time
@@ -1356,17 +1358,39 @@ class PluginManagerPlugin(Plugin):
 
 class PluginManager:
     """
-    The plugin manager class.
+    The top level manager class, this is the controller (hipervisor)
+    of all the plugin instances handled by him.
+
+    Main tasks of it include inversion of control handling and reverse
+    dependency injection. Other tasks include logging and resource
+    handling support.
+
+    Any change in this class must be done with care and with complete
+    knowledge of the system as major problems may arise from a superficial
+    and careless change.
     """
 
     uid = None
-    """ The unique identification """
+    """ The unique identification of the manager, this
+    should be generated in a way than no id collision
+    exists event at a distribution level (uuid is the
+    recommended approach for generation) """
 
     logger = None
-    """ The logger used """
+    """ The logger reference to be used as the base
+    element for all the logging operations to be done
+    under the plugin manager """
+
+    logger_handlers = {}
+    """ The map that associates a logging handler name
+    with the proper handler instance so that inner details
+    may be retrieved from the handler, useful for
+    promiscuous usage of the logging handlers """
 
     platform = None
-    """ The current executing platform """
+    """ The current executing platform, should be a
+    sub value for the python interpreters (eg: cpython
+    jython or iron python) """
 
     condition = None
     """ The condition used in the event queue """
@@ -1626,6 +1650,7 @@ class PluginManager:
 
         self.plugins = colony.base.util.Plugins()
         self.current_id = 0
+        self.logger_handlers = {}
         self.event_queue = []
         self.referred_modules = []
         self.loaded_plugins = []
@@ -1872,6 +1897,14 @@ class PluginManager:
         # sets the logger in the current context, so that
         # it may be used latter for reference
         self.logger = logger
+
+        # updates the reference to all of the logging handlers
+        # associated with the current logger so that latter it's
+        # possible to retrieve each of them based on their name
+        self.logger_handlers["stream"] = stream_handler
+        self.logger_handlers["rotating_file"] = rotating_file_handler
+        self.logger_handlers["broadcast"] = broadcast_handler
+        self.logger_handlers["memory"] = memory_handler
 
     def load_system(self):
         """
