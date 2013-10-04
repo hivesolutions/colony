@@ -1869,9 +1869,17 @@ class PluginManager:
         )
 
         # creates the broadcast handler so that the logging messages
-        # may be sent to the world (network broadcast)
+        # may be sent to the world (network broadcast), then sets the
+        # minimal level in it so that the maximum amount of information
+        # is logged "into it" (permissive logging)
         broadcast_handler = colony.base.loggers.BroadcastHandler()
+        broadcast_handler.setLevel(minimal_log_level)
+
+        # creates the in memory handler object and then again sets
+        # the minimal log level in it so that it may have the
+        # maximum amount of information available for handling
         memory_handler = colony.base.loggers.MemoryHandler()
+        memory_handler.setLevel(minimal_log_level)
 
         # retrieves the logging format and uses it
         # to create the proper logging formatter
@@ -1888,11 +1896,13 @@ class PluginManager:
         broadcast_handler.setFormatter(formatter)
         memory_handler.setFormatter(formatter)
 
-        # adds the stream and rotating file handlers
-        # to the logger
+        # adds the complete set of logging handler to the
+        # current logger, so that they get notified once
+        # a new "message" is going to emit
         logger.addHandler(stream_handler)
         logger.addHandler(rotating_file_handler)
         logger.addHandler(broadcast_handler)
+        logger.addHandler(memory_handler)
 
         # sets the logger in the current context, so that
         # it may be used latter for reference
