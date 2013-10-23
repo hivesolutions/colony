@@ -207,7 +207,7 @@ def url_encode(attributes_map, plus_encoding = False):
     is_first = True
 
     # iterates over all the attribute keys and values
-    for attribute_key, attribute_value in attributes_map.items():
+    for attribute_key, attribute_value in attributes_map.iteritems():
         # quotes both the attribute key and value
         attribute_key_quoted = quote_method(attribute_key)
         attribute_value_quoted = quote_method(attribute_value)

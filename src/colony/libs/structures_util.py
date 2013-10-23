@@ -237,7 +237,7 @@ class OrderedMap(object):
 
     def extend(self, map):
         # iterates over all the map items
-        for key, value in map.items():
+        for key, value in map.iteritems():
             # sets the item in the structure
             self.__setitem__(key, value)
 
