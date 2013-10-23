@@ -254,6 +254,15 @@ class OrderedMap(object):
         # returns the valid keys
         return keys
 
+    def itervalues(self):
+        return self._map.itervalues()
+
+    def iteritems(self):
+        return self.items()
+
+    def iterkeys(self):
+        return self.keys()
+
     def __add_item(self, key, value):
         """
         Adds an item with the given key to the
@@ -427,7 +436,7 @@ class MultipleValueMap(object):
         return self._map.itervalues()
 
     def iteritems(self):
-        return self.tuples_list
+        return self.items()
 
     def iterkeys(self):
         return self._map.keys()
