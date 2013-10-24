@@ -12,3 +12,5 @@
 /src/plugins/
 /src/tmp/
 /src/var/
+
+/scripts/build/builds/
