@@ -220,7 +220,7 @@ class ProcessCommand(setuptools.Command):
 
 setuptools.setup(
     name = "colony",
-    version = "1.0.8",
+    version = "1.0.9",
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
     description = "Colony Framework",
