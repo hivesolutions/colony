@@ -42,7 +42,7 @@ def build(file = None):
     # resulting source build file to the distribution directory
     os.chdir(repo_f)
     atm.pytest()
-    atm.pysdist()
+    atm.pysdist(process = True)
     atm.copy(os.path.join("dist", name_ver + ".zip"), dist_f)
 
     # changes the current directory to the source directory of the
