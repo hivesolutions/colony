@@ -3,6 +3,7 @@
 
 /build/
 /src/colony.egg-info/
+/scripts/build/builds/
 
 /src/containers/
 /src/deploy/
@@ -12,5 +13,3 @@
 /src/plugins/
 /src/tmp/
 /src/var/
-
-/scripts/build/builds/
