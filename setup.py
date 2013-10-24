@@ -230,9 +230,9 @@ setuptools.setup(
     zip_safe = False,
     scripts = [
         "scripts/pypi/colony.bat",
-        "scripts/pypi/colony_admin.py",
+        "scripts/pypi/colony_adm.py",
         "scripts/pypi/colony_pypi.py",
-        "scripts/pypi/colony_admin.bat"
+        "scripts/pypi/colony_adm.bat"
     ],
     py_modules = [
         "colony_adm",
