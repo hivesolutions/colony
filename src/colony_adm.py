@@ -91,6 +91,9 @@ def get_base_path(path):
     # not possible to find it
     return None
 
+def version():
+    print "colony admin - admin tool for colony framework"
+
 def clone():
     # in case there are enough arguments for the
     # deduction of the target path uses the provided
