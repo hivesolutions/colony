@@ -1,4 +1,5 @@
 {
+    "1.0.8" : ["Better support for the admin tool"],
     "1.0.7" : ["Relase for sync with plugins"],
     "1.0.6" : ["Deployment under the admin command"],
     "1.0.5" : ["Support for the admin command"],
