@@ -9,7 +9,7 @@ def build(file = None):
     # runs the initial assertion for the various commands
     # that are mandatory for execution, this should avoid
     # errors in the middle of the build
-    atm.assert_c(("git", "python --version"))
+    atm.assert_c(("git", "colony_admin", "python --version"))
 
     # starts the build process with the configuration file
     # that was provided to the configuration script
