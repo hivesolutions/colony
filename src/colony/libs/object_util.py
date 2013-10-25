@@ -679,9 +679,9 @@ def __object_items(instance):
     if instance_type == types.DictionaryType:
         # returns the instance (map) keys values
         # using the normal map method
-        return instance.iteritems()
+        return instance.items()
     # otherwise the instance is a "normal" instance
     else:
         # returns the instance dictionary keys
         # (the instance names)
-        return instance.__dict__.iteritems()
+        return instance.__dict__.items()
