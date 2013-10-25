@@ -194,19 +194,27 @@ class OrderedMap(object):
     _keys = None
     """ The internal keys list for ordered keys retrieval """
 
-    def __init__(self, ordered_keys = False):
+    def __init__(self, ordered_keys = False, map = None):
         """
         Constructor of the class.
+
+        In case a map is provided the map is first sorted according
+        to the default sorting operation in the map keys and then
+        all of their values are entered.
 
         @type ordered_keys: bool
         @param ordered_keys: If the keys should also be provided
         in an ordered fashion (expensive remove operation).
+        @type map: Dictionary
+        @param map: The map to be used to populate the ordered map
+        initially using the default key order.
         """
 
         self.tuples_list = []
         self._map = {}
 
         if ordered_keys: self._keys = []
+        if map: self._load_map(map)
 
     def __len__(self):
         return self._map.__len__()
@@ -262,6 +270,25 @@ class OrderedMap(object):
 
     def iterkeys(self):
         return self.keys()
+
+    def _load_map(self, map):
+        """
+        Loads the provided map into the current ordered
+        map so that the keys are sorted in the default
+        manner and then the associated items are inserted
+        using the order of the keys.
+
+        @type map: Dictionary
+        @param map: The map that is going to be used to
+        populate the current ordered map using the default
+        order of the keys.
+        """
+
+        keys = map.keys()
+        keys.sort()
+        for key in keys:
+            value = map[key]
+            self.__add_item(key, value)
 
     def __add_item(self, key, value):
         """
