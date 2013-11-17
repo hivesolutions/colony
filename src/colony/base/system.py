@@ -3980,12 +3980,10 @@ class PluginManager:
         @return: The "asserted" and loaded plugin.
         """
 
-        # in case the plugin is not loaded
-        # (loading is required)
-        if not plugin.is_loaded():
-            # loads the plugin (as defined by the
-            # assert request)
-            self._load_plugin(plugin)
+        # in case the plugin is not loaded (loading is
+        # required), must trigger the loading process for
+        # the current plugin in assertion
+        if not plugin.is_loaded(): self._load_plugin(plugin)
 
         # returns the (loaded) plugin
         return plugin
