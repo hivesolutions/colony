@@ -42,7 +42,7 @@ def version_cmp(version, version_compare):
     Compares the given version string against a compare string
     that may contain wildcard values.
 
-    This way it's possible to compare it agains version ranges
+    This way it's possible to compare it against version ranges
     defined in the form of wildcard values.
 
     @type version: String
