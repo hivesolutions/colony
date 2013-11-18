@@ -1358,7 +1358,7 @@ class PluginManagerPlugin(Plugin):
 
 class PluginManager:
     """
-    The top level manager class, this is the controller (hipervisor)
+    The top level manager class, this is the controller (hypervisor)
     of all the plugin instances handled by him.
 
     Main tasks of it include inversion of control handling and reverse
@@ -1455,6 +1455,11 @@ class PluginManager:
     """ The object that stores the references to all
     the loaded plugins instances (singletons) indexed
     in the object by their short name """
+
+    retrieve_lock = None
+    """ The lock that is used to control the access and
+    retrieval of plugin instance, no two threads may retrieve
+    plugins at the same as this would create some sync problems """
 
     current_id = 0
     """ The current id used for the plugin """
@@ -1571,7 +1576,28 @@ class PluginManager:
     """ The map with the plugin associated with
     the name of the event fired """
 
-    def __init__(self, manager_path = "", logger_path = "log", library_paths = [], meta_paths = [], plugin_paths = [], platform = CPYTHON_ENVIRONMENT, init_complete_handlers = [], stop_on_cycle_error = True, loop = True, threads = True, signals = True, layout_mode = "default", run_mode = "default", container = "default", prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+    def __init__(
+        self,
+        manager_path = "",
+        logger_path = "log",
+        library_paths = [],
+        meta_paths = [],
+        plugin_paths = [],
+        platform = CPYTHON_ENVIRONMENT,
+        init_complete_handlers = [],
+        stop_on_cycle_error = True,
+        loop = True,
+        threads = True,
+        signals = True,
+        layout_mode = "default",
+        run_mode = "default",
+        container = "default",
+        prefix_paths = [],
+        daemon_pid = None,
+        daemon_file_path = None,
+        execution_command = None,
+        attributes_map = {}
+    ):
         """
         Constructor of the class.
 
@@ -1649,6 +1675,7 @@ class PluginManager:
         self.condition = threading.Condition()
 
         self.plugins = colony.base.util.Plugins()
+        self.retrieve_lock = threading.RLock()
         self.current_id = 0
         self.logger_handlers = {}
         self.event_queue = []
@@ -3994,6 +4021,10 @@ class PluginManager:
         The retrieval of the plugin only uses the version is it's
         specified.
 
+        Note that this method cannot be called at the same time
+        from different threads as this would block the control
+        flow to avoid unwanted sync problems.
+
         @type plugin_id: String
         @param plugin_id: The id of the plugin to retrieve.
         @type plugin_version: String
@@ -4002,12 +4033,22 @@ class PluginManager:
         @return: The plugin with the given id and optionally version.
         """
 
-        # retrieves the plugin (not sure about loading) and then
-        # asserts it to be sure it's loaded (if possible)
-        plugin = self._get_plugin(plugin_id, plugin_version)
-        plugin = plugin and self.assert_plugin(plugin) or plugin
+        # acquires the retrieve lock so that no multiple retrieval
+        # of plugins occur this would create some sync problems
+        self.retrieve_lock.acquire()
 
-        # returns the plugin (instance)
+        try:
+            # retrieves the plugin (not sure about loading) and then
+            # asserts it to be sure it's loaded (if possible)
+            plugin = self._get_plugin(plugin_id, plugin_version)
+            plugin = plugin and self.assert_plugin(plugin) or plugin
+        finally:
+            # releases the retrieve lock so that new retrieval of
+            # plugins may occur (it's now possible)
+            self.retrieve_lock.release()
+
+        # returns the plugin (instance), this may be a newly initialized
+        # instance or an instance already previously initialized
         return plugin
 
     def _get_plugin(self, plugin_id, plugin_version = None):
@@ -4030,10 +4071,17 @@ class PluginManager:
         plugin = self.plugin_names_map.get(plugin_id, None)
         plugin = self.plugin_instances_map.get(plugin_id, plugin)
 
-        # in case the plugin version is specified and
-        # it does not match the retrieved plugin version
-        if plugin_version and not colony.libs.version_util.version_cmp(plugin.version, plugin_version):
-            return None
+        # verifies if the plugin version is valid, it's considered to
+        # be valid when it's not defined (anything counts) or when the
+        # version matches the current plugin version
+        version_valid = not plugin_version or colony.libs.version_util.version_cmp(
+            plugin.version,
+            plugin_version
+        )
+
+        # in case the version of the plugin is not valid returns invalid
+        # as no valid plugin has been retrieved
+        if not version_valid: return None
 
         # returns the plugin (instance)
         return plugin
