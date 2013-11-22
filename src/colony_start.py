@@ -393,7 +393,22 @@ def main():
 
     # parses the configuration options, retrieving the various values that
     # control the execution of the plugin system
-    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error, prefix_paths, daemon_file_path, logger_path, library_path, meta_path, plugin_path = parse_configuration(config_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, meta_path, plugin_path, manager_path)
+    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error,\
+    prefix_paths, daemon_file_path, logger_path, library_path, meta_path,\
+    plugin_path = parse_configuration(
+        config_file_path,
+        verbose,
+        debug,
+        silent,
+        layout_mode,
+        run_mode,
+        daemon_file_path,
+        logger_path,
+        library_path,
+        meta_path,
+        plugin_path,
+        manager_path
+    )
 
     # configures the system using the layout mode, the run mode
     # and the  manager path
