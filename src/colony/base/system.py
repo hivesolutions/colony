@@ -267,6 +267,21 @@ class System(object):
 
         return self.plugin.manager
 
+    def debug(self, *args, **kwargs):
+        return self.plugin.debug(*args, **kwargs)
+
+    def info(self, *args, **kwargs):
+        return self.plugin.info(*args, **kwargs)
+
+    def warning(self, *args, **kwargs):
+        return self.plugin.warning(*args, **kwargs)
+
+    def error(self, *args, **kwargs):
+        return self.plugin.error(*args, **kwargs)
+
+    def critical(self, *args, **kwargs):
+        return self.plugin.critical(*args, **kwargs)
+
 class Plugin(object):
     """
     The abstract plugin class.
