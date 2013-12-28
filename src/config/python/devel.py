@@ -46,14 +46,8 @@ layout_mode = "default"
 run_mode = "development"
 """ The project run mode """
 
-verbose = False
-""" The verbose flag """
-
-debug = False
-""" The debug flag """
-
-silent = False
-""" The silent flag """
+level = "INFO"
+""" The logging verbosity level """
 
 stop_on_cycle_error = False
 """ The stop on cycle error flag """
