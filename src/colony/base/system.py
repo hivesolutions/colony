@@ -1213,23 +1213,23 @@ class Plugin(object):
         in the logging.
         """
 
-        # retrieves the execution information
+        # retrieves the execution information, note
+        # that this execution information only exists
+        # in case an exception has been raised
         _type, _value, traceback_list = sys.exc_info()
 
-        # in case the traceback list is valid
-        if traceback_list:
-            formated_traceback = traceback.format_tb(traceback_list)
-        # otherwise there is no traceback list
-        else:
-            formated_traceback = ()
+        # in case the traceback list is valid formats it
+        # correctly otherwise falls-back to the empty tuple
+        # as the default formated traceback (no traceback)
+        formated_traceback = traceback.format_tb(traceback_list) if traceback_list else ()
 
         # iterates over the traceback lines to log
         # them into the current logger
         for formated_traceback_line in formated_traceback:
-            # strips the formated traceback line
+            # strips the formated traceback line and then
+            # logs the message with the formated traceback line
+            # with the requested log level (as specified)
             formated_traceback_line_stripped = formated_traceback_line.rstrip()
-
-            # prints a log message with the formated traceback line
             self.logger.log(level, formated_traceback_line_stripped)
 
     def debug(self, message):
