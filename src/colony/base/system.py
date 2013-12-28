@@ -100,6 +100,10 @@ DEFAULT_LOGGING_FILE_NAME_SEPARATOR = "_"
 DEFAULT_LOGGING_FILE_NAME_EXTENSION = ".log"
 """ The default logging file name extension """
 
+DEFAULT_LOGGING_ERR_FILE_NAME_EXTENSION = ".err"
+""" The default logging file name extension
+for the error type of file logging """
+
 DEFAULT_LOGGING_FILE_MODE = "a"
 """ The default logging file mode """
 
@@ -1884,10 +1888,14 @@ class PluginManager:
         # various prefixes, name separators, run mode and file name extensions
         logger_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX + DEFAULT_LOGGING_FILE_NAME_SEPARATOR +\
             self.run_mode + DEFAULT_LOGGING_FILE_NAME_EXTENSION
+        logger_err_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX + DEFAULT_LOGGING_FILE_NAME_SEPARATOR +\
+            self.run_mode + DEFAULT_LOGGING_ERR_FILE_NAME_EXTENSION
 
         # creates the complete logger file path by adding the "complete"
-        # logger file name to the "base" logger path
+        # logger file name to the "base" logger path, this is done both
+        # for the "normal" logger path and for the error based path
         logger_file_path = self.logger_path + "/" + logger_file_name
+        logger_err_file_path = self.logger_path + "/" + logger_err_file_name
 
         # retrieves the logger, sets the logger propagation
         # to avoid propagation and then updates the logger
@@ -1902,13 +1910,29 @@ class PluginManager:
         stream_handler = logging.StreamHandler()
         stream_handler.setLevel(log_level)
 
-        # creates the rotating file handler
+        # creates the rotating file handler that will be used for
+        # the "normal" colony logger and that logs the complete set
+        # of event associated with it (as defined in specification)
+        # note that the log level is set to the not set level
         rotating_file_handler = logging.handlers.RotatingFileHandler(
             logger_file_path,
             DEFAULT_LOGGING_FILE_MODE,
             DEFAULT_LOGGING_FILE_SIZE,
             DEFAULT_LOGGING_FILE_BACKUP_COUNT
         )
+        rotating_file_handler.setLevel(logging.NOTSET)
+
+        # creates the rotating error file handler that handles all the
+        # warning or more type of messages only, this is done in order
+        # to facilitate the debugging strategy in real-time production
+        # servers (as defined in the proper colony specification)
+        rotating_err_file_handler = logging.handlers.RotatingFileHandler(
+            logger_err_file_path,
+            DEFAULT_LOGGING_FILE_MODE,
+            DEFAULT_LOGGING_FILE_SIZE,
+            DEFAULT_LOGGING_FILE_BACKUP_COUNT
+        )
+        rotating_err_file_handler.setLevel(logging.WARNING)
 
         # creates the broadcast handler so that the logging messages
         # may be sent to the world (network broadcast), then sets the
@@ -1935,6 +1959,7 @@ class PluginManager:
         # file handlers (correctly formats the message)
         stream_handler.setFormatter(formatter)
         rotating_file_handler.setFormatter(formatter)
+        rotating_err_file_handler.setFormatter(formatter)
         broadcast_handler.setFormatter(formatter)
         memory_handler.setFormatter(formatter)
 
@@ -1943,6 +1968,7 @@ class PluginManager:
         # a new "message" is going to emit
         logger.addHandler(stream_handler)
         logger.addHandler(rotating_file_handler)
+        logger.addHandler(rotating_err_file_handler)
         logger.addHandler(broadcast_handler)
         logger.addHandler(memory_handler)
 
@@ -1955,6 +1981,7 @@ class PluginManager:
         # possible to retrieve each of them based on their name
         self.logger_handlers["stream"] = stream_handler
         self.logger_handlers["rotating_file"] = rotating_file_handler
+        self.logger_handlers["rotating_err_file"] = rotating_err_file_handler
         self.logger_handlers["broadcast"] = broadcast_handler
         self.logger_handlers["memory"] = memory_handler
 
