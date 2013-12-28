@@ -2053,7 +2053,7 @@ class PluginManager:
             # prints an information message about the ending of the
             # plugin system startup process, this message should mark
             # the readiness of the system to received actions
-            self.info("Startup process finished (used %d seconds)" % delta)
+            self.info("Startup process finished (took %d seconds)" % delta)
 
             # starts the main loop
             self.main_loop()
