@@ -493,8 +493,8 @@ class Plugin(object):
         # generates the lazy load plugin event
         self.manager.generate_event("plugin_manager.plugin.lazy_load_plugin", [self.id, self.version, self])
 
-        # prints an info message
-        self.info("Lazy loading plugin '%s' v%s" % (self.name, self.version))
+        # prints a debug message
+        self.debug("Lazy loading plugin '%s' v%s" % (self.name, self.version))
 
     def end_load_plugin(self):
         """
@@ -504,7 +504,7 @@ class Plugin(object):
         # generates the end load plugin event
         self.manager.generate_event("plugin_manager.plugin.end_load_plugin", [self.id, self.version, self])
 
-        self.info("Loading process for plugin '%s' v%s completed" % (self.name, self.version))
+        self.debug("Loading process for plugin '%s' v%s completed" % (self.name, self.version))
 
     def unload_plugin(self):
         """
@@ -580,8 +580,8 @@ class Plugin(object):
         # registers for all handled events
         self.register_all_handled_events_plugin(plugin)
 
-        # prints an info message
-        self.info("Loading plugin '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
+        # prints a debug message
+        self.debug("Loading plugin '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
 
     def unload_allowed(self, plugin, capability):
         """
@@ -623,14 +623,14 @@ class Plugin(object):
         """
 
         self.dependencies_loaded.append(plugin)
-        self.info("Plugin dependency '%s' v%s injected in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
+        self.debug("Plugin dependency '%s' v%s injected in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
 
     def init_complete(self):
         """
         Method called at the end of the plugin manager initialization.
         """
 
-        self.info("Plugin '%s' v%s notified about the end of the plugin manager init process" % (self.name, self.version))
+        self.debug("Plugin '%s' v%s notified about the end of the plugin manager init process" % (self.name, self.version))
 
     def register_all_handled_events_plugin(self, plugin):
         """
@@ -792,7 +792,7 @@ class Plugin(object):
 
         if not plugin in self.event_plugins_fired_loaded_map[event_name]:
             self.event_plugins_fired_loaded_map[event_name].append(plugin)
-            self.info("Registering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.name, plugin.version, self.name, self.version))
+            self.debug("Registering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.name, plugin.version, self.name, self.version))
 
     def unregister_plugin_event(self, plugin, event_name):
         """
@@ -807,7 +807,7 @@ class Plugin(object):
         if event_name in self.event_plugins_fired_loaded_map:
             if plugin in self.event_plugins_fired_loaded_map[event_name]:
                 self.event_plugins_fired_loaded_map[event_name].remove(plugin)
-                self.info("Unregistering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.name, plugin.version, self.name, self.version))
+                self.debug("Unregistering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.name, plugin.version, self.name, self.version))
 
     def notify_handlers(self, event_name, event_args):
         """
@@ -830,8 +830,8 @@ class Plugin(object):
             if event_or_super_event in self.event_plugins_fired_loaded_map:
                 # iterates over all the plugins registered for notification
                 for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
-                    # prints an info message
-                    self.info("Notifying '%s' v%s about event '%s' generated in '%s' v%s" % (event_plugin_loaded.name, event_plugin_loaded.version, event_name, self.name, self.version))
+                    # prints a debug message
+                    self.debug("Notifying '%s' v%s about event '%s' generated in '%s' v%s" % (event_plugin_loaded.name, event_plugin_loaded.version, event_name, self.name, self.version))
 
                     # calls the event handler for the event name with
                     # the given event arguments
@@ -850,8 +850,8 @@ class Plugin(object):
         if not is_event_or_super_event_in_list(event_name, self.events_fired):
             return
 
-        # prints an info message
-        self.info("Event '%s' generated in '%s' v%s" % (event_name, self.name, self.version))
+        # prints a debug message
+        self.debug("Event '%s' generated in '%s' v%s" % (event_name, self.name, self.version))
 
         # notifies the event handlers
         self.notify_handlers(event_name, event_args)
@@ -866,8 +866,8 @@ class Plugin(object):
         @param event_args: The arguments for the handler.
         """
 
-        # prints an info message
-        self.info("Event '%s' caught in '%s' v%s" % (event_name, self.name, self.version))
+        # prints a debug message
+        self.debug("Event '%s' caught in '%s' v%s" % (event_name, self.name, self.version))
 
     def reload_main_modules(self):
         """
@@ -2001,7 +2001,13 @@ class PluginManager:
         """
 
         try:
-            # prints an info message
+            # saves the initial time for the starting of the system
+            # this value is going to be used to calculate the delta
+            initial = time.time()
+
+            # prints an info message about the initialization of
+            # of the plugin manager, this should be one of the
+            # first logging messages printed by the system
             self.info("Starting plugin manager...")
 
             # sets the plugin manager timestamp
@@ -2037,6 +2043,17 @@ class PluginManager:
 
             # starts the plugin loading process
             self.init_plugin_system(plugin_system_configuration)
+
+            # retrieves the current time as the final one and then uses
+            # it to calculate the delta (used time) rounding into into
+            # an integer value so that it's printed accordingly
+            final = time.time()
+            delta = int(final - initial)
+
+            # prints an information message about the ending of the
+            # plugin system startup process, this message should mark
+            # the readiness of the system to received actions
+            self.info("Startup process finished (used %d seconds)" % delta)
 
             # starts the main loop
             self.main_loop()
@@ -3164,7 +3181,7 @@ class PluginManager:
 
         # in case a type is defined, prints an information
         # message about this loading type
-        if type: self.info("Loading of type: '%s'" % (type))
+        if type: self.debug("Loading of type: '%s'" % (type))
 
         # in case the plugin to be loaded is either of type main or thread
         if loading_type == MAIN_TYPE or loading_type == THREAD_TYPE:
@@ -3173,8 +3190,8 @@ class PluginManager:
                 # retrieves the available thread for the plugin
                 plugin_thread = self.plugin_threads_map[plugin.id]
 
-                # prints an info message
-                self.info("Thread restarted for plugin '%s' v%s" % (plugin.name, plugin.version))
+                # prints a debug message
+                self.debug("Thread restarted for plugin '%s' v%s" % (plugin.name, plugin.version))
             else:
                 # creates a new tread to run the main plugin
                 plugin_thread = PluginThread(plugin)
@@ -3188,8 +3205,8 @@ class PluginManager:
                 # sets the plugin thread in the plugin threads map
                 self.plugin_threads_map[plugin.id] = plugin_thread
 
-                # prints an info message
-                self.info("New thread started for plugin '%s' v%s" % (plugin.name, plugin.version))
+                # prints a debug message
+                self.debug("New thread started for plugin '%s' v%s" % (plugin.name, plugin.version))
 
             # sets the plugin load as not completed
             plugin_thread.set_load_complete(False)
@@ -3327,8 +3344,8 @@ class PluginManager:
 
         # in case a type is defined
         if type:
-            # prints an info message
-            self.info("Unloading of type: '%s'" % (type))
+            # prints a debug message
+            self.debug("Unloading of type: '%s'" % (type))
 
         # unloads the plugins that depend on the plugin being unloaded
         for dependent_plugin in self.get_plugin_dependent_plugins_map(plugin.id):
@@ -3529,8 +3546,8 @@ class PluginManager:
 
             # in case the test dependency tests fails
             if not plugin_dependency.test_dependency(self):
-                # prints an info message
-                self.info("Problem with dependency for plugin '%s' v%s" % (plugin.name, plugin.version))
+                # prints a debug  message
+                self.debug("Problem with dependency for plugin '%s' v%s" % (plugin.name, plugin.version))
 
                 # returns false
                 return False
@@ -3722,8 +3739,8 @@ class PluginManager:
                     if allowed_plugin.id in self.diffusion_scope_loaded_plugins_map[plugin.diffusion_scope]:
                         allowed_plugin = self.diffusion_scope_loaded_plugins_map[plugin.diffusion_scope][allowed_plugin.id]
                     else:
-                        # prints an info message
-                        self.info("Creating allowed plugin '%s' v%s as same diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
+                        # prints a debug message
+                        self.debug("Creating allowed plugin '%s' v%s as same diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
 
                         # creates a new allowed plugin (in a the same diffusion scope as the plugin)
                         allowed_plugin = self._create_plugin(allowed_plugin.id, allowed_plugin.version, plugin.diffusion_scope)
@@ -3732,8 +3749,8 @@ class PluginManager:
                     self.__load_plugin(allowed_plugin, ALLOWED_TYPE)
                 # in case the diffusion policy is new diffusion scope
                 elif diffusion_policy == NEW_DIFFUSION_SCOPE:
-                    # prints an info message
-                    self.info("Creating allowed plugin '%s' v%s as new diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
+                    # prints a debug message
+                    self.debug("Creating allowed plugin '%s' v%s as new diffusion scope" % (allowed_plugin.id, allowed_plugin.version))
 
                     # creates a new allowed plugin (in a new diffusion scope)
                     allowed_plugin = self.create_plugin(allowed_plugin.id, allowed_plugin.version)
@@ -4949,8 +4966,8 @@ class PluginManager:
         if not plugin in self.event_plugins_fired_loaded_map[event_name]:
             self.event_plugins_fired_loaded_map[event_name].append(plugin)
 
-            # prints an info message
-            self.info("Registering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.name, plugin.version))
+            # prints a debug message
+            self.debug("Registering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.name, plugin.version))
 
     def unregister_plugin_manager_event(self, plugin, event_name):
         """
@@ -4966,8 +4983,8 @@ class PluginManager:
             if plugin in self.event_plugins_fired_loaded_map[event_name]:
                 self.event_plugins_fired_loaded_map[event_name].remove(plugin)
 
-                # prints an info message
-                self.info("Unregistering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.name, plugin.version))
+                # prints a debug message
+                self.debug("Unregistering event '%s' from '%s' v%s in plugin manager" % (event_name, plugin.name, plugin.version))
 
     def notify_handlers(self, event_name, event_args):
         """
@@ -4990,7 +5007,7 @@ class PluginManager:
             if event_or_super_event in self.event_plugins_fired_loaded_map:
                 # iterates over all the plugins registered for notification
                 for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
-                    self.info("Notifying '%s' v%s about event '%s' generated in plugin manager" % (event_plugin_loaded.name, event_plugin_loaded.version, event_name))
+                    self.debug("Notifying '%s' v%s about event '%s' generated in plugin manager" % (event_plugin_loaded.name, event_plugin_loaded.version, event_name))
 
                     # calls the event handler for the event and the event arguments
                     event_plugin_loaded.event_handler(event_name, *event_args)
@@ -5005,8 +5022,8 @@ class PluginManager:
         @param event_args: The arguments to be passed to the handler.
         """
 
-        # prints an info message
-        self.info("Event '%s' generated in plugin manager" % (event_name))
+        # prints a debug  message
+        self.debug("Event '%s' generated in plugin manager" % (event_name))
 
         # notifies the event handlers of the event name with the event arguments
         self.notify_handlers(event_name, event_args)
