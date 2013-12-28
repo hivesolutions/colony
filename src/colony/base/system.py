@@ -1270,7 +1270,7 @@ class Plugin(object):
         # warning message and logs the current stack trace
         logger_message = self.format_logger_message(message)
         self.logger.warning(logger_message)
-        self.log_stack_trace()
+        self.log_stack_trace(level = logging.INFO)
 
     def error(self, message):
         """
@@ -1284,7 +1284,7 @@ class Plugin(object):
         # error message and logs the current stack trace
         logger_message = self.format_logger_message(message)
         self.logger.error(logger_message)
-        self.log_stack_trace()
+        self.log_stack_trace(level = logging.WARNING)
 
     def critical(self, message):
         """
@@ -1298,7 +1298,7 @@ class Plugin(object):
         # critical message and logs the current stack trace
         logger_message = self.format_logger_message(message)
         self.logger.critical(logger_message)
-        self.log_stack_trace()
+        self.log_stack_trace(level = logging.ERROR)
 
     def format_logger_message(self, message):
         """
@@ -3044,13 +3044,11 @@ class PluginManager:
             # calls the method with the given arguments
             method(*arguments)
         except Exception, exception:
-            # prints an error message
+            # prints an error message, then logs the stack trace
+            # resulting from the current execution and returns
+            # an invalid error code to the caller method
             self.error("Error while executing command: " + unicode(exception))
-
-            # logs the stack trace
-            self.log_stack_trace()
-
-            # sets the return code to error
+            self.log_stack_trace(level = logging.WARNING)
             self.return_code = 1
 
         # unsets the main loop (disables the loop)
@@ -5190,7 +5188,7 @@ class PluginManager:
         if not self.logger: return
 
         # formats the logger message and prints it
-        # as a debu message into the logger
+        # as a debug message into the logger
         logger_message = self.format_logger_message(message)
         self.logger.debug(logger_message)
 
@@ -5229,7 +5227,7 @@ class PluginManager:
         self.logger.warning(logger_message)
 
         # logs the stack trace
-        self.log_stack_trace()
+        self.log_stack_trace(level = logging.INFO)
 
     def error(self, message):
         """
@@ -5249,7 +5247,7 @@ class PluginManager:
         self.logger.error(logger_message)
 
         # logs the stack trace
-        self.log_stack_trace()
+        self.log_stack_trace(level = logging.WARNING)
 
     def critical(self, message):
         """
@@ -5266,7 +5264,7 @@ class PluginManager:
         self.logger.critical(logger_message)
 
         # logs the stack trace
-        self.log_stack_trace()
+        self.log_stack_trace(level = logging.ERROR)
 
     def format_logger_message(self, message):
         """
