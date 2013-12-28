@@ -50,10 +50,8 @@ import colony.base.information
 
 USAGE = "Help:\n\
 --help[-h] - prints this message\n\
---verbose[-v] - starts the program in verbose mode\n\
---debug[-d] - starts the program in debug mode\n\
---silent[-s] - starts the program in silent mode\n\
 --noloop[-n] - sets the manager to not use the loop mode\n\
+--level[-v]=(LEVEL) - sets the logging verbosity level to be used\n\
 --layout_mode[-l]=development/repository_svn/production - sets the layout mode to be used\n\
 --run_mode[-r]=development/test/production - sets the run mode to be used\n\
 --container[-c]=default - sets the container to be used\n\
@@ -86,6 +84,11 @@ COLONY_LAYOUT_MODE_ENVIRONMENT = "COLONY_LAYOUT_MODE"
 COLONY_RUN_MODE_ENVIRONMENT = "COLONY_RUN_MODE"
 """ The colony run mode environment variable name """
 
+DEFAUL_LEVEL_VALUE = "WARNING"
+""" The default logging verbosity level to be used
+when no other value is defined by the user or by the
+configuration files pointed by the execution """
+
 DEFAULT_STRING_VALUE = "default"
 """ The default string value """
 
@@ -116,14 +119,8 @@ GENERAL_DIRECTORY = "general"
 PLUGIN_PATHS_FILE = "plugins.pth"
 """ The colony plugin paths file """
 
-VERBOSE_VALUE = "verbose"
-""" The verbose value """
-
-DEBUG_VALUE = "debug"
-""" The debug value """
-
-SILENT_VALUE = "silent"
-""" The silent value """
+LEVEL_VALUE = "level"
+""" The level value"""
 
 LAYOUT_MODE_VALUE = "layout_mode"
 """ The layout mode value """
@@ -175,7 +172,26 @@ def print_information():
     # prints some help information
     print HELP_TEXT
 
-def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose = False, debug = False, silent = False, layout_mode = DEFAULT_STRING_VALUE, run_mode = DEFAULT_STRING_VALUE, stop_on_cycle_error = True, loop = False, threads = True, signals = True, container = DEFAULT_STRING_VALUE, prefix_paths = [], daemon_pid = None, daemon_file_path = None, execution_command = None, attributes_map = {}):
+def run(
+    manager_path,
+    logger_path,
+    library_path,
+    meta_path,
+    plugin_path,
+    level = DEFAUL_LEVEL_VALUE,
+    layout_mode = DEFAULT_STRING_VALUE,
+    run_mode = DEFAULT_STRING_VALUE,
+    stop_on_cycle_error = True,
+    loop = False,
+    threads = True,
+    signals = True,
+    container = DEFAULT_STRING_VALUE,
+    prefix_paths = [],
+    daemon_pid = None,
+    daemon_file_path = None,
+    execution_command = None,
+    attributes_map = {}
+):
     """
     Starts the loading of the plugin manager.
 
@@ -184,23 +200,27 @@ def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose
     @type logger_path: String
     @param logger_path: The manager base path for logger.
     @type library_path: String
-    @param library_path: The set of paths to the various library locations separated by a semi-column.
+    @param library_path: The set of paths to the various library
+    locations separated by a semi-column.
     @type meta_path: String
-    @param meta_path: The set of paths to the various meta locations separated by a semi-column.
+    @param meta_path: The set of paths to the various meta
+    locations separated by a semi-column.
     @type plugin_path: String
-    @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
-    @type verbose: bool
-    @param verbose: If the log is going to be of type verbose.
-    @type debug: bool
-    @param debug: If the log is going to be of type debug.
-    @type silent: bool
-    @param silent: If the log is going to be of type silent.
+    @param plugin_path: The set of paths to the various plugin
+    locations separated by a semi-column.
+    @type level: String
+    @param level: The logging level described as a string that is
+    going to be used by the underlying colony logging infra-structure.
     @type layout_mode: String
     @param layout_mode: The layout mode to be used by the plugin system.
     @type run_mode: String
-    @param run_mode: The run mode to be used by the plugin system.
+    @param run_mode: The run mode to be used by the plugin
+    system, this value is critical for the type of execution
+    of the colony system (eg: development, runtime, etc.)
     @type stop_on_cycle_error: bool
-    @param stop_on_cycle_error: If the plugin system should stop on cycle error.
+    @param stop_on_cycle_error: If the plugin system should stop
+    on cycle error, a cycle error is an error that occurs during
+    the startup process of the colony infra-structure.
     @type loop: bool
     @param loop: If the plugin manager is going to run in a loop.
     @type threads: bool
@@ -273,16 +293,17 @@ def run(manager_path, logger_path, library_path, meta_path, plugin_path, verbose
         attributes_map
     )
 
-    # sets the logging level for the plugin manager logger
-    if debug: plugin_manager.start_logger(logging.DEBUG)
-    elif verbose: plugin_manager.start_logger(logging.INFO)
-    elif silent: plugin_manager.start_logger(logging.ERROR)
-    else: plugin_manager.start_logger(logging.WARN)
+    # resolves the string based level into the proper integer
+    # that describes the logging level and then uses that value
+    # to start the logging infra-structure of colony
+    level = logging.getLevelName(level)
+    plugin_manager.start_logger(level)
 
-    # starts and loads the plugin system
+    # starts and loads the plugin system, this is a blocking
+    # call and the flow control is only returned at the end of
+    # the execution of the colony infra-structure, then the
+    # returned code is returned to the caller function
     return_code = plugin_manager.load_system()
-
-    # returns the return code
     return return_code
 
 def main():
@@ -293,13 +314,11 @@ def main():
     try:
         options, _args = getopt.getopt(
             sys.argv[1:],
-            "hvdsnl:r:c:o:a:f:d:m:g:i:t:p:e:",
+            "hnv:l:r:c:o:a:f:d:m:g:i:t:p:e:",
             [
-                 "help",
-                 "verbose",
-                 "debug",
-                 "silent",
+                 "help"
                  "noloop",
+                 "level="
                  "layout_mode=",
                  "run_mode=",
                  "container=",
@@ -329,10 +348,8 @@ def main():
     file_system_encoding = sys.getfilesystemencoding()
 
     # starts the options values
-    verbose = False
-    debug = False
-    silent = False
     loop = True
+    level = None
     threads = True
     signals = True
     layout_mode = DEFAULT_STRING_VALUE
@@ -354,14 +371,10 @@ def main():
         if option in ("-h", "--help"):
             usage()
             sys.exit()
-        elif option in ("-v", "--verbose"):
-            verbose = True
-        elif option in ("-d", "--debug"):
-            debug = True
-        elif option in ("-s", "--silent"):
-            silent = True
         elif option in ("-n", "--noloop"):
             loop = False
+        elif option in ("-v", "--level"):
+            level = value
         elif option in ("-l", "--layout_mode"):
             layout_mode = value
         elif option in ("-r", "--run_mode"):
@@ -393,13 +406,11 @@ def main():
 
     # parses the configuration options, retrieving the various values that
     # control the execution of the plugin system
-    verbose, debug, silent, layout_mode, run_mode, stop_on_cycle_error,\
+    level, layout_mode, run_mode, stop_on_cycle_error,\
     prefix_paths, daemon_file_path, logger_path, library_path, meta_path,\
     plugin_path = parse_configuration(
         config_file_path,
-        verbose,
-        debug,
-        silent,
+        level,
         layout_mode,
         run_mode,
         daemon_file_path,
@@ -436,9 +447,7 @@ def main():
         library_path_striped,
         meta_path_striped,
         plugin_path_striped,
-        verbose,
-        debug,
-        silent,
+        level,
         layout_mode,
         run_mode,
         stop_on_cycle_error,
@@ -485,33 +494,45 @@ def parse_attributes(attributes_string):
     # returns the attributes map
     return attributes_map
 
-def parse_configuration(config_file_path, verbose, debug, silent, layout_mode, run_mode, daemon_file_path, logger_path, library_path, meta_path, plugin_path, manager_path):
+def parse_configuration(
+    config_file_path,
+    level,
+    layout_mode,
+    run_mode,
+    daemon_file_path,
+    logger_path,
+    library_path,
+    meta_path,
+    plugin_path,
+    manager_path
+):
     """
     Parses the configuration using the given values as default values.
     The configuration file used is given as a parameter to the function.
 
     @type config_file_path: Sting
     @param config_file_path: The path to the configuration file.
-    @type verbose: bool
-    @param verbose: If the log is going to be of type verbose.
-    @type debug: bool
-    @param debug: If the log is going to be of type debug.
-    @type silent: bool
-    @param silent: If the log is going to be of type silent.
+    @type level: String
+    @param level: The logging level value described as a string
+    that is going to be used in the plugin system.
     @type layout_mode: String
     @param layout_mode: The layout mode to be used by the plugin system.
     @type run_mode: String
     @param run_mode: The run mode to be used by the plugin system.
     @type daemon_file_path: String
-    @param daemon_file_path: The file path to the daemon file, for information control.
+    @param daemon_file_path: The file path to the daemon file,
+    for information control.
     @type logger_path: String
     @param logger_path: The path to the logger.
     @type library_path: String
-    @param library_path: The set of paths to the various library locations separated by a semi-column.
+    @param library_path: The set of paths to the various library
+    locations separated by a semi-column.
     @type meta_path: String
-    @param meta_path: The set of paths to the various meta locations separated by a semi-column.
+    @param meta_path: The set of paths to the various meta locations
+    separated by a semi-column.
     @type plugin_path: String
-    @param plugin_path: The set of paths to the various plugin locations separated by a semi-column.
+    @param plugin_path: The set of paths to the various plugin
+    locations separated by a semi-column.
     @type manager_path: String
     @param manager_path: The path to the plugin system.
     @rtype: Tuple
@@ -543,17 +564,9 @@ def parse_configuration(config_file_path, verbose, debug, silent, layout_mode, r
     # retrieves the colony configuration contents
     colony_configuration_contents = dir(colony_configuration)
 
-    # in case the verbose variable is defined in the colony configuration
-    if not verbose and VERBOSE_VALUE in colony_configuration_contents:
-        verbose = colony_configuration.verbose
-
-    # in case the debug variable is defined in the colony configuration
-    if not debug and DEBUG_VALUE in colony_configuration_contents:
-        debug = colony_configuration.debug
-
-    # in case the silent variable is defined in the colony configuration
-    if not silent and SILENT_VALUE in colony_configuration_contents:
-        silent = colony_configuration.silent
+    # in case the level variable is defined in the colony configuration
+    if not level and LEVEL_VALUE in colony_configuration_contents:
+        level = colony_configuration.level
 
     # in case the layout mode variable is defined in the colony configuration
     if layout_mode == DEFAULT_STRING_VALUE and LAYOUT_MODE_VALUE in colony_configuration_contents:
@@ -643,9 +656,7 @@ def parse_configuration(config_file_path, verbose, debug, silent, layout_mode, r
     plugin_path += extra_plugin_path
 
     return (
-        verbose,
-        debug,
-        silent,
+        level,
         layout_mode,
         run_mode,
         stop_on_cycle_error,
