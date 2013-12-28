@@ -1222,7 +1222,8 @@ class Plugin(object):
         # in case the traceback list is valid formats it
         # correctly otherwise falls-back to the empty tuple
         # as the default formated traceback (no traceback)
-        formated_traceback = traceback.format_tb(traceback_list) if traceback_list else ()
+        formated_traceback = traceback.format_tb(traceback_list) if\
+            traceback_list else ()
 
         # iterates over the traceback lines to log
         # them into the current logger
