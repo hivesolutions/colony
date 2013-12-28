@@ -86,7 +86,8 @@ DEFAULT_LOGGER = "default_messages"
 """ The default logger name """
 
 DEFAULT_LOGGING_LEVEL = logging.INFO
-""" The default logging level """
+""" The default logging level to be used as the minimal
+logging level to all the default (verbose) loggers """
 
 DEFAULT_LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
 """ The default logging format """
@@ -1883,15 +1884,19 @@ class PluginManager:
         @param log_level: The log level of the logger.
         """
 
-        # retrieves the minimal log level between the current log level and the default one
-        minimal_log_level = DEFAULT_LOGGING_LEVEL < log_level and DEFAULT_LOGGING_LEVEL or log_level
+        # retrieves the minimal log level between the current
+        # log level and the default one (as specified)
+        minimal_log_level = DEFAULT_LOGGING_LEVEL if\
+            DEFAULT_LOGGING_LEVEL < log_level else log_level
 
         # creates the (complete) logger file name by concatenating the
         # various prefixes, name separators, run mode and file name extensions
-        logger_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX + DEFAULT_LOGGING_FILE_NAME_SEPARATOR +\
-            self.run_mode + DEFAULT_LOGGING_FILE_NAME_EXTENSION
-        logger_err_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX + DEFAULT_LOGGING_FILE_NAME_SEPARATOR +\
-            self.run_mode + DEFAULT_LOGGING_ERR_FILE_NAME_EXTENSION
+        logger_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX +\
+            DEFAULT_LOGGING_FILE_NAME_SEPARATOR + self.run_mode +\
+            DEFAULT_LOGGING_FILE_NAME_EXTENSION
+        logger_err_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX +\
+            DEFAULT_LOGGING_FILE_NAME_SEPARATOR + self.run_mode +\
+             DEFAULT_LOGGING_ERR_FILE_NAME_EXTENSION
 
         # creates the complete logger file path by adding the "complete"
         # logger file name to the "base" logger path, this is done both
