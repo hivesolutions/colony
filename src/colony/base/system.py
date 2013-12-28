@@ -1210,7 +1210,8 @@ class Plugin(object):
 
         @type level: int
         @param level: The verbosity level to be used
-        in the logging.
+        in the logging for the printing of the series
+        of stack trace messages.
         """
 
         # retrieves the execution information, note
