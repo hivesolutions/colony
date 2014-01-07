@@ -223,11 +223,24 @@ class ServerThread(threading.Thread):
     the exit of the current process "kills" it.
     """
 
-    def __init__(self, server, host, port, *args, **kwargs):
+    def __init__(
+        self,
+        server = "waitress",
+        host = "127.0.0.1",
+        port = 8080,
+        ssl = False,
+        key_file = None,
+        cer_file = None,
+        *args,
+        **kwargs
+    ):
         threading.Thread.__init__(self, *args, **kwargs)
         self.server = server
         self.host = host
         self.port = port
+        self.ssl = ssl
+        self.key_file = key_file
+        self.cer_file = cer_file
 
     def __repr__(self):
         return "%s / %s@%d" % (self.server, self.host, self.port)
@@ -237,45 +250,105 @@ class ServerThread(threading.Thread):
             serve(
                 server = self.server,
                 host = self.host,
-                port = self.port
+                port = self.port,
+                ssl = self.ssl,
+                key_file = self.key_file,
+                cer_file = self.cer_file
             )
         except:
             print >> sys.stderr, "Problem in '%s'" % str(self)
             raise
 
-def serve_multiple(server = "waitress", hosts = ("127.0.0.1",), ports = (8080,)):
+def serve_multiple(
+    server = "waitress",
+    hosts = ("127.0.0.1",),
+    ports = (8080,),
+    ssl = False,
+    key_file = None,
+    cer_file = None
+):
     count = len(hosts)
 
     for index in range(count):
         host = hosts[index]
         port = ports[index]
 
-        server_thread = ServerThread(server, host, port)
+        server_thread = ServerThread(
+            server = server,
+            host = host,
+            port = port,
+            ssl = ssl,
+            key_file = key_file,
+            cer_file = cer_file
+        )
         server_thread.start()
 
-def serve(server = "waitress", host = "127.0.0.1", port = 8080):
+def serve(
+    server = "waitress",
+    host = "127.0.0.1",
+    port = 8080,
+    ssl = False,
+    key_file = None,
+    cer_file = None
+):
     _globals = globals()
     print >> sys.stderr, "Starting with '%s' ..." % server
     method = _globals.get("serve_" + server, serve_legacy)
-    return_value = method(host = host, port = port)
+    return_value = method(
+        host = host,
+        port = port,
+        ssl = ssl,
+        key_file = key_file,
+        cer_file = cer_file
+    )
     print >> sys.stderr, "Stopped in '%s' ..." % server
     return return_value
 
-def serve_waitress(host, port):
+def serve_waitress(host, port, **kwargs):
     import waitress
     waitress.serve(application, host = host, port = port)
 
-def serve_tornado(host, port):
+def serve_netius(
+    host,
+    port,
+    ssl = False,
+    key_file = None,
+    cer_file = None,
+    **kwargs
+):
+    import netius.servers
+    server = netius.servers.WSGIServer(application, **kwargs)
+    server.serve(
+        host = host,
+        port = port,
+        ssl = ssl,
+        key_file = key_file,
+        cer_file = cer_file
+    )
+
+def serve_tornado(
+    host,
+    port,
+    ssl = False,
+    key_file = None,
+    cer_file = None,
+    **kwargs
+):
     import tornado.wsgi
     import tornado.httpserver
 
+    ssl_options = ssl and dict(
+        keyfile = key_file,
+        certfile = cer_file
+    ) or None
+
     container = tornado.wsgi.WSGIContainer(application)
-    server = tornado.httpserver.HTTPServer(container)
+    server = tornado.httpserver.HTTPServer(container, ssl_options = ssl_options)
     server.listen(port, address = host)
     instance = tornado.ioloop.IOLoop.instance()
     instance.start()
 
-def serve_cherry(host, port):
+def serve_cherry(host, port, **kwargs):
     import cherrypy.wsgiserver
 
     server = cherrypy.wsgiserver.CherryPyWSGIServer(
@@ -285,7 +358,7 @@ def serve_cherry(host, port):
     try: server.start()
     except KeyboardInterrupt: server.stop()
 
-def serve_legacy(host, port):
+def serve_legacy(host, port, **kwargs):
     import wsgiref.simple_server
     httpd = wsgiref.simple_server.make_server(host, port, application)
     print >> sys.stderr, "Running on http://%s:%d/" % (host, port)
@@ -295,12 +368,18 @@ if __name__ == "__main__":
     server = os.environ.get("SERVER", "legacy")
     host = os.environ.get("HOST", "127.0.0.1")
     port = os.environ.get("PORT", "8080")
+    ssl = os.environ.get("SSL", False)
+    key_file = os.environ.get("KEY_FILE", None)
+    cer_file = os.environ.get("CER_FILE", None)
 
     hosts = [value.strip() for value in host.split(",")]
     ports = [int(value.strip()) for value in port.split(",")]
 
     serve_multiple(
-        server,
-        hosts,
-        ports
+        server = server,
+        hosts = hosts,
+        ports = ports,
+        ssl = ssl,
+        key_file = key_file,
+        cer_file = cer_file
     )
