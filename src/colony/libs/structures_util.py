@@ -579,6 +579,10 @@ class FormatTuple(object):
     def __replace__(self, value):
         self.set_format_string(value)
 
+    def json_v(self, format = False):
+        if format: return self.format()
+        else: return (self.format_string, self.arguments)
+
     def format(self, format_string = None):
         """
         Formats the current format tuple using the currently loaded
