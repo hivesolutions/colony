@@ -52,14 +52,14 @@ def size_round_unit(size_value, minimum = DEFAULT_MINIMUM, space = False, depth 
     """
     Rounds the size unit, returning a string representation
     of the value with a good rounding precision.
-    This melhod should be used to round data sizing units.
+    This method should be used to round data sizing units.
 
     @type size_value: int
     @param size_value: The current size value (in bytes).
     @type minimum: int
     @param minimum: The minimum value to be used.
     @type space: bool
-    @param space: If a space character must be used deviding
+    @param space: If a space character must be used dividing
     the value from the unit symbol.
     @type depth: int
     @param depth: The current iteration depth value.
