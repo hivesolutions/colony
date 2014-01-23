@@ -244,9 +244,9 @@ class ServerThread(threading.Thread):
         cer_file = None,
         kwargs = dict(),
         *args,
-        **kwargs
+        **_kwargs
     ):
-        threading.Thread.__init__(self, *args, **kwargs)
+        threading.Thread.__init__(self, *args, **_kwargs)
         self.server = server
         self.host = host
         self.port = port
