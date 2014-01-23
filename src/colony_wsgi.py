@@ -55,6 +55,17 @@ DEFAULT_CONFIG_PATH = "config/python/devel.py"
 used in case no path is specified using the environment
 variable bases strategy """
 
+EXCLUDED_NAMES = (
+    "server",
+    "host",
+    "port",
+    "ssl",
+    "key_file",
+    "cer_file"
+)
+""" The sequence that contains the names that are considered
+excluded from the auto parsing of parameters """
+
 # retrieves the base path for the current file and uses
 # it to insert it in the current system path in case it's
 # not already present (required for module importing)
@@ -231,6 +242,7 @@ class ServerThread(threading.Thread):
         ssl = False,
         key_file = None,
         cer_file = None,
+        kwargs = dict(),
         *args,
         **kwargs
     ):
@@ -241,6 +253,7 @@ class ServerThread(threading.Thread):
         self.ssl = ssl
         self.key_file = key_file
         self.cer_file = cer_file
+        self.kwargs = kwargs
 
     def __repr__(self):
         return "%s / %s@%d" % (self.server, self.host, self.port)
@@ -253,7 +266,8 @@ class ServerThread(threading.Thread):
                 port = self.port,
                 ssl = self.ssl,
                 key_file = self.key_file,
-                cer_file = self.cer_file
+                cer_file = self.cer_file,
+                kwargs = self.kwargs
             )
         except:
             print >> sys.stderr, "Problem in '%s'" % str(self)
@@ -265,7 +279,8 @@ def serve_multiple(
     ports = (8080,),
     ssl = False,
     key_file = None,
-    cer_file = None
+    cer_file = None,
+    kwargs = dict()
 ):
     count = len(hosts)
 
@@ -279,7 +294,8 @@ def serve_multiple(
             port = port,
             ssl = ssl,
             key_file = key_file,
-            cer_file = cer_file
+            cer_file = cer_file,
+            kwargs = kwargs
         )
         server_thread.start()
 
@@ -289,7 +305,8 @@ def serve(
     port = 8080,
     ssl = False,
     key_file = None,
-    cer_file = None
+    cer_file = None,
+    kwargs = dict()
 ):
     _globals = globals()
     print >> sys.stderr, "Starting with '%s' ..." % server
@@ -299,7 +316,8 @@ def serve(
         port = port,
         ssl = ssl,
         key_file = key_file,
-        cer_file = cer_file
+        cer_file = cer_file,
+        **kwargs
     )
     print >> sys.stderr, "Stopped in '%s' ..." % server
     return return_value
@@ -365,12 +383,18 @@ def serve_legacy(host, port, **kwargs):
     httpd.serve_forever()
 
 if __name__ == "__main__":
+    kwargs = dict()
     server = os.environ.get("SERVER", "legacy")
     host = os.environ.get("HOST", "127.0.0.1")
     port = os.environ.get("PORT", "8080")
     ssl = os.environ.get("SSL", False)
     key_file = os.environ.get("KEY_FILE", None)
     cer_file = os.environ.get("CER_FILE", None)
+    for name, value in os.environ.iteritems():
+        if not name.startswith("SERVER_"): continue
+        name_s = name.lower()[7:]
+        if name_s in EXCLUDED_NAMES: continue
+        kwargs[name_s] = value
 
     hosts = [value.strip() for value in host.split(",")]
     ports = [int(value.strip()) for value in port.split(",")]
@@ -381,5 +405,6 @@ if __name__ == "__main__":
         ports = ports,
         ssl = ssl,
         key_file = key_file,
-        cer_file = cer_file
+        cer_file = cer_file,
+        kwargs = kwargs
     )
