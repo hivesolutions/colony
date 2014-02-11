@@ -71,7 +71,7 @@ class WaitInput:
     with being stuck in the console input.
     This file like object reads something as a virtual
     timeout object avoid the proper read and unblocking
-    the current inout operation.
+    the current in/out operation.
     """
 
     def readline(self):

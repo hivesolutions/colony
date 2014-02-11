@@ -63,23 +63,22 @@ import colony.libs.string_util
 import colony.libs.version_util
 import colony.libs.string_buffer_util
 
-import colony.base.loggers
-import colony.base.util
+import util
+import loggers
+import exceptions
+import information
+import configuration
 
-import colony.base.exceptions
-import colony.base.information
-import colony.base.configuration
-
-plugin_manager_configuration = colony.base.configuration.plugin_manager_configuration
+plugin_manager_configuration = configuration.plugin_manager_configuration
 """ The plugin manager configuration """
 
-CPYTHON_ENVIRONMENT = colony.base.util.CPYTHON_ENVIRONMENT
+CPYTHON_ENVIRONMENT = util.CPYTHON_ENVIRONMENT
 """ CPython environment value """
 
-JYTHON_ENVIRONMENT = colony.base.util.JYTHON_ENVIRONMENT
+JYTHON_ENVIRONMENT = util.JYTHON_ENVIRONMENT
 """ Jython environment value """
 
-IRON_PYTHON_ENVIRONMENT = colony.base.util.IRON_PYTHON_ENVIRONMENT
+IRON_PYTHON_ENVIRONMENT = util.IRON_PYTHON_ENVIRONMENT
 """ IronPython environment value """
 
 DEFAULT_LOGGER = "default_messages"
@@ -572,7 +571,7 @@ class Plugin(object):
         # the allowed loaded capability list
         if plugin_capability_tuple in self.allowed_loaded_capability:
             # raises the plugin system exception
-            raise colony.base.exceptions.PluginSystemException("invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
+            raise exceptions.PluginSystemException("invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
 
         # adds the plugin capability tuple to the allowed loaded capability
         self.allowed_loaded_capability.append(plugin_capability_tuple)
@@ -603,7 +602,7 @@ class Plugin(object):
         # the allowed loaded capability list
         if not plugin_capability_tuple in self.allowed_loaded_capability:
             # raises the plugin system exception
-            raise colony.base.exceptions.PluginSystemException("invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
+            raise exceptions.PluginSystemException("invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
 
         # removes the plugin capability tuple from the allowed loaded capability
         self.allowed_loaded_capability.remove(plugin_capability_tuple)
@@ -1693,10 +1692,10 @@ class PluginManager:
         self.execution_command = execution_command
         self.attributes_map = attributes_map
 
-        self.uid = colony.base.util.get_timestamp_uid()
+        self.uid = util.get_timestamp_uid()
         self.condition = threading.Condition()
 
-        self.plugins = colony.base.util.Plugins()
+        self.plugins = util.Plugins()
         self.retrieve_lock = threading.RLock()
         self.current_id = 0
         self.logger_handlers = {}
@@ -1775,7 +1774,7 @@ class PluginManager:
         # in case the plugin id does not exist in the plugin classes map
         if not plugin_id in self.plugin_classes_map:
             # raises the plugin class not available exception
-            raise colony.base.exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
+            raise exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
 
         # retrieves the plugin class
         plugin_class = self.plugin_classes_map[plugin_id]
@@ -1784,7 +1783,7 @@ class PluginManager:
         # the defined version comparison)
         if not colony.libs.version_util.version_cmp(plugin_class.version, plugin_version):
             # raises the plugin class not available exception
-            raise colony.base.exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
+            raise exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
 
         # retrieves the generated replica id
         replica_id = self.generate_replica_id()
@@ -1945,13 +1944,13 @@ class PluginManager:
         # may be sent to the world (network broadcast), then sets the
         # minimal level in it so that the maximum amount of information
         # is logged "into it" (permissive logging)
-        broadcast_handler = colony.base.loggers.BroadcastHandler()
+        broadcast_handler = loggers.BroadcastHandler()
         broadcast_handler.setLevel(minimal_log_level)
 
         # creates the in memory handler object and then again sets
         # the minimal log level in it so that it may have the
         # maximum amount of information available for handling
-        memory_handler = colony.base.loggers.MemoryHandler()
+        memory_handler = loggers.MemoryHandler()
         memory_handler.setLevel(minimal_log_level)
 
         # retrieves the logging format and uses it
@@ -2081,7 +2080,7 @@ class PluginManager:
         # in case the system initialization is not complete
         # raises a colony exception to notify the problem
         if not self.init_complete:
-            raise colony.base.exceptions.ColonyException("trying to unload uninitialized plugin system")
+            raise exceptions.ColonyException("trying to unload uninitialized plugin system")
 
         # creates the kill system timer, to kill the system
         # if it hangs in shutdown and starts it so that the
@@ -2110,7 +2109,7 @@ class PluginManager:
         if thread_safe:
             # creates the exit event and adds it to the
             # event queue to be executed in back thread
-            exit_event = colony.base.util.Event(EXIT_VALUE)
+            exit_event = util.Event(EXIT_VALUE)
             self.add_event(exit_event)
         else:
             # unloads the thread based plugins
@@ -2240,7 +2239,7 @@ class PluginManager:
         # in case there the execution of type script or is a daemon
         if self.execution_command or self.daemon_pid or self.daemon_file_path:
             # sets the standard input as a wait input object (for no blocking)
-            sys.stdin = colony.base.util.WaitInput()
+            sys.stdin = util.WaitInput()
 
     def apply_fixes(self):
         """
@@ -2635,7 +2634,7 @@ class PluginManager:
             plugin_thread = self.plugin_threads_map[plugin_id]
 
             # creates the plugin exit event
-            event = colony.base.util.Event(EXIT_VALUE)
+            event = util.Event(EXIT_VALUE)
 
             # adds the load event to the thread queue
             plugin_thread.add_event(event)
@@ -3010,7 +3009,7 @@ class PluginManager:
                     argument_value = type_converter_function(argument_value)
             elif argument_split_length > 2:
                 # raises the invalid argument exception
-                raise colony.base.exceptions.InvalidArgument(argument)
+                raise exceptions.InvalidArgument(argument)
 
             # adds the argument value to the arguments list
             arguments_list.append(argument_value)
@@ -3040,7 +3039,7 @@ class PluginManager:
             # in case the plugin was not retrieved successfully
             if not plugin:
                 # raises the invalid command exception
-                raise colony.base.exceptions.InvalidCommand("plugin not found '%s'" % plugin_id)
+                raise exceptions.InvalidCommand("plugin not found '%s'" % plugin_id)
 
             # loads the plugin
             self.__load_plugin(plugin)
@@ -3048,7 +3047,7 @@ class PluginManager:
             # in case the plugin does not have a method with the given name
             if not hasattr(plugin, method_name):
                 # raises the invalid command exception
-                raise colony.base.exceptions.InvalidCommand("method not found '%s' for plugin '%s'" % (method_name, plugin_id))
+                raise exceptions.InvalidCommand("method not found '%s' for plugin '%s'" % (method_name, plugin_id))
 
             # retrieves the method from the plugin
             method = getattr(plugin, method_name)
@@ -3063,7 +3062,7 @@ class PluginManager:
             # than the expected arguments length
             if not argments_length == expected_arguments_length:
                 # raises the invalid command exception
-                raise colony.base.exceptions.InvalidCommand("invalid number of arguments for method '%s' (expected %d given %d)" % (full_method_name, expected_arguments_length, argments_length))
+                raise exceptions.InvalidCommand("invalid number of arguments for method '%s' (expected %d given %d)" % (full_method_name, expected_arguments_length, argments_length))
 
             # calls the method with the given arguments
             method(*arguments)
@@ -3214,10 +3213,10 @@ class PluginManager:
             # in case the loading type of the plugin is eager
             if plugin.loading_type == EAGER_LOADING_TYPE or type == FULL_LOAD_TYPE:
                 # creates the plugin load event
-                event = colony.base.util.Event(LOAD_VALUE)
+                event = util.Event(LOAD_VALUE)
             else:
                 # creates the plugin lazy load event
-                event = colony.base.util.Event(LAZY_LOAD_VALUE)
+                event = util.Event(LAZY_LOAD_VALUE)
 
             # adds the load event to the thread queue
             plugin_thread.add_event(event)
@@ -3275,7 +3274,7 @@ class PluginManager:
             plugin_thread.set_end_load_complete(False)
 
             # creates the plugin end load event
-            event = colony.base.util.Event(END_LOAD_VALUE)
+            event = util.Event(END_LOAD_VALUE)
 
             # adds the end load event to the thread queue
             plugin_thread.add_event(event)
@@ -3388,7 +3387,7 @@ class PluginManager:
             plugin_thread.set_unload_complete(False)
 
             # creates the plugin unload event
-            event = colony.base.util.Event(UNLOAD_VALUE)
+            event = util.Event(UNLOAD_VALUE)
 
             # adds the unload event to the thread queue
             plugin_thread.add_event(event)
@@ -3427,7 +3426,7 @@ class PluginManager:
             plugin_thread.set_end_unload_complete(False)
 
             # creates the plugin end unload event
-            event = colony.base.util.Event(END_UNLOAD_VALUE)
+            event = util.Event(END_UNLOAD_VALUE)
 
             # adds the end unload event to the thread queue
             plugin_thread.add_event(event)
@@ -3462,7 +3461,7 @@ class PluginManager:
         """
 
         # creates the exit event
-        exit_event = colony.base.util.Event(EXIT_VALUE)
+        exit_event = util.Event(EXIT_VALUE)
 
         # iterates over all the available plugin threads
         # joining all the threads
@@ -4055,7 +4054,7 @@ class PluginManager:
         self.assert_plugin(plugin)
         is_loaded = plugin.is_loaded()
         if not is_loaded:
-            raise colony.base.exceptions.ColonyException(
+            raise exceptions.ColonyException(
                 "not possible to load plugin '%s'" % plugin.name
             )
 
@@ -5635,7 +5634,7 @@ class PluginManager:
         @return: The current base (plugin manager) version.
         """
 
-        return colony.base.information.VERSION
+        return information.VERSION
 
     def get_release(self):
         """
@@ -5645,7 +5644,7 @@ class PluginManager:
         @return: The current base (plugin manager) release.
         """
 
-        return colony.base.information.RELEASE
+        return information.RELEASE
 
     def get_build(self):
         """
@@ -5655,7 +5654,7 @@ class PluginManager:
         @return: The current base (plugin manager) build.
         """
 
-        return colony.base.information.BUILD
+        return information.BUILD
 
     def get_release_date(self):
         """
@@ -5665,7 +5664,7 @@ class PluginManager:
         @return: The current base (plugin manager) release date.
         """
 
-        return colony.base.information.RELEASE_DATE
+        return information.RELEASE_DATE
 
     def get_release_date_time(self):
         """
@@ -5675,7 +5674,7 @@ class PluginManager:
         @return: The current base (plugin manager) release date time.
         """
 
-        return colony.base.information.RELEASE_DATE_TIME
+        return information.RELEASE_DATE_TIME
 
     def get_environment(self):
         """
@@ -5685,7 +5684,7 @@ class PluginManager:
         @return: The current base (plugin manager) environment.
         """
 
-        return colony.base.information.ENVIRONMENT
+        return information.ENVIRONMENT
 
     def get_system_information_map(self):
         """
@@ -6314,7 +6313,7 @@ class OperativeSystemCondition(Condition):
             return False
 
         # retrieves the current operative system name
-        current_operative_system_name = colony.base.util.get_operative_system()
+        current_operative_system_name = util.get_operative_system()
 
         # in case the current operative system is the same as the defined in the condition
         if current_operative_system_name == self.operative_system_name:

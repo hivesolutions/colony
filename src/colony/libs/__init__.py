@@ -107,3 +107,5 @@ from test_util import *
 from time_util import *
 from update_thread_util import *
 from version_util import *
+
+from import_util import __import__
