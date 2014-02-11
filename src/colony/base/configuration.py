@@ -42,4 +42,7 @@ plugin_manager_configuration = {
     "plugin_id_logging" : True,
     "thread_id_logging" : True
 }
-""" The plugin manager configuration """
+""" The plugin manager configuration, this value is
+used only as part of the inner (private) configuration
+of the colony infra-structure and should only be changed
+with complete knowledge of the inner workings of the system """
