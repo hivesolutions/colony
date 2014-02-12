@@ -1751,32 +1751,23 @@ class PluginManager:
         Creates a new instance of the plugin with the given id
         and version.
 
+        This is method generates a new (unique) diffusion scope for the
+        new plugin instance that is going to be created.
+
         @type plugin_id: String
         @param plugin_id: The id of the plugin to create an instance.
         @param plugin_version: plugin_version
         @param plugin_version: The version of the plugin to create an instance.
         @rtype: Plugin
-        @return: The created plugin instance.
+        @return: The created plugin instance (with an unique diffusion scope).
         """
 
-        # @todo: important diffusion scope
-        # tenho de pensar em como posso obter as classes para criar novas instancias
-        # tenho de pensar como e ke as classes vao ser updatadas de modo a gerir autoloaders e afins
-
-        # tenho de criar novas estruturas: esta estrutura serve para associar o origianl id com todas as instances do tipo replica
-        # para depois quando se faze o reload do modulo tb fazemos reload das replicas
-        # originalModuleIdClassHash.get(moduleOriginalId)
-
-        # tenho de as manter actualizadas .... quando descarrego modulos, etc....
-        # tenho de actualizar sempre que faco start_plugins (porque e neste momento que vai ser feito o refresh)
-
-        # generates a new diffusion scope id
+        # generates a new diffusion scope id and uses it to  create a new
+        # plugin instance, returning it then to the caller method as requested
+        # by the call to this method, note that the diffusion scope id should
+        # be unique according to the plugin manager specification
         diffusion_scope_id = self.generate_diffusion_scope_id()
-
-        # creates a new plugin instance in the new diffusion scope id
         plugin_instance = self._create_plugin(plugin_id, plugin_version, diffusion_scope_id)
-
-        # returns the created plugin instance
         return plugin_instance
 
     def _create_plugin(self, plugin_id, plugin_version, diffusion_scope_id):
@@ -4268,12 +4259,14 @@ class PluginManager:
 
     def _get_plugins_by_capability_cache(self, capability):
         """
-        Retrieves all the plugins (not verified to be loaded) with the given capability and sub capabilities (using cache system).
+        Retrieves all the plugins (not verified to be loaded) with the
+        given capability and sub capabilities (using cache system).
 
         @type capability: String
         @param capability: The capability of the plugins to retrieve.
         @rtype: List
-        @return: The list of plugins for the given capability and sub capabilities.
+        @return: The list of plugins for the given capability and
+        sub capabilities.
         """
 
         # creates the results list to hold
@@ -4302,12 +4295,14 @@ class PluginManager:
 
     def _get_plugins_by_capability(self, capability):
         """
-        Retrieves all the plugins (not verified to be loaded) with the given capability and sub capabilities.
+        Retrieves all the plugins (not verified to be loaded) with
+        the given capability and sub capabilities.
 
         @type capability: String
         @param capability: The capability of the plugins to retrieve.
         @rtype: List
-        @return: The list of plugins for the given capability and sub capabilities.
+        @return: The list of plugins for the given capability
+        and sub capabilities.
         """
 
         # creates the results list to hold
@@ -4370,12 +4365,15 @@ class PluginManager:
 
     def _get_plugins_by_capability_allowed(self, capability_allowed):
         """
-        Retrieves all the plugins (not verified to be loaded) with the given allowed capability and sub capabilities.
+        Retrieves all the plugins (not verified to be loaded) with
+        the given allowed capability and sub capabilities.
 
         @type capability_allowed: String
-        @param capability_allowed: The capability allowed of the plugins to retrieve.
+        @param capability_allowed: The capability allowed of the
+        plugins to retrieve.
         @rtype: List
-        @return: The list of plugins for the given capability allowed.
+        @return: The list of plugins for the given capability
+        allowed.
         """
 
         # the results list
@@ -5107,7 +5105,10 @@ class PluginManager:
             for execute_plugin in execute_plugins_list:
 
                 # retrieves the validation method
-                validation_execute_call = getattr(execute_plugin, PLUGIN_MANAGER_PLUGIN_VALIDATION_PREFIX + execution_type)
+                validation_execute_call = getattr(
+                    execute_plugin,
+                    PLUGIN_MANAGER_PLUGIN_VALIDATION_PREFIX + execution_type
+                )
 
                 # runs the validation test
                 if validation_execute_call(*arguments):
@@ -5907,11 +5908,12 @@ class PluginManager:
         """
 
         # in case the kill system timer is not defined
-        if not self.kill_system_timer:
-            # returns immediatly
-            return
+        # must returns immediately as there's nothing
+        # to be canceled (nothing to be done)
+        if not self.kill_system_timer: return
 
-        # cancels the kill system timer
+        # cancels the kill system timer, this shold avoid
+        # any possible locking problems with the system
         self.kill_system_timer.cancel()
 
     def _kill_system_timeout(self):
@@ -6074,7 +6076,14 @@ class PluginDependency(Dependency):
     diffusion_policy = SINGLETON_DIFFUSION_SCOPE
     """ The diffusion policy """
 
-    def __init__(self, plugin_id = "none", plugin_version = "none", diffusion_policy = SINGLETON_DIFFUSION_SCOPE, mandatory = True, conditions_list = []):
+    def __init__(
+        self,
+        plugin_id = "none",
+        plugin_version = "none",
+        diffusion_policy = SINGLETON_DIFFUSION_SCOPE,
+        mandatory = True,
+        conditions_list = []
+    ):
         """
         Constructor of the class.
 
@@ -6174,7 +6183,15 @@ class PackageDependency(Dependency):
     package_url = "none"
     """ The package url """
 
-    def __init__(self, package_name = "none", package_import_name = "none", package_version = "none", package_url = "none", mandatory = True, conditions_list = []):
+    def __init__(
+        self,
+        package_name = "none",
+        package_import_name = "none",
+        package_version = "none",
+        package_url = "none",
+        mandatory = True,
+        conditions_list = []
+    ):
         """
         Constructor of the class.
 
