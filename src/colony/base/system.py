@@ -599,10 +599,13 @@ class Plugin(object):
         )
 
         # in case the plugin capability tuple does not exist in
-        # the allowed loaded capability list
+        # the allowed loaded capability list, this is an error
+        # and an exception must be raised indicating it
         if not plugin_capability_tuple in self.allowed_loaded_capability:
-            # raises the plugin system exception
-            raise exceptions.PluginSystemException("invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
+            raise exceptions.PluginSystemException(
+                "invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" %\
+                (plugin.name, plugin.version, self.name, self.version)
+            )
 
         # removes the plugin capability tuple from the allowed loaded capability
         self.allowed_loaded_capability.remove(plugin_capability_tuple)
@@ -610,19 +613,33 @@ class Plugin(object):
         # unregisters for all handled events
         self.unregister_all_handled_events_plugin(plugin)
 
-        # prints an info message
-        self.info("Unloading plugin '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
+        # prints an info message about the unloading of the plugin
+        # so that the developer is notified about the operation
+        self.info(
+            "Unloading plugin '%s' v%s in '%s' v%s" %\
+            (plugin.name, plugin.version, self.name, self.version)
+        )
 
     def dependency_injected(self, plugin):
         """
         Method called at the injection of a plugin dependency.
+        Should change the current plugin instance so that it
+        is able to recognizes the newly injected plugin instance.
 
         @type plugin: Plugin
         @param plugin: The dependency plugin to be injected.
         """
 
+        # adds the dependency that was injected into the list of
+        # loaded dependencies and then "injects" the plugin into
+        # the plugin where it is being loaded, then loads a message
+        # about the injection of the dependency
         self.dependencies_loaded.append(plugin)
-        self.debug("Plugin dependency '%s' v%s injected in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
+        setattr(self, plugin.short_name + "_plugin", plugin)
+        self.debug(
+            "Plugin dependency '%s' v%s injected in '%s' v%s" %\
+            (plugin.name, plugin.version, self.name, self.version)
+        )
 
     def init_complete(self):
         """
@@ -1441,11 +1458,14 @@ class PluginManager:
     """ The run mode used in the plugin loading """
 
     container = "default"
-    """ The name of the plugin manager container """
+    """ The name of the plugin manager container, this is
+    used for situations where the plugin manager is running
+    under a "contained" environment (eg: wsgi, mod_python, etc.) """
 
     daemon_pid = None
     """ The pid of the daemon process running the instance
-    of plugin manager  """
+    of plugin manager, this is only used for situations where
+    the manager is running as explicit daemon (background usage)  """
 
     daemon_file_path = None
     """ The file path to the daemon file, for information control """
@@ -1467,7 +1487,10 @@ class PluginManager:
     """ The attributes map """
 
     plugin_manager_timestamp = 0
-    """ The plugin manager timestamp """
+    """ The plugin manager timestamp, this value should be set
+    at the start of the plugin manager, and so indicates the time
+    of the start of the plugin manager (may be used to calculate
+    the total uptime for the current manager instance) """
 
     plugin_manager_plugins_loaded = False
     """ The plugin manager plugins loaded flag """
@@ -2009,7 +2032,8 @@ class PluginManager:
             # first logging messages printed by the system
             self.info("Starting plugin manager...")
 
-            # sets the plugin manager timestamp
+            # sets the plugin manager timestamp, should set it with
+            # the current time (to be used for uptime calculus)
             self.set_plugin_manager_timestamp()
 
             # applies the set of fixes for the context
@@ -2959,10 +2983,9 @@ class PluginManager:
         Executes the currently defined execution command (if any).
         """
 
-        # in case an execution command is not defined
-        if not self.execution_command:
-            # returns immediately
-            return
+        # in case an execution command is not defined, must
+        # return immediately as there's nothing to be done
+        if not self.execution_command: return
 
         # splits the execution command stripping every value
         execution_command_splitted = [value.strip() for value in self.execution_command.split(" ", 1)]
@@ -5400,19 +5423,17 @@ class PluginManager:
     def set_plugin_manager_timestamp(self, plugin_manager_timestamp = None):
         """
         Sets the timestamp value for the plugin manager.
+        The value that will be set depends on the provided value, in
+        case the provided value is invalid the current time is set.
 
         @type plugin_manager_timestamp: float
         @param plugin_manager_timestamp: The value to set in the plugin
         manager as the timestamp, used for loading time purposes.
         """
 
-        # in case no plugin manager timestamp is defined
-        if not plugin_manager_timestamp:
-            # sets the plugin manager timestamp as the current time
-            plugin_manager_timestamp = time.time()
-
-        # sets the timestamp
-        self.plugin_manager_timestamp = plugin_manager_timestamp
+        # sets the plugin manager timestamp with the provided value or
+        # with the current time value as a fallback procedure
+        self.plugin_manager_timestamp = plugin_manager_timestamp or time.time()
 
     def set_plugin_manager_plugins_loaded(self, value = True):
         """
@@ -7081,13 +7102,11 @@ class PluginEventThread(threading.Thread):
                 # calls the event thread method
                 self.method()
             except BaseException, exception:
-                # prints an error message
+                # prints an error message to the current logging infra-structure
+                # then sets the exception in the plugin instance and signals the
+                # error state in the plugin (to be used latter)
                 self.plugin.error("Problem starting thread plugin: " + unicode(exception))
-
-                # sets the exception in the plugin
                 self.plugin.exception = exception
-
-                # sets the plugin error state flag
                 self.plugin.error_state = True
 
         # acquires the ready semaphore lock
