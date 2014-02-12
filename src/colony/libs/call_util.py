@@ -95,6 +95,9 @@ def call_safe(callable, *args, **kwargs):
     meaning that each of its keyword arguments will be validated
     for existence in the target callable definition.
 
+    In case the validation of the keyword argument fails the same
+    argument is removed from the map of keyword arguments.
+
     Note that in case the wildcard based kwargs value exists in
     the callable definition the callable is immediately considered
     to be valid and the call is ran.
