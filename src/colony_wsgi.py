@@ -156,7 +156,8 @@ plugin_manager = colony.base.system.PluginManager(
     threads = False,
     signals = False,
     layout_mode = layout_mode,
-    run_mode = run_mode
+    run_mode = run_mode,
+    container = "wsgi"
 )
 plugin_manager.start_logger(logging.INFO)
 return_code = plugin_manager.load_system()
