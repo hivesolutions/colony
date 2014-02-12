@@ -38,6 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import time
+import inspect
 
 DEFAULT_NUMBER_RETRIES = 3
 """ The default number of retries to register or unregister """
@@ -45,15 +46,19 @@ DEFAULT_NUMBER_RETRIES = 3
 DEFAULT_RETRY_SLEEP = 1
 """ The default sleep time between retries """
 
-def execute_retries(callable, number_retries = DEFAULT_NUMBER_RETRIES, retry_sleep = DEFAULT_RETRY_SLEEP):
+def execute_retries(
+    callable,
+    number_retries = DEFAULT_NUMBER_RETRIES,
+    retry_sleep = DEFAULT_RETRY_SLEEP
+):
     """
-    Executes the given callable retring the call in case an exception occurs.
+    Executes the given callable retrying the call in case an exception occurs.
     The number of retries and the time between retries is configurable.
     The method returns the return value from the call or raises the last
     known exception.
 
     @type callable: Callable
-    @param callable: The callalbe to be called using retries.
+    @param callable: The callable to be called using retries.
     @type number_retries: int
     @param number_retries: The number of retries to be used.
     @type retry_sleep: int´
@@ -76,12 +81,49 @@ def execute_retries(callable, number_retries = DEFAULT_NUMBER_RETRIES, retry_sle
         except:
             # in case it's the last index position
             # the exception should be re-raised
-            if index == number_retries:
-                # re-raises the exception
-                raise
+            if index == number_retries: raise
 
             # sleeps a while to avoid problems
             time.sleep(retry_sleep)
 
     # returns the callable return value
     return return_value
+
+def call_safe(callable, *args, **kwargs):
+    """
+    Method used to call a callable object using a "safe" approach,
+    meaning that each of its keyword arguments will be validated
+    for existence in the target callable definition.
+
+    Note that in case the wildcard based kwargs value exists in
+    the callable definition the callable is immediately considered
+    to be valid and the call is ran.
+
+    @type callable: Callable
+    @callable callable: The callable that is going to have the keyword
+    based arguments validated and the get called.
+    @rtype: object
+    @return: The resulting value from the safe call to the provided
+    callable, this may have any data type.
+    """
+
+    # retrieves the arguments specification to the provided callable
+    # and retrieves the various argument names and the existence or
+    # not of the wildcard kargs value in the callable and in case it
+    # exists runs the callable call immediately
+    argspec = inspect.getargspec(callable)
+    method_args = argspec[0]
+    method_kwargs = argspec[2]
+    if method_kwargs: return callable(*args, **kwargs)
+
+    # iterates over the complete set of keyword based arguments to be
+    # used in the call and validates them against the method specification
+    # in case they do not exist in the specification deletes them from
+    # the map of keyword based arguments (not going to be sent)
+    for name in kwargs.keys():
+        if name in method_args: continue
+        del kwargs[name]
+
+    # runs the callable with the "remaining" arguments and keyword arguments
+    # returning the value to the caller method
+    return callable(*args, **kwargs)
