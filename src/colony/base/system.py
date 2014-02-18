@@ -561,26 +561,40 @@ class Plugin(object):
         @param capability: Capability for which the plugin is being injected.
         """
 
-        # creates the plugin capability tuple
+        # creates the plugin capability tuple that is going to represent
+        # the relation between the current plugin and the allowed one
         plugin_capability_tuple = (
             plugin,
             capability
         )
 
         # in case the plugin capability tuple already exists in
-        # the allowed loaded capability list
+        # the allowed loaded capability list, an exception must
+        # be raised indicating the problem (assertion)
         if plugin_capability_tuple in self.allowed_loaded_capability:
-            # raises the plugin system exception
-            raise exceptions.PluginSystemException("invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
+            raise exceptions.PluginSystemException(
+                "invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" %\
+                (plugin.name, plugin.version, self.name, self.version)
+            )
+
+        # in case the current plugin does not have the capability plugins
+        # definition set creates a new map for it and then registers the
+        # newly allowed plugin in the map (for latter usage)
+        if not hasattr(self, capability): setattr(self, capability, {})
+        allowed = getattr(self, capability)
+        allowed[plugin.short_name] = plugin
 
         # adds the plugin capability tuple to the allowed loaded capability
+        # and registers for all handled events
         self.allowed_loaded_capability.append(plugin_capability_tuple)
-
-        # registers for all handled events
         self.register_all_handled_events_plugin(plugin)
 
-        # prints a debug message
-        self.debug("Loading plugin '%s' v%s in '%s' v%s" % (plugin.name, plugin.version, self.name, self.version))
+        # prints a debug message about the loading of the plugin inside
+        # the current plugin (for diagnostic purposes)
+        self.debug(
+            "Loading plugin '%s' v%s in '%s' v%s" %\
+            (plugin.name, plugin.version, self.name, self.version)
+        )
 
     def unload_allowed(self, plugin, capability):
         """
@@ -607,10 +621,15 @@ class Plugin(object):
                 (plugin.name, plugin.version, self.name, self.version)
             )
 
-        # removes the plugin capability tuple from the allowed loaded capability
-        self.allowed_loaded_capability.remove(plugin_capability_tuple)
+        # retrieves the map of allowed loaded plugin for the current
+        # plugin and removes the reference to the plugin to be unloaded
+        # from that map as it is no longer allowed in the current plugin
+        allowed = getattr(self, capability)
+        del allowed[plugin.short_name]
 
-        # unregisters for all handled events
+        # removes the plugin capability tuple from the allowed loaded capability
+        # and then unregisters for all handled events of the plugin to be unloaded
+        self.allowed_loaded_capability.remove(plugin_capability_tuple)
         self.unregister_all_handled_events_plugin(plugin)
 
         # prints an info message about the unloading of the plugin
