@@ -6058,16 +6058,20 @@ class Dependency:
 
     def test_conditions(self):
         """
-        Tests the available conditions.
+        Tests the available conditions, in case at least one of
+        the conditions fails the return value is invalid otherwise
+        the return value is valid.
 
         @rtype: bool
         @return: The result of the test (if successful or not).
         """
 
-        # iterates over all the conditions
+        # iterates over all the conditions returning
+        # an invalid value in case at least one of the
+        # test fails to be successful
         for condition in self.conditions_list:
-            if not condition.test_condition():
-                return False
+            if condition.test_condition(): continue
+            return False
 
         return True
 
@@ -6187,41 +6191,49 @@ class PluginDependency(Dependency):
 
 class PackageDependency(Dependency):
     """
-    The package dependency class.
+    The package dependency class, used to describe a dependency
+    on a python simple package. Should encapsulate the various
+    concepts that define the package.
     """
 
-    package_name = "none"
-    """ The package name """
+    name = None
+    """ The name of the package defined as a simple
+    human readable description of it """
 
-    package_import_name = "none"
-    """ The package import name """
+    import_name = None
+    """ The name of the python based import, this name
+    should respect the value of the import as it is going
+    to be used for the testing of package existence """
 
-    package_version = "none"
-    """ The package version """
+    version = "1.0.0"
+    """ The version of the package that the dependency is
+    defined this value may or may not be used for the test
+    of packaged existence (not required) """
 
-    package_url = "none"
-    """ The package url """
+    url = None
+    """ The url where from which the package may be retrieved
+    this may be the product page for the package """
 
     def __init__(
         self,
-        package_name = "none",
-        package_import_name = "none",
-        package_version = "none",
-        package_url = "none",
+        name,
+        import_name,
+        version = "1.0.0",
+        url = None,
         mandatory = True,
         conditions_list = []
     ):
         """
         Constructor of the class.
 
-        @type package_name: String
-        @param package_name: The package name.
-        @type package_import_name: String
-        @param package_import_name: The package import name.
-        @type package_version: String
-        @param package_version: The package version.
-        @type package_url: String
-        @param package_url: The package url.
+        @type name: String
+        @param name: The package name.
+        @type import_name: String
+        @param import_name: The package import name.
+        @type version: String
+        @param version: The package version.
+        @type url: String
+        @param url: The package url.
         @type mandatory: bool
         @param mandatory: The mandatory value.
         @type conditions_list: List
@@ -6229,10 +6241,10 @@ class PackageDependency(Dependency):
         """
 
         Dependency.__init__(self, mandatory, conditions_list)
-        self.package_name = package_name
-        self.package_import_name = package_import_name
-        self.package_version = package_version
-        self.package_url = package_url
+        self.name = name
+        self.import_name = import_name
+        self.version = version
+        self.url = url
 
     def __repr__(self):
         """
@@ -6250,7 +6262,10 @@ class PackageDependency(Dependency):
 
     def test_dependency(self, manager):
         """
-        Tests the environment for the package dependency and the given plugin manager.
+        Tests the environment for the package dependency and the
+        given plugin manager. Meaning that the complete set of
+        packages for the current dependency are going to be tested
+        for the proper existence.
 
         @type manager: PluginManager
         @param manager: The current plugin manager in use.
@@ -6260,57 +6275,44 @@ class PackageDependency(Dependency):
 
         Dependency.test_dependency(self, manager)
 
-        # in case some of the conditions are not fulfilled plugin
-        if not self.test_conditions():
-            return True
+        # in case some of the conditions are not fulfilled, an invalid
+        # value must be returned to the caller method
+        if not self.test_conditions(): return True
 
-        # retrieves the package name for the package dependency
-        package_name = self.package_name
+        # retrieves the package import name type so that it may be used
+        # to verify if the package is a set of packages (list type) or
+        # just a single package, and in case it's a single package converts
+        # it into a single item sequence to be compliant with a sequence
+        import_name_t = type(self.import_name)
+        is_sequence = import_name_t in (types.ListType, types.TupleType)
+        import_name = self.import_name if is_sequence else (self.import_name,)
 
-        # retrieves the package import name for the package dependency
-        package_import_name = self.package_import_name
-
-        # retrieves the package version for the package dependency
-        package_version = self.package_version
-
-        # retrieves the package url for the package dependency
-        package_url = self.package_url
-
-        # retrieves the package import name type
-        package_import_name_type = type(package_import_name)
-
-        if package_import_name_type == types.StringType:
-            try:
-                # tries to find (import) the given module
-                __import__(package_import_name)
+        # iterates over the complete set of package items in the import name
+        # value and tries to import every single one of them, in case one of
+        # the import fails a message is logged and an invalid value is returned
+        for import_name_item in import_name:
+            try: __import__(import_name_item)
             except ImportError:
                 if not manager.logger: return False
-                manager.logger.info("Package '%s' v%s does not exist in your system" % (package_name, package_version))
-                if not package_url == "none":
-                    manager.logger.info("You can download the package at %s" % package_url)
+                manager.logger.info("Package '%s' v%s does not exist in your system" % (self.name, self.version))
+                if self.url:
+                    manager.logger.info("You can download the package at %s" % self.url)
 
                 return False
-        elif package_import_name_type == types.ListType:
-            for package_import_name_item in package_import_name:
-                try:
-                    # tries to find (import) the given module
-                    __import__(package_import_name_item)
-                except ImportError:
-                    if not manager.logger: return False
-                    manager.logger.info("Package '%s' v%s does not exist in your system" % (package_name, package_version))
-                    if not package_url == "none":
-                        manager.logger.info("You can download the package at %s" % package_url)
 
-                    return False
-
+        # returns a valid value to the caller method as the complete set of packages
+        # were able to be imported with success (no problems occurred)
         return True
 
     def get_tuple(self):
         """
-        Retrieves a tuple representing the package dependency.
+        Retrieves a tuple representing the package dependency,
+        this value should include both the name and the proper
+        version of it.
 
         @rtype: Tuple
-        @return: A tuple representing the package dependency.
+        @return: A tuple representing the package dependency
+        with both of its name and version.
         """
 
         return (
