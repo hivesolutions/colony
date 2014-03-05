@@ -6101,8 +6101,8 @@ class PluginDependency(Dependency):
 
     def __init__(
         self,
-        plugin_id = "none",
-        plugin_version = "none",
+        plugin_id,
+        plugin_version = "x.x.x",
         diffusion_policy = SINGLETON_DIFFUSION_SCOPE,
         mandatory = True,
         conditions_list = []
