@@ -70,6 +70,7 @@ import test_util
 import time_util
 import update_thread_util
 import version_util
+import visitor_util
 
 from aes_util import *
 from bank_util import *
@@ -107,5 +108,6 @@ from test_util import *
 from time_util import *
 from update_thread_util import *
 from version_util import *
+from visitor_util import *
 
 from import_util import __import__
