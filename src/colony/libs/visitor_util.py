@@ -84,9 +84,13 @@ def dispatch_visit(map_name = "node_method_map"):
                 visit_method(*args, **kwargs)
                 self.after_visit(*args[1:], **kwargs)
 
+                # returns the control flow to the caller method, note that no
+                # value is returned as this is a simple visit operation
                 return
 
-            function(*args, **kwargs)
+            # in case no visit has been made a normal fallback operation is
+            # performed by calling the "original" function/method
+            return function(*args, **kwargs)
 
         return decorator_interceptor
 
