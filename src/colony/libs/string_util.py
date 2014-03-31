@@ -112,7 +112,7 @@ def to_underscore(string_value):
     # converts the string value underscore into the next underscore notation
     string_value_underscore = UNDERSCORE_SECOND_REGEX.sub(r"\1_\2", string_value_underscore)
 
-    # converts the string value in underscore notation to lowecase
+    # converts the string value in underscore notation to lowercase
     string_value_underscore = string_value_underscore.lower()
 
     # returns the string value in underscore notation
