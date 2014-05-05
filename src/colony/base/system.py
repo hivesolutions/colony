@@ -3392,15 +3392,16 @@ class PluginManager:
 
         # notifies the allowed plugins about the unload
         for allowed_plugin_info in self.get_plugin_allowed_plugins_map(plugin.id):
-            # retrieves the allowed plugin
+            # retrieves both the allowed plugin and the associated
+            # capability for which it was loaded for
             allowed_plugin = allowed_plugin_info[0]
-
-            # retrieves the allowed capability
             allowed_capability = allowed_plugin_info[1]
 
-            # in case the allowed plugin is loaded
-            if allowed_plugin.is_loaded():
-                allowed_plugin.unload_allowed(plugin, allowed_capability)
+            # verifies if the allowed plugin is loaded and in case it's
+            # not continues the loop as there's nothing to be done,
+            # otherwise starts the unloading of the allowed plugin
+            if not allowed_plugin.is_loaded(): continue
+            allowed_plugin.unload_allowed(plugin, allowed_capability)
 
         # clears the map for the dependent plugins
         self.clear_plugin_dependent_plugins_map(plugin.id)
