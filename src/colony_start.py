@@ -193,7 +193,9 @@ def run(
     attributes_map = {}
 ):
     """
-    Starts the loading of the plugin manager.
+    Starts the loading of the plugin manager. This should be the
+    primary start point of the plugin system when starting it as
+    a stand alone process (eg: not using wsgi).
 
     @type manager_path: String
     @param manager_path: The manager base path for execution.
