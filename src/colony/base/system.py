@@ -3701,7 +3701,7 @@ class PluginManager:
             # in case the dependency is of type plugin dependency
             if plugin_dependency.__class__ == PluginDependency:
                 # retrieves the dependency plugin instances (by id and version)
-                dependency_plugin_instance = self._get_plugin_by_id_and_version(plugin_dependency.plugin_id, plugin_dependency.plugin_version)
+                dependency_plugin_instance = self._get_plugin_by_id_and_version(plugin_dependency.id, plugin_dependency.version)
 
                 # in case the loading of the dependency plugin was not successful
                 if not self.__load_plugin(dependency_plugin_instance, DEPENDENCY_TYPE):
@@ -3716,7 +3716,7 @@ class PluginManager:
 
                     # adds the plugin to the plugin dependent plugins map for
                     # the plugin dependency id
-                    self.add_plugin_dependent_plugins_map(plugin_dependency.plugin_id, plugin)
+                    self.add_plugin_dependent_plugins_map(plugin_dependency.id, plugin)
 
         # returns true
         return True
@@ -4489,7 +4489,7 @@ class PluginManager:
                 # in case the dependency is of type plugin dependency
                 if dependency.__class__ == PluginDependency:
                     # in case the dependency plugin id is the same
-                    if dependency.plugin_id == plugin_id:
+                    if dependency.id == plugin_id:
                         # appends the plugin to the result
                         result.append(self.assert_plugin(plugin))
         return result
@@ -4515,7 +4515,7 @@ class PluginManager:
                 # in case the dependency is of type plugin dependency
                 if dependency.__class__ == PluginDependency:
                     # in case the dependency plugin id is the same
-                    if dependency.plugin_id == plugin_id:
+                    if dependency.id == plugin_id:
                         # appends the plugin to the result
                         result.append(plugin)
 
@@ -6109,19 +6109,21 @@ class PluginDependency(Dependency):
     The plugin dependency class.
     """
 
-    plugin_id = "none"
-    """ The plugin id """
+    id = "none"
+    """ The identifier of the plugin that is being represented
+    by the current dependency instance """
 
-    plugin_version = "none"
-    """ The plugin version """
+    version = "none"
+    """ The version of the plugin that is going to be
+    used for the plugin dependency representation """
 
     diffusion_policy = SINGLETON_DIFFUSION_SCOPE
-    """ The diffusion policy """
+    """ The diffusion policy for the dependency """
 
     def __init__(
         self,
-        plugin_id,
-        plugin_version = "x.x.x",
+        id,
+        version = "x.x.x",
         diffusion_policy = SINGLETON_DIFFUSION_SCOPE,
         mandatory = True,
         conditions_list = []
@@ -6129,10 +6131,10 @@ class PluginDependency(Dependency):
         """
         Constructor of the class.
 
-        @type plugin_id: String
-        @param plugin_id: The plugin id.
-        @type plugin_version: String
-        @param plugin_version: The plugin version.
+        @type id: String
+        @param id: The plugin id.
+        @type version: String
+        @param version: The plugin version.
         @type diffusion_policy: int
         @param diffusion_policy: The diffusion policy.
         @type mandatory: bool
@@ -6142,8 +6144,8 @@ class PluginDependency(Dependency):
         """
 
         Dependency.__init__(self, mandatory, conditions_list)
-        self.plugin_id = plugin_id
-        self.plugin_version = plugin_version
+        self.id = id
+        self.version = version
         self.diffusion_policy = diffusion_policy
 
     def __repr__(self):
@@ -6156,8 +6158,8 @@ class PluginDependency(Dependency):
 
         return "<%s, %s, %s>" % (
             self.__class__.__name__,
-            self.plugin_id,
-            self.plugin_version,
+            self.id,
+            self.version,
         )
 
     def test_dependency(self, manager):
@@ -6179,8 +6181,8 @@ class PluginDependency(Dependency):
         # retrieves the plugin id and version for the
         # plugin dependency so that it can be tested
         # for version matching
-        plugin_id = self.plugin_id
-        plugin_version = self.plugin_version
+        plugin_id = self.id
+        plugin_version = self.version
 
         # in case the plugin is not present in the loaded
         # plugins map, returns immediately in failure, otherwise
@@ -6204,10 +6206,27 @@ class PluginDependency(Dependency):
         """
 
         return (
-            self.plugin_id,
-            self.plugin_version
+            self.id,
+            self.version
         )
 
+    def get_map(self):
+        """
+        Retrieves the map based representation of the current plugin
+        dependency, this value may be used as a portable way to represent
+        the current dependency.
+        
+        @rtype: Dictionary
+        @return: The map based representation of the current plugin
+        dependency to be used in a portable way.
+        """
+        
+        return dict(
+            type = "plugin",
+            id = self.id,
+            version = self.version
+        )
+        
 class PackageDependency(Dependency):
     """
     The package dependency class, used to describe a dependency
@@ -6337,6 +6356,23 @@ class PackageDependency(Dependency):
         return (
             self.package_name,
             self.package_version
+        )
+        
+    def get_map(self):
+        """
+        Retrieves the map based representation of the current package
+        dependency, this value may be used as a portable way to represent
+        the current dependency.
+        
+        @rtype: Dictionary
+        @return: The map based representation of the current package
+        dependency to be used in a portable way.
+        """
+        
+        return dict(
+            type = "package",
+            name = self.name,
+            version = self.version
         )
 
 class Condition:
