@@ -6275,8 +6275,8 @@ class PackageDependency(Dependency):
 
         return "<%s, %s, %s>" % (
             self.__class__.__name__,
-            self.package_name,
-            self.package_version
+            self.name,
+            self.version
         )
 
     def test_dependency(self, manager):
