@@ -21,14 +21,14 @@ To actually do something useful look into [How to Establish your Colony in 3 Eas
 
 ## Usage
 
-Most of the colony operation are run through the `colony_admin` command:
+Most of the colony operation are run through the `cpm` command:
 
-* `colony_admin clone <target>` - clones the base colony instance into the target directory (new project)
-* `colony_admin cleanup <target>` - cleans the current instance removing extra files
-* `colony_admin pack <target>` - packs the current instance into a .zip file
-* `colony_admin build [target]` - builds the target descriptor file into a cbx file
-* `colony_admin deploy [target]` - deploys the target .cbx file into the current instance
-* `colony_admin generate [target]` - generates a .json descriptor file for the provided python file
+* `cpm clone <target>` - clones the base colony instance into the target directory (new project)
+* `cpm cleanup <target>` - cleans the current instance removing extra files
+* `cpm pack <target>` - packs the current instance into a .zip file
+* `cpm build [target]` - builds the target descriptor file into a cbx file
+* `cpm deploy [target]` - deploys the target .cbx file into the current instance
+* `cpm generate [target]` - generates a .json descriptor file for the provided python file
 
 ## Features
 
