@@ -43,5 +43,3 @@ from base_extra import * #@UnusedWildImport
 layout_mode = "default"
 run_mode = "development"
 level = "INFO"
-stop_on_cycle_error = False
-daemon_file_path = None

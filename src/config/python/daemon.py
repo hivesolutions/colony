@@ -42,5 +42,4 @@ from colony.config import * #@UnusedWildImport
 layout_mode = "default"
 run_mode = "production"
 level = "WARNING"
-stop_on_cycle_error = False
 daemon_file_path = "tmp/colony.daemon"
