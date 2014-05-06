@@ -1,15 +1,13 @@
 include src/colony.json
 include src/container.json
 include src/container.log.json
-recursive-include scripts *
-recursive-include src/colony *
-recursive-include src/config *
-recursive-include src/containers *
-recursive-include src/deploy *
-recursive-include src/libraries *
-recursive-include src/log *
-recursive-include src/meta *
-recursive-include src/plugins *
-recursive-include src/scripts *
-recursive-include src/tmp *
-recursive-include src/var *
+include src/config/README
+include src/containers/README
+include src/deploy/README
+include src/libraries/README
+include src/log/README
+include src/meta/README
+include src/plugins/README
+include src/scripts/README
+include src/tmp/README
+include src/var/README
