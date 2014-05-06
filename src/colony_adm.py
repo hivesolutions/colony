@@ -95,7 +95,7 @@ def get_base_path(path):
     return None
 
 def version():
-    output("colony admin (cpm) - admin tool for colony framework")
+    output("cpm - package management for colony framework")
 
 def clone():
     # in case there are enough arguments for the

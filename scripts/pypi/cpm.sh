@@ -27,15 +27,16 @@
 # __license__   = GNU General Public License (GPL), Version 3
 
 # sets the temporary variables
-SCRIPT_NAME=colony_admin.sh
+USR_BIN_PATH=/usr/bin
+PYTHON_PATH=$USR_BIN_PATH/python
+SCRIPT_NAME=cpm_pypi.py
 
 # retrieves the script directory path
 SCRIPT_DIRECTORY_PATH=$(dirname $(readlink $0 || echo $0))
 
-# executes the "parent" script file that should
-# exist in the current directory with the provided
-# arguments (argument pipe)
-"$SCRIPT_DIRECTORY_PATH/$SCRIPT_NAME" "$@"
+# executes the initial python script with
+# the provided arguments
+$PYTHON_PATH "$SCRIPT_DIRECTORY_PATH/$SCRIPT_NAME" "$@"
 
 # exits the process
 exit $?

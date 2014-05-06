@@ -27,7 +27,7 @@
 @echo off
 
 :: sets the temporary variables
-set SCRIPT_NAME=colony_admin.py
+set SCRIPT_NAME=cpm_pypi.py
 
 :: executes the initial python script with
 :: the provided arguments
