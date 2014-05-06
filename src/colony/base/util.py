@@ -136,18 +136,75 @@ def module_import(module_name):
         module = getattr(module, component)
     return module
 
+def ensure_tree(path):
+    """
+    Ensures that the proper colony plugin system directory
+    structure is created under the provided path.
+    
+    Note that the top level directory will be created in case
+    it does not exists, the permissions used for such operation
+    will be the default ones (may be not secure enough).
+    
+    @type path: String
+    @param path: The file path of the root plugin system directory
+    for which the structure is going to be created.
+    """
+    
+    config_path = os.path.join(path, "config")
+    containers_path = os.path.join(path, "containers")
+    deploy_path = os.path.join(path, "deploy")
+    libraries_path = os.path.join(path, "libraries")
+    log_path = os.path.join(path, "log")
+    meta_path = os.path.join(path, "meta")
+    plugins_path = os.path.join(path, "plugins")
+    scripts_path = os.path.join(path, "scripts")
+    tmp_path = os.path.join(path, "tmp")
+    var_path = os.path.join(path, "var")
+    if not os.path.exists(path): os.makedirs(path)
+    if not os.path.exists(config_path): os.makedirs(config_path)
+    if not os.path.exists(containers_path): os.makedirs(containers_path)
+    if not os.path.exists(deploy_path): os.makedirs(deploy_path)
+    if not os.path.exists(libraries_path): os.makedirs(libraries_path)
+    if not os.path.exists(log_path): os.makedirs(log_path)
+    if not os.path.exists(meta_path): os.makedirs(meta_path)
+    if not os.path.exists(plugins_path): os.makedirs(plugins_path)
+    if not os.path.exists(scripts_path): os.makedirs(scripts_path)
+    if not os.path.exists(tmp_path): os.makedirs(tmp_path)
+    if not os.path.exists(var_path): os.makedirs(var_path)
+
+def is_master(path):
+    """
+    Verifies if the provided file path is considered to be the
+    root path of a colony master directory structure. A colony
+    master directory structure is considered to be a directory
+    structure where the colony package system and the other directories
+    mix together (typically used for development).
+
+    @type path: String
+    @param path: The file path that is going to be verified to
+    be part of a colony master directory structure.
+    @rtype: bool
+    @return: If the provided path is considered to be a normalized
+    master directory structure for colony.
+    """
+
+    package_path = os.path.join(path, "colony")
+    return os.path.isdir(package_path)
+
 def get_environment():
     """
-    Retrieves the current python environment.
+    Retrieves the current python environment, there
+    should be multiple environments depending on the
+    kind of python interpreter being used.
 
     @rtype: String
-    @return: The type of the current python environment.
+    @return: The type of the current python environment,
+    taking into account the current interpreter information.
     """
 
     platform = sys.platform
-
-    if platform.find("java") != -1: return JYTHON_ENVIRONMENT
-    elif platform.find("cli") != -1: return IRON_PYTHON_ENVIRONMENT
+    if not platform.find("java") == -1: return JYTHON_ENVIRONMENT
+    elif not platform.find("cli") == -1: return IRON_PYTHON_ENVIRONMENT
     else: return CPYTHON_ENVIRONMENT
 
 def get_operative_system():
@@ -160,34 +217,25 @@ def get_operative_system():
     @return: The type of the current operative system.
     """
 
-    # retrieves the current os name
     os_name = os.name
-
     if os_name == "nt" or os_name == "dos": return WINDOWS_OS
     elif os_name == "mac": return MAC_OS
     elif os_name == "posix": return UNIX_OS
-
     return OTHER_OS
 
 def get_timestamp_uid():
     """
     Retrieves a unique id based in the current timestamp.
+    This value should not be used for high accuracy or
+    cryptographic operations as it's not very unique and
+    it is not entropy safe.
 
     @rtype: String
     @return: A unique id based in the current timestamp.
     """
 
-    # retrieves the current timestamp
     timestamp = time.time()
-
-    # increments precision decimal places
     float_value = timestamp * (10 ** UID_PRECISION)
-
-    # retrieves the integer value
     integer_value = long(float_value)
-
-    # converts the integer value to string value
     string_value = str(integer_value)
-
-    # returns the string value
     return string_value
