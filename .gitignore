@@ -1,6 +1,7 @@
 *.pyc
 *.egg
 
+/dist/
 /build/
 /src/colony.egg-info/
 /scripts/build/builds/
