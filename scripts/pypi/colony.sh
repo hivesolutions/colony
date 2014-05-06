@@ -34,10 +34,9 @@ SCRIPT_NAME=colony_pypi.py
 # retrieves the script directory path
 SCRIPT_DIRECTORY_PATH=$(dirname $(readlink $0 || echo $0))
 
-# executes the "parent" script file that should
-# exist in the current directory with the provided
-# arguments (argument pipe)
-"$SCRIPT_DIRECTORY_PATH/$SCRIPT_NAME" "$@"
+# executes the initial python script with
+# the provided arguments
+$PYTHON_PATH "$SCRIPT_DIRECTORY_PATH/$SCRIPT_NAME" "$@"
 
 # exits the process
 exit $?
