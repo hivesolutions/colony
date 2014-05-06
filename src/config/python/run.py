@@ -37,20 +37,11 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from base import * #@UnusedWildImport
+from colony.config import * #@UnusedWildImport
 from base_extra import * #@UnusedWildImport
 
 layout_mode = "default"
-""" The project layout mode """
-
 run_mode = "production"
-""" The project run mode """
-
 level = "WARNING"
-""" The logging verbosity level """
-
 stop_on_cycle_error = False
-""" The stop on cycle error flag """
-
 daemon_file_path = None
-""" The daemon file path """
