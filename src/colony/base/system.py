@@ -2525,6 +2525,8 @@ class PluginManager:
     def start_plugin(self, plugin):
         """
         Starts the given plugin, creating a singleton instance.
+        This method should also manipulate the created singleton
+        by adding some attributes to it.
 
         @type plugin: Class
         @param plugin: The plugin to start.
