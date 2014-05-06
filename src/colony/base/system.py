@@ -449,16 +449,21 @@ class Plugin(object):
         Method called at the beginning of the plugin loading process.
         """
 
+        # iterates over the complete set of allowed capabilities to be able
+        # to creates the required structures for the access to the loaded
+        # allowed plugins, note that they have not been loaded yet into the
+        # current plugin, so we can change the internal values of structures
+        for capability in self.capabilities_allowed:
+            setattr(self, capability, {})
+            setattr(self, capability + "_plugins", [])
+
         # registers all the plugin manager events
         self.register_all_plugin_manager_events()
 
-        # sets the loaded flag as true
+        # sets the values of a series of flags that control the state of the
+        # current plugin, these values may be used in flow control
         self.loaded = True
-
-        # sets the loaded flag as true
         self.lazy_loaded = False
-
-        # sets the error state as false
         self.error_state = False
 
         # resets the (load) timestamp value to the current
@@ -480,13 +485,10 @@ class Plugin(object):
         # registers all the plugin manager events
         self.register_all_plugin_manager_events()
 
-        # sets the loaded flag as true
+        # sets the values of a series of flags that control the state of the
+        # current plugin, these values may be used in flow control
         self.loaded = True
-
-        # sets the loaded flag as true
         self.lazy_loaded = True
-
-        # sets the error state as false
         self.error_state = False
 
         # generates the lazy load plugin event
