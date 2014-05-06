@@ -25,9 +25,10 @@ Most of the colony operation are run through the `colony_admin` command:
 
 * `colony_admin clone <target>` - clones the base colony instance into the target directory (new project)
 * `colony_admin cleanup <target>` - cleans the current instance removing extra files
-* `colony_admin pack <target>` - packs the current instance into a zip file
+* `colony_admin pack <target>` - packs the current instance into a ZIP file
 * `colony_admin build [target]` - builds the target descriptor file into a cbx file
-* `colony_admin deploy [target]` - deploys the target cbx file into the current instance
+* `colony_admin deploy [target]` - deploys the target CBX file into the current instance
+* `colony_admin generate [target]` - generates a JSON descriptor file for the provided python file
 
 ## Features
 
