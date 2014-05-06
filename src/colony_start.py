@@ -44,9 +44,7 @@ import getopt
 import logging
 import warnings
 
-import colony.base.util
-import colony.base.system
-import colony.base.information
+import colony
 
 USAGE = "Help:\n\
 --help[-h] - prints this message\n\
@@ -160,10 +158,10 @@ def print_information():
 
     # print the branding information text
     print BRANDING_TEXT % (
-        colony.base.information.VERSION,
-        colony.base.information.RELEASE,
-        colony.base.information.BUILD,
-        colony.base.information.RELEASE_DATE
+        colony.VERSION,
+        colony.RELEASE,
+        colony.BUILD,
+        colony.RELEASE_DATE
     )
 
     # print the python information
@@ -270,10 +268,10 @@ def run(
     global plugin_manager
 
     # retrieves the current executing platform
-    platform = colony.base.util.get_environment()
+    platform = colony.get_environment()
 
     # creates the plugin manager with the given plugin paths
-    plugin_manager = colony.base.system.PluginManager(
+    plugin_manager = colony.PluginManager(
         manager_path,
         logger_path,
         library_paths,

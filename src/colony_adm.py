@@ -43,7 +43,7 @@ import sys
 import shutil
 import zipfile
 
-import colony.libs.string_util
+import colony
 
 DEFAULT_TARGET = "colony"
 """ The default directory to be used as target in
@@ -291,7 +291,7 @@ def _build(path, short_name = False):
     # extension from it so that the short name for it is
     # correctly retrieved
     base_name = os.path.basename(path)
-    plugin_name = colony.libs.string_util.to_underscore(base_name)[:-12]
+    plugin_name = colony.to_underscore(base_name)[:-12]
 
     # retrieves the resources directory for the resources
     # from the base directory of the json descriptor and
