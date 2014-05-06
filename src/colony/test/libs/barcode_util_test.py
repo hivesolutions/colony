@@ -37,10 +37,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import colony.libs.test_util
-import colony.libs.barcode_util
+import colony
 
-class BarcodeTest(colony.libs.test_util.ColonyTestCase):
+class BarcodeTest(colony.ColonyTestCase):
     """
     Class that tests the barcode generation methods.
     The series of tests should include the complete
@@ -54,12 +53,12 @@ class BarcodeTest(colony.libs.test_util.ColonyTestCase):
 
         # encodes a "normal" even length based string value and asserts
         # that the encoded value is the expected one
-        encoded_value = colony.libs.barcode_util.encode_2_of_5("123456")
+        encoded_value = colony.encode_2_of_5("123456")
         self.assertEqual(encoded_value, "NnNnWnNwNnNnWwWnWnNwNnNwWnNwWwNnNnWnN")
 
         # encodes an odd length base string value and asserts that the
         # encoded value is the expected one (padded with the zero value)
-        encoded_value = colony.libs.barcode_util.encode_2_of_5("54321")
+        encoded_value = colony.encode_2_of_5("54321")
         self.assertEqual(encoded_value, "NnNnNwNnWwWnNnNwNwWnNnWnNwWnNnNnWwWnN")
 
     def test_code_128(self):
@@ -69,25 +68,25 @@ class BarcodeTest(colony.libs.test_util.ColonyTestCase):
 
         # encodes a "normal" even length based string value and asserts
         # that the encoded value is the expected one
-        encoded_value = colony.libs.barcode_util.encode_code_128("123456")
+        encoded_value = colony.encode_code_128("123456")
         self.assertEqual(encoded_value, u"\xcb123456/\xce")
 
         # encodes a "normal" even length based string value and asserts
         # that the encoded value is the expected one, the used code set
         # is the a code set
-        encoded_value = colony.libs.barcode_util.encode_code_128("123456", "A")
+        encoded_value = colony.encode_code_128("123456", "A")
         self.assertEqual(encoded_value, u"\xcb123456/\xce")
 
         # encodes a "normal" even length based string value and asserts
         # that the encoded value is the expected one, the used code set
         # is the b code set
-        encoded_value = colony.libs.barcode_util.encode_code_128("123456", "B")
+        encoded_value = colony.encode_code_128("123456", "B")
         self.assertEqual(encoded_value, u"\xcc1234560\xce")
 
         # encodes a "normal" even length based string value and asserts
         # that the encoded value is the expected one, the used code set
         # is the c code set
-        encoded_value = colony.libs.barcode_util.encode_code_128("123456", "C")
+        encoded_value = colony.encode_code_128("123456", "C")
         self.assertEqual(encoded_value, u"\xcd,BXL\xce")
 
     def test_code_39(self):
@@ -97,5 +96,5 @@ class BarcodeTest(colony.libs.test_util.ColonyTestCase):
 
         # encodes a "normal" even length based string value and asserts
         # that the encoded value is the expected one
-        encoded_value = colony.libs.barcode_util.encode_code_39("123456")
+        encoded_value = colony.encode_code_39("123456")
         self.assertEqual(encoded_value, "*123456*")

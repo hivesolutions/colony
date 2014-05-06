@@ -72,7 +72,7 @@ excluded from the auto parsing of parameters """
 base_path = os.path.dirname(__file__)
 if not base_path in sys.path: sys.path.insert(0, base_path)
 
-import colony.base.system
+import colony
 
 # registers the ignore flag in the deprecation warnings so that
 # no message with this kind of warning is printed (clean console)
@@ -147,7 +147,7 @@ meta_paths = [os.path.abspath(meta_path) for meta_path in meta_paths]
 # loop strategy (avoids blocking the process), note also that
 # threads are disallowed to avoid creation of extra threads, the
 # signal handlers are disabled to avoid collisions
-plugin_manager = colony.base.system.PluginManager(
+plugin_manager = colony.PluginManager(
     manager_path = base_path,
     logger_path = os.path.join(base_path, "log"),
     plugin_paths = plugin_paths,

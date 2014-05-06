@@ -39,7 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import datetime
 
-import colony.libs.list_util
+import list_util
 
 DAY_VALUE = "day"
 """ The day value """
@@ -335,7 +335,7 @@ def _process_includes(seconds, includes, minimize_mode):
 
     # intersects the (original) list of includes and the valid includes
     # to retrieve the processed includes
-    processed_includes = colony.libs.list_util.list_intersect(includes, valid_includes)
+    processed_includes = list_util.list_intersect(includes, valid_includes)
 
     # returns the processed includes
     return processed_includes

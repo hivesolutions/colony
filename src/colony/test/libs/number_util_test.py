@@ -37,10 +37,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import colony.libs.test_util
-import colony.libs.number_util
+import colony
 
-class NumberTest(colony.libs.test_util.ColonyTestCase):
+class NumberTest(colony.ColonyTestCase):
     """
     Class that tests the number various functions method.
     """
@@ -64,8 +63,8 @@ class NumberTest(colony.libs.test_util.ColonyTestCase):
 
         # converts both values into the fixed representation to test them
         # into a fixed based comparison, that must be valid
-        infinite_fixed_value = colony.libs.number_util.to_fixed(infinite_float_value, 2)
-        correct_fixed_value = colony.libs.number_util.to_fixed(correct_float_value, 2)
+        infinite_fixed_value = colony.to_fixed(infinite_float_value, 2)
+        correct_fixed_value = colony.to_fixed(correct_float_value, 2)
 
         # verifies that the comparison of the fixed based values should
         # be valid (this time the comparison takes no side effects)

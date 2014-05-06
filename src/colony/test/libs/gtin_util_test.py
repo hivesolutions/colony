@@ -37,10 +37,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import colony.libs.test_util
-import colony.libs.gtin_util
+import colony
 
-class GtinTest(colony.libs.test_util.ColonyTestCase):
+class GtinTest(colony.ColonyTestCase):
     """
     Class that tests the gtin calculation method.
     """
@@ -51,25 +50,25 @@ class GtinTest(colony.libs.test_util.ColonyTestCase):
         """
 
         # calculates the control value
-        control_value = colony.libs.gtin_util.calculate_control_value(629104150021)
+        control_value = colony.calculate_control_value(629104150021)
 
         # asserts the control value
         self.assertEqual(control_value, 3)
 
         # calculates the control value
-        control_value = colony.libs.gtin_util.calculate_control_value(978097123458)
+        control_value = colony.calculate_control_value(978097123458)
 
         # asserts the control value
         self.assertEqual(control_value, 1)
 
         # calculates the control value
-        control_value = colony.libs.gtin_util.calculate_control_value(978097123456)
+        control_value = colony.calculate_control_value(978097123456)
 
         # asserts the control value
         self.assertEqual(control_value, 7)
 
         # calculates the control value
-        control_value = colony.libs.gtin_util.calculate_control_value(978097123457)
+        control_value = colony.calculate_control_value(978097123457)
 
         # asserts the control value
         self.assertEqual(control_value, 4)

@@ -37,7 +37,7 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import colony.libs.string_buffer_util
+import string_buffer_util
 
 QUOTE_SAFE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.-"
 """ The string containing all the safe characters to be quoted """
@@ -201,7 +201,7 @@ def url_encode(attributes_map, plus_encoding = False):
     quote_method = plus_encoding and quote_plus or quote
 
     # creates a string buffer to hold the encoded attribute values
-    string_buffer = colony.libs.string_buffer_util.StringBuffer()
+    string_buffer = string_buffer_util.StringBuffer()
 
     # sets the is first flag
     is_first = True

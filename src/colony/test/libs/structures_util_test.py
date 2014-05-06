@@ -37,10 +37,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import colony.libs.test_util
-import colony.libs.structures_util
+import colony
 
-class JournaledListTest(colony.libs.test_util.ColonyTestCase):
+class JournaledListTest(colony.ColonyTestCase):
     """
     Class that tests the journaled list structure.
     """
@@ -53,7 +52,7 @@ class JournaledListTest(colony.libs.test_util.ColonyTestCase):
         # creates a jounaled list with elements from an existent
         # list and then adds some extra elements (that are going to
         # be journalized) to test the appending of them
-        jounaled_list = colony.libs.structures_util.JournaledList([1, 2, 3])
+        jounaled_list = colony.JournaledList([1, 2, 3])
         jounaled_list.append(4)
         jounaled_list.append(5)
         jounaled_list.append(6)
@@ -85,7 +84,7 @@ class JournaledListTest(colony.libs.test_util.ColonyTestCase):
         # creates a jounaled list with elements from an existent
         # list and then adds some extra elements (that are going to
         # be journalized) to test the removal of them
-        jounaled_list = colony.libs.structures_util.JournaledList([1, 2, 3])
+        jounaled_list = colony.JournaledList([1, 2, 3])
         jounaled_list.remove(1)
         jounaled_list.remove(2)
         jounaled_list.remove(3)
@@ -119,7 +118,7 @@ class JournaledListTest(colony.libs.test_util.ColonyTestCase):
         # creates a jounaled list with elements from an existent
         # list and then adds (and removes) some extra elements (that are going to
         # be journalized) to test the overriding of them
-        jounaled_list = colony.libs.structures_util.JournaledList([1, 2, 3])
+        jounaled_list = colony.JournaledList([1, 2, 3])
         jounaled_list.append(1)
         jounaled_list.append(1)
         jounaled_list.remove(1)
@@ -161,7 +160,7 @@ class JournaledListTest(colony.libs.test_util.ColonyTestCase):
         # creates a jounaled list with elements from an existent
         # list and then adds and removes some extra elements (that are going to
         # be journalized) to test the appending and removal of them
-        jounaled_list = colony.libs.structures_util.JournaledList([1, 2, 3])
+        jounaled_list = colony.JournaledList([1, 2, 3])
         jounaled_list.append(1)
         jounaled_list.remove(2)
         jounaled_list.remove(3)
@@ -197,7 +196,7 @@ class JournaledListTest(colony.libs.test_util.ColonyTestCase):
         # creates a jounaled list with elements from an existent
         # list and then adds some extra elements (that are not going to
         # be journalized) to test the (not jounalized) appending of them
-        jounaled_list = colony.libs.structures_util.JournaledList([1, 2, 3])
+        jounaled_list = colony.JournaledList([1, 2, 3])
         jounaled_list._append(4)
         jounaled_list._append(5)
         jounaled_list._append(6)
@@ -229,7 +228,7 @@ class JournaledListTest(colony.libs.test_util.ColonyTestCase):
         # creates a jounaled list with elements from an existent
         # list and then adds some extra elements (that are not going to
         # be journalized) to test the (not jounalized) removal of them
-        jounaled_list = colony.libs.structures_util.JournaledList([1, 2, 3])
+        jounaled_list = colony.JournaledList([1, 2, 3])
         jounaled_list._remove(1)
         jounaled_list._remove(2)
         jounaled_list._remove(3)
@@ -254,7 +253,7 @@ class JournaledListTest(colony.libs.test_util.ColonyTestCase):
         appends = jounaled_list.get_appends()
         self.assertEqual(appends, [])
 
-class OrderedMap(colony.libs.test_util.ColonyTestCase):
+class OrderedMap(colony.ColonyTestCase):
     """
     Class that tests the ordered map structure.
     """
@@ -269,7 +268,7 @@ class OrderedMap(colony.libs.test_util.ColonyTestCase):
         # defined sequence of setting of values, to be used
         # to after verify that they are set in the correct
         # order of appearance (test structure)
-        ordered_map = colony.libs.structures_util.OrderedMap()
+        ordered_map = colony.OrderedMap()
         ordered_map["1"] = 1
         ordered_map["2"] = 2
         ordered_map["3"] = 3

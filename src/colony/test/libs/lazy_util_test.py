@@ -37,10 +37,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import colony.libs.test_util
-import colony.libs.lazy_util
+import colony
 
-class LazyClassTest(colony.libs.test_util.ColonyTestCase):
+class LazyClassTest(colony.ColonyTestCase):
     """
     Class that tests the gtin calculation method.
     """
@@ -52,14 +51,14 @@ class LazyClassTest(colony.libs.test_util.ColonyTestCase):
 
         # verifies that the global lazy reference is
         # "equivalent" to a null reference
-        self.assertEqual(colony.libs.lazy_util.Lazy, None)
+        self.assertEqual(colony.Lazy, None)
 
         # creates a new lazy class instance to check the
         # comparisons against it
-        lazy = colony.libs.lazy_util.LazyClass()
+        lazy = colony.LazyClass()
 
         # verifies that the new instance is equivalent to
         # a null object, itself and the global lazy reference
         self.assertEqual(lazy, None)
         self.assertEqual(lazy, lazy)
-        self.assertEqual(lazy, colony.libs.lazy_util.Lazy)
+        self.assertEqual(lazy, colony.Lazy)
