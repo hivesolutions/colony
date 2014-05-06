@@ -152,7 +152,9 @@ def get_environment():
 
 def get_operative_system():
     """
-    Retrieves the current operative system.
+    Retrieves the current operative system, this is a
+    normalized operation that uses the underlying python
+    infra-structure and normalizes the result.
 
     @rtype: String
     @return: The type of the current operative system.
