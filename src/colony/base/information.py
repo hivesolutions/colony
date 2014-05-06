@@ -79,7 +79,7 @@ DATE_FORMAT = "%b %d %Y"
 DATE_TIME_FORMAT = "%b %d %Y %H:%M:%S"
 """ The format used to convert date times to strings """
 
-INFORMATION_PATH = "../../colony.json"
+INFORMATION_PATH = "../res/colony.json"
 """ The relative path to the file containing the
 complete "release" information about the current
 colony implementation running """
