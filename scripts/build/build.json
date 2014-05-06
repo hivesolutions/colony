@@ -1,6 +1,6 @@
 {
     "name" : "colony",
-    "version" : "1.0.9",
+    "version" : "1.0.10",
     "description" : "Colony Framework",
     "author" : "Hive Solutions <development@hive.pt>",
     "repo" : "git://github.com/hivesolutions/colony.git",

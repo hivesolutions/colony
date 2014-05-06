@@ -1,4 +1,5 @@
 {
+    "1.0.10" : ["New generation feature in admin"],
     "1.0.9" : ["Small bug fixed in admin"],
     "1.0.8" : ["Better support for the admin tool"],
     "1.0.7" : ["Relase for sync with plugins"],
