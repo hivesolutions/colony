@@ -202,17 +202,20 @@ def build():
     target = sys.argv[2]
     _build(target)
 
+def deploy():
+    pass
+
 def generate():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
     # a runtime error
     if len(sys.argv) < 3: raise RuntimeError("no plugin file provided")
 
+    # retrieves the target plugin file path and uses it
+    # for the generation of the descriptor file that should
+    # represent the same plugin in terms of meat information
     target = sys.argv[2]
     _generate(target)
-
-def deploy():
-    pass
 
 def _cleanup(path, empty_extra = True):
     # retrieves the path to the series of sub
