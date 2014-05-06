@@ -56,12 +56,7 @@ import __builtin__
 
 import logging.handlers
 
-import colony.libs.time_util
-import colony.libs.path_util
-import colony.libs.round_util
-import colony.libs.string_util
-import colony.libs.version_util
-import colony.libs.string_buffer_util
+import colony.libs
 
 import util
 import loggers
@@ -1248,7 +1243,7 @@ class Plugin(object):
             # value and the saved load timestamp then uses it to create
             # the uptime message to be returned
             delta = time.time() - self.timestamp
-            uptime = colony.libs.time_util.format_seconds_smart(delta, mode = "extended_simple")
+            uptime = colony.libs.format_seconds_smart(delta, mode = "extended_simple")
 
         # returns the message containing the description
         # about the uptime for the current plugin
@@ -1830,7 +1825,7 @@ class PluginManager:
 
         # in case the plugin version is not the same (uses
         # the defined version comparison)
-        if not colony.libs.version_util.version_cmp(plugin_class.version, plugin_version):
+        if not colony.libs.version_cmp(plugin_class.version, plugin_version):
             # raises the plugin class not available exception
             raise exceptions.PluginClassNotAvailable("invalid plugin '%s' v%s" % (plugin_id, plugin_version))
 
@@ -2304,7 +2299,7 @@ class PluginManager:
         # applies the round fix so that all the python interpreter
         # version use an uniform rounding strategy and avoid the
         # typical errors for rounding operations
-        colony.libs.round_util.apply()
+        colony.libs.apply()
 
     def get_all_modules(self, path, suffix = None):
         """
@@ -2558,7 +2553,7 @@ class PluginManager:
         # to the underscore version of it and then removes the last part of
         # the string that contains the plugin suffix (this plugin name value
         # will be used for rapid retrieval of the plugin)
-        plugin_name = colony.libs.string_util.to_underscore(plugin.__name__)[:-7]
+        plugin_name = colony.libs.to_underscore(plugin.__name__)[:-7]
         plugin._name = plugin_name
 
         # sets the plugin instance reference in the plugins object, this will
@@ -4189,7 +4184,7 @@ class PluginManager:
         # verifies if the plugin version is valid, it's considered to
         # be valid when it's not defined (anything counts) or when the
         # version matches the current plugin version
-        version_valid = not plugin_version or colony.libs.version_util.version_cmp(
+        version_valid = not plugin_version or colony.libs.version_cmp(
             plugin.version,
             plugin_version
         )
@@ -4243,7 +4238,7 @@ class PluginManager:
 
         if plugin_id in self.plugin_instances_map:
             plugin = self.plugin_instances_map[plugin_id]
-            if colony.libs.version_util.version_cmp(plugin.version, plugin_version):
+            if colony.libs.version_cmp(plugin.version, plugin_version):
                 return self.assert_plugin(plugin)
 
     def _get_plugin_by_id_and_version(self, plugin_id, plugin_version):
@@ -4260,7 +4255,7 @@ class PluginManager:
 
         if plugin_id in self.plugin_instances_map:
             plugin = self.plugin_instances_map[plugin_id]
-            if colony.libs.version_util.version_cmp(plugin.version, plugin_version):
+            if colony.libs.version_cmp(plugin.version, plugin_version):
                 return plugin
 
     def get_plugins_by_capability(self, capability):
@@ -4693,7 +4688,7 @@ class PluginManager:
 
         # creates the string buffers list with the initial string
         # buffer in it
-        string_buffers_list = [colony.libs.string_buffer_util.StringBuffer()]
+        string_buffers_list = [colony.libs.StringBuffer()]
 
         # initializes the current index
         current_index = 0
@@ -4810,7 +4805,7 @@ class PluginManager:
         temporary_plugin_path = temporary_directory + "/" + COLONY_VALUE + "/" + plugin_id + "/" + extra_path
 
         # normalizes the temporary plugin path
-        normalized_temporary_plugin_path = colony.libs.path_util.normalize_path(temporary_plugin_path)
+        normalized_temporary_plugin_path = colony.libs.normalize_path(temporary_plugin_path)
 
         # returns the normalized temporary plugin path
         return normalized_temporary_plugin_path
@@ -4839,7 +4834,7 @@ class PluginManager:
         temporary_plugin_generated_path = os.path.join(temporary_plugin_path, str(current_time_value))
 
         # normalizes the temporary plugin generated path
-        normalized_temporary_plugin_generated_path = colony.libs.path_util.normalize_path(temporary_plugin_generated_path)
+        normalized_temporary_plugin_generated_path = colony.libs.normalize_path(temporary_plugin_generated_path)
 
         # returns the normalized temporary plugin generated path
         return normalized_temporary_plugin_generated_path
@@ -5776,7 +5771,7 @@ class PluginManager:
         # value and the saved load timestamp then uses it to create
         # the uptime message to be returned
         delta = time.time() - self.plugin_manager_timestamp
-        uptime = colony.libs.time_util.format_seconds_smart(delta, mode = "extended_simple")
+        uptime = colony.libs.format_seconds_smart(delta, mode = "extended_simple")
 
         # returns the message containing the description
         # about the uptime for the current plugin system
@@ -6027,7 +6022,7 @@ class PluginManager:
 
         # retrieves the relative path between the manager path and the plugin
         # path
-        plugin_relative_path = colony.libs.path_util.relative_path(plugin_path, manager_path)
+        plugin_relative_path = colony.libs.relative_path(plugin_path, manager_path)
 
         # checks if the plugin relative path is a back-reference
         plugin_relative_path_back = plugin_relative_path.startswith("..")
@@ -6190,7 +6185,7 @@ class PluginDependency(Dependency):
         # out if there is a version mismatch
         if not plugin_id in manager.loaded_plugins_map: return False
         plugin = manager.loaded_plugins_map[plugin_id]
-        if not colony.libs.version_util.version_cmp(plugin.version, plugin_version): return False
+        if not colony.libs.version_cmp(plugin.version, plugin_version): return False
 
         # in case the plugin load test is not successful
         if not manager.test_plugin_load(plugin): return False
