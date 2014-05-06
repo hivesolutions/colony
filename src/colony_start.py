@@ -73,15 +73,6 @@ VERSION_PRE_TEXT = "Python "
 HELP_TEXT = "Type \"help\" for more information."
 """ The help text value """
 
-COLONY_HOME_ENVIRONMENT = "COLONY_HOME"
-""" The colony home environment variable name """
-
-COLONY_LAYOUT_MODE_ENVIRONMENT = "COLONY_LAYOUT_MODE"
-""" The colony layout mode environment variable name """
-
-COLONY_RUN_MODE_ENVIRONMENT = "COLONY_RUN_MODE"
-""" The colony run mode environment variable name """
-
 DEFAUL_LEVEL_VALUE = "WARNING"
 """ The default logging verbosity level to be used
 when no other value is defined by the user or by the
@@ -94,7 +85,8 @@ DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "config/python/devel.py"
 """ The default configuration file path """
 
 DEFAULT_MANAGER_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
-""" The default manager path """
+""" The default manager path, considered to be the current
+executing file's directory (by default)) """
 
 DEFAULT_LOGGER_PATH_VALUE = "log"
 """ The default logger path """
@@ -359,7 +351,7 @@ def main():
     attributes_map = None
     config_file_path = DEFAULT_CONFIGURATION_FILE_PATH_VALUE
     daemon_file_path = None
-    manager_path = os.environ.get(COLONY_HOME_ENVIRONMENT, DEFAULT_MANAGER_PATH_VALUE).decode(file_system_encoding)
+    manager_path = os.environ.get("COLONY_HOME", DEFAULT_MANAGER_PATH_VALUE).decode(file_system_encoding)
     logger_path = DEFAULT_LOGGER_PATH_VALUE
     library_path = None
     meta_path = None
@@ -787,9 +779,9 @@ def configure_system(layout_mode, run_mode, manager_path):
     # sets the various colony related environment variables
     # so that the current process may expose them to any
     # created child process (context exposure)
-    os.environ[COLONY_LAYOUT_MODE_ENVIRONMENT] = layout_mode
-    os.environ[COLONY_RUN_MODE_ENVIRONMENT] = run_mode
-    os.environ[COLONY_HOME_ENVIRONMENT] = manager_path
+    os.environ["COLONY_LAYOUT_MODE"] = layout_mode
+    os.environ["COLONY_RUN_MODE"] = run_mode
+    os.environ["COLONY_HOME"] = manager_path
 
     # constructs the library path and normalizes it
     library_path = manager_path + "/" + LIBRARY_DIRECTORY
