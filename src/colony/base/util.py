@@ -122,12 +122,15 @@ class Plugins:
 
 def module_import(module_name):
     """
-    Imports the module with the given name.
+    Imports the module with the given name, this import
+    operation is recursive meaning that inner packages
+    are also going to be imported.
 
     @type module_name: String
-    @param module_name: The name of the module to be imported.
+    @param module_name: The name of the module to be imported,
+    this value may contain multiple "sub" packages.
     @rtype: module
-    @return: The imported module.
+    @return: The imported module as a variable reference.
     """
 
     module = __import__(module_name)
@@ -135,6 +138,31 @@ def module_import(module_name):
     for component in components[1:]:
         module = getattr(module, component)
     return module
+
+def resolve_manager(exec_path):
+    """
+    Master resolver for the manager path, it's responsible
+    for the decision to use the current and possible master
+    directory structure or the personal (home directory based)
+    strategy that is used as fallback.
+
+    Note that the master structure should only be used for
+    development purposes.
+
+    @type exec_path: String
+    @param exec_path: The currently executing path, should be
+    retrieved from the first file to be executed in the call
+    stack, this is the path to be inspected for master.
+    @rtype: String
+    @return: The final "resolved" manager path after the proper
+    validation operations have been done.
+    """
+
+    personal_path = os.path.expanduser("~")
+    personal_path = os.path.join(personal_path, ".colony")
+    master_path = os.environ.get("COLONY_HOME", exec_path)
+    manager_path = master_path if is_master(master_path) else personal_path
+    return manager_path
 
 def ensure_tree(path):
     """
@@ -188,7 +216,7 @@ def is_master(path):
     master directory structure for colony.
     """
 
-    package_path = os.path.join(path, "colony")
+    package_path = os.path.join(path, "colonyd")
     plugins_path = os.path.join(path, "plugins")
     return os.path.isdir(package_path) and os.path.isdir(plugins_path)
 

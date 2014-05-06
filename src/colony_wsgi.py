@@ -74,6 +74,13 @@ if not base_path in sys.path: sys.path.insert(0, base_path)
 
 import colony
 
+# runs the resolution process in order to be able to retrieve
+# the "real" a "best" match for the manager path, this method
+# should decide between the personal and the master versions
+# then ensures that the proper directory tree is created
+manager_path = colony.resolve_manager(base_path)
+colony.ensure_tree(manager_path)
+
 # registers the ignore flag in the deprecation warnings so that
 # no message with this kind of warning is printed (clean console)
 warnings.filterwarnings("ignore", category = DeprecationWarning)
@@ -101,7 +108,7 @@ alias_path = os.environ.get("ALIAS_PATH", None)
 # file path then joins the "relative" file path to the base path
 # and resolves it as an absolute path
 config_file_path = os.environ.get(CONFIG_FILE_ENV, None) or DEFAULT_CONFIG_PATH
-config_file_path = os.path.join(base_path, config_file_path)
+config_file_path = os.path.join(manager_path, config_file_path)
 config_file_path = os.path.abspath(config_file_path)
 
 # retrieves the name of the directory containing the configuration
@@ -120,7 +127,8 @@ config_file_base_path = os.path.basename(config_file_path)
 # module extension by splitting the configuration base path into
 # base name and extension and then imports the referring module
 configuration_module_name, _configuration_module_extension = os.path.splitext(config_file_base_path)
-colony_configuration = __import__(configuration_module_name)
+try: colony_configuration = __import__(configuration_module_name)
+except ImportError: import colony.config.base as module; colony_configuration = module
 
 # initializes the lists that will contain both the path to the
 # plugins and the paths to the configuration (meta) files
@@ -131,14 +139,14 @@ meta_paths = []
 # the glob based approach then "takes" the final list into a
 # final step of absolute path normalization
 for plugin_path in colony_configuration.plugin_path_list:
-    plugin_paths += glob.glob(os.path.join(base_path, plugin_path))
+    plugin_paths += glob.glob(os.path.join(manager_path, plugin_path))
 plugin_paths = [os.path.abspath(plugin_path) for plugin_path in plugin_paths]
 
 # iterates over each of the meta paths to resolve them using
 # the glob based approach then "takes" the final list into a
 # final step of absolute path normalization
 for meta_path in colony_configuration.meta_path_list:
-    meta_paths += glob.glob(os.path.join(base_path, meta_path))
+    meta_paths += glob.glob(os.path.join(manager_path, meta_path))
 meta_paths = [os.path.abspath(meta_path) for meta_path in meta_paths]
 
 # creates the plugin manager instance with the current file path
@@ -148,8 +156,8 @@ meta_paths = [os.path.abspath(meta_path) for meta_path in meta_paths]
 # threads are disallowed to avoid creation of extra threads, the
 # signal handlers are disabled to avoid collisions
 plugin_manager = colony.PluginManager(
-    manager_path = base_path,
-    logger_path = os.path.join(base_path, "log"),
+    manager_path = manager_path,
+    logger_path = os.path.join(manager_path, "log"),
     plugin_paths = plugin_paths,
     meta_paths = meta_paths,
     loop = False,

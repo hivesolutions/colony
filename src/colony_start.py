@@ -345,10 +345,7 @@ def main():
     attributes_map = None
     config_file_path = DEFAULT_CONFIGURATION_FILE_PATH_VALUE
     daemon_file_path = None
-    personal_path = os.path.expanduser("~")
-    personal_path = os.path.join(personal_path, ".colony")
-    master_path = os.environ.get("COLONY_HOME", RELATIVE_MANAGER_PATH).decode(file_system_encoding)
-    manager_path = master_path if colony.is_master(master_path) else personal_path
+    manager_path = colony.resolve_manager(RELATIVE_MANAGER_PATH)
     logger_path = DEFAULT_LOGGER_PATH_VALUE
     library_path = None
     meta_path = None
