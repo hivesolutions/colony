@@ -42,7 +42,6 @@ import glob
 import datetime
 import setuptools
 
-
 setuptools.setup(
     name = "colony",
     version = "1.0.10",
