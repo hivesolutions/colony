@@ -5,9 +5,7 @@ Colony aims to eliminate the complexity typically associated with the creation o
 
 ## Quick start
 
-* Download [Colony](http://hivesolutions.dyndns.org/integration_public/LATEST_SUCCESS/resources/colony_1.0.0_all.zip).
-* Unzip the file, which will create a colony directory.
-* Go to colony/scripts/<platform>.
+* Install Colony using ``pip install colony``
 * Run the command 'colony'
 
 To actually do something useful look into [How to Establish your Colony in 3 Easy Steps](http://getcolony.com/docs/colony/documentation_how_to_establish_your_colony_in_3_easy_steps.html)
