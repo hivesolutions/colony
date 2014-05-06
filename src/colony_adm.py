@@ -72,6 +72,9 @@ REMOVALS = (
 """ The list of paths to be removed because there's
 no use for them in the target colony instance """
 
+def output(message):
+    print message
+
 def get_base_path(path):
     # iterates continuously while the root path is not
     # reached or a root file paths is not found
@@ -92,7 +95,7 @@ def get_base_path(path):
     return None
 
 def version():
-    print "colony admin - admin tool for colony framework"
+    output("colony admin - admin tool for colony framework")
 
 def clone():
     # in case there are enough arguments for the
@@ -198,6 +201,15 @@ def build():
     # uses it to run the build structure
     target = sys.argv[2]
     _build(target)
+
+def generate():
+    # in case there're not enough arguments to be
+    # able to retrieve the specification file raises
+    # a runtime error
+    if len(sys.argv) < 3: raise RuntimeError("no plugin file provided")
+
+    target = sys.argv[2]
+    _generate(target)
 
 def deploy():
     pass
@@ -322,6 +334,149 @@ def _build(path, short_name = False):
         # closes the file to avoid any leak of file
         # descriptors and to flush the pending data
         file.close()
+
+def _generate(path):
+    # imports the json module so that it's possible
+    # to generate the colony descriptor file
+    import json
+
+    # normalizes the path so that the value that is going to be
+    # used from no on is going to be the correct one according
+    # to the current operative system specifications
+    path = os.path.abspath(path)
+    path = os.path.normpath(path)
+
+    # retrieves the base name of the provided path so that it
+    # may be "safely" used for some of the situations
+    base = os.path.basename(path)
+    base_dir = os.path.dirname(path)
+
+    # prints a debug information message about the generation
+    # of descriptor process that is going to be started
+    output("Generating descriptor for '%s' ..." % base)
+
+    # starts some of the temporary variables that are going to be
+    # used as part of the plugin structure finding process
+    plugin = None
+    variables = dict()
+
+    # executes the main plugin python file so that it's possible
+    # to retrieve the plugin structure and process it, at the end
+    # of the "finding iteration" the plugin should have been found
+    execfile(path, variables)
+    for name, value in variables.items():
+        if not name.endswith("Plugin"): continue
+        plugin = value
+
+    # in case no plugin structure has been found an exception is raised
+    # indicating that no plugin has been found (problem situation)
+    if not plugin: raise RuntimeError("no plugin found")
+
+    # uses the typical approach to the generation of the plugin short name
+    # this strategy is defined as the standard one and should be respected
+    # by any plugin considered to be compliant with colony
+    short_name = colony.to_underscore(plugin.__name__)[:-7]
+
+    # initializes the loop that is going to discover the type of directory
+    # structure for the current plugin (either inexistent, direct or indirect)
+    mode = None
+    names = os.listdir(base_dir)
+    for name in names:
+        current = os.path.join(base_dir, name)
+        if not os.path.isdir(current): continue
+        if name == short_name: mode = "direct"; break
+        else: mode = "indirect"; break
+
+    # runs the proper resources gathering strategy taking into account the type
+    # of plugin directory structure that has just been found in the previous step
+    if mode == "direct": resources = _gather_direct(short_name, base_dir, name)
+    elif mode == "indirect": resources = _gather_indirect(short_name, base_dir, name)
+    else: resources = _gather_invalid(short_name, base_dir, name)
+
+    # filters the resources that have been gathered so that only the ones that
+    # matter are defined in the structure and then creates the sequence of dependency
+    # maps that are going to be defining the dependencies of the plugin
+    resources = _fitler_resources(resources)
+    dependencies = [dependency.get_map() for dependency in plugin.dependencies]
+
+    # creates the "final" plugin definition structure with the complete set of
+    # attributes of the plugin and then dumps the structure using the json serializer
+    # as this is the default serialization model of the descriptor files
+    structure = dict(
+        type = "plugin",
+        platform = "python",
+        sub_platforms = plugin.platforms,
+        id = plugin.id,
+        name = plugin.name,
+        description = plugin.description,
+        version = plugin.version,
+        author = plugin.author,
+        capabilities = plugin.capabilities,
+        capabilities_allowed = plugin.capabilities_allowed,
+        dependencies = dependencies,
+        resources = resources
+    )
+    structure_s = json.dumps(structure)
+
+    # creates the final path of the descriptor file and writes the serialized contents
+    # into the file closing it for writing at the end, note that the target file is
+    # defined by convention from the plugin's short name
+    descriptor_path = os.path.join(base_dir, short_name + "_plugin.json")
+    descriptor_file = open(descriptor_path, "wb")
+    try: descriptor_file.write(structure_s)
+    finally: descriptor_file
+
+    # prints a debug message about the descriptor file that has just been generated
+    # so that the user is notified about the generated file
+    output("Generated descriptor into '%s'" % descriptor_path)
+
+def _fitler_resources(resources, exclusion = (".pyc", ".temp", ".tmp")):
+    filtered = []
+    for resource in resources:
+        if resource.endswith(exclusion): continue
+        filtered.append(resource)
+    return filtered
+
+def _gather_direct(short_name, base_dir, name):
+    result = []
+
+    root_path = os.path.join(base_dir, name)
+    for root, _dirs, files in os.walk(root_path):
+        relative = os.path.relpath(root, root_path)
+        relative = relative.replace("\\", "/")
+        if relative == ".": relative = name
+        else: relative = name + "/" + relative
+        files = [relative + "/" + file for file in files]
+        result.extend(files)
+
+    return result
+
+def _gather_indirect(short_name, base_dir, name):
+    root_path = os.path.join(base_dir, name)
+
+    target = None
+    names = os.listdir(root_path)
+    for _name in names:
+        if short_name.endswith(_name): target = _name; break
+        elif short_name.startswith(_name): target = _name; break
+
+    if not target: return []
+
+    result = [name + "/__init__.py"]
+
+    base_path = os.path.join(root_path, target)
+    for root, _dirs, files in os.walk(base_path):
+        relative = os.path.relpath(root, root_path)
+        relative = relative.replace("\\", "/")
+        relative = name + "/" + relative
+        files = [relative + "/" + file for file in files]
+        result.extend(files)
+
+    return result
+
+def _gather_invalid(short_name, base_dir, name):
+    output("No directory found for plugin '%s'" % short_name)
+    return []
 
 def _zip_directory(path, relative, file):
     # retrieves the list of entries for the path to
