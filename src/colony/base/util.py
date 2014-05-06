@@ -140,16 +140,16 @@ def ensure_tree(path):
     """
     Ensures that the proper colony plugin system directory
     structure is created under the provided path.
-    
+
     Note that the top level directory will be created in case
     it does not exists, the permissions used for such operation
     will be the default ones (may be not secure enough).
-    
+
     @type path: String
     @param path: The file path of the root plugin system directory
     for which the structure is going to be created.
     """
-    
+
     config_path = os.path.join(path, "config")
     containers_path = os.path.join(path, "containers")
     deploy_path = os.path.join(path, "deploy")
@@ -189,7 +189,8 @@ def is_master(path):
     """
 
     package_path = os.path.join(path, "colony")
-    return os.path.isdir(package_path)
+    plugins_path = os.path.join(path, "plugins")
+    return os.path.isdir(package_path) and os.path.isdir(plugins_path)
 
 def get_environment():
     """

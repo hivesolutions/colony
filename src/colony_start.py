@@ -249,32 +249,32 @@ def run(
     # value may be passed to the next functions to be called
     # as part of this execution stack
     platform = colony.get_environment()
-    
-    # rus the ensure operation for the currently defined manager
+
+    # runs the ensure operation for the currently defined manager
     # path making sure that the complete directory structure exists
     colony.ensure_tree(manager_path)
 
     # creates the plugin manager with the given plugin paths
     plugin_manager = colony.PluginManager(
-        manager_path,
-        logger_path,
-        library_paths,
-        meta_paths,
-        plugin_paths,
-        platform,
-        [],
-        stop_on_cycle_error,
-        loop,
-        threads,
-        signals,
-        layout_mode,
-        run_mode,
-        container,
-        prefix_paths,
-        daemon_pid,
-        daemon_file_path,
-        execution_command,
-        attributes_map
+        manager_path = manager_path,
+        logger_path = logger_path,
+        library_paths = library_paths,
+        meta_paths = meta_paths,
+        plugin_paths = plugin_paths,
+        platform = platform,
+        init_complete_handlers = [],
+        stop_on_cycle_error = stop_on_cycle_error,
+        loop = loop,
+        threads = threads,
+        signals = signals,
+        layout_mode = layout_mode,
+        run_mode = run_mode,
+        container = container,
+        prefix_paths = prefix_paths,
+        daemon_pid = daemon_pid,
+        daemon_file_path = daemon_file_path,
+        execution_command = execution_command,
+        attributes_map = attributes_map
     )
 
     # resolves the string based level into the proper integer
