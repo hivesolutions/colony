@@ -102,8 +102,8 @@ DEFAULT_LOGGER_PATH_VALUE = "log"
 PREFIX_PATH_PREFIX_VALUE = "%"
 """ The prefix path prefix value """
 
-PREFIX_PATH_SUFIX_VALUE = "_prefix_path%"
-""" The prefix path sufix value """
+PREFIX_PATH_SUFFIX_VALUE = "_prefix_path%"
+""" The prefix path suffix value """
 
 LIBRARY_DIRECTORY = "colony/libs"
 """ The colony library directory """
@@ -703,7 +703,7 @@ def convert_reference_path_list(manager_path, current_prefix_paths, reference_pa
             # to be used in the dereferencing of the path, then
             # executes the dereferencing operation substituting the
             # "wildcard" references in the paths
-            current_prefix_path_name = PREFIX_PATH_PREFIX_VALUE + current_prefix_path + PREFIX_PATH_SUFIX_VALUE
+            current_prefix_path_name = PREFIX_PATH_PREFIX_VALUE + current_prefix_path + PREFIX_PATH_SUFFIX_VALUE
             current_prefix_path_value = current_prefix_paths[current_prefix_path]
             dereferenced_path = dereferenced_path.replace(current_prefix_path_name, current_prefix_path_value)
 
