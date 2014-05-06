@@ -53,9 +53,11 @@ setuptools.setup(
     url = "http://getcolony.com",
     zip_safe = False,
     scripts = [
+        "scripts/pypi/colony",
         "scripts/pypi/colony.bat",
         "scripts/pypi/colony.sh",
         "scripts/pypi/colony_pypi.py",
+        "scripts/pypi/cpm",
         "scripts/pypi/cpm.bat",
         "scripts/pypi/cpm.sh",
         "scripts/pypi/cpm_pypi.py"
