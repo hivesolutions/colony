@@ -73,18 +73,10 @@ VERSION_PRE_TEXT = "Python "
 HELP_TEXT = "Type \"help\" for more information."
 """ The help text value """
 
-DEFAUL_LEVEL_VALUE = "WARNING"
-""" The default logging verbosity level to be used
-when no other value is defined by the user or by the
-configuration files pointed by the execution """
-
-DEFAULT_STRING_VALUE = "default"
-""" The default string value """
-
 DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "config/python/devel.py"
 """ The default configuration file path """
 
-DEFAULT_MANAGER_PATH_VALUE = os.path.dirname(os.path.realpath(__file__))
+RELATIVE_MANAGER_PATH = os.path.dirname(os.path.realpath(__file__))
 """ The default manager path, considered to be the current
 executing file's directory (by default)) """
 
@@ -168,14 +160,14 @@ def run(
     library_path,
     meta_path,
     plugin_path,
-    level = DEFAUL_LEVEL_VALUE,
-    layout_mode = DEFAULT_STRING_VALUE,
-    run_mode = DEFAULT_STRING_VALUE,
+    level = "WARNING",
+    layout_mode = "default",
+    run_mode = "default",
     stop_on_cycle_error = True,
     loop = False,
     threads = True,
     signals = True,
-    container = DEFAULT_STRING_VALUE,
+    container = "default",
     prefix_paths = [],
     daemon_pid = None,
     daemon_file_path = None,
@@ -239,28 +231,28 @@ def run(
     print_information()
 
     # checks if the library path is not valid
-    if not library_path == None:
-        library_paths = library_path.split(";")
-    else:
-        library_paths = []
+    if library_path: library_paths = library_path.split(";")
+    else: library_paths = []
 
     # checks if the meta path is not valid
-    if not meta_path == None:
-        meta_paths = meta_path.split(";")
-    else:
-        meta_paths = []
+    if meta_path: meta_paths = meta_path.split(";")
+    else: meta_paths = []
 
     # checks if the plugin path is not valid
-    if not plugin_path == None:
-        plugin_paths = plugin_path.split(";")
-    else:
-        plugin_paths = []
+    if plugin_path: plugin_paths = plugin_path.split(";")
+    else: plugin_paths = []
 
     # sets the plugin manager as a global variable
     global plugin_manager
 
-    # retrieves the current executing platform
+    # retrieves the current executing platform, so that this
+    # value may be passed to the next functions to be called
+    # as part of this execution stack
     platform = colony.get_environment()
+    
+    # rus the ensure operation for the currently defined manager
+    # path making sure that the complete directory structure exists
+    colony.ensure_tree(manager_path)
 
     # creates the plugin manager with the given plugin paths
     plugin_manager = colony.PluginManager(
@@ -300,7 +292,9 @@ def run(
 
 def main():
     """
-    The main entry point of the application.
+    The main entry point of the application, should parse
+    the provided command line arguments and then start the
+    execution of the colony plugin system.
     """
 
     try:
@@ -344,14 +338,17 @@ def main():
     level = None
     threads = True
     signals = True
-    layout_mode = DEFAULT_STRING_VALUE
-    run_mode = DEFAULT_STRING_VALUE
-    container = DEFAULT_STRING_VALUE
+    layout_mode = "default"
+    run_mode = "default"
+    container = "default"
     daemon_pid = None
     attributes_map = None
     config_file_path = DEFAULT_CONFIGURATION_FILE_PATH_VALUE
     daemon_file_path = None
-    manager_path = os.environ.get("COLONY_HOME", DEFAULT_MANAGER_PATH_VALUE).decode(file_system_encoding)
+    personal_path = os.path.expanduser("~")
+    personal_path = os.path.join(personal_path, ".colony")
+    master_path = os.environ.get("COLONY_HOME", RELATIVE_MANAGER_PATH).decode(file_system_encoding)
+    manager_path = master_path if colony.is_master(master_path) else personal_path
     logger_path = DEFAULT_LOGGER_PATH_VALUE
     library_path = None
     meta_path = None
@@ -551,7 +548,8 @@ def parse_configuration(
     # module extension by splitting the configuration base path into
     # base name and extension and then imports the referring module
     configuration_module_name, _configuration_module_extension = os.path.splitext(config_file_base_path)
-    colony_configuration = __import__(configuration_module_name)
+    try: colony_configuration = __import__(configuration_module_name)
+    except ImportError: import colony.config.base as module; colony_configuration = module
 
     # retrieves the colony configuration contents
     colony_configuration_contents = dir(colony_configuration)
@@ -561,11 +559,11 @@ def parse_configuration(
         level = colony_configuration.level
 
     # in case the layout mode variable is defined in the colony configuration
-    if layout_mode == DEFAULT_STRING_VALUE and LAYOUT_MODE_VALUE in colony_configuration_contents:
+    if layout_mode == "default" and LAYOUT_MODE_VALUE in colony_configuration_contents:
         layout_mode = colony_configuration.layout_mode
 
     # in case the run mode variable is defined in the colony configuration
-    if run_mode == DEFAULT_STRING_VALUE and RUN_MODE_VALUE in colony_configuration_contents:
+    if run_mode == "default" and RUN_MODE_VALUE in colony_configuration_contents:
         run_mode = colony_configuration.run_mode
 
     # in case the prefix paths variable is defined in the
@@ -734,7 +732,7 @@ def load_plugin_paths_file(manager_path):
     # in case the plugin paths file does not exists (the
     # file is not mandatory) must return immediately because
     # no further processing is taking place
-    if not os.path.exists(plugin_paths_file_path): return
+    if not os.path.exists(plugin_paths_file_path): return ""
 
     # opens the plugin paths file for reading then reads the
     # plugin path files contents, and the closes file to avoid
