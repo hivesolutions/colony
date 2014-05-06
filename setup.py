@@ -70,6 +70,7 @@ setuptools.setup(
     packages = [
         "colony",
         "colony.base",
+        "colony.config",
         "colony.libs",
         "colony.test",
         "colony.test.base",
