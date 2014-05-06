@@ -6215,18 +6215,18 @@ class PluginDependency(Dependency):
         Retrieves the map based representation of the current plugin
         dependency, this value may be used as a portable way to represent
         the current dependency.
-        
+
         @rtype: Dictionary
         @return: The map based representation of the current plugin
         dependency to be used in a portable way.
         """
-        
+
         return dict(
             type = "plugin",
             id = self.id,
             version = self.version
         )
-        
+
 class PackageDependency(Dependency):
     """
     The package dependency class, used to describe a dependency
@@ -6357,18 +6357,18 @@ class PackageDependency(Dependency):
             self.package_name,
             self.package_version
         )
-        
+
     def get_map(self):
         """
         Retrieves the map based representation of the current package
         dependency, this value may be used as a portable way to represent
         the current dependency.
-        
+
         @rtype: Dictionary
         @return: The map based representation of the current package
         dependency to be used in a portable way.
         """
-        
+
         return dict(
             type = "package",
             name = self.name,
