@@ -1,13 +1,1 @@
-include src/colony.json
-include src/container.json
-include src/container.log.json
-include src/config/README
-include src/containers/README
-include src/deploy/README
-include src/libraries/README
-include src/log/README
-include src/meta/README
-include src/plugins/README
-include src/scripts/README
-include src/tmp/README
-include src/var/README
+recursive-include src/colony/res *
