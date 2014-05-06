@@ -584,6 +584,14 @@ class Plugin(object):
         allowed = getattr(self, capability)
         allowed[plugin.short_name] = plugin
 
+        # verifies if the current plugin already has the plugins list for
+        # the current capability created and if that's not the case creates
+        # a new list and then appends the current allowed plugin to the list
+        if not hasattr(self, capability + "_plugins"):
+            setattr(self, capability + "_plugins", [])
+        allowed_list = getattr(self, capability + "_plugins")
+        allowed_list.append(plugin)
+
         # adds the plugin capability tuple to the allowed loaded capability
         # and registers for all handled events
         self.allowed_loaded_capability.append(plugin_capability_tuple)
@@ -626,6 +634,12 @@ class Plugin(object):
         # from that map as it is no longer allowed in the current plugin
         allowed = getattr(self, capability)
         del allowed[plugin.short_name]
+
+        # retrieves the list of allowed plugins for the current capability
+        # that is currently registered and then removes the current plugin
+        # from it as it's currently being unloaded (as expected)
+        allowed_list = getattr(self, capability + "_plugins")
+        allowed_list.remove(plugin)
 
         # removes the plugin capability tuple from the allowed loaded capability
         # and then unregisters for all handled events of the plugin to be unloaded
