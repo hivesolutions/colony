@@ -39,7 +39,9 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 class ColonyException(Exception):
     """
-    The top level colony exception.
+    The top level colony exception, this is the main exception
+    for the complete colony infra-structure and all the other
+    exceptions should inherit from this one.
     """
 
     def __unicode__(self):
