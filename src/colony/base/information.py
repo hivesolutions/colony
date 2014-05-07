@@ -40,25 +40,31 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import sys
 
 VERSION = "%(version)s"
-""" The version value """
+""" The version value, that identifies the current
+running version, this value should have three components """
 
 RELEASE = "%(release)s"
-""" The release value """
+""" The release value identifying the continuous integration
+based value, this value should be considered internal """
 
 BUILD = "%(build)s"
-""" The build value """
+""" The build value, considered to be internal """
 
 RELEASE_DATE = "%(date)s"
-""" The release date value """
+""" The release date value conformant with the typical
+data and string values """
 
 RELEASE_DATE_TIME = "%(date_time)s"
-""" The release date time value """
+""" The release date time value that should timestamp the
+current system """
 
 ENVIRONMENT_VERSION = str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "." + str(sys.version_info[2]) + "-" + str(sys.version_info[3])
-""" The environment version """
+""" The environment version, constructed using information
+from the currently running python interpreter """
 
 ENVIRONMENT = "python-" + sys.platform + " " + ENVIRONMENT_VERSION
-""" The environment """
+""" The environment string that should identify in a minimal
+way the currently running system/environment """
 
 __GENERATED__ = "%(generated)s"
 """ Flag based global object that controls if the
