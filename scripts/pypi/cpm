@@ -27,8 +27,7 @@
 # __license__   = GNU General Public License (GPL), Version 3
 
 # sets the temporary variables
-USR_BIN_PATH=/usr/bin
-PYTHON_PATH=$USR_BIN_PATH/python
+PYTHON_PATH=python
 SCRIPT_NAME=cpm_pypi.py
 
 # retrieves the script directory path
