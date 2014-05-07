@@ -39,6 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 plugin_path_list = [
     "plugins",
+    "plugins/*plugins",
     "../../*/src",
     "../../*/*/src"
 ]
