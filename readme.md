@@ -71,3 +71,7 @@ To find python native extension required for some of the plugins used the follow
 ## License
 
 Colony is an open-source project licensed under the [GNU General Public License Version 3](http://www.gnu.org/licenses/gpl.html).
+
+## Build Automation
+
+[![Build Status](https://travis-ci.org/hivesolutions/colony.png?branch=master)](https://travis-ci.org/hivesolutions/colony)
