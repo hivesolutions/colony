@@ -5075,10 +5075,9 @@ class PluginManager:
         @param event_args: The arguments to be passed to the handler.
         """
 
-        # prints a debug  message
-        self.debug("Event '%s' generated in plugin manager" % (event_name))
-
+        # prints a debug message about the event that has been generated and
         # notifies the event handlers of the event name with the event arguments
+        self.debug("Event '%s' generated in plugin manager" % (event_name))
         self.notify_handlers(event_name, event_args)
 
     def plugin_manager_plugin_execute(self, execution_type, arguments):
