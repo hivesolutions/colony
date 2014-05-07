@@ -5968,29 +5968,41 @@ class PluginManager:
         plugin framework.
 
         @type exception: BaseException
-        @param exception: The exception to be handled.
+        @param exception: The exception to be handled, the kind of exception
+        gathered may be of any type and that should be expected.
         """
 
         try:
-            # retrieves the exception type
+            # retrieves the exception type and the message that is
+            # going to be used to represent the message
             exception_type = exception.__class__.__name__
+            exception_message = unicode(exception) or "Unknown error"
 
-            # print a warning message
-            self.warning("Unloading system due to exception: '%s' of type '%s'" % (unicode(exception), exception_type))
+            # print an information message about the unloading
+            # of the current system, this is printed at the beginning
+            # of the unloading process of the plugin system
+            self.info("Unloading system due to exception: '%s' of type '%s'" % (exception_message, exception_type))
 
-            # unloads the system
+            # starts the unloading of the system, this is a blocking
+            # method call and may take some time to be completed
             self.unload_system(False)
 
-            # print a warning message
-            self.warning("Unloaded system due to exception: '%s' of type '%s'" % (unicode(exception), exception_type))
+            # print an information message about the unloading
+            # that has completed for the current system
+            self.info("Unloaded system due to exception: '%s' of type '%s'" % (exception_message, exception_type))
         except KeyboardInterrupt, exception:
-            # prints an error message
-            self.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
+            # retrieves the message that is going to be used for the
+            # representation of the exception in the logging
+            exception_message = unicode(exception) or "Unknown error"
 
-            # stops the blocking system structures
+            # prints an error message about the problem in the unloading
+            # of the current plugin system, required for debugging
+            self.error("Problem unloading the system '%s', killing the system..." % exception_message)
+
+            # stops the blocking system structures and then exits
+            # the current process with an error code indicating that
+            # the exit was not achieved success (problem in unload)
             self._stop_blocking_system_structures()
-
-            # exits in error
             exit(2)
 
     def _get_best_plugin_path(self, plugin_path):
