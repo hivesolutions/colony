@@ -85,11 +85,11 @@ def info():
 
     # retrieves the complete set of information that is
     # going to be printed as part of the info printing
-    path = colony.resolve_manager(cwd)
+    manager_path = colony.resolve_manager(cwd)
 
     # prints the complete set of information to the user
     # so that it may take some decisions on the interaction
-    output("path := %s" % path)
+    output("manager_path := %s" % manager_path)
 
 def clone():
     # in case there are enough arguments for the
