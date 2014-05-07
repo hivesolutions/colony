@@ -178,7 +178,7 @@ def pack():
     target = target or os.path.normpath(os.path.dirname(__file__))
 
     # in case not target path is defined must raise
-    # a runtime error
+    # a runtime error, because it's not possible to proceed
     if not target: raise RuntimeError("no instance found")
 
     # runs the pack command on the target path
@@ -238,6 +238,11 @@ def _cleanup_directories(path, extension):
         _cleanup_files(_path, extension)
 
 def _cleanup_files(path, extension):
+    # verifies that the provided path exists and is
+    # a valid directory, in case it does not returns
+    # immediately to avoid any problem
+    if not os.path.isdir(path): return
+
     # lists all the entries in the provided path
     # in order to filter the ones to be removed
     entries = os.listdir(path)
