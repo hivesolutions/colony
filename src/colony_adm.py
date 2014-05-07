@@ -499,6 +499,12 @@ def _gather_invalid(short_name, base_dir, name):
     return []
 
 def _zip_directory(path, relative, file):
+    # verifies that the provided path exists and is
+    # a valid directory, in case it does not returns
+    # immediately to avoid any problem, the provided
+    # zip file is not going to contain of the data
+    if not os.path.isdir(path): return
+
     # retrieves the list of entries for the path to
     # be compressed into the zip
     entries = os.listdir(path)
