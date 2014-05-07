@@ -311,7 +311,7 @@ def _pack(path):
     # been performed on the current running colony instance
     output("Packed '%s' into '%s'" % (path, archive_path))
 
-def _generate(path):
+def _generate(path, build = True):
     # imports the json module so that it's possible
     # to generate the colony descriptor file
     import json
@@ -411,6 +411,10 @@ def _generate(path):
     # so that the user is notified about the generated file
     output("Generated descriptor into '%s'" % descriptor_path)
 
+    # in case the build flag is active the generated descriptor file is used to build
+    # a new package file for the currently associated package
+    if build: _build(descriptor_path)
+
 def _build(path, short_name = True):
     # imports the json module so that it's possible
     # to parse the colony descriptor file
@@ -487,8 +491,10 @@ def _deploy(path):
 
     short_name = descriptor["short_name"]
     short_path = os.path.join(plugins_path, short_name + "_plugin")
+    resources_path = os.path.join(temp_path, "resources")
 
-    shutil.move(temp_path, short_path)
+    shutil.move(resources_path, short_path)
+    shutil.rmtree(temp_path)
 
 def _fitler_resources(resources, exclusion = (".pyc", ".temp", ".tmp")):
     filtered = []
