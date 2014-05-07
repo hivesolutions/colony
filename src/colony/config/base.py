@@ -46,7 +46,7 @@ values, should be used with care (mostly maintained for legacy reasons) """
 
 plugin_path_list = [
     "plugins",
-    "plugins/*plugins"
+    "plugins/*plugin"
 ]
 """ The list of plugin paths, these directories are going
 to be searched for plugin files (via criteria) and the
