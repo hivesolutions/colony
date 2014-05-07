@@ -225,6 +225,11 @@ def _cleanup(path, empty_extra = True):
     empty_extra and _cleanup_directories(meta_path, re.compile(""))
 
 def _cleanup_directories(path, extension):
+    # verifies that the provided path exists and is
+    # a valid directory, in case it does not returns
+    # immediately to avoid any problem
+    if not os.path.isdir(path): return
+
     # lists all the entries in the provided path
     # in order to filter the ones to be removed
     entries = os.listdir(path)
@@ -276,6 +281,7 @@ def _pack(path):
     # path and then joins the pack file name to it
     _path = os.path.join(path, "..")
     archive_path = os.path.join(_path, PACK_FILE)
+    archive_path = os.path.normpath(archive_path)
 
     # opens the archive path as a zip file for writing and
     # then writes the current "instance" directory into the zip
@@ -284,7 +290,7 @@ def _pack(path):
     finally: file.close()
 
     # prints a message about the packing operation that has just
-    # been performed on the current runnig colony instance
+    # been performed on the current running colony instance
     output("Packed '%s' into '%s'" % (path, archive_path))
 
 def _build(path, short_name = False):
