@@ -97,6 +97,19 @@ def get_base_path(path):
 def version():
     output("cpm - package management for colony framework")
 
+def info():
+    # retrieves the current working directory (cwd)
+    # in order to be used in as fallback case
+    cwd = os.getcwd()
+
+    # retrieves the complete set of information that is
+    # going to be printed as part of the info printing
+    path = get_base_path(cwd)
+
+    # prints the complete set of information to the user
+    # so that it may take some decisions on the interaction
+    output("path := %s" % path)
+
 def clone():
     # in case there are enough arguments for the
     # deduction of the target path uses the provided
