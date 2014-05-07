@@ -472,27 +472,43 @@ def _build(path, short_name = True):
 def _deploy(path):
     import json
 
+    # retrieves the currently working directory as this is going
+    # to be used for some of the path resolution processes
     cwd = os.getcwd()
 
+    # resolves the associated manager path and then uses it to
+    # gather the path where the plugins are going to be deployed
     manager_path = resolve_manager(cwd)
     plugins_path = os.path.join(manager_path, "plugins")
 
+    # creates a new temporary directory path where the contents of
+    # the package file are going to be extracted
     temp_path = tempfile.mkdtemp()
 
+    # reads the package (zip file) and then extracts the complete
+    # set of it's contents into the temporary directory so that they
+    # may be manipulated and then properly used
     file = zipfile.ZipFile(path, "r", zipfile.ZIP_DEFLATED)
     try: file.extractall(temp_path)
     finally: file.close()
 
+    # retrieves the path of the specification file and reads it's json
+    # contents so that it's possible to retrieve more information about
+    # the package that is currently being deployed
     spec_path = os.path.join(temp_path, "spec.json")
     file = open(spec_path, "rb")
     try: descriptor = json.load(file, "utf-8")
     finally: file.close()
     os.remove(spec_path)
 
+    # retrieves some of the descriptor information and uses it to create
+    # the reference to the target path of the package deployment
     short_name = descriptor["short_name"]
     short_path = os.path.join(plugins_path, short_name + "_plugin")
     resources_path = os.path.join(temp_path, "resources")
 
+    # moves the resources part of the package into the target path for the
+    # package in the manager tree and then removes the temporary path
     shutil.move(resources_path, short_path)
     shutil.rmtree(temp_path)
 
