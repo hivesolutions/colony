@@ -283,6 +283,10 @@ def _pack(path):
     try: _zip_directory(path, "/", file)
     finally: file.close()
 
+    # prints a message about the packing operation that has just
+    # been performed on the current runnig colony instance
+    output("Packed '%s' into '%s'" % (path, archive_path))
+
 def _build(path, short_name = False):
     # imports the json module so that it's possible
     # to parse the colony descriptor file
