@@ -218,10 +218,13 @@ def _cleanup(path, empty_extra = True):
     meta_path = os.path.join(path, "meta")
 
     # removes the files using extension based rules
-    # on the defined directories
+    # on the defined directories, this should normalize
+    # the directory structure and avoid problems
     _cleanup_files(path, re.compile(".*\.pyc$"))
     _cleanup_files(log_path, re.compile(".*\.log$"))
     _cleanup_files(log_path, re.compile(".*\.log.[0-9]+$"))
+    _cleanup_files(log_path, re.compile(".*\.err$"))
+    _cleanup_files(log_path, re.compile(".*\.err.[0-9]+$"))
     empty_extra and _cleanup_directories(meta_path, re.compile(""))
 
 def _cleanup_directories(path, extension):
