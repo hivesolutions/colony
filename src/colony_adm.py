@@ -405,7 +405,7 @@ def _generate(path, build = True):
     descriptor_path = os.path.join(base_dir, short_name + "_plugin.json")
     descriptor_file = open(descriptor_path, "wb")
     try: descriptor_file.write(structure_s)
-    finally: descriptor_file
+    finally: descriptor_file.close()
 
     # prints a debug message about the descriptor file that has just been generated
     # so that the user is notified about the generated file
@@ -484,7 +484,7 @@ def _deploy(path):
     finally: file.close()
 
     spec_path = os.path.join(temp_path, "spec.json")
-    file = open(path, "rb")
+    file = open(spec_path, "rb")
     try: descriptor = json.load(file, "utf-8")
     finally: file.close()
     os.remove(spec_path)
