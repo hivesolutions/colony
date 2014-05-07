@@ -72,6 +72,11 @@ REMOVALS = (
 """ The list of paths to be removed because there's
 no use for them in the target colony instance """
 
+def resolve_manager(path, ensure = True):
+    manager_path = colony.resolve_manager(path)
+    if ensure: colony.ensure_tree(manager_path)
+    return manager_path
+
 def output(message):
     print message
 
@@ -85,7 +90,7 @@ def info():
 
     # retrieves the complete set of information that is
     # going to be printed as part of the info printing
-    manager_path = colony.resolve_manager(cwd)
+    manager_path = resolve_manager(cwd)
 
     # prints the complete set of information to the user
     # so that it may take some decisions on the interaction
@@ -145,7 +150,7 @@ def cleanup():
     # parameters otherwise used the default name
     # for the target path
     if len(sys.argv) > 2: target = sys.argv[2]
-    else: target = colony.resolve_manager(cwd)
+    else: target = resolve_manager(cwd)
 
     # in case not target was expanded the current directory
     # is used (assumes) the administration file is stored
@@ -170,7 +175,7 @@ def pack():
     # parameters otherwise used the default name
     # for the target path
     if len(sys.argv) > 2: target = sys.argv[2]
-    else: target = colony.resolve_manager(cwd)
+    else: target = resolve_manager(cwd)
 
     # in case not target was expanded the current directory
     # is used (assumes) the administration file is stored
