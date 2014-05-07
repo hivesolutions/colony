@@ -26,7 +26,7 @@ Most of the colony operation are run through the `cpm` command:
 * `cpm clone <target>` - clones the base colony instance into the target directory (new project)
 * `cpm cleanup <target>` - cleans the current instance removing extra files
 * `cpm pack <target>` - packs the current instance into a .zip file
-* `cpm generate [python]` - generates a .json descriptor file for the provided python file
+* `cpm generate [target]` - generates a .json descriptor file for the provided python file
 * `cpm build [descriptor]` - builds the target .json descriptor file into a package file
 * `cpm deploy [package]` - deploys the target .cbx file into the current instance
 
