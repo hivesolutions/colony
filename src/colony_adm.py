@@ -42,6 +42,7 @@ import os
 import sys
 import shutil
 import zipfile
+import tempfile
 
 import colony
 
@@ -190,20 +191,6 @@ def pack():
     # to create the packed file for the colony instance
     _pack(target)
 
-def build():
-    # in case there're not enough arguments to be
-    # able to retrieve the specification file raises
-    # a runtime error
-    if len(sys.argv) < 3: raise RuntimeError("no descriptor provided")
-
-    # retrieves the target file from the arguments and
-    # uses it to run the build structure
-    target = sys.argv[2]
-    _build(target)
-
-def deploy():
-    pass
-
 def generate():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
@@ -215,6 +202,29 @@ def generate():
     # represent the same plugin in terms of meat information
     target = sys.argv[2]
     _generate(target)
+
+def build():
+    # in case there're not enough arguments to be
+    # able to retrieve the specification file raises
+    # a runtime error
+    if len(sys.argv) < 3: raise RuntimeError("no descriptor provided")
+
+    # retrieves the descriptor file from the arguments and
+    # uses it to run the build structure
+    descriptor = sys.argv[2]
+    _build(descriptor)
+
+def deploy():
+    # in case there're not enough arguments to be
+    # able to retrieve the specification file raises
+    # a runtime error, the name of the file is required
+    if len(sys.argv) < 3: raise RuntimeError("no package provided")
+
+    # retrieves the package file from the arguments and
+    # uses it to run the deploy the package into the currently
+    # defined global instance (default colony instance)
+    package = sys.argv[2]
+    _deploy(package)
 
 def _cleanup(path, empty_extra = True):
     # retrieves the path to the series of sub
@@ -301,60 +311,6 @@ def _pack(path):
     # been performed on the current running colony instance
     output("Packed '%s' into '%s'" % (path, archive_path))
 
-def _build(path, short_name = False):
-    # imports the json module so that it's possible
-    # to parse the colony descriptor file
-    import json
-
-    # opens the descriptor file to be read in the binary
-    # format and loads its json contents to be used
-    file = open(path, "rb")
-    try: descriptor = json.load(file, "utf-8")
-    finally: file.close()
-
-    # retrieves the various attributes from the descriptor
-    # file and uses them to infer in some properties
-    type = descriptor["type"]
-    id = descriptor["id"]
-    resources = descriptor.get("resources", [])
-    extension = EXTENSIONS.get(type, ".cpx")
-
-    # retrieves the base name for the file and removes the
-    # extension from it so that the short name for it is
-    # correctly retrieved
-    base_name = os.path.basename(path)
-    plugin_name = colony.to_underscore(base_name)[:-12]
-
-    # retrieves the resources directory for the resources
-    # from the base directory of the json descriptor and
-    # then creates the name of the file from the id
-    resources_directory = os.path.dirname(path)
-    name = plugin_name + extension if short_name else id + extension
-
-    # opens the target zip file to be used in write
-    # mode (it's going to receive the data)
-    file = zipfile.ZipFile(name, "w", zipfile.ZIP_DEFLATED)
-
-    try:
-        # iterates over all the resources to be written
-        # in the packing file to zip them
-        for resource in resources:
-            # creates the full path to the resource from the
-            # resources directory and the re-calculates the
-            # the resources path with a prefix and writes
-            # the resource into the target file
-            _resource = os.path.join(resources_directory, resource)
-            _relative = "resources/" + resource
-            file.write(_resource, _relative)
-
-        # writes the specification file into the packing file
-        # to be used as meta data information
-        file.write(path, "spec.json")
-    finally:
-        # closes the file to avoid any leak of file
-        # descriptors and to flush the pending data
-        file.close()
-
 def _generate(path):
     # imports the json module so that it's possible
     # to generate the colony descriptor file
@@ -413,6 +369,10 @@ def _generate(path):
     elif mode == "indirect": resources = _gather_indirect(short_name, base_dir, name)
     else: resources = _gather_invalid(short_name, base_dir, name)
 
+    # prepends the current plugin file to the list of resource, this is considered
+    # to be the main resource to be included in the package
+    resources.insert(0, base)
+
     # filters the resources that have been gathered so that only the ones that
     # matter are defined in the structure and then creates the sequence of dependency
     # maps that are going to be defining the dependencies of the plugin
@@ -428,6 +388,7 @@ def _generate(path):
         sub_platforms = plugin.platforms,
         id = plugin.id,
         name = plugin.name,
+        short_name = short_name,
         description = plugin.description,
         version = plugin.version,
         author = plugin.author,
@@ -449,6 +410,85 @@ def _generate(path):
     # prints a debug message about the descriptor file that has just been generated
     # so that the user is notified about the generated file
     output("Generated descriptor into '%s'" % descriptor_path)
+
+def _build(path, short_name = True):
+    # imports the json module so that it's possible
+    # to parse the colony descriptor file
+    import json
+
+    # opens the descriptor file to be read in the binary
+    # format and loads its json contents to be used
+    file = open(path, "rb")
+    try: descriptor = json.load(file, "utf-8")
+    finally: file.close()
+
+    # retrieves the various attributes from the descriptor
+    # file and uses them to infer in some properties
+    type = descriptor["type"]
+    id = descriptor["id"]
+    resources = descriptor.get("resources", [])
+    extension = EXTENSIONS.get(type, ".cpx")
+
+    # retrieves the base name for the file and removes the
+    # extension from it so that the short name for it is
+    # correctly retrieved
+    base_name = os.path.basename(path)
+    plugin_name = colony.to_underscore(base_name)[:-12]
+
+    # retrieves the resources directory for the resources
+    # from the base directory of the json descriptor and
+    # then creates the name of the file from the id
+    resources_directory = os.path.dirname(path)
+    name = plugin_name + extension if short_name else id + extension
+
+    # opens the target zip file to be used in write
+    # mode (it's going to receive the data)
+    file = zipfile.ZipFile(name, "w", zipfile.ZIP_DEFLATED)
+
+    try:
+        # iterates over all the resources to be written
+        # in the packing file to zip them
+        for resource in resources:
+            # creates the full path to the resource from the
+            # resources directory and the re-calculates the
+            # the resources path with a prefix and writes
+            # the resource into the target file
+            _resource = os.path.join(resources_directory, resource)
+            _relative = "resources/" + resource
+            file.write(_resource, _relative)
+
+        # writes the specification file into the packing file
+        # to be used as meta data information
+        file.write(path, "spec.json")
+    finally:
+        # closes the file to avoid any leak of file
+        # descriptors and to flush the pending data
+        file.close()
+
+def _deploy(path):
+    import json
+
+    cwd = os.getcwd()
+
+    manager_path = resolve_manager(cwd)
+    plugins_path = os.path.join(manager_path, "plugins")
+
+    temp_path = tempfile.mkdtemp()
+
+    file = zipfile.ZipFile(path, "r", zipfile.ZIP_DEFLATED)
+    try: file.extractall(temp_path)
+    finally: file.close()
+
+    spec_path = os.path.join(temp_path, "spec.json")
+    file = open(path, "rb")
+    try: descriptor = json.load(file, "utf-8")
+    finally: file.close()
+    os.remove(spec_path)
+
+    short_name = descriptor["short_name"]
+    short_path = os.path.join(plugins_path, short_name + "_plugin")
+
+    shutil.move(temp_path, short_path)
 
 def _fitler_resources(resources, exclusion = (".pyc", ".temp", ".tmp")):
     filtered = []
