@@ -216,7 +216,7 @@ def is_master(path):
     master directory structure for colony.
     """
 
-    package_path = os.path.join(path, "colonyd")
+    package_path = os.path.join(path, "colony")
     plugins_path = os.path.join(path, "plugins")
     return os.path.isdir(package_path) and os.path.isdir(plugins_path)
 
