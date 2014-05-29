@@ -2078,12 +2078,12 @@ class PluginManager:
                 self.referred_modules.extend(plugin_path_modules)
 
             # defines the plugin system configuration
-            plugin_system_configuration = {
-                "library_paths" : self.library_paths,
-                "meta_paths" : self.meta_paths,
-                "plugin_paths" : self.plugin_paths,
-                "plugins" : self.referred_modules
-            }
+            plugin_system_configuration = dict(
+                library_paths = self.library_paths,
+                meta_paths = self.meta_paths,
+                plugin_paths =  self.plugin_paths,
+                plugins = self.referred_modules
+            )
 
             # starts the plugin loading process
             self.init_plugin_system(plugin_system_configuration)
