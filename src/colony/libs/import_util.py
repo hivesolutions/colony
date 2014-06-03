@@ -39,12 +39,6 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import sys
 
-GLOBALS_REFERENCE_VALUE = "_globals"
-""" The globals reference value """
-
-LOCALS_REFERENCE_VALUE = "_locals"
-""" The locals reference value """
-
 def __import__(module_name, persist_value = True):
     """
     Importer function to be used in the process of importing
@@ -72,29 +66,31 @@ def __import__(module_name, persist_value = True):
     index = 1
 
     try:
-        # iterates continuously
+        # iterates continuously over the stack frame to try to gather
+        # any loading frame that refers the request module name in it's
+        # global or locals names structure (reversed importing process)
         while True:
             # retrieves the caller of the importer method
             caller = sys._getframe(index)
 
             # in case the module name exists in the globals map
             # of the caller
-            if module_name in caller.f_globals.get(GLOBALS_REFERENCE_VALUE, {}):
-                # retrieves the module from the globals map of the caller
-                module = caller.f_globals[GLOBALS_REFERENCE_VALUE][module_name]
-
-                # breaks the loop
+            if module_name in caller.f_globals.get("_globals", {}):
+                # retrieves the module from the globals map of the caller and
+                # then breaks the current loop to return the module reference
+                module = caller.f_globals["_globals"][module_name]
                 break
+
             # in case the module name exists in the locals map
             # of the caller
-            elif module_name in caller.f_globals.get(LOCALS_REFERENCE_VALUE, {}):
-                # retrieves the module from the locals map of the caller
-                module = caller.f_globals[LOCALS_REFERENCE_VALUE][module_name]
-
-                # breaks the loop
+            elif module_name in caller.f_globals.get("_locals", {}):
+                # retrieves the module from the locals map of the caller and
+                # then breaks the current loop to return the module reference
+                module = caller.f_globals["_locals"][module_name]
                 break
 
-            # increments the index counter
+            # increments the index counter so that the stack position
+            # is incremented by one more value (one more level)
             index += 1
     except ValueError:
         # raises a runtime error because it could
@@ -112,11 +108,12 @@ def __import__(module_name, persist_value = True):
         # retrieves the (direct) caller of the importer method
         # and sets the module in the globals reference value
         caller = sys._getframe(1)
-        globals_reference = caller.f_globals.get(GLOBALS_REFERENCE_VALUE, {})
+        globals_reference = caller.f_globals.get("_globals", {})
         globals_reference[module_name] = module
-        caller.f_globals[GLOBALS_REFERENCE_VALUE] = globals_reference
+        caller.f_globals["_globals"] = globals_reference
 
-    # returns the module
+    # returns the module to the caller method that requested
+    # the importing of the module (as expected)
     return module
 
 def reload_import(path, hard = True):
