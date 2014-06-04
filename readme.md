@@ -30,6 +30,7 @@ Most of the colony operation are run through the `cpm` command:
 the build operation for the generated .json file, effectively build the package item
 * `cpm build [descriptor]` - builds the target .json descriptor file into a package file
 * `cpm deploy [package]` - deploys the target .cbx file into the current instance
+* `cpm info [package]` - prints information about the package to the standard output
 
 ## Features
 
