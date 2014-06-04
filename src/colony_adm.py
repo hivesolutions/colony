@@ -710,4 +710,4 @@ def main():
     else: raise RuntimeError("invalid operation")
 
 if __name__ == "__main__":
-    _upload("C:/repo.extra/colony_plugins/client/src/client_utils_plugin.py")
+    main()
