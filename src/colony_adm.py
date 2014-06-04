@@ -344,7 +344,7 @@ def _pack(path):
     # been performed on the current running colony instance
     output("Packed '%s' into '%s'" % (path, archive_path))
 
-def _generate(path, build = True):
+def _generate(path, build = True, delete = True):
     # imports the json module so that it's possible
     # to generate the colony descriptor file
     import json
@@ -444,9 +444,21 @@ def _generate(path, build = True):
     # so that the user is notified about the generated file
     output("Generated descriptor into '%s'" % descriptor_path)
 
+    # sets the default result value (nothing is returned by default) so the value is
+    # not defined (unset/invalid value)
+    result = None
+
     # in case the build flag is active the generated descriptor file is used to build
     # a new package file for the currently associated package
-    if build: return _build(descriptor_path)
+    if build: result = _build(descriptor_path)
+
+    # in the descriptor is meant to be delete (not going to be used anymore) the proper
+    # file must be removed from the current file system
+    if delete: os.remove(descriptor_path)
+
+    # returns the final result value that may be undefined in case no sub operations
+    # have been called for the current master operation
+    return result
 
 def _build(path, short_name = True):
     # imports the json module so that it's possible
