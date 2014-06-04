@@ -583,9 +583,13 @@ def _upload(path, generate = True, delete = True):
     try: contents = file.read()
     finally: file.close()
 
+    # tries to retrieve the currently targeted repository url taking
+    # into account both the environment and the static values
+    repo_url = appier.conf("REPO_URL", REPO_URL)
+
     # creates the url format, taking into account the defined url and the
     # current descriptor and then runs the upload, using a post operation
-    url = REPO_URL + "artifacts/%s" % descriptor["short_name"]
+    url = repo_url + "artifacts/%s" % descriptor["short_name"]
     appier.post(url, data_m = dict(
         version = descriptor["version"],
         contents = ("contents", contents)
