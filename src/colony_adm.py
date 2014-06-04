@@ -600,6 +600,10 @@ def _upload(path, generate = True, delete = True):
     # into account both the environment and the static values
     repo_url = appier.conf("REPO_URL", REPO_URL)
 
+    # prints a message about the upload operation that is going to occur
+    # so that the end user knows where the upload is going
+    output("Uploading file into '%s'" % repo_url)
+
     # creates the url format, taking into account the defined url and the
     # current descriptor and then runs the upload, using a post operation
     url = repo_url + "artifacts/%s" % descriptor["short_name"]
