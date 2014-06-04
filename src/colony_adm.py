@@ -91,7 +91,7 @@ def output(message):
     print message
 
 def version():
-    output("cpm - package management for colony framework")
+    output("CPM - package management for colony framework")
 
 def env():
     # retrieves the current working directory (cwd)
@@ -568,6 +568,7 @@ def _info(path):
     output("allowed      := %s" % ", ".join(descriptor["capabilities_allowed"]))
 
 def _upload(path, generate = True, delete = True):
+    import json
     import appier
 
     # in case the generate flag is active the package file is generated
@@ -592,6 +593,8 @@ def _upload(path, generate = True, delete = True):
     url = repo_url + "artifacts/%s" % descriptor["short_name"]
     appier.post(url, data_m = dict(
         version = descriptor["version"],
+        type = descriptor["type"],
+        info = json.dumps(descriptor),
         contents = ("contents", contents)
     ))
 
