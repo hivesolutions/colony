@@ -58,11 +58,11 @@ PACK_FILE = "colony.zip"
 """ The name of the file that will be the packing
 reference of the instance """
 
-EXTENSIONS = {
-    "bundle" : ".cbx",
-    "plugin" : ".cpx",
-    "container" : ".ccx"
-}
+EXTENSIONS = dict(
+    bundle = ".cbx",
+    plugin = ".cpx",
+    container = ".ccx"
+)
 """ The map associating the various types of
 colony packages with the associated extension """
 
@@ -72,6 +72,15 @@ REMOVALS = (
 )
 """ The list of paths to be removed because there's
 no use for them in the target colony instance """
+
+REPO_URL = "https://colony.bemisc.com/"
+""" The basic default open repository for colony packages
+this is always going to be used together with the current
+user wide configuration values """
+
+STAGE_URL = "https://colony.stage.hive.pt/"
+""" The test url version of the colony repository, used
+for the downloading of staging ready only packages """
 
 def resolve_manager(path, ensure = True):
     manager_path = colony.resolve_manager(path)
@@ -84,7 +93,7 @@ def output(message):
 def version():
     output("cpm - package management for colony framework")
 
-def info():
+def env():
     # retrieves the current working directory (cwd)
     # in order to be used in as fallback case
     cwd = os.getcwd()
@@ -225,6 +234,30 @@ def deploy():
     # defined global instance (default colony instance)
     package = sys.argv[2]
     _deploy(package)
+
+def upload():
+    # in case there're not enough arguments to be
+    # able to retrieve the specification file raises
+    # a runtime error, the name of the file is required
+    if len(sys.argv) < 3: raise RuntimeError("no plugin file provided")
+
+    # runs the upload operation for the target path, this
+    # should be a base file to be packed and then uploaded
+    # to the currently defined repository
+    target = sys.argv[2]
+    _upload(target)
+
+def info():
+    # in case there're not enough arguments to be
+    # able to retrieve the specification file raises
+    # a runtime error, the name of the file is required
+    if len(sys.argv) < 3: raise RuntimeError("no package provided")
+
+    # retrieves the package file from the arguments and
+    # uses it to runs the information command to be able
+    # to print some information about the package
+    package = sys.argv[2]
+    _info(package)
 
 def _cleanup(path, empty_extra = True):
     # retrieves the path to the series of sub
@@ -413,7 +446,7 @@ def _generate(path, build = True):
 
     # in case the build flag is active the generated descriptor file is used to build
     # a new package file for the currently associated package
-    if build: _build(descriptor_path)
+    if build: return _build(descriptor_path)
 
 def _build(path, short_name = True):
     # imports the json module so that it's possible
@@ -469,6 +502,10 @@ def _build(path, short_name = True):
         # descriptors and to flush the pending data
         file.close()
 
+    # returns the generated package name to the caller method
+    # as this is the resulting object for the operation
+    return name
+
 def _deploy(path):
     import json
 
@@ -511,6 +548,79 @@ def _deploy(path):
     # package in the manager tree and then removes the temporary path
     shutil.move(resources_path, short_path)
     shutil.rmtree(temp_path)
+
+def _info(path):
+    # retrieves the descriptor as a dictionary for the requested package
+    # path, this should contain a valid dictionary with the information
+    # read from the spec file associated with the package
+    descriptor = _read(path)
+
+    # prints the information about the package that is being request for
+    # the information to be printed, note that different types of packaged
+    # should have different types of information being printed to the output
+    output("id           := %s" % descriptor["id"])
+    output("name         := %s" % descriptor["name"])
+    output("short name   := %s" % descriptor["short_name"])
+    output("author       := %s" % descriptor["author"])
+    output("description  := %s" % descriptor["description"])
+    output("dependencies := %s" % ", ".join(descriptor["dependencies"]))
+    output("capabilities := %s" % ", ".join(descriptor["capabilities"]))
+    output("allowed      := %s" % ", ".join(descriptor["capabilities_allowed"]))
+
+def _upload(path, generate = True, delete = True):
+    import appier
+
+    # in case the generate flag is active the package file is generated
+    # for the path and then the descriptor information dictionary is read
+    # so that it's possible to properly upload the file to the repository
+    if generate: path = _generate(path)
+    descriptor = _read(path)
+
+    # opens the path of the package file that is going to be uploaded
+    # in order to be able to read the full contents of it, these are
+    # going to be the contents to be uploaded to the repository
+    file = open(path, "rb")
+    try: contents = file.read()
+    finally: file.close()
+
+    # creates the url format, taking into account the defined url and the
+    # current descriptor and then runs the upload, using a post operation
+    url = REPO_URL + "artifacts/%s" % descriptor["short_name"]
+    appier.post(url, data_m = dict(
+        version = descriptor["version"],
+        contents = ("contents", contents)
+    ))
+
+    # in case the delete flag is active the package file is delete after
+    # a proper upload operation is performed (house keeping)
+    if delete: os.remove(path)
+
+def _read(path):
+    import json
+
+    # creates a new temporary directory path where the contents of
+    # the package file are going to be extracted
+    temp_path = tempfile.mkdtemp()
+
+    # reads the package (zip file) and then extracts the complete
+    # set of it's contents into the temporary directory so that they
+    # may be manipulated and then properly used
+    file = zipfile.ZipFile(path, "r", zipfile.ZIP_DEFLATED)
+    try: file.extractall(temp_path)
+    finally: file.close()
+
+    # retrieves the path of the specification file and reads it's json
+    # contents so that it's possible to retrieve more information about
+    # the package that is going to have information printed
+    spec_path = os.path.join(temp_path, "spec.json")
+    file = open(spec_path, "rb")
+    try: descriptor = json.load(file, "utf-8")
+    finally: file.close()
+    shutil.rmtree(temp_path)
+
+    # returns the read descriptor dictionary to the caller metho/function
+    # so that it may be used to interpret the current package in action
+    return descriptor
 
 def _fitler_resources(resources, exclusion = (".pyc", ".temp", ".tmp")):
     filtered = []
@@ -600,4 +710,4 @@ def main():
     else: raise RuntimeError("invalid operation")
 
 if __name__ == "__main__":
-    main()
+    _upload("C:/repo.extra/colony_plugins/client/src/client_utils_plugin.py")
