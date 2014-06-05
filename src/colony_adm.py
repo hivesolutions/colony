@@ -47,6 +47,12 @@ import tempfile
 
 import colony
 
+INDENT = 0
+""" The global reference to the indentation level that
+is going to be printed at the start of each output
+operation, this value should be used carefully to avoid
+any thread related problems (not thread safe) """
+
 DEFAULT_TARGET = "colony"
 """ The default directory to be used as target in
 case no target path is provided (default name) """
@@ -89,7 +95,15 @@ def resolve_manager(path, ensure = True):
     return manager_path
 
 def output(message):
-    print message
+    print (" " * INDENT) +  message
+
+def indent():
+    global INDENT
+    INDENT += 1
+
+def unindent():
+    global INDENT
+    INDENT -= 1
 
 def version():
     output("CPM - package management for colony framework")
@@ -647,7 +661,8 @@ def _install(name = None, id = None, version = None):
     # runs the dependencies operation for the current package information
     # this operation should be able to install all the requirements for
     # the current package in transit (avoid package corruption)
-    _dependencies(info)
+    try: indent(); _dependencies(info)
+    finally: unindent()
 
     # prints information about the starting of the package download, this
     # is required for the user to be notified about such action
@@ -670,6 +685,10 @@ def _install(name = None, id = None, version = None):
     # and then removes the temporary directory path, as it's no longer required
     _deploy(target_path)
     shutil.rmtree(temp_path)
+
+    # prints a message about the end of the installation process for the current
+    # package, this will allow the user to be aware of the end of operation
+    output("Finished installing %s" % description)
 
 def _upload(path, generate = True, delete = True):
     import json
