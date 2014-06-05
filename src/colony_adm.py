@@ -261,6 +261,17 @@ def install():
     name = sys.argv[2]
     _install(name)
 
+def require():
+    # in case there're not enough arguments to be
+    # able to retrieve the requirements file
+    if len(sys.argv) < 3: raise RuntimeError("no requirements file provided")
+
+    # runs the requirements operation with the provided
+    # paths, this is a recursive operation and may take
+    # a while to reach the complete and final state
+    path = sys.argv[2]
+    _require(path)
+
 def upload():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
@@ -689,6 +700,21 @@ def _install(name = None, id = None, version = None):
     # prints a message about the end of the installation process for the current
     # package, this will allow the user to be aware of the end of operation
     output("Finished installing %s" % description)
+
+def _require(path):
+    # opens the file located at the provided path and reads the
+    # complete set of contents from it, this should be a small
+    # to medium size file so there should be no problems
+    file = open(path, "rb")
+    try: contents = file.read()
+    finally: file.close()
+
+    # splits the lines in the current file and removes the ones
+    # that are not considered valid, after that runs the install
+    # operation for each one of the dependency requests
+    lines = contents.split("\n")
+    lines = [line.strip() for line in lines if line.strip()]
+    for line in lines: _install(line)
 
 def _upload(path, generate = True, delete = True):
     import json
