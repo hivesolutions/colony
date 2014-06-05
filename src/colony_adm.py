@@ -579,6 +579,52 @@ def _info(path):
     output("capabilities := %s" % ", ".join(descriptor["capabilities"]))
     output("allowed      := %s" % ", ".join(descriptor["capabilities_allowed"]))
 
+def _install(name = None, id = None, version = None):
+    import appier
+
+    # creates the map containing the various parameters that are
+    # going to be sent as part of the filtering process for the
+    # remote request of package retrieval
+    params = dict()
+    if name: params["name"] = name
+    if id: params["id"] = id
+
+    # retrieves the proper repository url that is currently defined
+    # and constructs the url that is going to be used for searching
+    # of packages (this is the first step in the process)
+    repo_url = appier.conf("REPO_URL", REPO_URL)
+    url = repo_url + "packages"
+
+    # runs the requests and verifies if at least one result has been
+    # found for the requested criteria, if not an exception must be
+    # raised to notify the end user about the limitation
+    result = appier.get(url, params = params)
+    package = result[0] if result else dict()
+    if not package: raise RuntimeError("no package found")
+
+    # creates the parameters map for the seconds (proper package retrieval)
+    # request and assigns the appropriate version value to it
+    params = dict()
+    if version: params["version"] = version
+
+    # creates the proper package retrieval url and runs the remote get request
+    # to try to retrieve the package contents of so that they are installed
+    url = repo_url + "packages/%s" % package["name"]
+    data = appier.get(url, params = params)
+
+    # creates a new temporary directory for the new bundle file that is going
+    # to be created and stores it under such directory (for deployment)
+    temp_path = tempfile.mkdtemp()
+    target_path = os.path.join(temp_path, "%s.cbx" % package["name"])
+    file = open(target_path, "wb")
+    try: file.write(data)
+    finally: file.close()
+
+    # runs the deployment process for the package bundle that has been retrieved
+    # and then removes the temporary directory path, as it's no longer required
+    _deploy(target_path)
+    shutil.rmtree(temp_path)
+
 def _upload(path, generate = True, delete = True):
     import json
     import appier
@@ -596,9 +642,11 @@ def _upload(path, generate = True, delete = True):
     try: contents = file.read()
     finally: file.close()
 
-    # tries to retrieve the currently targeted repository url taking
+    # tries to retrieve the currently targeted repository info taking
     # into account both the environment and the static values
     repo_url = appier.conf("REPO_URL", REPO_URL)
+    repo_username = appier.conf("REPO_USERNAME", "root")
+    repo_password = appier.conf("REPO_PASSWORD", "root")
 
     # prints a message about the upload operation that is going to occur
     # so that the end user knows where the upload is going
@@ -608,12 +656,12 @@ def _upload(path, generate = True, delete = True):
     # current descriptor and then runs the upload, using a post operation
     url = repo_url + "packages"
     login_url = repo_url + "api/admin/login"
-    tobias = appier.post(login_url, params = dict(
-        username = "root",
-        password = "root"
+    auth = appier.post(login_url, params = dict(
+        username = repo_username,
+        password = repo_password
     ))
     appier.post(url, data_m = dict(
-        sid = tobias["sid"],
+        sid = auth["sid"],
         id = descriptor["id"],
         name = descriptor["short_name"],
         version = descriptor["version"],
@@ -741,4 +789,4 @@ def main():
     else: raise RuntimeError("invalid operation")
 
 if __name__ == "__main__":
-    _upload("C:/repo.extra/colony_plugins/api_yadis/src/api_yadis_plugin.py")
+    main()
