@@ -45,5 +45,7 @@ plugin_path_list = [
 ]
 
 meta_path_list = [
+    "meta",
+    "meta/*config",
     "../../*config/*"
 ]
