@@ -606,8 +606,16 @@ def _upload(path, generate = True, delete = True):
 
     # creates the url format, taking into account the defined url and the
     # current descriptor and then runs the upload, using a post operation
-    url = repo_url + "packages/%s" % descriptor["short_name"]
+    url = repo_url + "packages"
+    login_url = repo_url + "api/admin/login"
+    tobias = appier.post(login_url, params = dict(
+        username = "root",
+        password = "root"
+    ))
     appier.post(url, data_m = dict(
+        sid = tobias["sid"],
+        id = descriptor["id"],
+        name = descriptor["short_name"],
         version = descriptor["version"],
         type = descriptor["type"],
         info = json.dumps(descriptor),
@@ -733,4 +741,4 @@ def main():
     else: raise RuntimeError("invalid operation")
 
 if __name__ == "__main__":
-    main()
+    _upload("C:/repo.extra/colony_plugins/api_yadis/src/api_yadis_plugin.py")
