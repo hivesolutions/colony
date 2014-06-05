@@ -40,6 +40,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import re
 import os
 import sys
+import glob
 import shutil
 import zipfile
 import tempfile
@@ -342,7 +343,7 @@ def _pack(path):
 
     # prints a message about the packing operation that has just
     # been performed on the current running colony instance
-    output("Packed '%s' into '%s'" % (path, archive_path))
+    output("Packed %s into %s" % (path, archive_path))
 
 def _generate(path, build = True, delete = True):
     # imports the json module so that it's possible
@@ -362,7 +363,7 @@ def _generate(path, build = True, delete = True):
 
     # prints a debug information message about the generation
     # of descriptor process that is going to be started
-    output("Generating descriptor for '%s' ..." % base)
+    output("Generating descriptor for %s" % base)
 
     # starts some of the temporary variables that are going to be
     # used as part of the plugin structure finding process
@@ -442,7 +443,7 @@ def _generate(path, build = True, delete = True):
 
     # prints a debug message about the descriptor file that has just been generated
     # so that the user is notified about the generated file
-    output("Generated descriptor into '%s'" % descriptor_path)
+    output("Generated descriptor into %s" % descriptor_path)
 
     # sets the default result value (nothing is returned by default) so the value is
     # not defined (unset/invalid value)
@@ -582,6 +583,16 @@ def _info(path):
 def _install(name = None, id = None, version = None):
     import appier
 
+    # verifies if the provided version string is wildcard based and
+    # for such situations invalidated the version value (sets to invalid)
+    if version == "x.x.x": version = None
+
+    # constructs the proper description string taking into account
+    # if the name or the id has been provided and then prints a
+    # message about the installation operation that is going to start
+    description = name or id
+    output("Installing package %s" % description)
+
     # creates the map containing the various parameters that are
     # going to be sent as part of the filtering process for the
     # remote request of package retrieval
@@ -600,22 +611,45 @@ def _install(name = None, id = None, version = None):
     # raised to notify the end user about the limitation
     result = appier.get(url, params = params)
     package = result[0] if result else dict()
-    if not package: raise RuntimeError("no package found")
+    if not package: raise RuntimeError("package not found")
 
-    # creates the parameters map for the seconds (proper package retrieval)
-    # request and assigns the appropriate version value to it
+    # constructs the parameters map and puts the requested version in
+    # it in case the version has been specified (no wildcard)
     params = dict()
     if version: params["version"] = version
 
+    # constructs the proper url for package information retrieval and
+    # runs it so that the complete set of information (including dependencies)
+    # is gathered providing the system with the complete set of options
+    repo_url = appier.conf("REPO_URL", REPO_URL)
+    url = repo_url + "packages/%s/info" % package["name"]
+    info = appier.get(url, params = dict(version = version))
+
+    # verifies if the package is already installed under the current
+    # system and if that's the case returns immediately as there's
+    # nothing remaining to be done for such situation
+    if _exists(info):
+        output("Package %s is already installed, skipping" % description)
+        return
+
+    # runs the dependencies operation for the current package information
+    # this operation should be able to install all the requirements for
+    # the current package in transit (avoid package corruption)
+    _dependencies(info)
+
+    # prints information about the starting of the package download, this
+    # is required for the user to be notified about such action
+    output("Downloading %s" % description)
+
     # creates the proper package retrieval url and runs the remote get request
     # to try to retrieve the package contents of so that they are installed
-    url = repo_url + "packages/%s" % package["name"]
-    data = appier.get(url, params = params)
+    url = repo_url + "packages/%s" % info["short_name"]
+    data = appier.get(url, params = dict(version = info["version"]))
 
     # creates a new temporary directory for the new bundle file that is going
     # to be created and stores it under such directory (for deployment)
     temp_path = tempfile.mkdtemp()
-    target_path = os.path.join(temp_path, "%s.cbx" % package["name"])
+    target_path = os.path.join(temp_path, "%s.cbx" % info["short_name"])
     file = open(target_path, "wb")
     try: file.write(data)
     finally: file.close()
@@ -628,6 +662,20 @@ def _install(name = None, id = None, version = None):
 def _upload(path, generate = True, delete = True):
     import json
     import appier
+
+    # tries to runs the expansion of the glob for the provided path and
+    # in case it expands to multiple values the same upload operation is
+    # run on each of the items that compromise the expansion
+    expansion = glob.glob(path)
+    is_multiple = len(expansion) > 1
+    if is_multiple:
+        for item in expansion: _upload(
+            item,
+            generate = generate,
+            delete = delete
+        )
+        return
+    path = expansion[0]
 
     # in case the generate flag is active the package file is generated
     # for the path and then the descriptor information dictionary is read
@@ -650,7 +698,7 @@ def _upload(path, generate = True, delete = True):
 
     # prints a message about the upload operation that is going to occur
     # so that the end user knows where the upload is going
-    output("Uploading file into '%s'" % repo_url)
+    output("Uploading %s into %s" % (descriptor["short_name"], repo_url))
 
     # creates the url format, taking into account the defined url and the
     # current descriptor and then runs the upload, using a post operation
@@ -701,6 +749,25 @@ def _read(path):
     # so that it may be used to interpret the current package in action
     return descriptor
 
+def _exists(info):
+    cwd = os.getcwd()
+    manager_path = resolve_manager(cwd)
+    plugins_path = os.path.join(manager_path, "plugins")
+
+    short_name = info["short_name"]
+    short_path = os.path.join(plugins_path, short_name + "_plugin")
+
+    if os.path.exists(short_path): return True
+    return False
+
+def _dependencies(info):
+    dependencies = info.get("dependencies", [])
+    for dependency in dependencies:
+        _install(
+            id = dependency["id"],
+            version = dependency["version"]
+        )
+
 def _fitler_resources(resources, exclusion = (".pyc", ".temp", ".tmp")):
     filtered = []
     for resource in resources:
@@ -746,7 +813,7 @@ def _gather_indirect(short_name, base_dir, name):
     return result
 
 def _gather_invalid(short_name, base_dir, name):
-    output("No directory found for plugin '%s'" % short_name)
+    output("No directory found for plugin %s" % short_name)
     return []
 
 def _zip_directory(path, relative, file):
