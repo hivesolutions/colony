@@ -236,6 +236,17 @@ def deploy():
     package = sys.argv[2]
     _deploy(package)
 
+def install():
+    # in case there're not enough arguments to be
+    # able to retrieve the package file for install
+    if len(sys.argv) < 3: raise RuntimeError("no name of package provided")
+
+    # runs the install operation using the provided
+    # name as reference, note that this name may contain
+    # an optional version value attached to it
+    name = sys.argv[2]
+    _install(name)
+
 def upload():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
