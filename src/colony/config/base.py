@@ -60,6 +60,8 @@ be exported to the global system path and may be used
 independently of the execution location """
 
 meta_path_list = [
+    "meta",
+    "meta/*config"
 ]
 """ The list of meta paths, that should contain configuration
 directory structures, the runtime loaded properties will
