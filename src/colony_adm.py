@@ -400,18 +400,19 @@ def _generate(path, build = True, delete = True):
 
     # initializes the loop that is going to discover the type of directory
     # structure for the current plugin (either inexistent, direct or indirect)
-    mode = None
+    mode = "indirect"
+    target = None
     names = os.listdir(base_dir)
     for name in names:
         current = os.path.join(base_dir, name)
         if not os.path.isdir(current): continue
-        if name == short_name: mode = "direct"; break
-        else: mode = "indirect"; break
+        if name in (short_name, short_name + "_c"): mode = "direct"; break
+        else: target = name
 
     # runs the proper resources gathering strategy taking into account the type
     # of plugin directory structure that has just been found in the previous step
     if mode == "direct": resources = _gather_direct(short_name, base_dir, name)
-    elif mode == "indirect": resources = _gather_indirect(short_name, base_dir, name)
+    elif mode == "indirect": resources = _gather_indirect(short_name, base_dir, target)
     else: resources = _gather_invalid(short_name, base_dir, name)
 
     # prepends the current plugin file to the list of resource, this is considered
@@ -774,6 +775,7 @@ def _exists(info):
 def _dependencies(info):
     dependencies = info.get("dependencies", [])
     for dependency in dependencies:
+        if dependency["type"] in ("package",): continue
         _install(
             id = dependency["id"],
             version = dependency["version"]
@@ -790,6 +792,9 @@ def _gather_direct(short_name, base_dir, name):
     result = []
 
     root_path = os.path.join(base_dir, name)
+    exists = os.path.exists(root_path)
+    if not exists: root_path = os.path.join(base_dir, name + "_c")
+
     for root, _dirs, files in os.walk(root_path):
         relative = os.path.relpath(root, root_path)
         relative = relative.replace("\\", "/")
