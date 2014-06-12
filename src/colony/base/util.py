@@ -158,7 +158,8 @@ def resolve_manager(exec_path):
     validation operations have been done.
     """
 
-    personal_path = os.path.expanduser("~")
+    is_venv = hasattr(sys, "real_prefix")
+    personal_path = sys.prefix if is_venv else os.path.expanduser("~")
     personal_path = os.path.join(personal_path, ".colony")
     master_path = os.environ.get("COLONY_HOME", exec_path)
     manager_path = master_path if is_master(master_path) else personal_path
