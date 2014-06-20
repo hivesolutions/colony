@@ -180,7 +180,6 @@ def ensure_tree(path):
     """
 
     is_personal = not is_master(path)
-    env_path = os.path.join(path, "colony.json")
     config_path = os.path.join(path, "config")
     containers_path = os.path.join(path, "containers")
     deploy_path = os.path.join(path, "deploy")
@@ -191,7 +190,7 @@ def ensure_tree(path):
     scripts_path = os.path.join(path, "scripts")
     tmp_path = os.path.join(path, "tmp")
     var_path = os.path.join(path, "var")
-    if not os.path.exists(env_path) and is_personal: open(env_path, "a").close()
+    env_path = os.path.join(path, "colony.json")
     if not os.path.exists(path): os.makedirs(path)
     if not os.path.exists(config_path): os.makedirs(config_path)
     if not os.path.exists(containers_path): os.makedirs(containers_path)
@@ -203,6 +202,7 @@ def ensure_tree(path):
     if not os.path.exists(scripts_path): os.makedirs(scripts_path)
     if not os.path.exists(tmp_path): os.makedirs(tmp_path)
     if not os.path.exists(var_path): os.makedirs(var_path)
+    if not os.path.exists(env_path) and is_personal: open(env_path, "a").close()
 
 def is_master(path):
     """
