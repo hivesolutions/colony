@@ -139,7 +139,7 @@ def module_import(module_name):
         module = getattr(module, component)
     return module
 
-def resolve_manager(exec_path):
+def resolve_manager(exec_path = None):
     """
     Master resolver for the manager path, it's responsible
     for the decision to use the current and possible master
@@ -206,8 +206,12 @@ def is_master(path):
     Verifies if the provided file path is considered to be the
     root path of a colony master directory structure. A colony
     master directory structure is considered to be a directory
-    structure where the colony package system and the other directories
-    mix together (typically used for development).
+    structure where the colony package system and the other
+    directories mix together (typically used for development).
+
+    This structure is the opposite of the personal strategy where
+    the colony instance is stored separated to the logic of colony
+    typically used for production environments.
 
     @type path: String
     @param path: The file path that is going to be verified to
@@ -217,6 +221,7 @@ def is_master(path):
     master directory structure for colony.
     """
 
+    if path == None: return False
     package_path = os.path.join(path, "colony")
     plugins_path = os.path.join(path, "plugins")
     return os.path.isdir(package_path) and os.path.isdir(plugins_path)
