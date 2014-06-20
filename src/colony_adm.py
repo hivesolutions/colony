@@ -68,7 +68,7 @@ reference of the instance """
 EXTENSIONS = dict(
     bundle = ".cbx",
     plugin = ".cpx",
-    container = ".ccx"
+    config = ".ccx"
 )
 """ The map associating the various types of
 colony packages with the associated extension """
@@ -382,15 +382,44 @@ def _pack(path):
     output("Packed %s into %s" % (path, archive_path))
 
 def _generate(path, build = True, delete = True):
-    # imports the json module so that it's possible
-    # to generate the colony descriptor file
-    import json
-
     # normalizes the path so that the value that is going to be
     # used from no on is going to be the correct one according
     # to the current operative system specifications
     path = os.path.abspath(path)
     path = os.path.normpath(path)
+
+    # verifies the type of generation that is going to be performed, taking into
+    # account some of the characteristics of the provided path
+    is_plugin = path.endswith(".py")
+    is_config = os.path.isdir(path) and ".project" in os.listdir(path)
+
+    # verifies the type of generation that is meant to be performed and runs it,
+    # in case no valid type is found for the provided path an exception is raised
+    # indicating the problem (as expected by the current specification)
+    if is_plugin: descriptor_path = _generate_plugin(path)
+    elif is_config: descriptor_path = _generate_config(path)
+    else: raise RuntimeError("invalid path provided for generation")
+
+    # sets the default result value (nothing is returned by default) so the value is
+    # not defined (unset/invalid value)
+    result = None
+
+    # in case the build flag is active the generated descriptor file is used to build
+    # a new package file for the currently associated package
+    if build: result = _build(descriptor_path)
+
+    # in the descriptor is meant to be delete (not going to be used anymore) the proper
+    # file must be removed from the current file system
+    if delete: os.remove(descriptor_path)
+
+    # returns the final result value that may be undefined in case no sub operations
+    # have been called for the current master operation
+    return result
+
+def _generate_plugin(path):
+    # imports the json module so that it's possible
+    # to generate the colony descriptor file
+    import json
 
     # retrieves the base name of the provided path so that it
     # may be "safely" used for some of the situations
@@ -399,7 +428,7 @@ def _generate(path, build = True, delete = True):
 
     # prints a debug information message about the generation
     # of descriptor process that is going to be started
-    output("Generating descriptor for %s" % base)
+    output("Generating plugin descriptor for %s" % base)
 
     # starts some of the temporary variables that are going to be
     # used as part of the plugin structure finding process
@@ -480,23 +509,42 @@ def _generate(path, build = True, delete = True):
 
     # prints a debug message about the descriptor file that has just been generated
     # so that the user is notified about the generated file
-    output("Generated descriptor into %s" % descriptor_path)
+    output("Generated plugin descriptor into %s" % descriptor_path)
 
-    # sets the default result value (nothing is returned by default) so the value is
-    # not defined (unset/invalid value)
-    result = None
+    # returns the generated descriptor path to the caller method so that it may be
+    # used latter for any reference operation as expected
+    return descriptor_path
 
-    # in case the build flag is active the generated descriptor file is used to build
-    # a new package file for the currently associated package
-    if build: result = _build(descriptor_path)
+def _generate_config(path):
+    import json
 
-    # in the descriptor is meant to be delete (not going to be used anymore) the proper
-    # file must be removed from the current file system
-    if delete: os.remove(descriptor_path)
+    base = os.path.basename(path)
+    base_dir = os.path.dirname(path)
+    parent = os.path.basename(base_dir)
+    name = parent + "_" + base
 
-    # returns the final result value that may be undefined in case no sub operations
-    # have been called for the current master operation
-    return result
+    output("Generating config descriptor for %s" % name)
+
+    resources = _gather_config(path)
+    resources = _fitler_resources(resources)
+
+    structure = dict(
+        type = "config",
+        id = name,
+        name = name,
+        short_name = name,
+        resources = resources
+    )
+    structure_s = json.dumps(structure)
+
+    descriptor_path = os.path.join(path, name + ".json")
+    descriptor_file = open(descriptor_path, "wb")
+    try: descriptor_file.write(structure_s)
+    finally: descriptor_file.close()
+
+    output("Generated config descriptor into %s" % descriptor_path)
+
+    return descriptor_path
 
 def _build(path, short_name = True):
     # imports the json module so that it's possible
@@ -516,17 +564,22 @@ def _build(path, short_name = True):
     resources = descriptor.get("resources", [])
     extension = EXTENSIONS.get(type, ".cpx")
 
+    # verifies if the current deployment package to be build is
+    # a plugin and if that's the case updates the proper flag
+    is_plugin = type == "plugin"
+
     # retrieves the base name for the file and removes the
     # extension from it so that the short name for it is
-    # correctly retrieved
+    # correctly retrieved taking into account the package type
     base_name = os.path.basename(path)
-    plugin_name = colony.to_underscore(base_name)[:-12]
+    if is_plugin: base_name = colony.to_underscore(base_name)[:-12]
+    else: base_name = colony.to_underscore(base_name)[:-5]
 
     # retrieves the resources directory for the resources
     # from the base directory of the json descriptor and
     # then creates the name of the file from the id
     resources_directory = os.path.dirname(path)
-    name = plugin_name + extension if short_name else id + extension
+    name = base_name + extension if short_name else id + extension
 
     # opens the target zip file to be used in write
     # mode (it's going to receive the data)
@@ -832,6 +885,26 @@ def _fitler_resources(resources, exclusion = (".pyc", ".temp", ".tmp")):
         if resource.endswith(exclusion): continue
         filtered.append(resource)
     return filtered
+
+def _gather_config(base_path):
+    valid = []
+    result = []
+
+    items = os.listdir(base_path)
+    for item in items:
+        path = os.path.join(base_path, item)
+        if item.startswith("."): continue
+        if not os.path.isdir(path): continue
+        valid.append(path)
+
+    for _valid in valid:
+        for root, _dirs, files in os.walk(_valid):
+            relative = os.path.relpath(root, base_path)
+            relative = relative.replace("\\", "/")
+            files = [relative + "/" + file for file in files]
+            result.extend(files)
+
+    return result
 
 def _gather_direct(short_name, base_dir, name):
     result = []
