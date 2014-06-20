@@ -537,7 +537,7 @@ def _generate_config(path):
     )
     structure_s = json.dumps(structure)
 
-    descriptor_path = os.path.join(path, name + ".json")
+    descriptor_path = os.path.join(path, name + "_config.json")
     descriptor_file = open(descriptor_path, "wb")
     try: descriptor_file.write(structure_s)
     finally: descriptor_file.close()
@@ -564,15 +564,17 @@ def _build(path, short_name = True):
     resources = descriptor.get("resources", [])
     extension = EXTENSIONS.get(type, ".cpx")
 
-    # verifies if the current deployment package to be build is
-    # a plugin and if that's the case updates the proper flag
+    # verifies if the proper type of the current package and then
+    # sets the appropriate flags taking that into account
     is_plugin = type == "plugin"
+    is_config = type == "config"
 
     # retrieves the base name for the file and removes the
     # extension from it so that the short name for it is
     # correctly retrieved taking into account the package type
     base_name = os.path.basename(path)
     if is_plugin: base_name = colony.to_underscore(base_name)[:-12]
+    elif is_config: base_name = colony.to_underscore(base_name)[:-12]
     else: base_name = colony.to_underscore(base_name)[:-5]
 
     # retrieves the resources directory for the resources
@@ -616,11 +618,6 @@ def _deploy(path):
     # to be used for some of the path resolution processes
     cwd = os.getcwd()
 
-    # resolves the associated manager path and then uses it to
-    # gather the path where the plugins are going to be deployed
-    manager_path = resolve_manager(cwd)
-    plugins_path = os.path.join(manager_path, "plugins")
-
     # creates a new temporary directory path where the contents of
     # the package file are going to be extracted
     temp_path = tempfile.mkdtemp()
@@ -641,10 +638,23 @@ def _deploy(path):
     finally: file.close()
     os.remove(spec_path)
 
+    # retrieves the proper type from the descriptor and uses it to calculate
+    # both the target value and the suffix that are going to be used in the
+    # deployment operation to be performed (as expected)
+    type = descriptor.get("type", "plugin")
+    if type == "plugin": target = "plugins"; suffix = "_plugin"
+    elif type == "config": target = "meta"; suffix = "_config"
+    else: RuntimeError("invalid package type")
+
+    # resolves the associated manager path and then uses it to
+    # gather the path where the package is going to be deployed
+    manager_path = resolve_manager(cwd)
+    target_path = os.path.join(manager_path, target)
+
     # retrieves some of the descriptor information and uses it to create
     # the reference to the target path of the package deployment
     short_name = descriptor["short_name"]
-    short_path = os.path.join(plugins_path, short_name + "_plugin")
+    short_path = os.path.join(target_path, short_name + suffix)
     resources_path = os.path.join(temp_path, "resources")
 
     # moves the resources part of the package into the target path for the
@@ -658,9 +668,14 @@ def _info(path):
     # read from the spec file associated with the package
     descriptor = _read(path)
 
-    # prints the information about the package that is being request for
-    # the information to be printed, note that different types of packaged
-    # should have different types of information being printed to the output
+    # retries the proper package type from the descriptor and uses it to
+    # defined the correct method to be called for the info command
+    type = descriptor.get("type", "plugin")
+    if type == "plugin": _info_plugin(descriptor)
+    elif type == "config": _info_config(descriptor)
+    else: RuntimeError("invalid package type")
+
+def _info_plugin(descriptor):
     output("id           := %s" % descriptor["id"])
     output("name         := %s" % descriptor["name"])
     output("short name   := %s" % descriptor["short_name"])
@@ -669,6 +684,11 @@ def _info(path):
     output("dependencies := %s" % ", ".join(descriptor["dependencies"]))
     output("capabilities := %s" % ", ".join(descriptor["capabilities"]))
     output("allowed      := %s" % ", ".join(descriptor["capabilities_allowed"]))
+
+def _info_config(descriptor):
+    output("id           := %s" % descriptor["id"])
+    output("name         := %s" % descriptor["name"])
+    output("short name   := %s" % descriptor["short_name"])
 
 def _install(name = None, id = None, version = None):
     import appier
@@ -862,10 +882,16 @@ def _read(path):
 def _exists(info):
     cwd = os.getcwd()
     manager_path = resolve_manager(cwd)
-    plugins_path = os.path.join(manager_path, "plugins")
+
+    type = info.get("type", "plugin")
+    if type == "plugin": target = "plugins"; suffix = "_plugin"
+    elif type == "config": target = "meta"; suffix = "_config"
+    else: RuntimeError("invalid package type")
+
+    target_path = os.path.join(manager_path, target)
 
     short_name = info["short_name"]
-    short_path = os.path.join(plugins_path, short_name + "_plugin")
+    short_path = os.path.join(target_path, short_name + suffix)
 
     if os.path.exists(short_path): return True
     return False
