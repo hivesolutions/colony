@@ -278,11 +278,16 @@ def upload():
     # a runtime error, the name of the file is required
     if len(sys.argv) < 3: raise RuntimeError("no plugin file provided")
 
+    # in case there's an extra argument provided it's assumed
+    # that it's the name of the target repo
+    if len(sys.argv) > 3: repo = sys.argv[3]
+    else: repo = "colony"
+
     # runs the upload operation for the target path, this
     # should be a base file to be packed and then uploaded
     # to the currently defined repository
     target = sys.argv[2]
-    _upload(target)
+    _upload(target, repo = repo)
 
 def info():
     # in case there're not enough arguments to be
@@ -722,16 +727,30 @@ def _install(name = None, id = None, version = None):
     if id: params["id"] = id
 
     # retrieves the proper repository url that is currently defined
-    # and constructs the url that is going to be used for searching
-    # of packages (this is the first step in the process)
+    # then enforces the value to be a valid map, so that the logic is
+    # defined as cycle of url based package detection
     repo_url = colony.conf("REPO_URL", REPO_URL)
-    url = repo_url + "packages"
+    if not type(repo_url) == dict: repo_url = dict(colony = repo_url)
 
-    # runs the requests and verifies if at least one result has been
-    # found for the requested criteria, if not an exception must be
-    # raised to notify the end user about the limitation
-    result = appier.get(url, params = params)
-    package = result[0] if result else dict()
+    # starts the variable that will hold the found package at invalid
+    # so that the value is set only when a repo contains a package
+    # matching the defined criteria
+    package = None
+
+    # iterates over the complete set of repositories defined in the
+    # repository url value trying to find the proper package, note
+    # that the package is found when at least one result is returned
+    # matching the provided criteria (as defined in specification)
+    for name, _repo_url in repo_url.items():
+        url = _repo_url + "packages"
+        result = appier.get(url, params = params)
+        package = result[0] if result else dict()
+        if not package: continue
+        repo_url = _repo_url;
+        break
+
+    # in case no package has been found for any of the defined repos
+    # an exception must be raised indicating the problem to the user
     if not package: raise RuntimeError("package not found")
 
     # constructs the parameters map and puts the requested version in
@@ -742,7 +761,6 @@ def _install(name = None, id = None, version = None):
     # constructs the proper url for package information retrieval and
     # runs it so that the complete set of information (including dependencies)
     # is gathered providing the system with the complete set of options
-    repo_url = colony.conf("REPO_URL", REPO_URL)
     url = repo_url + "packages/%s/info" % package["name"]
     info = appier.get(url, params = dict(version = version))
 
@@ -800,7 +818,7 @@ def _require(path):
     lines = [line.strip() for line in lines if line.strip()]
     for line in lines: _install(line)
 
-def _upload(path, generate = True, delete = True):
+def _upload(path, repo = "colony", generate = True, delete = True):
     import json
     import appier
 
@@ -837,9 +855,16 @@ def _upload(path, generate = True, delete = True):
     repo_username = colony.conf("REPO_USERNAME", "root")
     repo_password = colony.conf("REPO_PASSWORD", "root")
 
+    # enforces the repository url to be defined as a map for better handling
+    # of the logic and then retrieves the requested target repository base
+    # url value, raising an exception in case it's not found
+    if not type(repo_url) == dict: repo_url = dict(colony = repo_url)
+    repo_url = repo_url.get(repo)
+    if not repo_url: raise RuntimeError("repository not found")
+
     # prints a message about the upload operation that is going to occur
     # so that the end user knows where the upload is going
-    output("Uploading %s into %s" % (descriptor["short_name"], repo_url))
+    output("Uploading %s into %s repo" % (descriptor["short_name"], repo))
 
     # creates the url format, taking into account the defined url and the
     # current descriptor and then runs the upload, using a post operation
