@@ -631,7 +631,8 @@ def convert_reference_path_list(manager_path, current_prefix_paths, reference_pa
     @type reference_path_list: List
     @param reference_path_list: The list of reference paths.
     @rtype: String
-    @return: A string converted reference path containing all the dereferenced paths.
+    @return: A string converted reference path containing all
+    the dereferenced paths.
     """
 
     # initializes the converted reference path, this is the value
