@@ -92,15 +92,6 @@ PREFIX_PATH_PREFIX_VALUE = "%"
 PREFIX_PATH_SUFFIX_VALUE = "_prefix_path%"
 """ The prefix path suffix value """
 
-LIBRARY_DIRECTORY = "colony/libs"
-""" The colony library directory """
-
-CONFIG_DIRECTORY = "config"
-""" The colony config directory """
-
-GENERAL_DIRECTORY = "general"
-""" The colony general directory """
-
 PLUGIN_PATHS_FILE = "plugins.pth"
 """ The colony plugin paths file """
 
@@ -692,7 +683,7 @@ def load_plugin_paths_file(manager_path):
     """
 
     # creates the config general path from the manager path
-    config_general_path = manager_path + "/" + CONFIG_DIRECTORY + "/" + GENERAL_DIRECTORY
+    config_general_path = manager_path + "/config/general"
 
     # crates the plugin paths file path (from the config general path)
     plugin_paths_file_path = config_general_path + "/" + PLUGIN_PATHS_FILE
@@ -750,7 +741,7 @@ def configure_system(layout_mode, run_mode, manager_path):
     os.environ["COLONY_HOME"] = manager_path
 
     # constructs the library path and normalizes it
-    library_path = manager_path + "/" + LIBRARY_DIRECTORY
+    library_path = manager_path + "/colony/libs"
     library_path = os.path.normpath(library_path)
 
     # inserts the library path into the system path
