@@ -523,6 +523,10 @@ def _generate_config(path):
     parent = os.path.basename(base_dir)
     name = parent + "_" + base
 
+    description = "Configuration package (%s)" % name
+    version = "0.0.0"
+    author = "John Doe <john@doe.com>"
+
     output("Generating config descriptor for %s" % name)
 
     resources = _gather_config(path)
@@ -533,6 +537,9 @@ def _generate_config(path):
         id = name,
         name = name,
         short_name = name,
+        description = description,
+        version = version,
+        author = author,
         resources = resources
     )
     structure_s = json.dumps(structure)
@@ -679,6 +686,7 @@ def _info_plugin(descriptor):
     output("id           := %s" % descriptor["id"])
     output("name         := %s" % descriptor["name"])
     output("short name   := %s" % descriptor["short_name"])
+    output("version      := %s" % descriptor["version"])
     output("author       := %s" % descriptor["author"])
     output("description  := %s" % descriptor["description"])
     output("dependencies := %s" % ", ".join(descriptor["dependencies"]))
@@ -689,6 +697,9 @@ def _info_config(descriptor):
     output("id           := %s" % descriptor["id"])
     output("name         := %s" % descriptor["name"])
     output("short name   := %s" % descriptor["short_name"])
+    output("version      := %s" % descriptor["version"])
+    output("author       := %s" % descriptor["author"])
+    output("description  := %s" % descriptor["description"])
 
 def _install(name = None, id = None, version = None):
     import appier
