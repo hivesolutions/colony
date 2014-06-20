@@ -10,7 +10,7 @@ Colony aims to eliminate the complexity typically associated with the creation o
 * Install Colony using ``pip install colony``
 * Run the command ``colony``
 
-### Virtualenv based deployment
+### Virtualenv deployment
 
 * Start the environment using ``virtualenv venv``
 * Activate the new environment with ``source venv/bin/activate``
