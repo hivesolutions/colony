@@ -12,10 +12,10 @@ Colony aims to eliminate the complexity typically associated with the creation o
 
 ### Virtualenv deployment
 
-* Start the environment using ``virtualenv venv``
-* Activate the new environment with ``source venv/bin/activate``
-* Install colony in the system using ``pip install colony``
+* Start and activate the environment using ``virtualenv venv && source venv/bin/activate``
+* Install Colony in the system using ``pip install colony``
 * Deploy the console package using ``cpm install console_interface``
+* Run your new colony using the command ``colony``
 
 To actually do something useful look into [How to Establish your Colony in 3 Easy Steps](http://getcolony.com/docs/colony/documentation_how_to_establish_your_colony_in_3_easy_steps.html)
 
