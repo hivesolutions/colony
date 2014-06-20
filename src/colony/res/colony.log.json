@@ -1,4 +1,5 @@
 {
+    "1.1.2" : ["Multiple repository support in admin"],
     "1.1.1" : ["Small config loading bug fix"],
     "1.1.0" : ["First version wuth full repo and packages support"],
     "1.0.15" : ["Initial support for config packages"],
