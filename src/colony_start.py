@@ -322,7 +322,7 @@ def main():
     signals = True
     layout_mode = None
     run_mode = None
-    container = None
+    container = "default"
     daemon_pid = None
     attributes_map = None
     config_file_path = DEFAULT_CONFIG_FILE_PATH
@@ -388,9 +388,6 @@ def main():
         plugin_path,
         manager_path
     )
-    layout_mode = layout_mode or "default"
-    run_mode = run_mode or "default"
-    container = container or "default"
 
     # configures the system using the layout mode, the run mode
     # and the  manager path
@@ -549,9 +546,12 @@ def parse_configuration(
 
     # tries to load some of the environment "loadable" properties for the
     # starting of the colony infra-structure, defaulting to the provided
-    # values in case they are present (as expected)
+    # values in case they are present (as expected), then in case there's
+    # still no valid values for such variables default values are used
     layout_mode = os.environ.get("LAYOUT_MODE", layout_mode)
     run_mode = os.environ.get("RUN_MODE", run_mode)
+    layout_mode = layout_mode or "default"
+    run_mode = run_mode or "default"
 
     # in case the library path is defined, must appends a
     # separator to the library path to mark the initial separation
