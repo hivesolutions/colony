@@ -539,9 +539,9 @@ def parse_configuration(
     # starting of the colony infra-structure, defaulting to the provided
     # values in case they are present (as expected), then in case there's
     # still no valid values for such variables default values are used
-    level = os.environ.get("LEVEL", level)
-    layout_mode = os.environ.get("LAYOUT_MODE", layout_mode)
-    run_mode = os.environ.get("RUN_MODE", run_mode)
+    level = colony.conf("LEVEL", level)
+    layout_mode = colony.conf("LAYOUT_MODE", layout_mode)
+    run_mode = colony.conf("RUN_MODE", run_mode)
     layout_mode = layout_mode or "default"
     run_mode = run_mode or "default"
 
