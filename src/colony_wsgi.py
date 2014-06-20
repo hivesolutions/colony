@@ -91,7 +91,7 @@ layout_mode = os.environ.get("LAYOUT_MODE", "default")
 
 # tries to retrieve the run mode from the currently set
 # environment variables, in case of failure defaults to
-# the default value
+# the default value (as expected by the specification)
 run_mode = os.environ.get("RUN_MODE", "development")
 
 # tries to retrieve the prefix to be used to shorten the path
