@@ -830,6 +830,7 @@ def _upload(path, repo = "colony", generate = True, delete = True):
     if is_multiple:
         for item in expansion: _upload(
             item,
+            repo = repo,
             generate = generate,
             delete = delete
         )
