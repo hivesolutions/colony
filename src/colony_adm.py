@@ -724,7 +724,7 @@ def _install(name = None, id = None, version = None):
     # retrieves the proper repository url that is currently defined
     # and constructs the url that is going to be used for searching
     # of packages (this is the first step in the process)
-    repo_url = appier.conf("REPO_URL", REPO_URL)
+    repo_url = colony.conf("REPO_URL", REPO_URL)
     url = repo_url + "packages"
 
     # runs the requests and verifies if at least one result has been
@@ -742,7 +742,7 @@ def _install(name = None, id = None, version = None):
     # constructs the proper url for package information retrieval and
     # runs it so that the complete set of information (including dependencies)
     # is gathered providing the system with the complete set of options
-    repo_url = appier.conf("REPO_URL", REPO_URL)
+    repo_url = colony.conf("REPO_URL", REPO_URL)
     url = repo_url + "packages/%s/info" % package["name"]
     info = appier.get(url, params = dict(version = version))
 
@@ -833,9 +833,9 @@ def _upload(path, generate = True, delete = True):
 
     # tries to retrieve the currently targeted repository info taking
     # into account both the environment and the static values
-    repo_url = appier.conf("REPO_URL", REPO_URL)
-    repo_username = appier.conf("REPO_USERNAME", "root")
-    repo_password = appier.conf("REPO_PASSWORD", "root")
+    repo_url = colony.conf("REPO_URL", REPO_URL)
+    repo_username = colony.conf("REPO_USERNAME", "root")
+    repo_password = colony.conf("REPO_PASSWORD", "root")
 
     # prints a message about the upload operation that is going to occur
     # so that the end user knows where the upload is going
