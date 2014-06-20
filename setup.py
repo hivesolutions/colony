@@ -81,6 +81,9 @@ setuptools.setup(
     package_data = {
         "colony" : ["res/*"]
     },
+    install_requires = [
+        "appier"
+    ],
     classifiers = [
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
