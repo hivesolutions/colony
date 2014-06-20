@@ -87,27 +87,27 @@ warnings.filterwarnings("ignore", category = DeprecationWarning)
 
 # retrieves the layout mode that is going to be used for the
 # resolution of resources in the colony infra-structure
-layout_mode = os.environ.get("LAYOUT_MODE", "default")
+layout_mode = colony.conf("LAYOUT_MODE", "default")
 
 # tries to retrieve the run mode from the currently set
 # environment variables, in case of failure defaults to
 # the default value (as expected by the specification)
-run_mode = os.environ.get("RUN_MODE", "development")
+run_mode = colony.conf("RUN_MODE", "development")
 
 # tries to retrieve the prefix to be used to shorten the path
 # resolution in the request handling
-prefix = os.environ.get("PREFIX", None)
+prefix = colony.conf("PREFIX", None)
 
 # gathers the path to the alias file that contains json information
 # about the mapping prefixes for the http server, the file should
 # contain a set of prefix to resolution prefix values
-alias_path = os.environ.get("ALIAS_PATH", None)
+alias_path = colony.conf("ALIAS_PATH", None)
 
 # tries to retrieve the configuration file from the environment
 # variable associated in case it fails uses the default configuration
 # file path then joins the "relative" file path to the base path
 # and resolves it as an absolute path
-config_file_path = os.environ.get(CONFIG_FILE_ENV, None) or DEFAULT_CONFIG_PATH
+config_file_path = colony.conf(CONFIG_FILE_ENV, None) or DEFAULT_CONFIG_PATH
 config_file_path = os.path.join(manager_path, config_file_path)
 config_file_path = os.path.abspath(config_file_path)
 
@@ -393,12 +393,12 @@ def serve_legacy(host, port, **kwargs):
 
 if __name__ == "__main__":
     kwargs = dict()
-    server = os.environ.get("SERVER", "legacy")
-    host = os.environ.get("HOST", "127.0.0.1")
-    port = os.environ.get("PORT", "8080")
-    ssl = os.environ.get("SSL", False)
-    key_file = os.environ.get("KEY_FILE", None)
-    cer_file = os.environ.get("CER_FILE", None)
+    server = colony.conf("SERVER", "legacy")
+    host = colony.conf("HOST", "127.0.0.1")
+    port = colony.conf("PORT", "8080")
+    ssl = colony.conf("SSL", False)
+    key_file = colony.conf("KEY_FILE", None)
+    cer_file = colony.conf("CER_FILE", None)
     for name, value in os.environ.iteritems():
         if not name.startswith("SERVER_"): continue
         name_s = name.lower()[7:]
