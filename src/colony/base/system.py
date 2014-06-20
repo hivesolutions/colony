@@ -59,13 +59,14 @@ import logging.handlers
 import colony.libs
 
 import util
+import config
 import loggers
 import exceptions
 import information
-import configuration
 
-plugin_manager_configuration = configuration.plugin_manager_configuration
-""" The plugin manager configuration """
+GLOBAL_CONFIG = config.GLOBAL_CONFIG
+""" The global static configuration of the manager that
+is going to be used for some of the operations """
 
 CPYTHON_ENVIRONMENT = util.CPYTHON_ENVIRONMENT
 """ CPython environment value """
@@ -1363,11 +1364,11 @@ class Plugin(object):
         formatting_message = str()
 
         # in case the plugin id logging option is activated
-        if plugin_manager_configuration.get("plugin_id_logging", False):
+        if GLOBAL_CONFIG.get("plugin_id_logging", False):
             formatting_message += "[" + self.id + "] "
 
         # in case the thread id logging option is activated
-        if plugin_manager_configuration.get("thread_id_logging", False):
+        if GLOBAL_CONFIG.get("thread_id_logging", False):
             formatting_message += "[" + str(thread.get_ident()) + "] "
 
         # appends the formatting message to the logging message and
@@ -1999,7 +2000,7 @@ class PluginManager:
 
         # retrieves the logging format and uses it
         # to create the proper logging formatter
-        logging_format = plugin_manager_configuration.get(
+        logging_format = GLOBAL_CONFIG.get(
             "logging_format",
             DEFAULT_LOGGING_FORMAT
         )
@@ -5359,11 +5360,11 @@ class PluginManager:
         formatting_message = str()
 
         # in case the plugin id logging option is activated
-        if plugin_manager_configuration.get("plugin_id_logging", False):
+        if GLOBAL_CONFIG.get("plugin_id_logging", False):
             formatting_message += "[pt.hive.colony] "
 
         # in case the thread id logging option is activated
-        if plugin_manager_configuration.get("thread_id_logging", False):
+        if GLOBAL_CONFIG.get("thread_id_logging", False):
             formatting_message += "[" + str(thread.get_ident()) + "] "
 
         # appends the formatting message to the logging message
