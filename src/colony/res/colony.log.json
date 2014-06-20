@@ -1,4 +1,5 @@
 {
+    "1.0.14" : ["Appier as a colony dependency"],
     "1.0.13" : ["New operations support in adm"],
     "1.0.12" : ["Fixed probles in adm install support"],
     "1.0.11" : ["Better colony adm support"],
