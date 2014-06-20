@@ -547,6 +547,12 @@ def parse_configuration(
     if "daemon_file_path" in names: daemon_file_path = config.daemon_file_path
     if "logger_path" in names: logger_path = config.logger_path
 
+    # tries to load some of the environment "loadable" properties for the
+    # starting of the colony infra-structure, defaulting to the provided
+    # values in case they are present (as expected)
+    layout_mode = os.environ.get("LAYOUT_MODE", layout_mode)
+    run_mode = os.environ.get("RUN_MODE", run_mode)
+
     # in case the library path is defined, must appends a
     # separator to the library path to mark the initial separation
     # otherwise creates a new library path string initializing the
