@@ -73,14 +73,17 @@ VERSION_PRE_TEXT = "Python "
 HELP_TEXT = "Type \"help\" for more information."
 """ The help text value """
 
-DEFAULT_CONFIGURATION_FILE_PATH_VALUE = "config/python/devel.py"
-""" The default configuration file path """
+DEFAULT_CONFIG_FILE_PATH = "config/python/devel.py"
+""" The default configuration file path, that is going
+to be used only in case it is available for under the
+provided path, otherwise only the default base values
+are used (security setting) """
 
 RELATIVE_MANAGER_PATH = os.path.dirname(os.path.realpath(__file__))
 """ The default manager path, considered to be the current
 executing file's directory (by default)) """
 
-DEFAULT_LOGGER_PATH_VALUE = "log"
+DEFAULT_LOGGER_PATH = "log"
 """ The default logger path """
 
 PREFIX_PATH_PREFIX_VALUE = "%"
@@ -100,27 +103,6 @@ GENERAL_DIRECTORY = "general"
 
 PLUGIN_PATHS_FILE = "plugins.pth"
 """ The colony plugin paths file """
-
-LEVEL_VALUE = "level"
-""" The level value"""
-
-LAYOUT_MODE_VALUE = "layout_mode"
-""" The layout mode value """
-
-RUN_MODE_VALUE = "run_mode"
-""" The run mode value """
-
-PREFIX_PATHS_VALUE = "prefix_paths"
-""" The prefix paths value """
-
-STOP_ON_CYCLE_ERROR_VALUE = "stop_on_cycle_error"
-""" The stop on cycle error value """
-
-DAEMON_FILE_PATH_VALUE = "daemon_file_path"
-""" The daemon file path value """
-
-LOGGER_PATH_VALUE = "logger_path"
-""" The logger path value """
 
 # registers the ignore flag in the deprecation warnings so that
 # no message with this kind of warning is printed (clean console)
@@ -338,15 +320,15 @@ def main():
     level = None
     threads = True
     signals = True
-    layout_mode = "default"
-    run_mode = "default"
-    container = "default"
+    layout_mode = None
+    run_mode = None
+    container = None
     daemon_pid = None
     attributes_map = None
-    config_file_path = DEFAULT_CONFIGURATION_FILE_PATH_VALUE
+    config_file_path = DEFAULT_CONFIG_FILE_PATH
     daemon_file_path = None
     manager_path = colony.resolve_manager(RELATIVE_MANAGER_PATH)
-    logger_path = DEFAULT_LOGGER_PATH_VALUE
+    logger_path = DEFAULT_LOGGER_PATH
     library_path = None
     meta_path = None
     plugin_path = None
@@ -406,6 +388,9 @@ def main():
         plugin_path,
         manager_path
     )
+    layout_mode = layout_mode or "default"
+    run_mode = run_mode or "default"
+    container = container or "default"
 
     # configures the system using the layout mode, the run mode
     # and the  manager path
@@ -527,16 +512,16 @@ def parse_configuration(
 
     # retrieves the configuration directory from the configuration
     # file path (the directory is going to be used to include the module)
-    configuration_directory_path = os.path.dirname(config_file_path)
+    config_dir = os.path.dirname(config_file_path)
 
     # in case the configuration directory path is not an absolute path
-    if not os.path.isabs(configuration_directory_path):
+    if not os.path.isabs(config_dir):
         # creates the (complete) configuration directory path
         # prepending the manager path
-        configuration_directory_path = os.path.normpath(manager_path + "/" + configuration_directory_path)
+        config_dir = os.path.normpath(manager_path + "/" + config_dir)
 
     # in case the configuration directory path is valid inserts it into the system path
-    configuration_directory_path and sys.path.insert(0, configuration_directory_path)
+    config_dir and sys.path.insert(0, config_dir)
 
     # retrieves the configuration file base path from the configuration file path
     config_file_base_path = os.path.basename(config_file_path)
@@ -544,44 +529,23 @@ def parse_configuration(
     # retrieves the configuration module name and the configuration
     # module extension by splitting the configuration base path into
     # base name and extension and then imports the referring module
-    configuration_module_name, _configuration_module_extension = os.path.splitext(config_file_base_path)
-    try: colony_configuration = __import__(configuration_module_name)
-    except ImportError: import colony.config.base as module; colony_configuration = module
+    config_module, _configuration_module_extension = os.path.splitext(config_file_base_path)
+    try: config = __import__(config_module)
+    except ImportError: import colony.config.base as module; config = module
 
-    # retrieves the colony configuration contents
-    colony_configuration_contents = dir(colony_configuration)
+    # retrieves the contents of the configuration file that has just
+    # been loaded, this is the default operation to be performed
+    names = dir(config)
 
-    # in case the level variable is defined in the colony configuration
-    if not level and LEVEL_VALUE in colony_configuration_contents:
-        level = colony_configuration.level
-
-    # in case the layout mode variable is defined in the colony configuration
-    if layout_mode == "default" and LAYOUT_MODE_VALUE in colony_configuration_contents:
-        layout_mode = colony_configuration.layout_mode
-
-    # in case the run mode variable is defined in the colony configuration
-    if run_mode == "default" and RUN_MODE_VALUE in colony_configuration_contents:
-        run_mode = colony_configuration.run_mode
-
-    # in case the prefix paths variable is defined in the
-    # colony configuration
-    if PREFIX_PATHS_VALUE in colony_configuration_contents:
-        prefix_paths = colony_configuration.prefix_paths
-
-    # in case the stop on cycle error variable is defined
-    # in the colony configuration
-    if STOP_ON_CYCLE_ERROR_VALUE in colony_configuration_contents:
-        stop_on_cycle_error = colony_configuration.stop_on_cycle_error
-
-    # in case the daemon file path variable is defined
-    # in the colony configuration
-    if DAEMON_FILE_PATH_VALUE in colony_configuration_contents:
-        daemon_file_path = colony_configuration.daemon_file_path
-
-    # in case the logger path variable is defined in the
-    # colony configuration
-    if LOGGER_PATH_VALUE in colony_configuration_contents:
-        logger_path = colony_configuration.logger_path
+    # sets the proper configuration attributes taking into account the
+    # presence or not of such attributes in the loaded file
+    if "level" in names: level = level or config.level
+    if "layout_mode" in names: layout_mode = layout_mode or config.layout_mode
+    if "run_mode" in names: run_mode = run_mode or config.run_mode
+    if "prefix_paths" in names: prefix_paths = config.prefix_paths
+    if "stop_on_cycle_error" in names: stop_on_cycle_error = config.stop_on_cycle_error
+    if "daemon_file_path" in names: daemon_file_path = config.daemon_file_path
+    if "logger_path" in names: logger_path = config.logger_path
 
     # in case the library path is defined, must appends a
     # separator to the library path to mark the initial separation
@@ -613,7 +577,7 @@ def parse_configuration(
     extra_library_path = convert_reference_path_list(
         manager_path,
         current_prefix_paths,
-        colony_configuration.library_path_list
+        config.library_path_list
     )
     library_path += extra_library_path
 
@@ -623,7 +587,7 @@ def parse_configuration(
     extra_meta_path = convert_reference_path_list(
         manager_path,
         current_prefix_paths,
-        colony_configuration.meta_path_list
+        config.meta_path_list
     )
     meta_path += extra_meta_path
 
@@ -638,7 +602,7 @@ def parse_configuration(
     extra_plugin_path = convert_reference_path_list(
         manager_path,
         current_prefix_paths,
-        colony_configuration.plugin_path_list
+        config.plugin_path_list
     )
     plugin_path += extra_plugin_path
 
