@@ -10,12 +10,12 @@ Colony aims to eliminate the complexity typically associated with the creation o
 * Install Colony using ``pip install colony``
 * Run the command ``colony``
 
-### Virtualenv based deployment
+### Virtualenv deployment
 
-* Start the environment using ``virtualenv venv``
-* Activate the new environment with ``source venv/bin/activate``
-* Install colony in the system using ``pip install colony``
-* Deploy the console package using ``cpm install console``
+* Start and activate the environment using ``virtualenv venv && source venv/bin/activate``
+* Install Colony in the system using ``pip install colony``
+* Deploy the console package using ``cpm install console_interface``
+* Run your new colony using the command ``colony``
 
 To actually do something useful look into [How to Establish your Colony in 3 Easy Steps](http://getcolony.com/docs/colony/documentation_how_to_establish_your_colony_in_3_easy_steps.html)
 
@@ -35,13 +35,14 @@ Most of the colony operation are run through the `cpm` command:
 * `cpm clone <target>` - clones the base colony instance into the target directory (new project)
 * `cpm cleanup <target>` - cleans the current instance removing extra files
 * `cpm pack <target>` - packs the current instance into a .zip file
-* `cpm generate [target]` - generates a .json descriptor file for the provided python file and then run s
+* `cpm generate [target]` - generates a .json descriptor file for the provided python file and then runs
 the build operation for the generated .json file, effectively build the package item
 * `cpm build [descriptor]` - builds the target .json descriptor file into a package file
 * `cpm deploy [package]` - deploys the target .cbx file into the current instance
 * `cpm info [package]` - prints information about the package to the standard output
-* `cpm install [name]` -
-* `cpm upload [target]` -
+* `cpm install [name]` - installs the package with the provided name from the remote repositories
+* `cpm upload [target]` - generates a package for the provided path and then uploads it to the currently
+configured primary repository
 
 ## Features
 
