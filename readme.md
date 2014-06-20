@@ -5,11 +5,12 @@ Colony aims to eliminate the complexity typically associated with the creation o
 
 ## Quick start
 
+### System wide installation
+
 * Install Colony using ``pip install colony``
 * Run the command ``colony``
 
-
-### Using Virtualenv
+### Virtualenv based installation
 
 * Start the environment using ``virtualenv venv``
 * Activate the new environment with ``source venv/bin/activate``
