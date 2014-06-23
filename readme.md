@@ -42,7 +42,7 @@ the build operation for the generated .json file, effectively build the package 
 * `cpm info [package]` - prints information about the package to the standard output
 * `cpm install [name] <repo>` - installs the package with the provided name from the remote repositories
 * `cpm upgrade` - updates the complete set of packages deployed in the instance
-* `cpm require [path]` - isntall the complete set of package defined in the requirements file
+* `cpm require [path]` - installs the complete set of packages defined in the requirements file
 * `cpm upload [target]` - generates a package for the provided path and then uploads it to the currently
 configured primary repository
 
