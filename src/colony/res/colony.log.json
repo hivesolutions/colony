@@ -1,4 +1,5 @@
 {
+    "1.1.4" : ["New way of defining the repos"],
     "1.1.3" : ["Fixed small bug with wildcard processing"],
     "1.1.2" : ["Multiple repository support in admin"],
     "1.1.1" : ["Small config loading bug fix"],
