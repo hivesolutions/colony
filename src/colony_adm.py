@@ -727,10 +727,10 @@ def _install(name = None, id = None, version = None):
     if id: params["id"] = id
 
     # retrieves the proper repository url that is currently defined
-    # then enforces the value to be a valid map, so that the logic is
-    # defined as cycle of url based package detection
+    # then enforces the value to be a valid sequence, so that the
+    # logic is defined as cycle of url based package detection
     repo_url = colony.conf("REPO_URL", REPO_URL)
-    if not type(repo_url) == dict: repo_url = dict(colony = repo_url)
+    if not type(repo_url) in (list, tuple): repo_url = (("colony", repo_url),)
 
     # starts the variable that will hold the found package at invalid
     # so that the value is set only when a repo contains a package
@@ -741,7 +741,7 @@ def _install(name = None, id = None, version = None):
     # repository url value trying to find the proper package, note
     # that the package is found when at least one result is returned
     # matching the provided criteria (as defined in specification)
-    for name, _repo_url in repo_url.items():
+    for name, _repo_url in repo_url:
         url = _repo_url + "packages"
         result = appier.get(url, params = params)
         package = result[0] if result else dict()
@@ -752,11 +752,6 @@ def _install(name = None, id = None, version = None):
     # in case no package has been found for any of the defined repos
     # an exception must be raised indicating the problem to the user
     if not package: raise RuntimeError("package not found")
-
-    # constructs the parameters map and puts the requested version in
-    # it in case the version has been specified (no wildcard)
-    params = dict()
-    if version: params["version"] = version
 
     # constructs the proper url for package information retrieval and
     # runs it so that the complete set of information (including dependencies)
@@ -856,10 +851,11 @@ def _upload(path, repo = "colony", generate = True, delete = True):
     repo_username = colony.conf("REPO_USERNAME", "root")
     repo_password = colony.conf("REPO_PASSWORD", "root")
 
-    # enforces the repository url to be defined as a map for better handling
-    # of the logic and then retrieves the requested target repository base
-    # url value, raising an exception in case it's not found
-    if not type(repo_url) == dict: repo_url = dict(colony = repo_url)
+    # enforces the repository url to be defined as a sequence for better
+    # handling of the logic and then retrieves the requested target
+    # repository base url value, raising an exception in case it's not found
+    if not type(repo_url) in (list, tuple): repo_url = (("colony", repo_url),)
+    repo_url = dict(repo_url)
     repo_url = repo_url.get(repo)
     if not repo_url: raise RuntimeError("repository not found")
 
