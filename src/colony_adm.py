@@ -830,23 +830,37 @@ def _require(path, upgrade = False):
     for line in lines: _install(line, upgrade = upgrade)
 
 def _upgrade():
+    # starts the initial list of gathered plugins and config as
+    # an empty list, this is going to be populated with the items
+    # found for the current instance from the file system
     plugins = []
     configs = []
 
+    # retrieves the current working directory and uses it to compute
+    # the final manager path that is going to be used for discovery
     cwd = os.getcwd()
     manager_path = resolve_manager(cwd)
 
+    # "calculates" both the path to the plugins directory and to the
+    # meta information directory, both of them will be used to gather
+    # the information on the current instace's deployment
     plugins_path = os.path.join(manager_path, "plugins")
     meta_path = os.path.join(manager_path, "meta")
 
+    # iterates over the complete set of items in the plugins path in
+    # order to be able to discover the currently installed plugins
     for item in os.listdir(plugins_path):
         if not item.endswith("_plugin"): continue
         plugins.append(item[:-7])
 
+    # gather the information on the currently installed configs by
+    # fetching information on the meta path (target config location)
     for item in os.listdir(meta_path):
         if not item.endswith("_config"): continue
         configs.append(item[:-7])
 
+    # iterates over both the plugins and the configs to try to upgrade
+    # the complete set of items as requested by the operation
     for plugin in plugins: _install(plugin, upgrade = True)
     for config in configs: _install(config, upgrade = True)
 
