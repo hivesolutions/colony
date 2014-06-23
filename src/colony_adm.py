@@ -677,6 +677,11 @@ def _deploy(path, timestamp = None):
     spec_path = os.path.join(short_path, "spec.json")
     resources_path = os.path.join(temp_path, "resources")
 
+    # in case the target deployment path already exists (must be an upgrade)
+    # it must be removed to avoid overlapping in files, this is considered
+    # to be a safe operation only for upgrade operations
+    if os.path.exists(short_path): shutil.rmtree(short_path)
+
     # moves the resources part of the package into the target path for the
     # package in the manager tree and then removes the temporary path
     shutil.move(resources_path, short_path)
