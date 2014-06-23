@@ -272,6 +272,9 @@ def require():
     path = sys.argv[2]
     _require(path)
 
+def upgrade():
+    _upgrade()
+
 def upload():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
@@ -623,7 +626,7 @@ def _build(path, short_name = True):
     # as this is the resulting object for the operation
     return name
 
-def _deploy(path):
+def _deploy(path, timestamp = None):
     import json
 
     # retrieves the currently working directory as this is going
@@ -650,6 +653,10 @@ def _deploy(path):
     finally: file.close()
     os.remove(spec_path)
 
+    # attaches the timestamp to the descriptor map in case it's been defined
+    # by the passing arguments, this is required for compliance
+    descriptor["timestamp"] = timestamp
+
     # retrieves the proper type from the descriptor and uses it to calculate
     # both the target value and the suffix that are going to be used in the
     # deployment operation to be performed (as expected)
@@ -667,12 +674,21 @@ def _deploy(path):
     # the reference to the target path of the package deployment
     short_name = descriptor["short_name"]
     short_path = os.path.join(target_path, short_name + suffix)
+    spec_path = os.path.join(short_path, "spec.json")
     resources_path = os.path.join(temp_path, "resources")
 
     # moves the resources part of the package into the target path for the
     # package in the manager tree and then removes the temporary path
     shutil.move(resources_path, short_path)
     shutil.rmtree(temp_path)
+
+    # dumps the current descriptor object for the item that is going to be
+    # deployed and then writes the contents of it into the info based file
+    # that is going to be used as a meta information provid3er
+    descriptor_s = json.dumps(descriptor)
+    file = open(spec_path, "wb")
+    try: file.write(descriptor_s)
+    finally: file.close()
 
 def _info(path):
     # retrieves the descriptor as a dictionary for the requested package
@@ -706,7 +722,7 @@ def _info_config(descriptor):
     output("author       := %s" % descriptor["author"])
     output("description  := %s" % descriptor["description"])
 
-def _install(name = None, id = None, version = None):
+def _install(name = None, id = None, version = None, upgrade = False):
     import appier
 
     # verifies if the provided version string is wildcard based and
@@ -762,14 +778,14 @@ def _install(name = None, id = None, version = None):
     # verifies if the package is already installed under the current
     # system and if that's the case returns immediately as there's
     # nothing remaining to be done for such situation
-    if _exists(info):
+    if _exists(info, upgrade = upgrade):
         output("Package %s is already installed, skipping" % description)
         return
 
     # runs the dependencies operation for the current package information
     # this operation should be able to install all the requirements for
     # the current package in transit (avoid package corruption)
-    try: indent(); _dependencies(info)
+    try: indent(); _dependencies(info, upgrade = upgrade)
     finally: unindent()
 
     # prints information about the starting of the package download, this
@@ -791,14 +807,14 @@ def _install(name = None, id = None, version = None):
 
     # runs the deployment process for the package bundle that has been retrieved
     # and then removes the temporary directory path, as it's no longer required
-    _deploy(target_path)
+    _deploy(target_path, timestamp = info["timestamp"])
     shutil.rmtree(temp_path)
 
     # prints a message about the end of the installation process for the current
     # package, this will allow the user to be aware of the end of operation
     output("Finished installing %s" % description)
 
-def _require(path):
+def _require(path, upgrade = False):
     # opens the file located at the provided path and reads the
     # complete set of contents from it, this should be a small
     # to medium size file so there should be no problems
@@ -811,7 +827,28 @@ def _require(path):
     # operation for each one of the dependency requests
     lines = contents.split("\n")
     lines = [line.strip() for line in lines if line.strip()]
-    for line in lines: _install(line)
+    for line in lines: _install(line, upgrade = upgrade)
+
+def _upgrade():
+    plugins = []
+    configs = []
+
+    cwd = os.getcwd()
+    manager_path = resolve_manager(cwd)
+
+    plugins_path = os.path.join(manager_path, "plugins")
+    meta_path = os.path.join(manager_path, "meta")
+
+    for item in os.listdir(plugins_path):
+        if not item.endswith("_plugin"): continue
+        plugins.append(item[:-7])
+
+    for item in os.listdir(meta_path):
+        if not item.endswith("_config"): continue
+        configs.append(item[:-7])
+
+    for plugin in plugins: _install(plugin, upgrade = True)
+    for config in configs: _install(config, upgrade = True)
 
 def _upload(path, repo = "colony", generate = True, delete = True):
     import json
@@ -912,7 +949,9 @@ def _read(path):
     # so that it may be used to interpret the current package in action
     return descriptor
 
-def _exists(info):
+def _exists(info, upgrade = False):
+    import json
+
     cwd = os.getcwd()
     manager_path = resolve_manager(cwd)
 
@@ -926,16 +965,28 @@ def _exists(info):
     short_name = info["short_name"]
     short_path = os.path.join(target_path, short_name + suffix)
 
-    if os.path.exists(short_path): return True
-    return False
+    if not os.path.exists(short_path): return False
+    if not upgrade: return True
 
-def _dependencies(info):
+    spec_path = os.path.join(short_path, "spec.json")
+    file = open(spec_path, "rb")
+    try: data = file.read()
+    finally: file.close()
+
+    descriptor = json.loads(data)
+    if not info["version"] == descriptor["version"]: return False
+    if info["timestamp"] > descriptor["timestamp"]: return False
+
+    return True
+
+def _dependencies(info, upgrade = False):
     dependencies = info.get("dependencies", [])
     for dependency in dependencies:
         if dependency["type"] in ("package",): continue
         _install(
             id = dependency["id"],
-            version = dependency["version"]
+            version = dependency["version"],
+            upgrade = upgrade
         )
 
 def _fitler_resources(resources, exclusion = (".pyc", ".temp", ".tmp")):
