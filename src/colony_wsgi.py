@@ -183,6 +183,7 @@ def application(environ, start_response):
         # exception should be handled and an error http
         # message should be returned to the end user
         wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
+        if not wsgi_plugin: raise colony.PluginSystemException("no wsgi plugin found")
         sequence = wsgi_plugin.handle(environ, start_response, prefix, alias)
     except:
         # in case the run mode is development the exception should
