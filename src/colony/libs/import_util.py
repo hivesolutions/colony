@@ -134,16 +134,14 @@ def reload_import(path, hard = True):
     This path should be the same as the one referring the module
     in the system modules.
     @type hard: bool
-    @param hard: If an "hard" reload approach musb be taken to provide
+    @param hard: If an "hard" reload approach must be taken to provide
     the reload process. The hard reload approach removes the path
     from the system modules map.
     """
 
     # in case the path is not present in the
     # system modules no need to reload
-    if not path in sys.modules:
-        # returns immediately
-        return
+    if not path in sys.modules: return
 
     # in case the hard approach for reloading is
     # taken the system modules should be changed
