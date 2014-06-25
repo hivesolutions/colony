@@ -3308,12 +3308,10 @@ class PluginManager:
             return True
 
         # resolves the capabilities of the plugin
-        if not self.resolve_capabilities(plugin):
-            return False
+        if not self.resolve_capabilities(plugin): return False
 
         # injects the plugin dependencies
-        if not self.inject_dependencies(plugin):
-            return False
+        if not self.inject_dependencies(plugin): return False
 
         # in case the plugin to be loaded is either of type main or thread
         if loading_type == MAIN_TYPE or loading_type == THREAD_TYPE:
