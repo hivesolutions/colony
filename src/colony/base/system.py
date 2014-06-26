@@ -5929,31 +5929,31 @@ class PluginManager:
 
     def _kill_system_signal_handler(self, signum, frame):
         """
-        Kills the system, due to signal occurrence.
+        Kills the system, due to signal occurrence, this unloading
+        process should be properly logged into the currently defined
+        logging infra-structure for debugging purposes.
 
         @type signum: int
-        @param signum: The signal number.
+        @param signum: The signal number that was raised and that is
+        going to be logged as "responsible" for the unloading.
         @type frame: Frame
-        @type frame: The frame value.
+        @type frame: The frame value of the current system stat that
+        may be used for traceability or debug.
         """
 
         try:
-            # print a warning message
+            # print a warning message about the start of the system unloading
+            # then runs the unloading operation and ends with a message about
+            # the end of the unloading operation process
             self.warning("Unloading system due to signal: '%s'" % signum)
-
-            # unloads the system
             self.unload_system(True)
-
-            # print a warning message
             self.warning("Unloaded system due to signal: '%s'" % signum)
         except Exception, exception:
-            # prints an error message
+            # prints an error message about the problem in the unloading process
+            # then stops the blocking system structures and exists the current
+            # process with an error value (notifies the operative system)
             self.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
-
-            # stops the blocking system structures
             self._stop_blocking_system_structures()
-
-            # exits in error
             exit(2)
 
     def _stop_blocking_system_structures(self):
