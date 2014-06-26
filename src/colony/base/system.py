@@ -1515,10 +1515,16 @@ class PluginManager:
     be registered for exiting the plugin manager """
 
     layout_mode = "default"
-    """ The layout mode used in the plugin loading """
+    """ The layout mode used in the plugin loading, this is
+    a deprecated value that used to defined the layout of the
+    file system structure supporting the colony instance """
 
     run_mode = "default"
-    """ The run mode used in the plugin loading """
+    """ The run mode used in the plugin loading, this value
+    should condition the way some of the logic is process, for
+    instance if the development mode is defined less concert
+    should be taken with security and performance as opposed to
+    a run or production run modes """
 
     container = "default"
     """ The name of the plugin manager container, this is
