@@ -3149,7 +3149,10 @@ class PluginManager:
             # than the expected arguments length
             if not argments_length == expected_arguments_length:
                 # raises the invalid command exception
-                raise exceptions.InvalidCommand("invalid number of arguments for method '%s' (expected %d given %d)" % (full_method_name, expected_arguments_length, argments_length))
+                raise exceptions.InvalidCommand(
+                    "invalid number of arguments for method '%s' (expected %d given %d)" %\
+                    (full_method_name, expected_arguments_length, argments_length)
+                )
 
             # calls the method with the given arguments
             method(*arguments)
