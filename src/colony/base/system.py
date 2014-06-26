@@ -919,27 +919,49 @@ class Plugin(object):
     def reload_main_modules(self):
         """
         Reloads the plugin main modules in the interpreter.
+        The strategy to be executed implies that the modules
+        currently loaded in the system that are prefixed with
+        the names defined in the main modules should be reloaded
+        or in case an error occurs in the import removed from
+        the currently loading memory for modules.
+
+        This is a dangerous operation and care should be taken
+        to avoid any system state corruption.
         """
 
         # prints an info message about the reloading of the main modules
         # of the plugins that is going to be performed
         self.info("Reloading main modules in '%s' v%s" % (self.name, self.version))
 
+        # creates the list that will hold the complete set of modules that
+        # are considered valid for the reload of modules operation
+        valids = []
+
         # iterates over all the main modules in order to reloaded them
         # under the current environment, required for new updating
         for main_module in self.main_modules:
-            # in case the current main module in iteration that is
-            # meant to be reloaded is not found in the list of currently
-            # loaded modules a warning message must be printed, because
-            # that probably indicates a programming error
-            if not main_module in sys.modules:
-                self.warning("Main module '%s' not found in system modules" % main_module)
-                continue
+            # gathers the complete set of loaded modules that are prefixed
+            # by the name defined as the current main module in iteration
+            # and then extends the complete set of valid modules with them
+            modules = [module for module in sys.modules if module.startswith(main_module)]
+            valids.extend(modules)
 
-            # retrieves the main module value and uses the reload
-            # function to trigger the reload of the module
-            main_module_value = sys.modules[main_module]
-            reload(main_module_value)
+        # creates the simple sorter lambda function that will sort the list
+        # of valid modules for reloading and runs the sorting operation so that
+        # the final list of valid modules for reload is defined from the larger
+        # (longest module names) to the shortest as required for correct loading
+        sorter = lambda a, b: len(a) - len(b)
+        valids.sort(sorter, reverse = True)
+
+        # iterates over the complete set of valid modules for reloading and runs
+        # and tries to run the reloading logic for each of them, in case it fails
+        # with an import error (assumes cycle error) the module is removed and it
+        # should be reloaded during the next import operation
+        for valid in valids:
+            module = sys.modules[valid]
+            if not module: continue
+            try: reload(module)
+            except ImportError: del sys.modules[valid]
 
     def get_configuration_property(self, property_name):
         """
