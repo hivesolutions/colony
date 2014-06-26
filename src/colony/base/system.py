@@ -333,7 +333,12 @@ class Plugin(object):
     """ The events that the plugin can handle """
 
     main_modules = []
-    """ The main modules of the plugin """
+    """ The main modules of the plugin, this value
+    should reference the complete set of prefix values
+    that should be used as reference for module operation
+    for instance this value is going to be used as the
+    reference for the reloading of modules for the
+    autoloading operations """
 
     valid = True
     """ The valid flag of the plugin """
