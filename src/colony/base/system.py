@@ -943,8 +943,11 @@ class Plugin(object):
             # gathers the complete set of loaded modules that are prefixed
             # by the name defined as the current main module in iteration
             # and then extends the complete set of valid modules with them
-            modules = [module for module in sys.modules if module.startswith(main_module)]
+            # also adds the main module that is defined with such name
+            prefix = main_module + "."
+            modules = [module for module in sys.modules if module.startswith(prefix)]
             valids.extend(modules)
+            valids.append(main_module)
 
         # creates the simple sorter lambda function that will sort the list
         # of valid modules for reloading and runs the sorting operation so that
