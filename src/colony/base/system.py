@@ -921,19 +921,25 @@ class Plugin(object):
         Reloads the plugin main modules in the interpreter.
         """
 
-        # prints an info message
+        # prints an info message about the reloading of the main modules
+        # of the plugins that is going to be performed
         self.info("Reloading main modules in '%s' v%s" % (self.name, self.version))
 
-        # iterates over all the main modules
+        # iterates over all the main modules in order to reloaded them
+        # under the current environment, required for new updating
         for main_module in self.main_modules:
-            # in case the main module is already loaded
-            # (contained in the system modules)
-            if main_module in sys.modules:
-                # retrieves the main module value and used
-                # the reload function to trigger the reload
-                # of the module (symbol reloading)
-                main_module_value = sys.modules[main_module]
-                reload(main_module_value)
+            # in case the current main module in iteration that is
+            # meant to be reloaded is not found in the list of currently
+            # loaded modules a warning message must be printed, because
+            # that probably indicates a programming error
+            if not main_module in sys.modules:
+                self.warning("Main module '%s' not found in loaded modules" % main_module)
+                continue
+
+            # retrieves the main module value and uses the reload
+            # function to trigger the reload of the module
+            main_module_value = sys.modules[main_module]
+            reload(main_module_value)
 
     def get_configuration_property(self, property_name):
         """
@@ -2458,20 +2464,22 @@ class PluginManager:
         @param plugins: The list of plugins to be loaded.
         """
 
-        # prints an info message
+        # prints an info message about the import operation
+        # that is going to be performed in the plugin
         self.info("Loading plugins (importing %d main module files)..." % len(plugins))
 
-        # iterates over all the available plugins
+        # iterates over all the plugins requested for loading and
+        # runs the import operation for each of them in case that
+        # operation is required by module inexistence
         for plugin in plugins:
-            # in case the plugin module is not currently loaded
-            if not plugin in sys.modules:
-                try:
-                    # imports the plugin module file into the
-                    # current environment
-                    __import__(plugin)
-                except BaseException, exception:
-                    # prints an error message
-                    self.error("Problem importing module %s: %s" % (plugin, unicode(exception)))
+            # in case the plugin module is already loaded continues
+            # the loop as no loading is required for it, otherwise
+            # runs the proper loading process for the plugin logging
+            # an error in case an exception occurs in the importing
+            if plugin in sys.modules: continue
+            try: __import__(plugin)
+            except BaseException, exception:
+                self.error("Problem importing module %s: %s" % (plugin, unicode(exception)))
 
         # prints an info message
         self.info("Finished loading plugins")
