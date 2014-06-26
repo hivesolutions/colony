@@ -5115,13 +5115,16 @@ class PluginManager:
 
         # iterates over all the events and super events for notification
         for event_or_super_event in events_or_super_events_list:
-            if event_or_super_event in self.event_plugins_fired_loaded_map:
-                # iterates over all the plugins registered for notification
-                for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
-                    self.debug("Notifying '%s' v%s about event '%s' generated in plugin manager" % (event_plugin_loaded.name, event_plugin_loaded.version, event_name))
+            if not event_or_super_event in self.event_plugins_fired_loaded_map: continue
 
-                    # calls the event handler for the event and the event arguments
-                    event_plugin_loaded.event_handler(event_name, *event_args)
+            # iterates over all the plugins registered for notification to be able
+            # to notify them about the new event that has just been triggered
+            for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
+                self.debug(
+                    "Notifying '%s' v%s about event '%s' generated in plugin manager" %\
+                    (event_plugin_loaded.name, event_plugin_loaded.version, event_name)
+                )
+                event_plugin_loaded.event_handler(event_name, *event_args)
 
     def generate_event(self, event_name, event_args):
         """
