@@ -933,7 +933,7 @@ class Plugin(object):
             # loaded modules a warning message must be printed, because
             # that probably indicates a programming error
             if not main_module in sys.modules:
-                self.warning("Main module '%s' not found in loaded modules" % main_module)
+                self.warning("Main module '%s' not found in system modules" % main_module)
                 continue
 
             # retrieves the main module value and uses the reload
