@@ -837,9 +837,12 @@ class Plugin(object):
         if not event_name in self.event_plugins_fired_loaded_map:
             self.event_plugins_fired_loaded_map[event_name] = []
 
-        if not plugin in self.event_plugins_fired_loaded_map[event_name]:
-            self.event_plugins_fired_loaded_map[event_name].append(plugin)
-            self.debug("Registering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.name, plugin.version, self.name, self.version))
+        if plugin in self.event_plugins_fired_loaded_map[event_name]: return
+        self.event_plugins_fired_loaded_map[event_name].append(plugin)
+        self.debug(
+            "Registering event '%s' from '%s' v%s in '%s' v%s" %\
+            (event_name, plugin.name, plugin.version, self.name, self.version)
+        )
 
     def unregister_plugin_event(self, plugin, event_name):
         """
@@ -851,10 +854,13 @@ class Plugin(object):
         @param event_name: The name of the event to be unregistered.
         """
 
-        if event_name in self.event_plugins_fired_loaded_map:
-            if plugin in self.event_plugins_fired_loaded_map[event_name]:
-                self.event_plugins_fired_loaded_map[event_name].remove(plugin)
-                self.debug("Unregistering event '%s' from '%s' v%s in '%s' v%s" % (event_name, plugin.name, plugin.version, self.name, self.version))
+        if not event_name in self.event_plugins_fired_loaded_map: return
+        if not plugin in self.event_plugins_fired_loaded_map[event_name]: return
+        self.event_plugins_fired_loaded_map[event_name].remove(plugin)
+        self.debug(
+            "Unregistering event '%s' from '%s' v%s in '%s' v%s" %\
+            (event_name, plugin.name, plugin.version, self.name, self.version)
+        )
 
     def notify_handlers(self, event_name, event_args):
         """
@@ -874,15 +880,25 @@ class Plugin(object):
 
         # iterates over all the events and super events for notification
         for event_or_super_event in events_or_super_events_list:
-            if event_or_super_event in self.event_plugins_fired_loaded_map:
-                # iterates over all the plugins registered for notification
-                for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
-                    # prints a debug message
-                    self.debug("Notifying '%s' v%s about event '%s' generated in '%s' v%s" % (event_plugin_loaded.name, event_plugin_loaded.version, event_name, self.name, self.version))
+            if not event_or_super_event in self.event_plugins_fired_loaded_map: continue
 
-                    # calls the event handler for the event name with
-                    # the given event arguments
-                    event_plugin_loaded.event_handler(event_name, *event_args)
+            # iterates over all the plugins registered for notification
+            for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
+                # prints a debug message
+                self.debug(
+                    "Notifying '%s' v%s about event '%s' generated in '%s' v%s" %\
+                    (
+                        event_plugin_loaded.name,
+                        event_plugin_loaded.version,
+                        event_name,
+                        self.name,
+                        self.version
+                    )
+                )
+
+                # calls the event handler for the event name with
+                # the given event arguments
+                event_plugin_loaded.event_handler(event_name, *event_args)
 
     def generate_event(self, event_name, event_args):
         """
