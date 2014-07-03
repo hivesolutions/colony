@@ -1,4 +1,5 @@
 {
+    "1.1.7" : ["Small set of bug fixes"],
     "1.1.6" : ["Fixed bug in upgrading of packages"],
     "1.1.5" : ["Initial support for the upgrade operation"],
     "1.1.4" : ["New way of defining the repos"],
