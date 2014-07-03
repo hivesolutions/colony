@@ -1,4 +1,5 @@
 {
+    "1.1.8" : ["New prefix based configuration loading"],
     "1.1.7" : ["Small set of bug fixes"],
     "1.1.6" : ["Fixed bug in upgrading of packages"],
     "1.1.5" : ["Initial support for the upgrade operation"],
