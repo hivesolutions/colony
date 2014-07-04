@@ -83,7 +83,7 @@ class LazyIteratorClass(object):
     def next(self):
         raise StopIteration()
 
-def is_lazy(cls, value):
+def is_lazy(value):
     """
     Verifies if the provided value is a lazy loaded value
     by "looking" at its data type.
