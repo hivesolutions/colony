@@ -1056,7 +1056,8 @@ class Plugin(object):
         Returns the result of the lazy loading test.
 
         @rtype: bool
-        @return: The result of the lazy loading test (if the plugin is lazy loaded or not).
+        @return: The result of the lazy loading test (if the
+        plugin is lazy loaded or not).
         """
 
         return self.lazy_loaded and not self.error_state
@@ -1066,7 +1067,8 @@ class Plugin(object):
         Returns the result of the loading and lazy loading tests.
 
         @rtype: bool
-        @return: The result of the loading and lazy loading tests (if the plugin is loaded or lazy loaded or not).
+        @return: The result of the loading and lazy loading tests
+        (if the plugin is loaded or lazy loaded or not).
         """
 
         return (self.loaded or self.lazy_loaded) and not self.error_state
@@ -1076,7 +1078,8 @@ class Plugin(object):
         Returns the result of the replica test.
 
         @rtype: bool
-        @return: The result of the replica test (if the plugin is a replica or not).
+        @return: The result of the replica test (if the plugin
+        is a replica or not).
         """
 
         return not self.id == self.original_id
@@ -1116,7 +1119,8 @@ class Plugin(object):
         Returns the result of the metadata test.
 
         @rtype: bool
-        @return: The result of the metadata test (if the plugin contains metadata or not).
+        @return: The result of the metadata test (if the plugin
+        contains metadata or not).
         """
 
         if hasattr(self, "metadata_map"): return True
@@ -1127,9 +1131,11 @@ class Plugin(object):
         Returns the result of the metadata key test.
 
         @type metadata_key: String
-        @param metadata_key: The value of the metadata key to test for metadata.
+        @param metadata_key: The value of the metadata key
+        to test for metadata.
         @rtype: bool
-        @return: The result of the metadata key test (if the plugin contains the metadata key or not).
+        @return: The result of the metadata key test (if the
+        plugin contains the metadata key or not).
         """
 
         if self.contains_metadata():
