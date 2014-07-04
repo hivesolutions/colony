@@ -83,6 +83,25 @@ class LazyIteratorClass(object):
     def next(self):
         raise StopIteration()
 
+def is_lazy(cls, value):
+    """
+    Verifies if the provided value is a lazy loaded value
+    by "looking" at its data type.
+
+    This is a simple and quick util for file type verification
+    and should be used as often as possible to provide a valid,
+    simple and coherent interface for lazy verification/validation.
+
+    @type value: Object
+    @param value: The value that is going to be verified to
+    be lazy loaded or not (lazy verification).
+    @rtype: bool
+    @return: If the provided value is a lazy loaded value or not
+    according to the current specification.
+    """
+
+    return type(value) == LazyClass
+
 # creates the global unique reference
 # to the object to be used for lazy
 # loaded symbols
