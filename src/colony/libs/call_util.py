@@ -112,7 +112,7 @@ def call_safe(callable, *args, **kwargs):
 
     # retrieves the arguments specification to the provided callable
     # and retrieves the various argument names and the existence or
-    # not of the wildcard kargs value in the callable and in case it
+    # not of the wildcard kwargs value in the callable and in case it
     # exists runs the callable call immediately
     argspec = inspect.getargspec(callable)
     method_args = argspec[0]
