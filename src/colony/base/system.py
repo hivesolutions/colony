@@ -136,9 +136,6 @@ DEFAULT_WORKSPACE_PATH = u"~/.colony_workspace"
 DEFAULT_EXECUTION_HANDLING_METHOD = "handle_execution"
 """ The default execution handling method """
 
-DEFAULT_LOOP_WAIT_TIMEOUT = 1.0
-""" The default loop wait timeout """
-
 DEFAULT_UNLOAD_SYSTEM_TIMEOUT = 600.0
 """ The default unload system timeout """
 
@@ -2132,16 +2129,17 @@ class PluginManager:
             # the readiness of the system to received actions
             self.info("Startup process finished (took %d seconds)" % delta)
 
-            # starts the main loop
+            # starts the main loop, this is a blocking call that should
+            # return only at the end of the plugin manger life cycle
             self.main_loop()
         except BaseException, exception:
-            # handles the system exception
+            # handles the system exception and changes the return code of
+            # the call to an error value (notifies caller process)
             self._handle_system_exception(exception)
-
-            # sets the return code to error
             self.return_code = 1
 
-        # returns the return code
+        # returns the return code, this value should be zero in case no
+        # error has occurred or any other value otherwise
         return self.return_code
 
     def unload_system(self, thread_safe = True):
@@ -2213,9 +2211,15 @@ class PluginManager:
         # new settings)
         self._relaunch_system()
 
-    def main_loop(self):
+    def main_loop(self, timeout = 1.0):
         """
-        The main loop for the plugin manager.
+        The main loop for the plugin manager, this is the call that
+        is considered to be blocking most of the manager's time.
+
+        @type timeout: float
+        @param timeout: The timeout that is going to be used as part
+        of the wait condition for the event queue of the main loop
+        the bigger this value the greater time to respond.
         """
 
         # main loop cycle
@@ -2223,31 +2227,33 @@ class PluginManager:
             # acquires the condition
             self.condition.acquire()
 
-            # iterates while the event queue has no items
+            # iterates while the event queue has no items waiting
+            # for new items to arrive and be processed
             while not len(self.event_queue):
                 try:
                     # waits for the condition to be notified
                     # this wait releases after the defined timeout
                     # in order to provide a away to process external interrupts
-                    self.condition.wait(DEFAULT_LOOP_WAIT_TIMEOUT)
-                except RuntimeError:
-                    # timeout occurred (ignores it)
-                    pass
+                    self.condition.wait(timeout)
+                except RuntimeError: pass
 
-            # pops the top item
+            # pops the top item from the event queue and "redirect"
+            # it for the processing phase of the workflow
             event = self.event_queue.pop(0)
 
-            # in case the event is of type execute
+            # in case the event is of type execute a method should
+            # be executed with the argument that are part of the event
             if event.event_name == "execute":
-                execution_method = event.event_args[0]
-                execution_arguments = event.event_args[1:]
-                execution_method(*execution_arguments)
-            # in case the event is of type exit
-            elif event.event_name == "exit":
-                # unloads the thread based plugins
-                self._unload_thread_plugins()
+                method = event.event_args[0]
+                args = event.event_args[1:]
+                method(*args)
 
-                # returns the method exiting the plugin system
+            # in case the event is of type exit, the unloading
+            # of the plugin system should be triggered
+            elif event.event_name == "exit":
+                # unloads the thread based plugins and then
+                # returns the current control flow to caller
+                self._unload_thread_plugins()
                 return
 
             # releases the condition
