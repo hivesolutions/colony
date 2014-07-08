@@ -19,6 +19,7 @@ Colony aims to eliminate the complexity typically associated with the creation o
 
 ### Docker
 
+* Create a new directory to serve as base for the build ``mkdir colony && cd colony``
 * Retrieve the ``Dockerfile`` from the repo using ``wget https://github.com/hivesolutions/colony/raw/master/assets/docker/Dockerfile``
 * Create the new image using ``docker build --tag self/colony .``
 * Execute colony with ``docker run --name colony_001 -i -t self/colony`` 
