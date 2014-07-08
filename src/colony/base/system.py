@@ -3941,9 +3941,9 @@ class PluginManager:
         for plugin_allowed_plugins_map_key in self.plugin_allowed_plugins_map:
             allowed_plugins_list = self.plugin_allowed_plugins_map[plugin_allowed_plugins_map_key]
             for allowed_plugins_list_element in allowed_plugins_list:
-                if allowed_plugins_list_element[0] == plugin:
-                    allowed_plugins_list.remove(allowed_plugins_list_element)
-                    break
+                if not allowed_plugins_list_element[0] == plugin: continue
+                allowed_plugins_list.remove(allowed_plugins_list_element)
+                break
 
     def add_capabilities_plugins_map(self, capability, plugin):
         """
