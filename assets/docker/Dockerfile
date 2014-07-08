@@ -8,3 +8,5 @@ RUN pip install colony
 RUN wget https://github.com/hivesolutions/config/raw/master/colony/base.txt
 RUN cpm require base.txt
 RUN rm base.txt
+
+ENTRYPOINT usr/local/bin/colony
