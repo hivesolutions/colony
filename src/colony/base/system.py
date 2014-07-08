@@ -2411,16 +2411,14 @@ class PluginManager:
         # adds the defined library and plugin paths to the system python path
         self.set_python_path(configuration["library_paths"], configuration["plugin_paths"])
 
-        # loads the plugin files into memory
+        # loads the plugin files into memory, this operation should import
+        # the complete set of files that are considered to be part of the plugin
         self.load_plugins(configuration["plugins"])
 
-        # starts all the available the plugin manager plugins
+        # starts all the available the plugin manager plugins, loads them all
+        # and set sets the plugin manager plugins as loaded in the system
         self.start_plugin_manager_plugins()
-
-        # loads the plugin manager plugins
         self.load_plugin_manager_plugins()
-
-        # sets the plugin manager plugins loaded to true
         self.set_plugin_manager_plugins_loaded(True)
 
         # starts all the available the plugins, this operation should create
@@ -3041,7 +3039,7 @@ class PluginManager:
     def execute_command(self):
         """
         Executes the currently defined execution command (if any).
-        
+
         This is considered to be a legacy operation and should not
         be used as a way of executing a command "inside" colony.
         """
@@ -3122,18 +3120,21 @@ class PluginManager:
         plugin = self._get_plugin_by_id(plugin_id)
 
         try:
-            # in case the plugin was not retrieved successfully
+            # in case the plugin was not retrieved successfully,
+            # raises the invalid command exception
             if not plugin:
-                # raises the invalid command exception
                 raise exceptions.InvalidCommand("plugin not found '%s'" % plugin_id)
 
             # loads the plugin
             self.__load_plugin(plugin)
 
-            # in case the plugin does not have a method with the given name
+            # in case the plugin does not have a method with the given name,
+            # raises the invalid command exception
             if not hasattr(plugin, method_name):
-                # raises the invalid command exception
-                raise exceptions.InvalidCommand("method not found '%s' for plugin '%s'" % (method_name, plugin_id))
+                raise exceptions.InvalidCommand(
+                    "method not found '%s' for plugin '%s'" %\
+                    (method_name, plugin_id)
+                )
 
             # retrieves the method from the plugin
             method = getattr(plugin, method_name)
