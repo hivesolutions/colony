@@ -62,10 +62,12 @@ USAGE = "Help:\n\
 --library_dir[-i]=(LIBRARY_DIR_1;LIBRARY_DIR_2;...) - sets the series of library directories to use\n\
 --plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use\r\
 --execution_command[-e]=plugin_id:method [argument1 argument2 ...] - executes the given execution command at the end of loading"
-""" The usage string for the command line arguments """
+""" The usage string for the command line arguments,
+this is going to be display as part of the help string """
 
 BRANDING_TEXT = "Hive Colony %s (Hive Solutions Lda. r%s:%s %s)"
-""" The branding text value """
+""" The branding text value to be display at the start
+of the process execution (contains user/system information) """
 
 VERSION_PRE_TEXT = "Python "
 """ The version pre text value """
