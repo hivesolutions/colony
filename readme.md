@@ -8,21 +8,21 @@ Colony aims to eliminate the complexity typically associated with the creation o
 ### Handicraft
 
 * Install Colony using ``pip install colony``
-* Run the command ``RUN_MODE=development colony``
+* Run the command ``RUN_MODE=devel colony``
 
 ### Virtualenv
 
 * Start and activate the environment using ``virtualenv venv && source venv/bin/activate``
 * Install Colony in the system using ``pip install colony``
 * Deploy the console package using ``cpm install console_interface``
-* Run your new colony using the command ``RUN_MODE=development colony``
+* Run your new colony using the command ``RUN_MODE=devel colony``
 
 ### Docker
 
 * Create a new directory to serve as base for the build ``mkdir colony && cd colony``
 * Retrieve the ``Dockerfile`` from the repo using ``wget https://github.com/hivesolutions/colony/raw/master/assets/docker/Dockerfile``
-* Create the new image using ``docker build --tag self/colony .``
-* Execute colony with ``docker run --name colony_001 -i -t self/colony`` 
+* Create the new docker image using ``docker build --tag self/colony .``
+* Execute colony with ``docker run -e RUN_MODE=devel -i -t self/colony /usr/local/bin/colony`` 
 
 To actually do something useful look into [How to Establish your Colony in 3 Easy Steps](http://getcolony.com/docs/colony/documentation_how_to_establish_your_colony_in_3_easy_steps.html)
 
