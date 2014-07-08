@@ -48,6 +48,18 @@ class ColonyTestCase(unittest.TestCase):
     based test cases.
     """
 
+    @staticmethod
+    def get_test_case():
+        return self
+
+    @staticmethod
+    def get_pre_conditions():
+        return None
+
+    @staticmethod
+    def get_description():
+        return "The base Colony Framework test case"
+
     def assert_type(self, value, expected_type):
         """
         Tests that the provided value is of the specified type.
@@ -106,14 +118,18 @@ class ColonyTestCase(unittest.TestCase):
             # raises a failure exception in case the
             # raised exception was not the expected one
             if string_mode and not exception_name == expected_exception:
-                # raises a failure exception
-                raise self.failureException("raised exception %s instead of expected exception %s" % (exception_name, expected_exception_name))
+                raise self.failureException(
+                    "raised exception %s instead of expected exception %s" %\
+                    (exception_name, expected_exception_name)
+                )
 
             # raises a failure exception in case the
             # raised exception was not the expected one
             if not string_mode and not exception_class == expected_exception:
-                # raises a failure exception
-                raise self.failureException("raised exception %s instead of expected exception %s" % (exception_name, expected_exception_name))
+                raise self.failureException(
+                    "raised exception %s instead of expected exception %s" %\
+                    (exception_name, expected_exception_name)
+                )
         else:
             # raises a failure exception in case no exception was raised
             raise self.failureException("%s exception was not raised" % expected_exception)

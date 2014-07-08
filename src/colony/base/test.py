@@ -19,7 +19,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = "1.0.0"
+__author__ = "João Magalhães <joamag@hive.pt>"
+""" The author(s) of the module """
+
+__version__ = "1.1.8"
 """ The version of the module """
 
 __revision__ = "$LastChangedRevision$"
@@ -34,20 +37,29 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import config
-import decorators
-import exceptions
-import information
-import loggers
-import system
-import test
-import util
+class Test(object):
+    """
+    The base and abstract test class from which all the
+    colony test back end class will inherit from. It
+    should contain the basic infra-structure for a rapid
+    creation of tests to be executed in colony.
+    """
 
-from config import *
-from decorators import *
-from exceptions import *
-from information import *
-from loggers import *
-from system import *
-from test import *
-from util import *
+    plugin = None
+    """ The reference to the plugin that "owns" this
+    test object, this may be used to reference the
+    top level manager functions """
+
+
+    def __init__(self, plugin):
+        """
+        Constructor of the class, received the "owner"
+        plugin as the first argument to be stored for
+        latter usage.
+
+        @type plugin: Plugin
+        @param plugin: The owner plugin for the system
+        object to be created.
+        """
+
+        self.plugin = plugin
