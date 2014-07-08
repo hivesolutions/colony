@@ -21,7 +21,7 @@ Colony aims to eliminate the complexity typically associated with the creation o
 
 * Create a new directory to serve as base for the build ``mkdir colony && cd colony``
 * Retrieve the ``Dockerfile`` from the repo using ``wget https://github.com/hivesolutions/colony/raw/master/assets/docker/Dockerfile``
-* Create the new image using ``docker build --tag self/colony .``
+* Create the new docker image using ``docker build --tag self/colony .``
 * Execute colony with ``docker run -e RUN_MODE=devel -i -t self/colony /usr/local/bin/colony`` 
 
 To actually do something useful look into [How to Establish your Colony in 3 Easy Steps](http://getcolony.com/docs/colony/documentation_how_to_establish_your_colony_in_3_easy_steps.html)
