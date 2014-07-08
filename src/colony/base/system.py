@@ -2423,31 +2423,29 @@ class PluginManager:
         # sets the plugin manager plugins loaded to true
         self.set_plugin_manager_plugins_loaded(True)
 
-        # starts all the available the plugins
+        # starts all the available the plugins, this operation should create
+        # the singletons instances for all of the available plugin classes
         self.start_plugins()
 
-        # loads the startup plugins
+        # loads the startup and the main plugins, the first represent the
+        # plugins that should always run and the second the ones that trigger
+        # a new thread loading and should also start at boot time
         self.load_startup_plugins()
-
-        # loads the main plugins
         self.load_main_plugins()
 
-        # installs the signal handlers
+        # installs the signal handlers, that are going to be used for operations
+        # like the "killing" of the plugin system and others
         self.install_signal_handlers()
 
-        # sets the init flag to true
+        # sets the init flag to true and then notifies the complete set
+        # of targets for the notification of the end plugin system loading
         self.set_init_complete(True)
-
-        # notifies all the loaded plugins about the init load complete
         self.notify_load_complete_loaded_plugins()
-
-        # notifies all the init complete handlers about the init load complete
         self.notify_load_complete_handlers()
-
-        # notifies the daemon file
         self.notify_daemon_file()
 
-        # executes the execution command
+        # executes the execution command in case one exists, note that this
+        # is a legacy and not supported operation in colony
         self.execute_command()
 
     def set_python_path(self, library_paths, plugin_paths):
@@ -2465,7 +2463,7 @@ class PluginManager:
         # structures for further loading of the modules
         for library_path in library_paths:
             # in case the library path already exits in the
-            # system path no need to continue with the proces
+            # system path no need to continue with the process
             if library_path in sys.path: continue
 
             # normalizes the library path and inserts the
@@ -2540,7 +2538,8 @@ class PluginManager:
 
     def start_plugins(self):
         """
-        Starts all the available plugins, creating a singleton instance for each of them.
+        Starts all the available plugins, creating a singleton
+        instance for each of them.
         """
 
         # retrieves all the plugin classes available
@@ -2932,12 +2931,9 @@ class PluginManager:
         Loads the set of plugin manager plugins.
         """
 
-        # iterates over all the plugin instances
         for plugin in self.plugin_instances:
-            # searches for the plugin manager extension type in the plugin capabilities
-            if PLUGIN_MANAGER_EXTENSION_TYPE in plugin.capabilities:
-                # loads the plugin
-                self._load_plugin(plugin, None, PLUGIN_MANAGER_EXTENSION_TYPE)
+            if not PLUGIN_MANAGER_EXTENSION_TYPE in plugin.capabilities: continue
+            self._load_plugin(plugin, None, PLUGIN_MANAGER_EXTENSION_TYPE)
 
     def load_startup_plugins(self):
         """
@@ -3045,6 +3041,9 @@ class PluginManager:
     def execute_command(self):
         """
         Executes the currently defined execution command (if any).
+        
+        This is considered to be a legacy operation and should not
+        be used as a way of executing a command "inside" colony.
         """
 
         # in case an execution command is not defined, must
