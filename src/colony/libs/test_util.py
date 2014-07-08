@@ -72,14 +72,18 @@ class ColonyTestCase(unittest.TestCase):
         the provided value.
         """
 
-        # retrieves the value's type
+        # retrieves the value's type and in case the type is
+        # the expected on returns immediately as no  problem
+        # exists for the current assertion call
         value_type = type(value)
+        if value_type == expected_type: return
 
-        # raises an exception in case the
-        # value is not of the expected type
-        if not value_type == expected_type:
-            # raises a failure exception
-            raise self.failureException("value is of type %s instead of expected type %s" % (value_type, expected_type))
+        # raises a failure exception as the type of the value
+        # is not the one expected by the assert operation
+        raise self.failureException(
+            "value is of type %s instead of expected type %s" %\
+            (value_type, expected_type)
+        )
 
     def assert_raises(self, expected_exception, function, *args, **kwargs):
         """
