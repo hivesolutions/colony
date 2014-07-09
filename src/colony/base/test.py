@@ -63,3 +63,12 @@ class Test(object):
         """
 
         self.plugin = plugin
+
+    def get_bundle(self):
+        return ()
+
+    def set_up(self, test_case):
+        pass
+
+    def tear_down(self, test_case):
+        pass
