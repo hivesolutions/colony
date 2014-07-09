@@ -2070,8 +2070,17 @@ class PluginManager:
         """
         Starts the process of loading the plugin system.
 
+        This is the main entry point of the system from
+        which either a command is executed or the main
+        loop is started (blocking call).
+
+        The resulting integer value may be returned to the
+        caller process as the result of the execution.
+
         @rtype: int
-        @return: The return code.
+        @return: The return code from the execution, this value
+        should be zero for no problem situation and any other
+        value for an error situation.
         """
 
         try:
@@ -2092,13 +2101,13 @@ class PluginManager:
             # of execution of the plugin system
             self.apply_fixes()
 
-            # updates the workspace path
+            # updates the workspace path and then checks the standard
+            # input, replacing it with a non blocking support if required
             self.update_workspace_path()
-
-            # checks the standard input
             self.check_standard_input()
 
-            # generates the system information map
+            # generates the system information map, that is going to be used
+            # as the primary "solution" in the retrieval of system information
             self.generate_system_information_map()
 
             # iterates over the complete set of paths registered as base
@@ -2340,10 +2349,12 @@ class PluginManager:
         blocking.
         """
 
-        # in case there the execution of type script or is a daemon
-        if self.execution_command or self.daemon_pid or self.daemon_file_path:
-            # sets the standard input as a wait input object (for no blocking)
-            sys.stdin = util.WaitInput()
+        # verifies if the current execution mode requires a detached
+        # support for the standard input and if that's not the case
+        # replaces the current standard input with the wait input (no blocking)
+        is_detached = self.execution_command or self.daemon_pid or self.daemon_file_path
+        if not is_detached: return
+        sys.stdin = util.WaitInput()
 
     def apply_fixes(self):
         """
