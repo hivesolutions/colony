@@ -2483,8 +2483,14 @@ class PluginManager:
         self.notify_daemon_file()
 
         # runs the complete set of conditional modes for the initialization
-        # of the system taking into account the mode configuration value
-        if mode == "test": self.run_test()
+        # of the system taking into account the mode configuration value note
+        # that if the mode is not found or invalid and exception is raised
+        if not mode: return
+        if not not hasattr(self, "run_" + mode): raise exceptions.ColonyException(
+            "execution mode '%s' not found or invalid" % mode
+        )
+        method = getattr(self, "run_" + mode)
+        method()
 
     def set_python_path(self, library_paths, plugin_paths):
         """
