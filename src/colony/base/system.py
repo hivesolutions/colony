@@ -2175,7 +2175,6 @@ class PluginManager:
         # iterates over all the plugin instances running the unload process
         # for all of them and according to their set of skill/capabilities
         for plugin_instance in self.plugin_instances:
-            print plugin_instance
 
             # in case the plugin instance is not loaded there's
             # no need to unload it from the current context and
