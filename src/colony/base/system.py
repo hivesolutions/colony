@@ -47,6 +47,7 @@ import types
 import thread
 import signal
 import inspect
+import unittest
 import tempfile
 import threading
 import traceback
@@ -782,8 +783,8 @@ class Plugin(object):
 
         if event_name in self.event_plugins_registered_loaded_map:
             for plugin in self.event_plugins_registered_loaded_map[event_name]:
-                if plugin.is_loaded_or_lazy_loaded():
-                    self.unregister_for_plugin_event(plugin, event_name)
+                if not plugin.is_loaded_or_lazy_loaded(): continue
+                self.unregister_for_plugin_event(plugin, event_name)
 
     def unregister_all_for_plugin(self):
         """
@@ -2442,6 +2443,13 @@ class PluginManager:
         self.notify_load_complete_handlers()
         self.notify_daemon_file()
 
+
+
+        self.run_test()
+
+
+
+
         # executes the execution command in case one exists, note that this
         # is a legacy and not supported operation in colony
         self.execute_command()
@@ -3035,6 +3043,58 @@ class PluginManager:
             # closes the file, no further writing is allowed
             # on this file (avoids leaks)
             file.close()
+
+    def run_test(self):
+        """
+        Runs the test mode for the current plugin manager, this should
+        consist on the retrieval of the test capability aware plugins
+        and running of the corresponding test.
+
+        The method should return a boolean value indicating if the complete
+        set of tests were correctly executed or not.
+
+        @rtype: bool
+        @return: If the execution of the unit tests from the proper plugins
+        was successful or not, the details of the execution should be read
+        from the currently defined standard output stream.
+        """
+
+        # starts the initial result value of the execution with the valid
+        # value as the execution is considered to be successful by default
+        result = True
+
+        # retrieves the complete set of plugin (instances) that have the
+        # test capability and starts the iteration process on all of them
+        # to run the corresponding unit tests (just for loaded plugins)
+        plugins = self.get_plugins_by_capability("test")
+        for plugin in plugins:
+            # in case the current plugin in iteration is not loaded, it's
+            # not possible to load it's unit tests, should continue loop
+            if not plugin.is_loaded(): continue
+
+            # creates a new test suite and a new loader instances that are
+            # going to be used to load the tests for the current plugin
+            suite = unittest.TestSuite()
+            loader = unittest.TestLoader()
+
+            # retrieves the bundle of test cases from the plugin and then
+            # adds the corresponding tests to the suite (for execution)
+            for test_case in plugin.test.get_bundle():
+                test_case.plugin = plugin
+                partial = loader.loadTestsFromTestCase(test_case)
+                suite.addTest(partial)
+
+            # creates the unit test runner and then runs the created suite
+            # retrieving the final execution result that is used to compute
+            # the result boolean value for the test execution
+            runner = unittest.TextTestRunner(verbosity = 1)
+            run_result = runner.run(suite)
+            result = result and run_result.errors == 0
+            result = result and run_result.failures == 0
+
+        # returns the "final" result value for the execution, taking into
+        # account that one "simple" error will return invalid as boolean
+        return result
 
     def execute_command(self):
         """
@@ -4467,42 +4527,38 @@ class PluginManager:
         return result
 
     def get_plugins_by_event_fired(self, event_fired):
-        # the results list
         result = []
 
         for plugin in self.plugin_instances:
-            if event_fired in plugin.events_fired:
-                result.append(self.assert_plugin(plugin))
+            if not event_fired in plugin.events_fired: continue
+            result.append(self.assert_plugin(plugin))
 
         return result
 
     def _get_plugins_by_event_fired(self, event_fired):
-        # the results list
         result = []
 
         for plugin in self.plugin_instances:
-            if event_fired in plugin.events_fired:
-                result.append(plugin)
+            if not event_fired in plugin.events_fired: continue
+            result.append(plugin)
 
         return result
 
     def get_plugins_by_event_handled(self, event_handled):
-        # the results list
         result = []
 
         for plugin in self.plugin_instances:
-            if event_handled in plugin.events_handled:
-                result.append(self.assert_plugin(plugin))
+            if not event_handled in plugin.events_handled: continue
+            result.append(self.assert_plugin(plugin))
 
         return result
 
     def _get_plugins_by_event_handled(self, event_handled):
-        # the results list
         result = []
 
         for plugin in self.plugin_instances:
-            if event_handled in plugin.events_handled:
-                result.append(plugin)
+            if not event_handled in plugin.events_handled: continue
+            result.append(plugin)
 
         return result
 
@@ -4516,19 +4572,8 @@ class PluginManager:
         @return: The list of plugins with a dependency with the given plugin id.
         """
 
-        # the results list
-        result = []
-
-        # iterates over all the plugin instances
-        for plugin in self.plugin_instances:
-            # iterates over all the plugin dependencies
-            for dependency in plugin.dependencies:
-                # in case the dependency is of type plugin dependency
-                if dependency.__class__ == PluginDependency:
-                    # in case the dependency plugin id is the same
-                    if dependency.id == plugin_id:
-                        # appends the plugin to the result
-                        result.append(self.assert_plugin(plugin))
+        result = self._get_plugins_by_dependency(plugin_id)
+        result = [self.assert_plugin(plugin) for plugin in result]
         return result
 
     def _get_plugins_by_dependency(self, plugin_id):
@@ -4542,21 +4587,31 @@ class PluginManager:
         @return: The list of plugins with a dependency with the given plugin id.
         """
 
-        # the results list
+        # the results list that will hold the complete set of plugins
+        # that match the required plugin as a dependency
         result = []
 
-        # iterates over all the plugin instances
+        # iterates over all the plugin instances trying to find the plugins
+        # that contain the request plugin dependency in its dependencies list
         for plugin in self.plugin_instances:
-            # iterates over all the plugin dependencies
-            for dependency in plugin.dependencies:
-                # in case the dependency is of type plugin dependency
-                if dependency.__class__ == PluginDependency:
-                    # in case the dependency plugin id is the same
-                    if dependency.id == plugin_id:
-                        # appends the plugin to the result
-                        result.append(plugin)
 
-        # returns the result
+            # iterates over all the plugin dependencies trying to find a match
+            # as requested by the method call (as defined in specification)
+            for dependency in plugin.dependencies:
+                # in case the dependency is not of type plugin dependency
+                # must continue the loop not a valid dependency
+                if not dependency.__class__ == PluginDependency: continue
+
+                # in case the dependency plugin id is not the same must
+                # continue the loop as this is not a valid plugin
+                if dependency.id == plugin_id: continue
+
+                # adds the current plugin plugin to the result list as it
+                # contains the requested plugin in its dependencies
+                result.append(self.assert_plugin(plugin))
+
+        # returns the result, that should contain the complete set of plugins
+        # that have the provided plugin as a dependency
         return result
 
     def get_plugins_allow_capability(self, capability):
