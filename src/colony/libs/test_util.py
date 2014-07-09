@@ -105,37 +105,34 @@ class ColonyTestCase(unittest.TestCase):
         """
 
         try:
-            # invokes the function
+            # invokes the function that should trigger the evaluation process,
+            # note that the execution is dynamic with the provided arguments
             function(*args, **kwargs)
         except Exception, exception:
             # checks if the current exception assert mode is string or value
             # oriented and then uses the string mode flag to find out the correct
             # expected exception name (for exception string description)
-            string_mode = type(expected_exception) in types.StringTypes and True or False
-            expected_exception_name = string_mode and expected_exception or expected_exception.__name__
+            string_mode = True if type(expected_exception) in types.StringTypes else False
+            expected_exception_name =expected_exception if string_mode else expected_exception.__name__
 
             # retrieves the exception class and then uses it
             # to retrieve the exception name
             exception_class = exception.__class__
             exception_name = exception_class.__name__
 
-            # raises a failure exception in case the
-            # raised exception was not the expected one
-            if string_mode and not exception_name == expected_exception:
-                raise self.failureException(
-                    "raised exception %s instead of expected exception %s" %\
-                    (exception_name, expected_exception_name)
-                )
+            # re-raises the proper exception in case the raised exception was
+            # not the expected one (so that the test may fail correctly) using
+            # the string based comparison as it's currently set
+            if string_mode and not exception_name == expected_exception_name: raise
 
-            # raises a failure exception in case the
-            # raised exception was not the expected one
-            if not string_mode and not exception_class == expected_exception:
-                raise self.failureException(
-                    "raised exception %s instead of expected exception %s" %\
-                    (exception_name, expected_exception_name)
-                )
+            # re-raises the proper exception in case the raised exception was
+            # not the expected one (so that the test may fail correctly) uses
+            # the class type verification as no string mode is enabled
+            if not string_mode and not exception_class == expected_exception: raise
+
         else:
-            # raises a failure exception in case no exception was raised
+            # raises a failure exception in case no exception was raised, this is
+            # the expected behavior as an exception was expected in situation
             raise self.failureException("%s exception was not raised" % expected_exception)
 
     def assert_valid_xml(self, xml_data):
