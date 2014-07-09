@@ -50,7 +50,6 @@ class Test(object):
     test object, this may be used to reference the
     top level manager functions """
 
-
     def __init__(self, plugin):
         """
         Constructor of the class, received the "owner"
@@ -58,7 +57,7 @@ class Test(object):
         latter usage.
 
         @type plugin: Plugin
-        @param plugin: The owner plugin for the system
+        @param plugin: The owner plugin for the test
         object to be created.
         """
 
