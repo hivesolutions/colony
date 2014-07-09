@@ -47,6 +47,6 @@ if __name__ == "__main__":
     _path = os.getcwd()
     try:
         os.chdir(path)
-        colony_start.main()
+        colony_start.main(cwd = _path)
     finally:
         os.chdir(_path)

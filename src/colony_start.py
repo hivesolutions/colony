@@ -254,14 +254,27 @@ def run(
     return_code = plugin_manager.load_system(mode = mode)
     return return_code
 
-def main():
+def main(cwd = None):
     """
     The main entry point of the application, should parse
     the provided command line arguments and then start the
     execution of the colony plugin system.
+
+    @type cwd: String
+    @param cwd: The "original" current working directory to
+    be used for situations where the "cwd" has been changed
+    so that files generated are put on the colony path. This
+    is created as a legacy operation.
     """
 
+    # verifies if the cwd value is defined an in case it's not
+    # retrieves the real cwd values as to be used for operations
+    cwd = cwd or os.getcwd()
+
     try:
+        # defines the options retrieval schema/template and runs it
+        # retrieves the various options and the remaining arguments
+        # that have not been parsed by the processor
         options, args = getopt.getopt(
             sys.argv[1:],
             "hnv:l:r:c:o:f:d:m:g:i:t:p:",
@@ -354,6 +367,7 @@ def main():
     mode, level, layout_mode, run_mode, stop_on_cycle_error,\
     prefix_paths, daemon_file_path, logger_path, library_path, meta_path,\
     plugin_path = parse_configuration(
+        cwd,
         mode,
         config_file_path,
         level,
@@ -411,6 +425,7 @@ def main():
     exit(return_code)
 
 def parse_configuration(
+    cwd,
     mode,
     config_file_path,
     level,
@@ -427,6 +442,9 @@ def parse_configuration(
     Parses the configuration using the given values as default values.
     The configuration file used is given as a parameter to the function.
 
+    @type cwd: String
+    @param cwd: The (original) current working directory to be used
+    in the resolution of the relative import values.
     @type mode: String
     @param mode: The mode that is going to be used for non
     standard execution of the plugin manager (eg: testing). This
@@ -547,6 +565,7 @@ def parse_configuration(
     # from the colony configuration library path list and adds the
     # extra library path to the library path
     extra_library_path = convert_reference_path_list(
+        cwd,
         manager_path,
         current_prefix_paths,
         library_path_list
@@ -557,6 +576,7 @@ def parse_configuration(
     # from the colony configuration meta path list and adds the
     # extra meta path to the meta path
     extra_meta_path = convert_reference_path_list(
+        cwd,
         manager_path,
         current_prefix_paths,
         meta_path_list
@@ -572,6 +592,7 @@ def parse_configuration(
     # from the colony configuration plugin path list and adds the
     # extra plugin path to the plugin path
     extra_plugin_path = convert_reference_path_list(
+        cwd,
         manager_path,
         current_prefix_paths,
         plugin_path_list
@@ -592,13 +613,16 @@ def parse_configuration(
         plugin_path
     )
 
-def convert_reference_path_list(manager_path, current_prefix_paths, reference_path_list):
+def convert_reference_path_list(cwd, manager_path, current_prefix_paths, reference_path_list):
     """
     Converts the given list of reference paths. The reference
     paths include references of type %reference_name% to include
     base paths that are dereferenced at runtime based in the current
     layout configuration or other variables.
 
+    @type cwd: String
+    @param cwd: The (original) current working directory to be used
+    in the resolution of the relative import values.
     @type manager_path: String
     @param manager_path: The path to the manager.
     @type current_prefix_paths: List
@@ -622,7 +646,7 @@ def convert_reference_path_list(manager_path, current_prefix_paths, reference_pa
         # the prefix value) and in case it's not prepends the manager
         # path to it as the base path (usual situation)
         is_local = reference_path.startswith("./")
-        if is_local: dereferenced_path = reference_path
+        if is_local: dereferenced_path = cwd + "/" + reference_path
         else: dereferenced_path = manager_path + "/" + reference_path
 
         # iterates over all the current prefix paths to dereference
