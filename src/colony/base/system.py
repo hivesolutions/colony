@@ -2054,7 +2054,7 @@ class PluginManager:
         self.logger_handlers["broadcast"] = broadcast_handler
         self.logger_handlers["memory"] = memory_handler
 
-    def load_system(self):
+    def load_system(self, mode = None):
         """
         Starts the process of loading the plugin system.
 
@@ -2065,6 +2065,11 @@ class PluginManager:
         The resulting integer value may be returned to the
         caller process as the result of the execution.
 
+        @type mode: String
+        @param mode: The type of execution mode that is going to
+        be used for this loading, this should be unset for the
+        default execution mode. This variable should be used for
+        non standard modes (eg: testing).
         @rtype: int
         @return: The return code from the execution, this value
         should be zero for no problem situation and any other
@@ -2109,6 +2114,7 @@ class PluginManager:
             # defines the plugin system configuration, consisting of a map
             # containing directives that will condition the initialization
             configuration = dict(
+                mode = mode,
                 library_paths = self.library_paths,
                 meta_paths = self.meta_paths,
                 plugin_paths =  self.plugin_paths,
@@ -2424,18 +2430,30 @@ class PluginManager:
 
     def init_plugin_system(self, configuration):
         """
-        Starts the plugin loading process.
+        Starts the plugin loading process, this should be the step to
+        start the various plugins classes and instances.
+
+        It should also start the various conditional modes that may
+        be activated through proper configuration.
 
         @type configuration: Dictionary
-        @param configuration: The configuration structure.
+        @param configuration: The configuration structure that is going
+        to be used for the conditional execution of the loading process.
         """
 
+        # unpacks the complete set of configuration items that
+        # are going to be used in the plugin system initialization
+        mode = configuration.get("mode", None)
+        library_paths = configuration.get("library_paths", [])
+        plugin_paths = configuration.get("plugin_paths", [])
+        plugins = configuration.get("plugins", [])
+
         # adds the defined library and plugin paths to the system python path
-        self.set_python_path(configuration["library_paths"], configuration["plugin_paths"])
+        self.set_python_path(library_paths, plugin_paths)
 
         # loads the plugin files into memory, this operation should import
         # the complete set of files that are considered to be part of the plugin
-        self.load_plugins(configuration["plugins"])
+        self.load_plugins(plugins)
 
         # starts all the available the plugin manager plugins, loads them all
         # and set sets the plugin manager plugins as loaded in the system
@@ -2464,9 +2482,9 @@ class PluginManager:
         self.notify_load_complete_handlers()
         self.notify_daemon_file()
 
-
-        self.run_test()
-
+        # runs the complete set of conditional modes for the initialization
+        # of the system taking into account the mode configuration value
+        if mode == "test": self.run_test()
 
     def set_python_path(self, library_paths, plugin_paths):
         """

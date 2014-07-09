@@ -133,6 +133,7 @@ def run(
     library_path,
     meta_path,
     plugin_path,
+    mode = None,
     level = "WARNING",
     layout_mode = "default",
     run_mode = "default",
@@ -163,6 +164,10 @@ def run(
     @type plugin_path: String
     @param plugin_path: The set of paths to the various plugin
     locations separated by a semi-column.
+    @type mode: String
+    @param mode: The mode that is going to be used for non
+    standard execution of the plugin manager (eg: testing). This
+    value is not set by default (for default execution).
     @type level: String
     @param level: The logging level described as a string that is
     going to be used by the underlying colony logging infra-structure.
@@ -252,7 +257,7 @@ def run(
     # call and the flow control is only returned at the end of
     # the execution of the colony infra-structure, then the
     # returned code is returned to the caller function
-    return_code = plugin_manager.load_system()
+    return_code = plugin_manager.load_system(mode = mode)
     return return_code
 
 def main():
@@ -263,7 +268,7 @@ def main():
     """
 
     try:
-        options, _args = getopt.getopt(
+        options, args = getopt.getopt(
             sys.argv[1:],
             "hnv:l:r:c:o:f:d:m:g:i:t:p:",
             [
@@ -284,14 +289,17 @@ def main():
             ]
         )
     except getopt.GetoptError, error:
-        # prints the error description
+        # prints the error description so that the user is able
+        # to react to the error, then prints the possible usage
+        # for the command and exists in error
         print str(error)
-
-        # prints usage information
         usage()
-
-        # exits in error
         sys.exit(2)
+
+    # retrieves the execution mode for colony as the first non parsed
+    # value from the command line (as expected)
+    if args: mode = args[0]
+    else: mode = None
 
     # retrieves the file system encoding
     file_system_encoding = sys.getfilesystemencoding()
@@ -349,9 +357,10 @@ def main():
 
     # parses the configuration options, retrieving the various values that
     # control the execution of the plugin system
-    level, layout_mode, run_mode, stop_on_cycle_error,\
+    mode, level, layout_mode, run_mode, stop_on_cycle_error,\
     prefix_paths, daemon_file_path, logger_path, library_path, meta_path,\
     plugin_path = parse_configuration(
+        mode,
         config_file_path,
         level,
         layout_mode,
@@ -383,30 +392,32 @@ def main():
     meta_path_striped = meta_path.strip(";")
     plugin_path_striped = plugin_path.strip(";")
 
-    # starts the running process
+    # starts the running process, this should lunch the manager
+    # and then start the main loop of execution returning the
+    # return code (result of execution) to the caller process
     return_code = run(
         manager_path,
         logger_path,
         library_path_striped,
         meta_path_striped,
         plugin_path_striped,
-        level,
-        layout_mode,
-        run_mode,
-        stop_on_cycle_error,
-        loop,
-        threads,
-        signals,
-        container,
-        prefix_paths,
-        daemon_pid,
-        daemon_file_path
+        mode = mode,
+        level = level,
+        layout_mode = layout_mode,
+        run_mode = run_mode,
+        stop_on_cycle_error = stop_on_cycle_error,
+        loop = loop,
+        threads = threads,
+        signals = signals,
+        container = container,
+        prefix_paths = prefix_paths,
+        daemon_pid = daemon_pid,
+        daemon_file_path = daemon_file_path
     )
-
-    # exits the process with return code
     exit(return_code)
 
 def parse_configuration(
+    mode,
     config_file_path,
     level,
     layout_mode,
@@ -422,6 +433,10 @@ def parse_configuration(
     Parses the configuration using the given values as default values.
     The configuration file used is given as a parameter to the function.
 
+    @type mode: String
+    @param mode: The mode that is going to be used for non
+    standard execution of the plugin manager (eg: testing). This
+    value is not set by default (for default execution).
     @type config_file_path: Sting
     @param config_file_path: The path to the configuration file.
     @type level: String
@@ -492,6 +507,7 @@ def parse_configuration(
     # starting of the colony infra-structure, defaulting to the provided
     # values in case they are present (as expected), then in case there's
     # still no valid values for such variables default values are used
+    mode = colony.conf("MODE", mode)
     level = colony.conf("LEVEL", level)
     layout_mode = colony.conf("LAYOUT_MODE", layout_mode)
     run_mode = colony.conf("RUN_MODE", run_mode)
@@ -558,6 +574,7 @@ def parse_configuration(
     plugin_path += extra_plugin_path
 
     return (
+        mode,
         level,
         layout_mode,
         run_mode,
