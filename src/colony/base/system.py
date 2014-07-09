@@ -3120,8 +3120,13 @@ class PluginManager:
         plugins = self.get_plugins_by_capability("test")
         for plugin in plugins:
             # in case the current plugin in iteration is not loaded, it's
-            # not possible to load it's unit tests, should continue loop
-            if not plugin.is_loaded(): continue
+            # not possible to load it's unit tests and so an exception must
+            # be raised indicating that the issue preventing the plugin
+            # from being loaded should be solved before unit test execution
+            if not plugin.is_loaded(): raise exceptions.ColonyException(
+                "failed to load '%s' v%s for unit test execution" %
+                (plugin.id, plugin.version)
+            )
 
             # creates a new test suite and a new loader instances that are
             # going to be used to load the tests for the current plugin
