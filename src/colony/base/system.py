@@ -53,8 +53,6 @@ import threading
 import traceback
 import subprocess
 
-import __builtin__
-
 import logging.handlers
 
 import colony.libs
@@ -133,9 +131,6 @@ DEFAULT_PLUGIN_PATHS_FILE_PATH = u"config/general/plugins.pth"
 
 DEFAULT_WORKSPACE_PATH = u"~/.colony_workspace"
 """ The default workspace path """
-
-DEFAULT_EXECUTION_HANDLING_METHOD = "handle_execution"
-""" The default execution handling method """
 
 DEFAULT_UNLOAD_SYSTEM_TIMEOUT = 600.0
 """ The default unload system timeout """
@@ -258,19 +253,21 @@ class Plugin(object):
     colony specification for python.
     """
 
-    id = "none"
-    """ The id of the plugin """
+    id = None
+    """ The id of the plugin, this is considered to be the
+    primary identifier of the plugin and should be unique """
 
-    name = "none"
-    """ The name of the plugin """
+    name = None
+    """ The name of the plugin as a more relaxed and verbose
+    way of presenting the plugin """
 
-    description = "none"
+    description = None
     """ The description of the plugin """
 
-    version = "none"
+    version = None
     """ The version of the plugin """
 
-    author = "none"
+    author = None
     """ The author of the plugin """
 
     loading_type = EAGER_LOADING_TYPE
@@ -1486,17 +1483,23 @@ class PluginManager:
     jython or iron python) """
 
     condition = None
-    """ The condition used in the event queue """
+    """ The condition used in the event queue of the
+    plugin manager, this thread synchronization mechanism
+    will ensure no race conditions on event queue """
 
     init_complete = False
-    """ The initialization complete flag """
+    """ The initialization complete flag, that indicates
+    that the manager's infra-structure has been completely
+    and correctly loaded (as expected) """
 
     init_complete_handlers = []
     """ The list of handlers to be called at the end of
     the plugin manager initialization """
 
     main_loop_active = True
-    """ The boolean value for the main loop activation """
+    """ The boolean value for the main loop activation
+    if this value in unset the manager's loop will stop
+    and the plugins will be unloaded gracefully """
 
     allow_threads = True
     """ The boolean value indicating if threads are allowed
@@ -1531,9 +1534,6 @@ class PluginManager:
     daemon_file_path = None
     """ The file path to the daemon file, for information control """
 
-    execution_command = None
-    """ The command to be executed on start (script mode) """
-
     prefix_paths = []
     """ The list of manager path relative paths to be used as
     reference for sub-projects """
@@ -1543,9 +1543,6 @@ class PluginManager:
 
     workspace_path = DEFAULT_WORKSPACE_PATH
     """ The current workspace path """
-
-    attributes_map = {}
-    """ The attributes map """
 
     plugin_manager_timestamp = 0
     """ The plugin manager timestamp, this value should be set
@@ -1699,9 +1696,7 @@ class PluginManager:
         container = "default",
         prefix_paths = [],
         daemon_pid = None,
-        daemon_file_path = None,
-        execution_command = None,
-        attributes_map = {}
+        daemon_file_path = None
     ):
         """
         Constructor of the class.
@@ -1749,11 +1744,6 @@ class PluginManager:
         @type daemon_file_path: String
         @param daemon_file_path: The file path to the daemon file, for
         information control.
-        @type execution_command: String
-        @param execution_command: The command to be executed on start (script mode).
-        @type attributes_map: Dictionary
-        @param attributes_map: The map associating the attribute key and the
-        attribute value.
         """
 
         self.manager_path = manager_path
@@ -1773,8 +1763,6 @@ class PluginManager:
         self.prefix_paths = prefix_paths
         self.daemon_pid = daemon_pid
         self.daemon_file_path = daemon_file_path
-        self.execution_command = execution_command
-        self.attributes_map = attributes_map
 
         self.uid = util.get_timestamp_uid()
         self.condition = threading.Condition()
@@ -2120,7 +2108,7 @@ class PluginManager:
 
             # defines the plugin system configuration, consisting of a map
             # containing directives that will condition the initialization
-            plugin_system_configuration = dict(
+            configuration = dict(
                 library_paths = self.library_paths,
                 meta_paths = self.meta_paths,
                 plugin_paths =  self.plugin_paths,
@@ -2130,7 +2118,7 @@ class PluginManager:
             # starts the plugin loading process, this should create the
             # plugin instances and load the ones required to be loading
             # it should also execute the finish boot tasks (if required)
-            self.init_plugin_system(plugin_system_configuration)
+            self.init_plugin_system(configuration)
 
             # retrieves the current time as the final one and then uses
             # it to calculate the delta (used time) rounding into into
@@ -2352,7 +2340,7 @@ class PluginManager:
         # verifies if the current execution mode requires a detached
         # support for the standard input and if that's not the case
         # replaces the current standard input with the wait input (no blocking)
-        is_detached = self.execution_command or self.daemon_pid or self.daemon_file_path
+        is_detached = self.daemon_pid or self.daemon_file_path
         if not is_detached: return
         sys.stdin = util.WaitInput()
 
@@ -2477,16 +2465,8 @@ class PluginManager:
         self.notify_daemon_file()
 
 
-
         self.run_test()
 
-
-
-
-
-        # executes the execution command in case one exists, note that this
-        # is a legacy and not supported operation in colony
-        self.execute_command()
 
     def set_python_path(self, library_paths, plugin_paths):
         """
@@ -2980,11 +2960,6 @@ class PluginManager:
         Loads the set of startup plugins, starting the system bootup process.
         """
 
-        # in case an execution command is defined must
-        # return immediately because startup plugins are
-        # not mean to be loaded in execution command
-        if self.execution_command: return
-
         # iterates over all the plugin instances
         for plugin in self.plugin_instances:
             # searches for the startup type in the plugin capabilities
@@ -2996,11 +2971,6 @@ class PluginManager:
         """
         Loads the set of main plugins, starting the system bootup process.
         """
-
-        # in case an execution command is defined must
-        # return immediately because main plugins are
-        # not mean to be loaded in execution command
-        if self.execution_command: return
 
         # iterates over all the plugin instances
         for plugin in self.plugin_instances:
@@ -3145,140 +3115,6 @@ class PluginManager:
         # returns the "final" result value for the execution, taking into
         # account that one "simple" error will return invalid as boolean
         return result
-
-    def execute_command(self):
-        """
-        Executes the currently defined execution command (if any).
-
-        This is considered to be a legacy operation and should not
-        be used as a way of executing a command "inside" colony.
-        """
-
-        # in case an execution command is not defined, must
-        # return immediately as there's nothing to be done
-        if not self.execution_command: return
-
-        # splits the execution command stripping every value
-        execution_command_splitted = [value.strip() for value in self.execution_command.split(" ", 1)]
-
-        # retrieves both the base and argument values
-        base = execution_command_splitted[0]
-        argument_values = len(execution_command_splitted) > 1 and execution_command_splitted[1] or None
-
-        # retrieves the arguments splitting them in case the arguments value
-        # is not an invalid value
-        arguments = argument_values and argument_values.split("$") or []
-
-        # creates the arguments list
-        arguments_list = []
-
-        # iterates over the arguments
-        for argument in arguments:
-            # splits the argument
-            argument_split = argument.rsplit("%", 1)
-
-            # retrieves the argument split length
-            argument_split_length = len(argument_split)
-
-            # retrieves the argument value from the first
-            # element of the argument split
-            argument_value = argument_split[0]
-
-            # in case the length of the argument split
-            # is two
-            if argument_split_length == 2:
-                # retrieves the argument type
-                argument_type = argument_split[1]
-
-                # in case the argument type is null
-                if argument_type == "null":
-                    # sets the argument value as none
-                    argument_value = None
-                else:
-                    # retrieves the type converted function
-                    type_converter_function = getattr(__builtin__, argument_type)
-
-                    # uses the type converter function to convert the
-                    # argument value
-                    argument_value = type_converter_function(argument_value)
-            elif argument_split_length > 2:
-                # raises the invalid argument exception
-                raise exceptions.InvalidArgument(argument)
-
-            # adds the argument value to the arguments list
-            arguments_list.append(argument_value)
-
-        # sets the arguments as the arguments list
-        arguments = arguments_list
-
-        # splits the base value
-        base_splitted = base.split(":")
-
-        # retrieves the length of the base splitted
-        base_splitted_length = len(base_splitted)
-
-        # retrieves the plugin id from the base value
-        plugin_id = base_splitted[0]
-
-        # retrieves the name of the method to be called
-        method_name = base_splitted_length > 1 and base_splitted[1] or DEFAULT_EXECUTION_HANDLING_METHOD
-
-        # creates the full method name with the plugin id and the method name
-        full_method_name = plugin_id + ":" + method_name
-
-        # retrieves the plugin for the plugin id
-        plugin = self._get_plugin_by_id(plugin_id)
-
-        try:
-            # in case the plugin was not retrieved successfully,
-            # raises the invalid command exception
-            if not plugin:
-                raise exceptions.InvalidCommand("plugin not found '%s'" % plugin_id)
-
-            # loads the plugin
-            self.__load_plugin(plugin)
-
-            # in case the plugin does not have a method with the given name,
-            # raises the invalid command exception
-            if not hasattr(plugin, method_name):
-                raise exceptions.InvalidCommand(
-                    "method not found '%s' for plugin '%s'" %
-                    (method_name, plugin_id)
-                )
-
-            # retrieves the method from the plugin
-            method = getattr(plugin, method_name)
-
-            # retrieves the length of the arguments
-            argments_length = len(arguments)
-
-            # calculates the expected arguments length
-            expected_arguments_length = method.func_code.co_argcount - 1
-
-            # in case the length of the arguments list is different
-            # than the expected arguments length
-            if not argments_length == expected_arguments_length:
-                # raises the invalid command exception
-                raise exceptions.InvalidCommand(
-                    "invalid number of arguments for method '%s' (expected %d given %d)" %
-                    (full_method_name, expected_arguments_length, argments_length)
-                )
-
-            # calls the method with the given arguments
-            method(*arguments)
-        except Exception, exception:
-            # prints an error message, then logs the stack trace
-            # resulting from the current execution and returns
-            # an invalid error code to the caller method
-            self.error("Error while executing command: " + unicode(exception))
-            self.log_stack_trace(level = logging.WARNING)
-            self.return_code = 1
-
-        # unsets the main loop (disables the loop)
-        self.main_loop_active = False
-
-        # unloads the system using no thread safety
-        self.unload_system(False)
 
     def __load_plugin(self, plugin, type = None, loading_type = None):
         """
@@ -6273,11 +6109,11 @@ class PluginDependency(Dependency):
     The plugin dependency class.
     """
 
-    id = "none"
+    id = None
     """ The identifier of the plugin that is being represented
     by the current dependency instance """
 
-    version = "none"
+    version = None
     """ The version of the plugin that is going to be
     used for the plugin dependency representation """
 
@@ -6566,10 +6402,11 @@ class OperativeSystemCondition(Condition):
     The operative system condition class.
     """
 
-    operative_system_name = "none"
-    """ The operative system name """
+    operative_system_name = None
+    """ The operative system name, that is going to
+    be "tested" as part of this condition structure """
 
-    def __init__(self, operative_system_name = "none"):
+    def __init__(self, operative_system_name = None):
         """
         Constructor of the class.
 
@@ -6587,17 +6424,11 @@ class OperativeSystemCondition(Condition):
         @return: The result of the test (if successful or not).
         """
 
-        if not Condition.test_condition(self):
-            return False
-
-        # retrieves the current operative system name
-        current_operative_system_name = util.get_operative_system()
-
-        # in case the current operative system is the same as the defined in the condition
-        if current_operative_system_name == self.operative_system_name:
-            return True
-        else:
-            return False
+        if not Condition.test_condition(self): return False
+        current_name = util.get_operative_system()
+        is_same = current_name == self.operative_system_name
+        if is_same: return True
+        else: return False
 
 class Capability:
     """
@@ -6649,7 +6480,7 @@ class Capability:
         # iterates over all the lists
         for index in range(length_self):
             # compares both values
-            if list_value_self[index] != list_value_capability[index]:
+            if not list_value_self[index] == list_value_capability[index]:
                 # returns false
                 return False
 
@@ -6731,7 +6562,7 @@ class Capability:
         # iterates over the list value self range
         for index in range(list_value_self_length):
             # in case the values of each list are different
-            if list_value_self[index] != list_value_capability[index]:
+            if not list_value_self[index] == list_value_capability[index]:
                 # returns false
                 return False
 
@@ -6807,7 +6638,7 @@ class Event:
         # iterates over all the lists
         for index in range(length_self):
             # compares both values
-            if list_value_self[index] != list_value_event[index]:
+            if not list_value_self[index] == list_value_event[index]:
                 # returns false
                 return False
 
@@ -6852,7 +6683,7 @@ class Event:
         # iterates over the list value self range
         for index in range(list_value_self_length):
             # in case the values of each list are different
-            if list_value_self[index] != list_value_event[index]:
+            if not list_value_self[index] == list_value_event[index]:
                 # returns false
                 return False
 

@@ -54,14 +54,12 @@ USAGE = "Help:\n\
 --run_mode[-r]=development/test/production - sets the run mode to be used\n\
 --container[-c]=default - sets the container to be used\n\
 --daemon_pid[-o]=(DAEMON_PID) - sets the pid of the parent daemon\n\
---attributes[-a]=... - sets the attributes to be used\n\
 --config_file[-f]=(CONFIGURATION_FILE) - sets the file path to the configuration file\n\
 --daemon_file[-d]=(DAEMON_FILE) - sets the file path to the daemon file\n\
 --manager_dir[-m]=(PLUGIN_DIR) - sets the plugin directory to be used by the manager\n\
 --logger_dir[-g]=(LOGGER_DIR) - sets the logger directory to be used by the manager for the logger\n\
 --library_dir[-i]=(LIBRARY_DIR_1;LIBRARY_DIR_2;...) - sets the series of library directories to use\n\
---plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use\r\
---execution_command[-e]=plugin_id:method [argument1 argument2 ...] - executes the given execution command at the end of loading"
+--plugin_dir[-p]=(PLUGIN_DIR_1;PLUGIN_DIR_2;...) - sets the series of plugin directories to use"
 """ The usage string for the command line arguments,
 this is going to be display as part of the help string """
 
@@ -145,9 +143,7 @@ def run(
     container = "default",
     prefix_paths = [],
     daemon_pid = None,
-    daemon_file_path = None,
-    execution_command = None,
-    attributes_map = {}
+    daemon_file_path = None
 ):
     """
     Starts the loading of the plugin manager. This should be the
@@ -194,10 +190,6 @@ def run(
     @param daemon_pid: The pid of the daemon process running the instance of plugin manager.
     @type daemon_file_path: String
     @param daemon_file_path: The file path to the daemon file, for information control.
-    @type execution_command: String
-    @param execution_command: The command to be executed by the plugin manager (script mode).
-    @type attributes_map: Dictionary
-    @param attributes_map: The name of the plugin manager container.
     @rtype: int
     @return: The return code.
     """
@@ -247,9 +239,7 @@ def run(
         container = container,
         prefix_paths = prefix_paths,
         daemon_pid = daemon_pid,
-        daemon_file_path = daemon_file_path,
-        execution_command = execution_command,
-        attributes_map = attributes_map
+        daemon_file_path = daemon_file_path
     )
 
     # resolves the string based level into the proper integer
@@ -275,7 +265,7 @@ def main():
     try:
         options, _args = getopt.getopt(
             sys.argv[1:],
-            "hnv:l:r:c:o:a:f:d:m:g:i:t:p:e:",
+            "hnv:l:r:c:o:f:d:m:g:i:t:p:",
             [
                  "help"
                  "noloop",
@@ -284,15 +274,13 @@ def main():
                  "run_mode=",
                  "container=",
                  "daemon_pid=",
-                 "attributes=",
                  "config_file=",
                  "daemon_file=",
                  "manager_dir=",
                  "logger_dir=",
                  "library_dir=",
                  "meta_dir=",
-                 "plugin_dir=",
-                 "execution_command="
+                 "plugin_dir="
             ]
         )
     except getopt.GetoptError, error:
@@ -317,7 +305,6 @@ def main():
     run_mode = None
     container = "default"
     daemon_pid = None
-    attributes_map = None
     config_file_path = DEFAULT_CONFIG_FILE_PATH
     daemon_file_path = None
     manager_path = colony.resolve_manager(RELATIVE_MANAGER_PATH)
@@ -325,7 +312,6 @@ def main():
     library_path = None
     meta_path = None
     plugin_path = None
-    execution_command = None
 
     # iterates over all the options
     for option, value in options:
@@ -344,8 +330,6 @@ def main():
             container = value
         elif option in ("-o", "--daemon_pid"):
             daemon_pid = int(value)
-        elif option in ("-a", "--attributes"):
-            attributes_map = parse_attributes(value)
         elif option in ("-f", "--config_file"):
             config_file_path = value.decode(file_system_encoding)
         elif option in ("-d", "--daemon_file"):
@@ -360,8 +344,6 @@ def main():
             meta_path = value.decode(file_system_encoding)
         elif option in ("-p", "--plugin_dir"):
             plugin_path = value.decode(file_system_encoding)
-        elif option in ("-e", "--execution_command"):
-            execution_command = value.decode(file_system_encoding)
         else:
             assert False, "unhandled option"
 
@@ -418,42 +400,11 @@ def main():
         container,
         prefix_paths,
         daemon_pid,
-        daemon_file_path,
-        execution_command,
-        attributes_map
+        daemon_file_path
     )
 
     # exits the process with return code
     exit(return_code)
-
-def parse_attributes(attributes_string):
-    # creates an attributes map
-    attributes_map = {}
-
-    # strips the attributes string
-    attributes_string_stripped = attributes_string.strip()
-
-    # splits the attributes string
-    attributes_string_list = attributes_string_stripped.split(",")
-
-    # iterates over all the attributes string list
-    for attributes_string_item in attributes_string_list:
-        # strips the attributes string item
-        attributes_string_item_stripped = attributes_string_item.strip()
-
-        # splits the attributes string item
-        attributes_string_item_splitted = attributes_string_item_stripped.split(":")
-
-        # in case the length of the tuple is two (is valid)
-        if len(attributes_string_item_splitted) == 2:
-            # unpacks the attribute tuple
-            attribute_key, attribute_value = attributes_string_item_splitted
-
-            # sets the attribute in the attributes map
-            attributes_map[attribute_key] = attribute_value
-
-    # returns the attributes map
-    return attributes_map
 
 def parse_configuration(
     config_file_path,
