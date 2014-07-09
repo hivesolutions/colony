@@ -49,8 +49,10 @@ class LazyClass(object):
 
     def __eq__(self, other):
         if other == None: return True
-
         return hash(self) == hash(other)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     def __add__(self, other):
         return other
