@@ -3117,8 +3117,8 @@ class PluginManager:
             # the result boolean value for the test execution
             runner = unittest.TextTestRunner(verbosity = verbosity)
             run_result = runner.run(suite)
-            result = result and run_result.errors == 0
-            result = result and run_result.failures == 0
+            result = result and not run_result.errors
+            result = result and not run_result.failures
 
         # unsets the main loop as active so that the current execution workflow
         # is avoided and the process workflow returned to the caller process
