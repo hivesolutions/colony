@@ -1,4 +1,5 @@
 {
+    "1.1.13" : ["Fixed cwd bug in colony start execution"],
     "1.1.12" : ["Support for env variables and path configuration"],
     "1.1.11" : ["Fixed minimal bug in testing"],
     "1.1.10" : ["Support for unit testing inside colony base"],
