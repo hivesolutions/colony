@@ -32,8 +32,8 @@ In order to run the complete set of available tests for the deployment use one o
 line flavors:
 
 ```bash
-    colony test
-    MODE=test colony
+colony test
+MODE=test colony
 ```
 
 ## Installation
