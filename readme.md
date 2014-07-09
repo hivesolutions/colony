@@ -26,16 +26,6 @@ Colony aims to eliminate the complexity typically associated with the creation o
 
 To actually do something useful look into [How to Establish your Colony in 3 Easy Steps](http://getcolony.com/docs/colony/documentation_how_to_establish_your_colony_in_3_easy_steps.html)
 
-## Testing
-
-In order to run the complete set of available tests for the deployment use one of this command
-line flavors:
-
-```bash
-colony test
-MODE=test colony
-```
-
 ## Installation
 
 ### For development
@@ -62,6 +52,12 @@ the build operation for the generated .json file, effectively build the package 
 * `cpm require [path]` - installs the complete set of packages defined in the requirements file
 * `cpm upload [target]` - generates a package for the provided path and then uploads it to the currently
 configured primary repository
+
+## Testing
+
+In order to run the complete set of available tests for the deployment use eeither `colony test`
+or `MODE=test colony` and Colony Manager will boot directly to unit testing and exit in error in
+case at least one test fails.
 
 ## Features
 
