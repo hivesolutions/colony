@@ -66,7 +66,7 @@ class Protected(object):
 
     def __new__(cls, *args, **kwargs):
         # creates a new object reference
-        object_reference = object.__new__(cls)
+        object_reference = cls.__new__()
 
         # initializes the class reference with the new
         # object reference and the arguments
