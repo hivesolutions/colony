@@ -2101,14 +2101,16 @@ class PluginManager:
             # generates the system information map
             self.generate_system_information_map()
 
-            # gets all modules from all plugin paths
+            # iterates over the complete set of paths registered as base
+            # paths for plugin loading, trying to find the plugin modules
             for plugin_path in self.plugin_paths:
                 # retrieves all the modules from the plugin path and uses them
                 # to extend the referred modules list
                 plugin_path_modules = self.get_all_modules(plugin_path, suffix = "plugin")
                 self.referred_modules.extend(plugin_path_modules)
 
-            # defines the plugin system configuration
+            # defines the plugin system configuration, consisting of a map
+            # containing directives that will condition the initialization
             plugin_system_configuration = dict(
                 library_paths = self.library_paths,
                 meta_paths = self.meta_paths,
@@ -2116,7 +2118,9 @@ class PluginManager:
                 plugins = self.referred_modules
             )
 
-            # starts the plugin loading process
+            # starts the plugin loading process, this should create the
+            # plugin instances and load the ones required to be loading
+            # it should also execute the finish boot tasks (if required)
             self.init_plugin_system(plugin_system_configuration)
 
             # retrieves the current time as the final one and then uses
@@ -2223,9 +2227,13 @@ class PluginManager:
         the bigger this value the greater time to respond.
         """
 
-        # main loop cycle
+        # runs the plugin manager's main loop while the proper
+        # active flag is set, this is used as the primary control
+        # structure to be used for disabling the manager
         while self.main_loop_active:
-            # acquires the condition
+
+            # acquires the condition so that the event queue
+            # may be accessed in a safe fashion
             self.condition.acquire()
 
             # iterates while the event queue has no items waiting
@@ -2268,16 +2276,12 @@ class PluginManager:
         @param event: The event to add to the list of events in the plugin manager.
         """
 
-        # acquires the condition
+        # acquired the proper condition, then adds the event
+        # to the proper queue, notifies and releases the condition
+        # providing a safe access to the underlying queue
         self.condition.acquire()
-
-        # adds the event to the event queue
         self.event_queue.append(event)
-
-        # notifies the condition
         self.condition.notify()
-
-        # releases the condition
         self.condition.release()
 
     def expand_workspace_path(self):
@@ -2287,7 +2291,9 @@ class PluginManager:
         workspace.
         """
 
-        # expands the workspace path
+        # expands the workspace path, meaning that if this
+        # is an user related directory it will be expanded
+        # into a fully (normalized) path
         self.workspace_path = os.path.expanduser(self.workspace_path)
 
     def create_workspace_path(self):
@@ -2296,10 +2302,11 @@ class PluginManager:
         not exists already.
         """
 
-        # in case the workspace path does not exists
-        if not os.path.exists(self.workspace_path):
-            # creates the workspace path as a directory
-            os.mkdir(self.workspace_path)
+        # in case the workspace path already exists in the
+        # current file system returns the control flow otherwise
+        # starts the creation of the proper directory
+        if os.path.exists(self.workspace_path): return
+        os.mkdir(self.workspace_path)
 
     def update_workspace_path(self):
         """
@@ -2307,11 +2314,9 @@ class PluginManager:
         path and creating the workspace path if necessary.
         """
 
-        # expands the workspace path
+        # expands the workspace path to obtain a valid one an then
+        # creates the workspace path directory if required
         self.expand_workspace_path()
-
-        # creates the workspace path directory
-        # if necessary
         self.create_workspace_path()
 
     def check_standard_input(self):
@@ -2359,7 +2364,8 @@ class PluginManager:
         @return: All the modules in the given path.
         """
 
-        # starts the modules list
+        # starts the modules list, that will contain the complete set
+        # of modules for the requested suffix value
         modules = []
 
         # in case the path does not exist
@@ -2367,7 +2373,8 @@ class PluginManager:
             self.warning("Path '%s' does not exist in the current filesystem" % (path))
             return modules
 
-        # retrieves the directory list for the path
+        # retrieves the directory list for the path, this should
+        # provide the complete set of file names in the directory
         dir_list = os.listdir(path)
 
         # iterates over all the file names
@@ -2398,7 +2405,8 @@ class PluginManager:
             # adds the module into it
             if not module_name in modules: modules.append(module_name)
 
-        # returns the modules list
+        # returns the modules list, containing the complete set of
+        # modules that respect the provided set of rules
         return modules
 
     def init_plugin_system(self, configuration):
@@ -2483,7 +2491,7 @@ class PluginManager:
         # structures for further loading of the modules
         for plugin_path in plugin_paths:
             # in case the plugin path already exits in the
-            # system path no need to continue with the proces
+            # system path no need to continue with the process
             if plugin_path in sys.path: continue
 
             # normalizes the plugin path and inserts the
@@ -5547,10 +5555,9 @@ class PluginManager:
         @param workspace_path: The workspace path.
         """
 
-        # sets the workspace path
+        # sets the workspace path in the current instance and then
+        # updates the workspace path (creating it if required)
         self.workspace_path = workspace_path
-
-        # updates the workspace path
         self.update_workspace_path()
 
     def set_plugin_manager_timestamp(self, plugin_manager_timestamp = None):
