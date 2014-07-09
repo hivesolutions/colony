@@ -2272,8 +2272,13 @@ class PluginManager:
         """
         Adds an event to the list of events in the plugin manager.
 
+        The proper thread synchronization mechanisms are going to
+        be used to ensure that the adding of the event is thread
+        safe as expected by the specification
+
         @type event: Event
-        @param event: The event to add to the list of events in the plugin manager.
+        @param event: The event to add to the list of events in
+        the plugin manager.
         """
 
         # acquired the proper condition, then adds the event
