@@ -81,7 +81,7 @@ class ColonyTestCase(unittest.TestCase):
         # raises a failure exception as the type of the value
         # is not the one expected by the assert operation
         raise self.failureException(
-            "value is of type %s instead of expected type %s" %\
+            "value is of type %s instead of expected type %s" %
             (value_type, expected_type)
         )
 
