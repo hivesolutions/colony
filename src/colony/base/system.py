@@ -4114,10 +4114,10 @@ class PluginManager:
         plugin = self._get_plugin_by_id(plugin_id)
 
         for plugin_capability_allowed in plugin.capabilities_allowed:
-            if plugin_capability_allowed in self.capabilities_plugins_map:
-                capability_plugins = self.capabilities_plugins_map[plugin_capability_allowed]
-                if plugin in capability_plugins:
-                    capability_plugins.remove(plugin)
+            if not plugin_capability_allowed in self.capabilities_plugins_map: continue
+            capability_plugins = self.capabilities_plugins_map[plugin_capability_allowed]
+            if not plugin in capability_plugins: continue
+            capability_plugins.remove(plugin)
 
     def load_plugin(self, plugin_id, type = None):
         """
