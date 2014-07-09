@@ -55,7 +55,7 @@ configured primary repository
 
 ## Testing
 
-In order to run the complete set of available tests for the deployment use eeither `colony test`
+In order to run the complete set of available tests for the deployment use either `colony test`
 or `MODE=test colony` and Colony Manager will boot directly to unit testing and exit in error in
 case at least one test fails.
 
