@@ -541,7 +541,7 @@ class Plugin(object):
         # be raised indicating the problem (assertion)
         if plugin_capability_tuple in self.allowed_loaded_capability:
             raise exceptions.PluginSystemException(
-                "invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" %\
+                "invalid plugin allowed loading (duplicate) '%s' v%s in '%s' v%s" %
                 (plugin.name, plugin.version, self.name, self.version)
             )
 
@@ -568,7 +568,7 @@ class Plugin(object):
         # prints a debug message about the loading of the plugin inside
         # the current plugin (for diagnostic purposes)
         self.debug(
-            "Loading plugin '%s' v%s in '%s' v%s" %\
+            "Loading plugin '%s' v%s in '%s' v%s" %
             (plugin.name, plugin.version, self.name, self.version)
         )
 
@@ -593,7 +593,7 @@ class Plugin(object):
         # and an exception must be raised indicating it
         if not plugin_capability_tuple in self.allowed_loaded_capability:
             raise exceptions.PluginSystemException(
-                "invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" %\
+                "invalid plugin allowed unloading (not existent) '%s' v%s in '%s' v%s" %
                 (plugin.name, plugin.version, self.name, self.version)
             )
 
@@ -617,7 +617,7 @@ class Plugin(object):
         # prints an info message about the unloading of the plugin
         # so that the developer is notified about the operation
         self.info(
-            "Unloading plugin '%s' v%s in '%s' v%s" %\
+            "Unloading plugin '%s' v%s in '%s' v%s" %
             (plugin.name, plugin.version, self.name, self.version)
         )
 
@@ -638,7 +638,7 @@ class Plugin(object):
         self.dependencies_loaded.append(plugin)
         setattr(self, plugin.short_name + "_plugin", plugin)
         self.debug(
-            "Plugin dependency '%s' v%s injected in '%s' v%s" %\
+            "Plugin dependency '%s' v%s injected in '%s' v%s" %
             (plugin.name, plugin.version, self.name, self.version)
         )
 
@@ -810,7 +810,7 @@ class Plugin(object):
         if plugin in self.event_plugins_fired_loaded_map[event_name]: return
         self.event_plugins_fired_loaded_map[event_name].append(plugin)
         self.debug(
-            "Registering event '%s' from '%s' v%s in '%s' v%s" %\
+            "Registering event '%s' from '%s' v%s in '%s' v%s" %
             (event_name, plugin.name, plugin.version, self.name, self.version)
         )
 
@@ -828,7 +828,7 @@ class Plugin(object):
         if not plugin in self.event_plugins_fired_loaded_map[event_name]: return
         self.event_plugins_fired_loaded_map[event_name].remove(plugin)
         self.debug(
-            "Unregistering event '%s' from '%s' v%s in '%s' v%s" %\
+            "Unregistering event '%s' from '%s' v%s in '%s' v%s" %
             (event_name, plugin.name, plugin.version, self.name, self.version)
         )
 
@@ -856,7 +856,7 @@ class Plugin(object):
             for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
                 # prints a debug message
                 self.debug(
-                    "Notifying '%s' v%s about event '%s' generated in '%s' v%s" %\
+                    "Notifying '%s' v%s about event '%s' generated in '%s' v%s" %
                     (
                         event_plugin_loaded.name,
                         event_plugin_loaded.version,
@@ -2166,25 +2166,35 @@ class PluginManager:
         # creates the kill system timer, to kill the system
         # if it hangs in shutdown and starts it so that the
         # system will be able to kill itself after a timeout
-        self.kill_system_timer = threading.Timer(DEFAULT_UNLOAD_SYSTEM_TIMEOUT, self._kill_system_timeout)
+        self.kill_system_timer = threading.Timer(
+            DEFAULT_UNLOAD_SYSTEM_TIMEOUT,
+            self._kill_system_timeout
+        )
         self.kill_system_timer.start()
 
-        # iterates over all the plugin instances
+        # iterates over all the plugin instances running the unload process
+        # for all of them and according to their set of skill/capabilities
         for plugin_instance in self.plugin_instances:
-            # in case the plugin instance is loaded
-            if plugin_instance.is_loaded():
-                # in case the plugin contains the main type capability
-                if MAIN_TYPE in plugin_instance.capabilities:
-                    # unloads the plugin using the main type unloading
-                    self._unload_plugin(plugin_instance, None, MAIN_TYPE)
-                # in case the plugin contains the thread type capability
-                elif THREAD_TYPE in plugin_instance.capabilities:
-                    # unloads the plugin using the thread type unloading
-                    self._unload_plugin(plugin_instance, None, THREAD_TYPE)
-                # otherwise
-                else:
-                    # unloads the plugin normally
-                    self._unload_plugin(plugin_instance, None)
+            print plugin_instance
+
+            # in case the plugin instance is not loaded there's
+            # no need to unload it from the current context and
+            # the current iteration step may be skipped
+            if not plugin_instance.is_loaded(): continue
+
+            # in case the current plugin instance is of type main
+            # the special main type unloading process should be used
+            if MAIN_TYPE in plugin_instance.capabilities:
+                self._unload_plugin(plugin_instance, unloading_type = MAIN_TYPE)
+
+            # otherwise in case the plugin is thread based the also
+            # special mode for threads should be used instead
+            elif THREAD_TYPE in plugin_instance.capabilities:
+                self._unload_plugin(plugin_instance, unloading_type = THREAD_TYPE)
+
+            # otherwise it should be a "normal" plugin and the normal
+            # process for the plugin unloading should be used instead
+            else: self._unload_plugin(plugin_instance)
 
         # in case thread safety is requested
         if thread_safe:
@@ -2459,6 +2469,7 @@ class PluginManager:
 
 
         self.run_test()
+
 
 
 
@@ -3057,7 +3068,7 @@ class PluginManager:
             # on this file (avoids leaks)
             file.close()
 
-    def run_test(self):
+    def run_test(self, verbosity = 1, raise_e = True):
         """
         Runs the test mode for the current plugin manager, this should
         consist on the retrieval of the test capability aware plugins
@@ -3066,6 +3077,12 @@ class PluginManager:
         The method should return a boolean value indicating if the complete
         set of tests were correctly executed or not.
 
+        @type verbosity: int
+        @param verbosity: The amount of verbosity (larger more verbose)
+        that is going to be used in the test runner.
+        @type raise_e: bool
+        @param raise_e: If an exception should be raised in case the tests
+        execution process fails (one or more tests failed).
         @rtype: bool
         @return: If the execution of the unit tests from the proper plugins
         was successful or not, the details of the execution should be read
@@ -3100,10 +3117,20 @@ class PluginManager:
             # creates the unit test runner and then runs the created suite
             # retrieving the final execution result that is used to compute
             # the result boolean value for the test execution
-            runner = unittest.TextTestRunner(verbosity = 1)
+            runner = unittest.TextTestRunner(verbosity = verbosity)
             run_result = runner.run(suite)
             result = result and run_result.errors == 0
             result = result and run_result.failures == 0
+
+        # unsets the main loop as active so that the current execution workflow
+        # is avoided and the process workflow returned to the caller process
+        self.main_loop_active = False
+
+        # in case the raise (exception) flag is set and the result is invalid
+        # and exception must be raised indicating the execution problem
+        if raise_e and not result: raise exceptions.ColonyException(
+            "failed to execute some of the unit tests"
+        )
 
         # returns the "final" result value for the execution, taking into
         # account that one "simple" error will return invalid as boolean
@@ -3205,7 +3232,7 @@ class PluginManager:
             # raises the invalid command exception
             if not hasattr(plugin, method_name):
                 raise exceptions.InvalidCommand(
-                    "method not found '%s' for plugin '%s'" %\
+                    "method not found '%s' for plugin '%s'" %
                     (method_name, plugin_id)
                 )
 
@@ -3223,7 +3250,7 @@ class PluginManager:
             if not argments_length == expected_arguments_length:
                 # raises the invalid command exception
                 raise exceptions.InvalidCommand(
-                    "invalid number of arguments for method '%s' (expected %d given %d)" %\
+                    "invalid number of arguments for method '%s' (expected %d given %d)" %
                     (full_method_name, expected_arguments_length, argments_length)
                 )
 
@@ -3619,19 +3646,22 @@ class PluginManager:
 
     def _unload_thread_plugins(self):
         """
-        Unloads all the thread based plugins.
+        Unloads all the thread based plugins, unblocking them
+        from the current workload. This is a blocking operation
+        that may take some time to be finished.
         """
 
-        # creates the exit event
+        # creates the exit event that will be used to "kill"
+        # each of the plugin threads that is running
         exit_event = util.Event("exit")
 
         # iterates over all the available plugin threads
-        # joining all the threads
+        # joining all the threads into the current thread
+        # this is a blocking call that may take some time
         for plugin_thread in self.plugin_threads:
-            # sends the exit event to the plugin thread
-            plugin_thread.add_event(exit_event)
-
+            # sends the exit event to the plugin thread and then
             # joins the plugin thread (waiting for the end of it)
+            plugin_thread.add_event(exit_event)
             plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
 
     def test_plugin_load(self, plugin):
@@ -5173,7 +5203,7 @@ class PluginManager:
             # to notify them about the new event that has just been triggered
             for event_plugin_loaded in self.event_plugins_fired_loaded_map[event_or_super_event]:
                 self.debug(
-                    "Notifying '%s' v%s about event '%s' generated in plugin manager" %\
+                    "Notifying '%s' v%s about event '%s' generated in plugin manager" %
                     (event_plugin_loaded.name, event_plugin_loaded.version, event_name)
                 )
                 event_plugin_loaded.event_handler(event_name, *event_args)
@@ -6092,7 +6122,10 @@ class PluginManager:
             # print an information message about the unloading
             # of the current system, this is printed at the beginning
             # of the unloading process of the plugin system
-            self.info("Unloading system due to exception: '%s' of type '%s'" % (exception_message, exception_type))
+            self.info(
+                "Unloading system due to exception: '%s' of type '%s'" %
+                (exception_message, exception_type)
+            )
 
             # starts the unloading of the system, this is a blocking
             # method call and may take some time to be completed
@@ -6100,7 +6133,10 @@ class PluginManager:
 
             # print an information message about the unloading
             # that has completed for the current system
-            self.info("Unloaded system due to exception: '%s' of type '%s'" % (exception_message, exception_type))
+            self.info(
+                "Unloaded system due to exception: '%s' of type '%s'" %
+                (exception_message, exception_type)
+            )
         except KeyboardInterrupt, exception:
             # retrieves the message that is going to be used for the
             # representation of the exception in the logging
@@ -6885,15 +6921,11 @@ def is_capability_or_sub_capability_in_list(base_capability, capability_list):
     @return: The result of the test.
     """
 
-    # iterates over all the capabilities in the capability list
     for capability in capability_list:
-        # tests if the capability is capability or
-        # sub capability of the base capability
-        if is_capability_or_sub_capability(base_capability, capability):
-            # returns true
-            return True
+        is_valid = is_capability_or_sub_capability(base_capability, capability)
+        if not is_valid: continue
+        return True
 
-    # returns false
     return False
 
 def convert_to_capability_list(capability_list):
@@ -6902,7 +6934,7 @@ def convert_to_capability_list(capability_list):
     into a list of capability objects (structures).
 
     @type capability_list: List
-    @para capability_list: The list of capability strings.
+    @param capability_list: The list of capability strings.
     @rtype: List
     @return: The list of converted capability objects (structures).
     """
@@ -6987,15 +7019,11 @@ def is_event_or_sub_event_in_list(base_event, event_list):
     @return: The result of the test.
     """
 
-    # iterates over all the events in the event list
     for event in event_list:
-        # tests if the event is event or
-        # sub event of the base event
-        if is_event_or_sub_event(base_event, event):
-            # returns true
-            return True
+        is_valid = is_event_or_sub_event(base_event, event)
+        if not is_valid: continue
+        return True
 
-    # returns false
     return False
 
 def is_event_or_super_event_in_list(base_event, event_list):
@@ -7011,21 +7039,17 @@ def is_event_or_super_event_in_list(base_event, event_list):
     @return: The result of the test.
     """
 
-    # iterates over all the events in the event list
     for event in event_list:
-        # tests if the event is event or
-        # super event of the base event
-        if is_event_or_super_event(base_event, event):
-            # returns true
-            return True
+        is_valid = is_event_or_super_event(base_event, event)
+        if not is_valid: continue
+        return True
 
-    # returns false
     return False
 
 def get_all_events_or_super_events_in_list(base_event, event_list):
     """
     Retrieves all the events or super events in the list.
-    Filters the event list, retrieving only the event thar are events or
+    Filters the event list, retrieving only the event that are events or
     super events of the base event.
 
     @type base_event: String
@@ -7041,11 +7065,11 @@ def get_all_events_or_super_events_in_list(base_event, event_list):
 
     # iterates over all the events in the events list
     for event in event_list:
-        # tests if the event is event or
-        # super event of the base event
-        if is_event_or_super_event(base_event, event):
-            # adds the event to the events or super events list
-            events_or_super_events_list.append(event)
+        # tests if the event is event or super event
+        # of the base event and and adds it to the list
+        # in case such validation is successful
+        if not is_event_or_super_event(base_event, event): continue
+        events_or_super_events_list.append(event)
 
     # returns the events or super events list
     return events_or_super_events_list
@@ -7056,7 +7080,7 @@ def convert_to_event_list(event_list):
     into a list of event objects (structures).
 
     @type event_list: List
-    @para event_list: The list of event strings.
+    @param event_list: The list of event strings.
     @rtype: List
     @return: The list of converted event objects (structures).
     """
@@ -7066,12 +7090,10 @@ def convert_to_event_list(event_list):
 
     # iterates over all the events in the event list
     for event in event_list:
-        # creates the event structure from the
-        # event string
-        event_structure = Event(event)
-
-        # adds the event structure to the list
+        # creates the event structure from the event
+        # string and adds the event structure to the list
         # of event structures
+        event_structure = Event(event)
         event_list_structure.append(event_structure)
 
     # returns the list of event structures
@@ -7079,11 +7101,15 @@ def convert_to_event_list(event_list):
 
 class PluginThread(threading.Thread):
     """
-    The plugin thread class.
+    The plugin thread class, that is used to encapsulate
+    the execution of a thread based plugin inside a new
+    thread. These threads are "joined" at the end of the
+    plugin manager execution (as expected).
     """
 
     plugin = None
-    """ The plugin to be used """
+    """ The reference to plugin to be used in the
+    threads main execution process """
 
     load_complete = False
     """ The load complete flag """
@@ -7137,63 +7163,30 @@ class PluginThread(threading.Thread):
         self.load_complete = False
 
     def set_load_complete(self, value):
-        """
-        Sets the load complete.
-
-        @type value: bool
-        @param value: The load complete.
-        """
-
         self.load_complete = value
 
     def set_end_load_complete(self, value):
-        """
-        Sets the end load complete.
-
-        @type value: bool
-        @param value: The end load complete.
-        """
-
         self.end_load_complete = value
 
     def set_unload_complete(self, value):
-        """
-        Sets the unload complete.
-
-        @type value: bool
-        @param value: The unload complete.
-        """
-
         self.unload_complete = value
 
     def set_end_unload_complete(self, value):
-        """
-        Sets the end unload complete.
-
-        @type value: bool
-        @param value: The end unload complete.
-        """
-
         self.end_unload_complete = value
 
     def add_event(self, event):
         """
-        Adds an event to the event queue.
+        Adds an event to the event queue of the current plugin
+        thread, this is done using the required synchronization
+        mechanisms so that so race conditions are triggered.
 
         @type event: String
         @param event: The event to be added to the event queue.
         """
 
-        # acquires the condition
         self.condition.acquire()
-
-        # adds the event to the event queue
         self.event_queue.append(event)
-
-        # notifies the condition
         self.condition.notify()
-
-        # releases the condition
         self.condition.release()
 
     def process_event(self, event):
@@ -7239,31 +7232,21 @@ class PluginThread(threading.Thread):
 
     def run(self):
         """
-        Starts running the thread.
+        Starts running the thread, this should be considered
+        the thread's main loop and consists of an even queue
+        based iteration that processes requests.
         """
 
-        # loops continuously
         while True:
-            # acquires the condition
             self.condition.acquire()
-
-            # iterates while the event queue is empty
             while not len(self.event_queue):
-                # waits for the condition
                 self.condition.wait()
 
-            # retrieves the event
             event = self.event_queue.pop(0)
-
-            # processes the event
             if self.process_event(event):
-                # releases the condition
                 self.condition.release()
-
-                # returns immediately
                 return
 
-            # releases the condition
             self.condition.release()
 
 class PluginEventThread(threading.Thread):
