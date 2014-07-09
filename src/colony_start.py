@@ -86,12 +86,6 @@ executing file's directory (by default)) """
 DEFAULT_LOGGER_PATH = "log"
 """ The default logger path """
 
-PREFIX_PATH_PREFIX_VALUE = "%"
-""" The prefix path prefix value """
-
-PREFIX_PATH_SUFFIX_VALUE = "_prefix_path%"
-""" The prefix path suffix value """
-
 PLUGIN_PATHS_FILE = "plugins.pth"
 """ The colony plugin paths file """
 
@@ -514,6 +508,17 @@ def parse_configuration(
     layout_mode = layout_mode or "default"
     run_mode = run_mode or "default"
 
+    # retrieves the complete set of configuration variables associated
+    # with the various paths to be used by colony and then adds the
+    # proper static file based configuration values to them, so that
+    # these list are properly started with the initial values
+    library_path_list = colony.conf("LIBRARY_PATH", [], cast = list)
+    meta_path_list = colony.conf("META_PATH", [], cast = list)
+    plugin_path_list = colony.conf("PLUGIN_PATH", [], cast = list)
+    library_path_list = library_path_list + config.library_path_list
+    meta_path_list = meta_path_list + config.meta_path_list
+    plugin_path_list = plugin_path_list + config.plugin_path_list
+
     # in case the library path is defined, must appends a
     # separator to the library path to mark the initial separation
     # otherwise creates a new library path string initializing the
@@ -544,7 +549,7 @@ def parse_configuration(
     extra_library_path = convert_reference_path_list(
         manager_path,
         current_prefix_paths,
-        config.library_path_list
+        library_path_list
     )
     library_path += extra_library_path
 
@@ -554,7 +559,7 @@ def parse_configuration(
     extra_meta_path = convert_reference_path_list(
         manager_path,
         current_prefix_paths,
-        config.meta_path_list
+        meta_path_list
     )
     meta_path += extra_meta_path
 
@@ -569,7 +574,7 @@ def parse_configuration(
     extra_plugin_path = convert_reference_path_list(
         manager_path,
         current_prefix_paths,
-        config.plugin_path_list
+        plugin_path_list
     )
     plugin_path += extra_plugin_path
 
@@ -613,8 +618,12 @@ def convert_reference_path_list(manager_path, current_prefix_paths, reference_pa
     # iterates over all the reference paths, in order to normalize
     # resolver and integrate them into the reference path
     for reference_path in reference_path_list:
-        # sets the initial dereferenced path
-        dereferenced_path = manager_path + "/" + reference_path
+        # verifies if the current reference path is a local one (using
+        # the prefix value) and in case it's not prepends the manager
+        # path to it as the base path (usual situation)
+        is_local = reference_path.startswith("./")
+        if is_local: dereferenced_path = reference_path
+        else: dereferenced_path = manager_path + "/" + reference_path
 
         # iterates over all the current prefix paths to dereference
         # them into the path "along" the various prefix paths
@@ -623,7 +632,7 @@ def convert_reference_path_list(manager_path, current_prefix_paths, reference_pa
             # to be used in the dereferencing of the path, then
             # executes the dereferencing operation substituting the
             # "wildcard" references in the paths
-            current_prefix_path_name = PREFIX_PATH_PREFIX_VALUE + current_prefix_path + PREFIX_PATH_SUFFIX_VALUE
+            current_prefix_path_name = "%" + current_prefix_path + "_prefix_path%"
             current_prefix_path_value = current_prefix_paths[current_prefix_path]
             dereferenced_path = dereferenced_path.replace(current_prefix_path_name, current_prefix_path_value)
 
