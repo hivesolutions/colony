@@ -2485,12 +2485,7 @@ class PluginManager:
         # runs the complete set of conditional modes for the initialization
         # of the system taking into account the mode configuration value note
         # that if the mode is not found or invalid and exception is raised
-        if not mode: return
-        if not hasattr(self, "run_" + mode): raise exceptions.ColonyException(
-            "execution mode '%s' not found or invalid" % mode
-        )
-        method = getattr(self, "run_" + mode)
-        method()
+        self.exec_mode()
 
     def set_python_path(self, library_paths, plugin_paths):
         """
@@ -3071,6 +3066,28 @@ class PluginManager:
             # closes the file, no further writing is allowed
             # on this file (avoids leaks)
             file.close()
+
+    def exec_mode(self, mode):
+        """
+        Executes the provided mode of execution but only if
+        the valid is correctly defined and the proper method
+        for the running is defined in the manager.
+
+        An exception will be raised in case the proper run method
+        is not defined "inside" the manager.
+
+        @type mode: String
+        @param mode: The (execution) mode that is going to be
+        used for the performing of the execution, should be
+        a valid one and defined in the manager.
+        """
+
+        if not mode: return
+        if not hasattr(self, "run_" + mode): raise exceptions.ColonyException(
+            "execution mode '%s' not found or invalid" % mode
+        )
+        method = getattr(self, "run_" + mode)
+        method()
 
     def run_test(self, verbosity = 1, raise_e = True):
         """
