@@ -565,10 +565,11 @@ class FormatTuple(object):
         return self.format()
 
     def __eq__(self, other):
-        if other == self.format_string:
-            return True
-
+        if other == self.format_string: return True
         return False
+
+    def __ne__(self, value):
+        return not self.__eq__(value)
 
     def __add__(self, other):
         return self.format() + other
