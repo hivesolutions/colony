@@ -2485,7 +2485,7 @@ class PluginManager:
         # runs the complete set of conditional modes for the initialization
         # of the system taking into account the mode configuration value note
         # that if the mode is not found or invalid and exception is raised
-        self.exec_mode()
+        self.exec_mode(mode)
 
     def set_python_path(self, library_paths, plugin_paths):
         """
