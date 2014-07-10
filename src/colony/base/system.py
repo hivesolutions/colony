@@ -3376,17 +3376,21 @@ class PluginManager:
                     # sets the plugin error state flag
                     plugin.error_state = True
 
-        # in case the plugin is in an error state
+        # in case the plugin is in an error state, there's a problem
+        # with the end loading process and the caller method must be
+        # notified about the problem (to act on it)
         if plugin.error_state:
-            # prints the error message
-            self.error("Problem end loading plugin '%s' v%s '%s'" % (plugin.name, plugin.version, unicode(plugin.exception)))
-
-            # returns false in the loading process
+            # prints the error message and returns the control flow
+            # to the caller method in error
+            self.error(
+                "Problem end loading plugin '%s' v%s '%s'" %
+                (plugin.name, plugin.version, unicode(plugin.exception))
+            )
             return False
 
-        # injects the allowed plugins into the plugin
-        if not self.inject_allowed(plugin):
-            return False
+        # injects the allowed plugins into the plugin and verifies that
+        # everything went as expected in such injection
+        if not self.inject_allowed(plugin): return False
 
         # retrieves the current loading state for the plugin manager
         if self.get_init_complete():
