@@ -1,0 +1,30 @@
+{
+    "REPO_URL" : [
+        ["colony", "https://colony.bemisc.com/"],
+        ["hive", "https://${REPO_USERNAME}:${REPO_PASSWORD}@colony.private.hive.pt/"]
+    ],
+    "EMAIL" : {
+        "smtp" : {
+            "hostname" : "${SMTP_HOST}",
+            "port" : "${SMTP_PORT}",
+            "username" : "${SMTP_USERNAME}",
+            "password" : "${SMTP_PASSWORD}",
+            "tls" : "${SMTP_USES_TLS}"
+        }
+    },
+    "ENTITY_MANAGER" : {
+        "arguments" : {
+            "id" : "pt.hive.omni.database",
+            "engine" : "mysql",
+            "options" : {
+                "ensure_integrity" : false
+            },
+            "connection_parameters" : {
+                "host" : "${DB_HOST}",
+                "user" : "${DB_USER}",
+                "password" : "${DB_PASSWORD}",
+                "database" : "${DB_NAME}"
+            }
+        }
+    }
+}
