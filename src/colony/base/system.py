@@ -3089,7 +3089,7 @@ class PluginManager:
         method = getattr(self, "run_" + mode)
         method()
 
-    def run_test(self, verbosity = 1, raise_e = True):
+    def run_test(self, verbosity = 2, raise_e = True):
         """
         Runs the test mode for the current plugin manager, this should
         consist on the retrieval of the test capability aware plugins
