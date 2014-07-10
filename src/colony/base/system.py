@@ -3247,17 +3247,19 @@ class PluginManager:
         # to load it again, returns in success
         if plugin.is_loaded(): return True
 
-        # in case the plugin is lazy loaded
+        # in case the plugin is lazy loaded and lazy loading
+        # is allowed in context the method should return
         if (plugin.loading_type == LAZY_LOADING_TYPE and not type == FULL_LOAD_TYPE) and plugin.is_lazy_loaded():
-            # returns true
             return True
 
         # in case the plugin load is not successful
         if not self.test_plugin_load(plugin):
-            # prints an info message
-            self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.name, plugin.version))
-
-            # returns false
+            # prints the error message and returns the control flow
+            # to the caller method in error
+            self.info(
+                "Plugin '%s' v%s not ready to be loaded" %
+                (plugin.name, plugin.version)
+            )
             return False
 
         # in case a type is defined, prints an information
@@ -3332,10 +3334,12 @@ class PluginManager:
 
         # in case the plugin is in an error state
         if plugin.error_state:
-            # prints the error message
-            self.error("Problem loading plugin '%s' v%s '%s'" % (plugin.name, plugin.version, unicode(plugin.exception)))
-
-            # returns false in the loading process
+            # prints the error message and returns the control flow
+            # to the caller method in error
+            self.error(
+                "Problem loading plugin '%s' v%s '%s'" %
+                (plugin.name, plugin.version, unicode(plugin.exception))
+            )
             return False
 
         # in case the loading type is lazy, the loading task is complete
@@ -3420,26 +3424,25 @@ class PluginManager:
         @requires: The result of the plugin unload.
         """
 
-        # in case the plugin is not loaded
-        if not plugin.is_loaded():
-            # returns true
-            return True
+        # in case the plugin is not loaded, there's no need to start
+        # the unloading process for it and so it must return immediately
+        if not plugin.is_loaded(): return True
 
-        # in case a type is defined
-        if type:
-            # prints a debug message
-            self.debug("Unloading of type: '%s'" % (type))
+        # in case an (unloading) type is defined a proper debug message
+        # must be printed to notify the end user about the unloading
+        if type: self.debug("Unloading of type: '%s'" % (type))
 
         # unloads the plugins that depend on the plugin being unloaded
+        # this is required because if a plugins depends on the current
+        # plugin to be unloaded its dependencies will not be met after
         for dependent_plugin in self.get_plugin_dependent_plugins_map(plugin.id):
-            # in case the dependent plugin is loaded
-            if dependent_plugin.is_loaded():
-                if MAIN_TYPE in dependent_plugin.capabilities:
-                    self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE, MAIN_TYPE)
-                elif THREAD_TYPE in dependent_plugin.capabilities:
-                    self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE, THREAD_TYPE)
-                else:
-                    self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE)
+            if not dependent_plugin.is_loaded(): continue
+            if MAIN_TYPE in dependent_plugin.capabilities:
+                self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE, MAIN_TYPE)
+            elif THREAD_TYPE in dependent_plugin.capabilities:
+                self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE, THREAD_TYPE)
+            else:
+                self._unload_plugin(dependent_plugin, DEPENDENCY_TYPE)
 
         # notifies the allowed plugins about the unload
         for allowed_plugin_info in self.get_plugin_allowed_plugins_map(plugin.id):
@@ -3496,10 +3499,12 @@ class PluginManager:
 
         # in case the plugin is in an error state
         if plugin.error_state:
-            # prints the error message
-            self.error("Problem unloading plugin '%s' v%s '%s'" % (plugin.name, plugin.version, unicode(plugin.exception)))
-
-            # returns false in the unloading process
+            # prints the error message and returns the control flow
+            # to the caller method in error
+            self.error(
+                "Problem unloading plugin '%s' v%s '%s'" %
+                (plugin.name, plugin.version, unicode(plugin.exception))
+            )
             return False
 
         # if it's a main or thread type unload
@@ -3531,10 +3536,12 @@ class PluginManager:
 
         # in case the plugin is in an error state
         if plugin.error_state:
-            # prints the error message
-            self.error("Problem end unloading plugin '%s' v%s %s" % (plugin.name, plugin.version, unicode(plugin.exception)))
-
-            # returns false in the unloading process
+            # prints the error message and returns the control flow
+            # to the caller method in error
+            self.error(
+                "Problem end unloading plugin '%s' v%s %s" %
+                (plugin.name, plugin.version, unicode(plugin.exception))
+            )
             return False
 
         # returns true
@@ -4408,8 +4415,8 @@ class PluginManager:
         # the results list
         result = []
         for plugin in self.plugin_instances:
-            if capability in plugin.capabilities:
-                result.append(self.assert_plugin(plugin))
+            if not capability in plugin.capabilities: continue
+            result.append(self.assert_plugin(plugin))
         return result
 
     def get_plugins_by_capability_allowed(self, capability_allowed):
