@@ -82,8 +82,8 @@ setuptools.setup(
         "colony" : ["res/*"]
     },
     entry_points = {
-        "colony_wsgi" : [
-            "context = colony_wsgi:main"
+        "console_scripts" : [
+            "colony_wsgi = colony_wsgi:main"
         ]
     },
     install_requires = [
