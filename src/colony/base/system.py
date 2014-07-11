@@ -3188,10 +3188,9 @@ class PluginManager:
 
         # in case the plugin does not pass the test plugin load
         if not self.test_plugin_load(plugin):
-            # prints an info message
+            # prints an info message about the fact that the plugin
+            # is not ready to be loaded and returns in error
             self.info("Plugin '%s' v%s not ready to be loaded" % (plugin.name, plugin.version))
-
-            # returns false
             return False
 
         if not loading_type and MAIN_TYPE in plugin.capabilities:
