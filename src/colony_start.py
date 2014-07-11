@@ -107,18 +107,13 @@ def print_information():
     used when running the system.
     """
 
-    # print the branding information text
     print BRANDING_TEXT % (
         colony.VERSION,
         colony.RELEASE,
         colony.BUILD,
         colony.RELEASE_DATE
     )
-
-    # print the python information
     print VERSION_PRE_TEXT + sys.version
-
-    # prints some help information
     print HELP_TEXT
 
 def run(
