@@ -392,7 +392,7 @@ def serve_legacy(host, port, **kwargs):
     print >> sys.stderr, "Running on http://%s:%d/" % (host, port)
     httpd.serve_forever()
 
-if __name__ == "__main__":
+def main():
     kwargs = dict()
     server = colony.conf("SERVER", "legacy")
     host = colony.conf("HOST", "127.0.0.1")
@@ -418,3 +418,6 @@ if __name__ == "__main__":
         cer_file = cer_file,
         kwargs = kwargs
     )
+
+if __name__ == "__main__":
+    main()
