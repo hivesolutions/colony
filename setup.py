@@ -81,6 +81,11 @@ setuptools.setup(
     package_data = {
         "colony" : ["res/*"]
     },
+    entry_points = {
+        "colony_wsgi" : [
+            "context = colony_wsgi:main"
+        ]
+    },
     install_requires = [
         "appier"
     ],
