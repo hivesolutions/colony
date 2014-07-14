@@ -2092,7 +2092,8 @@ class PluginManager:
             # of the plugin manager, this should be one of the
             # first logging messages printed by the system
             self.info("Starting plugin manager...")
-            self.info("Using %s run mode and %s layout mode" % (self.run_mode, self.layout_mode))
+            self.info("Using %s run mode and %s layout mode" %
+                (self.run_mode, self.layout_mode))
 
             # sets the plugin manager timestamp, should set it with
             # the current time (to be used for uptime calculus)
