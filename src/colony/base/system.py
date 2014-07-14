@@ -2054,13 +2054,16 @@ class PluginManager:
         self.logger_handlers["broadcast"] = broadcast_handler
         self.logger_handlers["memory"] = memory_handler
 
-    def load_system(self, mode = None):
+    def load_system(self, mode = None, callback = None):
         """
         Starts the process of loading the plugin system.
 
         This is the main entry point of the system from
         which either a command is executed or the main
         loop is started (blocking call).
+
+        An optional callback argument may be used to have
+        a function called at the end of the loading process.
 
         The resulting integer value may be returned to the
         caller process as the result of the execution.
@@ -2070,6 +2073,10 @@ class PluginManager:
         be used for this loading, this should be unset for the
         default execution mode. This variable should be used for
         non standard modes (eg: testing).
+        @type callback: Function
+        @param callback: The callback function to be called at the
+        end of the current plugin manager's loading process. This
+        may be used to execute final operations in it.
         @rtype: int
         @return: The return code from the execution, this value
         should be zero for no problem situation and any other
@@ -2136,6 +2143,10 @@ class PluginManager:
             # plugin system startup process, this message should mark
             # the readiness of the system to received actions
             self.info("Startup process finished (took %d seconds)" % delta)
+
+            # in case a callback function is defined for the end of the
+            # loading process it must be correctly called (with no arguments)
+            if callback: callback()
 
             # starts the main loop, this is a blocking call that should
             # return only at the end of the plugin manger life cycle

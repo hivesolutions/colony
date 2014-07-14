@@ -188,23 +188,25 @@ def run(
     @return: The return code.
     """
 
-    # print the branding information text
-    print_information()
+    # sets the plugin manager as a global variable, this value
+    # may be used in more situations that the one defined in the
+    # the current (local) scope
+    global plugin_manager
 
-    # checks if the library path is not valid
+    # checks if the library path is not valid, by splitting its
+    # value around the separator token into a valid list
     if library_path: library_paths = library_path.split(";")
     else: library_paths = []
 
-    # checks if the meta path is not valid
+    # checks if the meta path is not valid, by splitting its
+    # value around the separator token into a valid list
     if meta_path: meta_paths = meta_path.split(";")
     else: meta_paths = []
 
-    # checks if the plugin path is not valid
+    # checks if the plugin path is not valid, by splitting its
+    # value around the separator token into a valid list
     if plugin_path: plugin_paths = plugin_path.split(";")
     else: plugin_paths = []
-
-    # sets the plugin manager as a global variable
-    global plugin_manager
 
     # retrieves the current executing platform, so that this
     # value may be passed to the next functions to be called
@@ -215,7 +217,8 @@ def run(
     # path making sure that the complete directory structure exists
     colony.ensure_tree(manager_path)
 
-    # creates the plugin manager with the given plugin paths
+    # creates the plugin manager with the given plugin paths, this
+    # is the instance that is going to be used for the current loading
     plugin_manager = colony.PluginManager(
         manager_path = manager_path,
         logger_path = logger_path,
@@ -242,11 +245,16 @@ def run(
     level = logging.getLevelName(level)
     plugin_manager.start_logger(level)
 
+    # creates the callback function to be used in the process of
+    # printing the branding information text to the standard output
+    # informing the end user about the current environment
+    callback = lambda: print_information()
+
     # starts and loads the plugin system, this is a blocking
     # call and the flow control is only returned at the end of
     # the execution of the colony infra-structure, then the
     # returned code is returned to the caller function
-    return_code = plugin_manager.load_system(mode = mode)
+    return_code = plugin_manager.load_system(mode = mode, callback = callback)
     return return_code
 
 def main(cwd = None):
