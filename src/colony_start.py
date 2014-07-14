@@ -331,7 +331,8 @@ def main(cwd = None):
     meta_path = None
     plugin_path = None
 
-    # iterates over all the options
+    # iterates over all the options to be able to parse its value
+    # starting it from the command line
     for option, value in options:
         if option in ("-h", "--help"):
             usage()
@@ -661,7 +662,10 @@ def convert_reference_path_list(cwd, manager_path, current_prefix_paths, referen
             # "wildcard" references in the paths
             current_prefix_path_name = "%" + current_prefix_path + "_prefix_path%"
             current_prefix_path_value = current_prefix_paths[current_prefix_path]
-            dereferenced_path = dereferenced_path.replace(current_prefix_path_name, current_prefix_path_value)
+            dereferenced_path = dereferenced_path.replace(
+                current_prefix_path_name,
+                current_prefix_path_value
+            )
 
         # runs the glob based resolver to resolver the "wildcard" patterns
         # that may be present in the path, this operation should return
