@@ -2092,6 +2092,7 @@ class PluginManager:
             # of the plugin manager, this should be one of the
             # first logging messages printed by the system
             self.info("Starting plugin manager...")
+            self.info("Using %s run mode and %s layout mode" % (self.run_mode, self.layout_mode))
 
             # sets the plugin manager timestamp, should set it with
             # the current time (to be used for uptime calculus)
@@ -3097,6 +3098,7 @@ class PluginManager:
         if not hasattr(self, "run_" + mode): raise exceptions.ColonyException(
             "execution mode '%s' not found or invalid" % mode
         )
+        self.info("Executing mode '%s'..." % mode)
         method = getattr(self, "run_" + mode)
         method()
 
