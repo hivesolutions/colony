@@ -1453,7 +1453,7 @@ class PluginManagerPlugin(Plugin):
 
         Plugin.__init__(self, manager)
 
-class PluginManager:
+class PluginManager(object):
     """
     The top level manager class, this is the controller (hypervisor)
     of all the plugin instances handled by him.
@@ -6149,7 +6149,7 @@ class PluginManager:
         # returns the resulting plugin path
         return plugin_path
 
-class Dependency:
+class Dependency(object):
     """
     The dependency class.
     """
@@ -6485,7 +6485,7 @@ class PackageDependency(Dependency):
             version = self.version
         )
 
-class Condition:
+class Condition(object):
     """
     The condition class.
     """
@@ -6540,7 +6540,7 @@ class OperativeSystemCondition(Condition):
         if is_same: return True
         else: return False
 
-class Capability:
+class Capability(object):
     """
     Class that describes a neutral structure for a capability.
     """
@@ -6698,7 +6698,7 @@ class Capability:
             # returns false
             return False
 
-class Event:
+class Event(object):
     """
     Class that describes a neutral structure for an event.
     """
