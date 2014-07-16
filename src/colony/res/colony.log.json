@@ -1,4 +1,5 @@
 {
+    "1.2.3" : ["Better support for SIGTERM"],
     "1.2.2" : ["Fixed some normalization issues"],
     "1.2.1" : ["Fixed small logging bug"],
     "1.2.0" : ["Stable version, new information prompt"],
