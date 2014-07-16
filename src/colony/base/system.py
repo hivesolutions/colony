@@ -3611,36 +3611,48 @@ class PluginManager:
         # retrieves the plugin version
         plugin_version = plugin.version
 
-        # tests the plugin against the current platform
+        # verifies if the current plugin is not blacklisted for the current
+        # manager and in case it's prints a message and returns in error
+        if not self.test_blacklist(plugin):
+            self.info(
+                "Plugin '%s' v%s is blacklisted under the current manager" %
+                (plugin_name, plugin_version)
+            )
+            return False
+
+        # tests the plugin against the current thread specification
+        # verifying if threads are available for the plugin
         if not self.test_threads(plugin):
-            # prints an info message
-            self.info("Current thread permissions is not compatible with plugin '%s' v%s" % (plugin_name, plugin_version))
-
-            # returns false
+            self.info(
+                "Current thread permissions is not compatible with plugin '%s' v%s" %
+                (plugin_name, plugin_version)
+            )
             return False
 
-        # tests the plugin against the current platform
+        # tests the plugin against the current platform verifying if the
+        # current platform is compatible with the plugin specification
         if not self.test_platform_compatible(plugin):
-            # prints an info message
-            self.info("Current platform (%s) not compatible with plugin '%s' v%s" % (self.platform, plugin_name, plugin_version))
-
-            # returns false
+            self.info(
+                "Current platform (%s) not compatible with plugin '%s' v%s" %
+                (self.platform, plugin_name, plugin_version)
+            )
             return False
 
-        # tests the plugin for the availability of the dependencies
+        # tests the plugin for the availability of the dependencies checking
+        # if the complete set of dependencies are available for the plugin
         if not self.test_dependencies_available(plugin):
-            # prints an info message
-            self.info("Missing dependencies for plugin '%s' v%s" % (plugin_name, plugin_version))
-
-            # returns false
+            self.info(
+                "Missing dependencies for plugin '%s' v%s" %
+                (plugin_name, plugin_version)
+            )
             return False
 
-        # in case the plugin id does not exists in the loaded plugins map
-        if not plugin_id in self.loaded_plugins_map:
-            # returns false
-            return False
+        # in case the plugin id does not exists in the loaded plugins
+        # map must returns in error because it's not valid state
+        if not plugin_id in self.loaded_plugins_map: return False
 
-        # returns true
+        # returns valid as the complete set of tests for the plugin have
+        # be completed with success (no failures)
         return True
 
     def test_dependencies_available(self, plugin):
@@ -3659,13 +3671,14 @@ class PluginManager:
         # iterates over all the plugin dependencies
         for plugin_dependency in plugin_dependencies:
 
-            # in case the test dependency tests fails
-            if not plugin_dependency.test_dependency(self):
-                # prints a debug  message
-                self.debug("Problem with dependency for plugin '%s' v%s" % (plugin.name, plugin.version))
+            # in case the test dependency tests succeeds continues
+            # the current loop to run more tests for dependencies
+            if plugin_dependency.test_dependency(self): continue
 
-                # returns false
-                return False
+            # prints a debug  message about the missing dependency
+            # for the plugin and return in error (test failed)
+            self.debug("Problem with dependency for plugin '%s' v%s" % (plugin.name, plugin.version))
+            return False
 
         # returns true
         return True
@@ -3719,6 +3732,28 @@ class PluginManager:
         # returns value as all the tests have passed with success
         # the plugin should not create any threads as a consequence
         # of its execution in the environment
+        return True
+
+    def test_blacklist(self, plugin):
+        """
+        Verifies if the provided plugin is present in any of the
+        currently loaded "blacklist", returning the appropriate
+        value to the caller method.
+
+        This test may be used to prevent the loading of the plugin
+        under the current manager context.
+
+        @type plugin: Plugin
+        @param plugin: The plugin that is going to be tested for
+        presence in the "blacklist".
+        @rtype: bool
+        @return: The result of the existence presence test of the
+        plugin in the currently loaded "blacklist".
+        """
+
+        blacklist = config.conf("BLACKLIST", cast = list)
+        if plugin.id in blacklist: return False
+        if plugin.short_name in blacklist: return False
         return True
 
     def resolve_capabilities(self, plugin):
