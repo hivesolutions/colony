@@ -1539,7 +1539,8 @@ class PluginManager(object):
     the manager is running as explicit daemon (background usage)  """
 
     daemon_file_path = None
-    """ The file path to the daemon file, for information control """
+    """ The file path to the daemon file, for information control,
+    this file will store the pid of the created process """
 
     prefix_paths = []
     """ The list of manager path relative paths to be used as
@@ -3131,6 +3132,10 @@ class PluginManager(object):
         from the currently defined standard output stream.
         """
 
+        # tries to retrieve the "blacklist" for testing purposes, meaning
+        # the tests that are not meant to be run for some reasons
+        blacklist = config.conf("BLACKTEST", [], cast = list)
+
         # starts the initial result value of the execution with the valid
         # value as the execution is considered to be successful by default
         result = True
@@ -3140,6 +3145,12 @@ class PluginManager(object):
         # to run the corresponding unit tests (just for loaded plugins)
         plugins = self.get_plugins_by_capability("test")
         for plugin in plugins:
+            # verifies if the identifier or the short name of the plugin
+            # are present in the black list for testing, if that's the case
+            # the current plugin is skipped as no test is meant to be executed
+            if plugin.id in blacklist: continue
+            if plugin.short_name in blacklist: continue
+
             # in case the current plugin in iteration is not loaded, it's
             # not possible to load it's unit tests and so an exception must
             # be raised indicating that the issue preventing the plugin
@@ -3761,7 +3772,7 @@ class PluginManager(object):
         plugin in the currently loaded "blacklist".
         """
 
-        blacklist = config.conf("BLACKLIST", cast = list)
+        blacklist = config.conf("BLACKLIST", [], cast = list)
         if not blacklist: return True
         if plugin.id in blacklist: return False
         if plugin.short_name in blacklist: return False
