@@ -2590,10 +2590,10 @@ class PluginManager:
             # sets the plugin class in the plugin classes map
             self.plugin_classes_map[plugin_id] = plugin
 
-            # tests the plugin for loading
-            if not plugin in self.loaded_plugins:
-                # starts the plugin
-                self.start_plugin(plugin)
+            # tests the plugin for loading, verifying that it's
+            # current loaded and then starts the plugin
+            if not plugin in self.loaded_plugins: continue
+            self.start_plugin(plugin)
 
     def start_plugins(self):
         """
