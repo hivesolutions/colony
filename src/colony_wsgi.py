@@ -39,6 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import os
 import sys
+import time
 import glob
 import atexit
 import logging
@@ -264,6 +265,7 @@ class ServerThread(threading.Thread):
         self.key_file = key_file
         self.cer_file = cer_file
         self.kwargs = kwargs
+        self.daemon = True
 
     def __repr__(self):
         return "%s / %s@%d" % (self.server, self.host, self.port)
@@ -292,13 +294,14 @@ def serve_multiple(
     cer_file = None,
     kwargs = dict()
 ):
+    threads = []
     count = len(hosts)
 
     for index in range(count):
         host = hosts[index]
         port = ports[index]
 
-        server_thread = ServerThread(
+        thread = ServerThread(
             server = server,
             host = host,
             port = port,
@@ -307,7 +310,10 @@ def serve_multiple(
             cer_file = cer_file,
             kwargs = kwargs
         )
-        server_thread.start()
+        thread.start()
+        threads.append(thread)
+
+    return threads
 
 def serve(
     server = "waitress",
@@ -418,6 +424,11 @@ def main():
         cer_file = cer_file,
         kwargs = kwargs
     )
+
+    run = True
+    while run:
+        try: time.sleep(86400)
+        except KeyboardInterrupt: run = False
 
 if __name__ == "__main__":
     main()
