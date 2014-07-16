@@ -5535,7 +5535,8 @@ class PluginManager(object):
         @return: The current meta paths.
         """
 
-        return [os.path.join(self.manager_path, meta_path) for meta_path in self.meta_paths if os.path.exists(os.path.join(self.manager_path, meta_path))]
+        return [os.path.join(self.manager_path, meta_path) for meta_path in\
+            self.meta_paths if os.path.exists(os.path.join(self.manager_path, meta_path))]
 
     def get_workspace_path(self):
         """
