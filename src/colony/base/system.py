@@ -3752,6 +3752,7 @@ class PluginManager(object):
         """
 
         blacklist = config.conf("BLACKLIST", cast = list)
+        if not blacklist: return True
         if plugin.id in blacklist: return False
         if plugin.short_name in blacklist: return False
         return True
