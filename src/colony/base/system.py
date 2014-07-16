@@ -3631,7 +3631,7 @@ class PluginManager(object):
 
         # tests the plugin against the current platform verifying if the
         # current platform is compatible with the plugin specification
-        if not self.test_platform_compatible(plugin):
+        if not self.test_platform(plugin):
             self.info(
                 "Current platform (%s) not compatible with plugin '%s' v%s" %
                 (self.platform, plugin_name, plugin_version)
@@ -3640,7 +3640,7 @@ class PluginManager(object):
 
         # tests the plugin for the availability of the dependencies checking
         # if the complete set of dependencies are available for the plugin
-        if not self.test_dependencies_available(plugin):
+        if not self.test_dependencies(plugin):
             self.info(
                 "Missing dependencies for plugin '%s' v%s" %
                 (plugin_name, plugin_version)
@@ -3655,9 +3655,11 @@ class PluginManager(object):
         # be completed with success (no failures)
         return True
 
-    def test_dependencies_available(self, plugin):
+    def test_dependencies(self, plugin):
         """
         Tests if the dependencies for the given plugin are available.
+        This test should not trigger the loading of the dependency
+        plugin but only test if it's possible to load it.
 
         @type plugin: Plugin
         @param plugin: The plugin to be tested for dependencies.
@@ -3665,10 +3667,12 @@ class PluginManager(object):
         @return: The result of the plugin dependencies available check.
         """
 
-        # retrieves the plugin dependencies
+        # retrieves the plugin dependencies, that are going to be used
+        # in the testing for availability (for loading)
         plugin_dependencies = plugin.dependencies
 
-        # iterates over all the plugin dependencies
+        # iterates over all the plugin dependencies to verify that they
+        # are available for the loading process (as required)
         for plugin_dependency in plugin_dependencies:
 
             # in case the test dependency tests succeeds continues
@@ -3677,15 +3681,21 @@ class PluginManager(object):
 
             # prints a debug  message about the missing dependency
             # for the plugin and return in error (test failed)
-            self.debug("Problem with dependency for plugin '%s' v%s" % (plugin.name, plugin.version))
+            self.debug(
+                "Problem with dependency for plugin '%s' v%s" %
+                (plugin.name, plugin.version)
+            )
             return False
 
-        # returns true
+        # returns valid meaning that the complete set of dependencies
+        # is available for the loading of the plugin
         return True
 
-    def test_platform_compatible(self, plugin):
+    def test_platform(self, plugin):
         """
-        Tests if the current platform is compatible with the given plugin.
+        Tests if the current platform is compatible with the given plugin,
+        meaning that the current platform should be part of the registered
+        list of available/compatible platforms for the plugin.
 
         @type plugin: Plugin
         @param plugin: The plugin to be tested for platform compatibility.
