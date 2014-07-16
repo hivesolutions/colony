@@ -1551,7 +1551,7 @@ class PluginManager(object):
     workspace_path = DEFAULT_WORKSPACE_PATH
     """ The current workspace path """
 
-    plugin_manager_timestamp = 0
+    timestamp = 0
     """ The plugin manager timestamp, this value should be set
     at the start of the plugin manager, and so indicates the time
     of the start of the plugin manager (may be used to calculate
@@ -2104,7 +2104,7 @@ class PluginManager(object):
 
             # sets the plugin manager timestamp, should set it with
             # the current time (to be used for uptime calculus)
-            self.set_plugin_manager_timestamp()
+            self.set_timestamp()
 
             # applies the set of fixes for the context
             # of execution of the plugin system
@@ -5307,7 +5307,7 @@ class PluginManager(object):
         self.system_information_map = {
             "layout_mode" : self.get_layout_mode(),
             "run_mode" : self.get_run_mode(),
-            "timestamp" : self.get_plugin_manager_timestamp(),
+            "timestamp" : self.get_timestamp(),
             "version" : self.get_version(),
             "release" : self.get_release(),
             "build" : self.get_build(),
@@ -5563,20 +5563,20 @@ class PluginManager(object):
         self.workspace_path = workspace_path
         self.update_workspace_path()
 
-    def set_plugin_manager_timestamp(self, plugin_manager_timestamp = None):
+    def set_timestamp(self, timestamp = None):
         """
         Sets the timestamp value for the plugin manager.
         The value that will be set depends on the provided value, in
         case the provided value is invalid the current time is set.
 
-        @type plugin_manager_timestamp: float
-        @param plugin_manager_timestamp: The value to set in the plugin
-        manager as the timestamp, used for loading time purposes.
+        @type timestamp: float
+        @param timestamp: The value to set in the plugin manager
+        as the timestamp, used for loading time purposes.
         """
 
         # sets the plugin manager timestamp with the provided value or
         # with the current time value as a fallback procedure
-        self.plugin_manager_timestamp = plugin_manager_timestamp or time.time()
+        self.timestamp = timestamp or time.time()
 
     def set_plugin_manager_plugins_loaded(self, value = True):
         """
@@ -5780,7 +5780,7 @@ class PluginManager(object):
 
         return self.run_mode
 
-    def get_plugin_manager_timestamp(self):
+    def get_timestamp(self):
         """
         Retrieves the current base (plugin manager) timestamp.
 
@@ -5788,7 +5788,7 @@ class PluginManager(object):
         @return: The current base (plugin manager) timestamp.
         """
 
-        return self.plugin_manager_timestamp
+        return self.timestamp
 
     def get_version(self):
         """
@@ -5879,7 +5879,7 @@ class PluginManager(object):
         # calculates the delta (value) between the current time
         # value and the saved load timestamp then uses it to create
         # the uptime message to be returned
-        delta = time.time() - self.plugin_manager_timestamp
+        delta = time.time() - self.timestamp
         uptime = colony.libs.format_seconds_smart(delta, mode = "extended_simple")
 
         # returns the message containing the description
