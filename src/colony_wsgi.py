@@ -42,6 +42,7 @@ import sys
 import time
 import glob
 import atexit
+import signal
 import logging
 import warnings
 import traceback
@@ -424,6 +425,9 @@ def main():
         cer_file = cer_file,
         kwargs = kwargs
     )
+
+    def handler(signum = None, frame = None): raise SystemExit()
+    signal.signal(signal.SIGTERM, handler)
 
     run = True
     while run:
