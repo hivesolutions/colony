@@ -390,7 +390,7 @@ def serve_cherry(host, port, **kwargs):
         application
     )
     try: server.start()
-    except KeyboardInterrupt: server.stop()
+    except (KeyboardInterrupt, SystemExit): server.stop()
 
 def serve_legacy(host, port, **kwargs):
     import wsgiref.simple_server
@@ -428,7 +428,7 @@ def main():
     run = True
     while run:
         try: time.sleep(86400)
-        except KeyboardInterrupt: run = False
+        except (KeyboardInterrupt, SystemExit): run = False
 
 if __name__ == "__main__":
     main()
