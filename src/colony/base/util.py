@@ -163,6 +163,8 @@ def resolve_manager(exec_path = None):
     personal_path = os.path.join(personal_path, ".colony")
     master_path = os.environ.get("COLONY_HOME", exec_path)
     manager_path = master_path if is_master(master_path) else personal_path
+    manager_path = os.path.abspath(manager_path)
+    manager_path = os.path.normpath(manager_path)
     return manager_path
 
 def ensure_tree(path):
