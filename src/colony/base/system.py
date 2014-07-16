@@ -831,7 +831,8 @@ class Plugin(object):
 
     def notify_handlers(self, event_name, event_args):
         """
-        Notifies all the handlers for the event with the given name with the give arguments.
+        Notifies all the handlers for the event with the given name
+        with the give arguments.
 
         @type event_name: String
         @param event_name: The name of the event to be notified.
@@ -972,7 +973,10 @@ class Plugin(object):
         @param property: The property name to set.
         """
 
-        self.info("Setting configuration property '%s' in '%s' v%s" % (property_name, self.name, self.version))
+        self.info(
+            "Setting configuration property '%s' in '%s' v%s" %
+            (property_name, self.name, self.version)
+        )
 
         self.configuration_map[property_name] = property
 
@@ -984,7 +988,10 @@ class Plugin(object):
         @param property_name: The property name to unset the property.
         """
 
-        self.info("Unsetting configuration property '%s' from '%s' v%s" % (property_name, self.name, self.version))
+        self.info(
+            "Unsetting configuration property '%s' from '%s' v%s" %
+            (property_name, self.name, self.version)
+        )
 
         del self.configuration_map[property_name]
 
@@ -3192,12 +3199,13 @@ class PluginManager:
         @return: The result of the plugin load.
         """
 
-        # in case the plugin is loaded
-        if plugin.is_loaded():
-            return True
+        # in case the plugin is already loaded, there's no need
+        # to continue with the loading process, returns immediately
+        if plugin.is_loaded(): return True
 
         # in case the plugin is lazy loaded
-        if (plugin.loading_type == LAZY_LOADING_TYPE and not type == FULL_LOAD_TYPE) and plugin.is_lazy_loaded():
+        if (plugin.loading_type == LAZY_LOADING_TYPE and\
+            not type == FULL_LOAD_TYPE) and plugin.is_lazy_loaded():
             return True
 
         # in case the plugin does not pass the test plugin load
@@ -3672,18 +3680,11 @@ class PluginManager:
         @return: The result of the plugin platform compatibility check.
         """
 
-        # retrieves the plugin platforms list
+        # retrieves the plugin platforms list and then uses it
+        # to verify if the current executing platform is present
+        # under that list (platform is considered compatible)
         plugin_platforms_list = plugin.platforms
-
-        # in case the current platform is in the
-        # plugin platforms list
-        if self.platform in plugin_platforms_list:
-            # returns true
-            return True
-        # otherwise
-        else:
-            # returns false
-            return False
+        return self.platform in plugin_platforms_list
 
     def test_threads(self, plugin):
         """
