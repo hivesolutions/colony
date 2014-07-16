@@ -65,7 +65,7 @@ OTHER_OS = "other"
 UID_PRECISION = 8
 """ Unique id precision """
 
-class WaitInput:
+class WaitInput(object):
     """
     Wait input file used to overcome the problem
     with being stuck in the console input.
@@ -87,7 +87,7 @@ class WaitInput:
         # returns an empty (wait string)
         return ""
 
-class Event:
+class Event(object):
     """
     The class that describes an event to be
     used in a generic event queue.
@@ -112,7 +112,7 @@ class Event:
         self.event_name = event_name
         self.event_args = event_args
 
-class Plugins:
+class Plugins(object):
     """
     Class used as storage for the various plugin
     instance references indexed by their name.

@@ -46,7 +46,7 @@ BLOCK_SIZE = 16
 """ The block size to be used for the post operation
 should not be too small or security issues may arise """
 
-class AesCipher:
+class AesCipher(object):
     """
     The class responsible for a proper encryption
     and decryption system for the aes system.

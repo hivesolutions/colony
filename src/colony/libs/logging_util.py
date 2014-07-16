@@ -99,7 +99,7 @@ def getLevelName(level):
 
     return _levelNames.get(level, ("Level %s" % level))
 
-class DummyLogger:
+class DummyLogger(object):
     """
     The dummy logger class.
     """
@@ -206,7 +206,7 @@ class DummyLogger:
 
         pass
 
-class StreamHandler:
+class StreamHandler(object):
     """
     The stream handler class.
     """
@@ -218,7 +218,7 @@ class StreamHandler:
 
         self.formatter = fmt
 
-class Formatter:
+class Formatter(object):
     """
     The formatter class.
     """

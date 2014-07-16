@@ -40,7 +40,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import copy
 
-class StringBuffer:
+class StringBuffer(object):
     """
     The string buffer class.
     """

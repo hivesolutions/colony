@@ -56,7 +56,7 @@ ADD_NO_REPLACE_OPERATION = "add_no_replace"
 REMOVE_OPERATION = "remove"
 """ The remove operation """
 
-class FileRotator:
+class FileRotator(object):
     """
     Class for handling of writing in files
     with a rotating capability.
@@ -261,7 +261,7 @@ class FileRotator:
         # opens the current file
         self._open_current_file()
 
-class FileContext:
+class FileContext(object):
     """
     The file context class used to read and write
     contents from files.
@@ -478,10 +478,10 @@ class FileContext:
         # creates the various required directories
         os.makedirs(directory_path)
 
-class TransactionContext:
+class TransactionContext(object):
     """
-    Generic transaction abstraction that hild the logic
-    to the calling od the various transaction section
+    Generic transaction abstraction that hold the logic
+    to the calling of the various transaction section
     callbacks for a "normal" workflow.
     """
 
