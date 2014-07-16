@@ -3753,27 +3753,31 @@ class PluginManager:
         # gets all the dependencies of the plugin
         plugin_dependencies = plugin.dependencies
 
-        # iterates over all the dependencies of the plugin
+        # iterates over all the dependencies of the plugin to be
+        # able to "inject" them into the current plugin
         for plugin_dependency in plugin_dependencies:
-            # in case the dependency is of type plugin dependency
-            if plugin_dependency.__class__ == PluginDependency:
-                # retrieves the dependency plugin instances (by id and version)
-                dependency_plugin_instance = self._get_plugin_by_id_and_version(plugin_dependency.id, plugin_dependency.version)
+            # in case the dependency is not of type plugin dependency
+            # the current iteration step must be skipped
+            if not plugin_dependency.__class__ == PluginDependency: continue
 
-                # in case the loading of the dependency plugin was not successful
-                if not self.__load_plugin(dependency_plugin_instance, DEPENDENCY_TYPE):
-                    # returns false
-                    return False
+            # retrieves the dependency plugin instances (by id and version)
+            dependency_plugin_instance = self._get_plugin_by_id_and_version(plugin_dependency.id, plugin_dependency.version)
 
-                # in case the dependency plugin instance is valid
-                if dependency_plugin_instance:
-                    # calls the dependency inject method in the plugin
-                    # with the dependency plugin instances
-                    plugin.dependency_injected(dependency_plugin_instance)
+            # in case the loading of the dependency plugin was not successful
+            if not self.__load_plugin(dependency_plugin_instance, DEPENDENCY_TYPE):
+                return False
 
-                    # adds the plugin to the plugin dependent plugins map for
-                    # the plugin dependency id
-                    self.add_plugin_dependent_plugins_map(plugin_dependency.id, plugin)
+            # in case the dependency plugin instance is not valid it's
+            # not possible to inject it and iteration step is skipped
+            if not dependency_plugin_instance: continue
+
+            # calls the dependency inject method in the plugin
+            # with the dependency plugin instances
+            plugin.dependency_injected(dependency_plugin_instance)
+
+            # adds the plugin to the plugin dependent plugins map for
+            # the plugin dependency id
+            self.add_plugin_dependent_plugins_map(plugin_dependency.id, plugin)
 
         # returns true
         return True
