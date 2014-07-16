@@ -1499,6 +1499,16 @@ class PluginManager(object):
     that the manager's infra-structure has been completely
     and correctly loaded (as expected) """
 
+    blacklist = []
+    """ List containing the identifiers or short names of the
+    various plugins that are not meant to be loaded even if
+    all the pre-conditions for loading are met """
+
+    blacktest = []
+    """ Set of identifiers and short names for the various plugins
+    that event if the tests are ready to be executed should not
+    be executed on user request (blacklisted) """
+
     init_complete_handlers = []
     """ The list of handlers to be called at the end of
     the plugin manager initialization """
@@ -1572,7 +1582,8 @@ class PluginManager(object):
     plugins at the same as this would create some sync problems """
 
     current_id = 0
-    """ The current id used for the plugin """
+    """ The current id used for the plugin, this value should be
+    unique and incremental per each instance created """
 
     replica_id = 0
     """ The replica id for the replica plugins """
@@ -1581,7 +1592,8 @@ class PluginManager(object):
     """ The diffusion scope id for the replica plugins """
 
     return_code = 0
-    """ The return code to be used on return """
+    """ The return code to be used on return, this value will
+    be returned as the result of process execution """
 
     event_queue = []
     """ The queue of events to be processed """
@@ -1774,6 +1786,9 @@ class PluginManager(object):
 
         self.uid = util.get_timestamp_uid()
         self.condition = threading.Condition()
+
+        self.blacklist = config.conf("BLACKLIST", [], cast = list)
+        self.blacktest = config.conf("BLACKTEST", [], cast = list)
 
         self.plugins = util.Plugins()
         self.retrieve_lock = threading.RLock()
@@ -3132,10 +3147,6 @@ class PluginManager(object):
         from the currently defined standard output stream.
         """
 
-        # tries to retrieve the "blacklist" for testing purposes, meaning
-        # the tests that are not meant to be run for some reasons
-        blacklist = config.conf("BLACKTEST", [], cast = list)
-
         # starts the initial result value of the execution with the valid
         # value as the execution is considered to be successful by default
         result = True
@@ -3148,8 +3159,8 @@ class PluginManager(object):
             # verifies if the identifier or the short name of the plugin
             # are present in the black list for testing, if that's the case
             # the current plugin is skipped as no test is meant to be executed
-            if plugin.id in blacklist: continue
-            if plugin.short_name in blacklist: continue
+            if plugin.id in self.blacktest: continue
+            if plugin.short_name in self.blacktest: continue
 
             # in case the current plugin in iteration is not loaded, it's
             # not possible to load it's unit tests and so an exception must
@@ -3772,10 +3783,8 @@ class PluginManager(object):
         plugin in the currently loaded "blacklist".
         """
 
-        blacklist = config.conf("BLACKLIST", [], cast = list)
-        if not blacklist: return True
-        if plugin.id in blacklist: return False
-        if plugin.short_name in blacklist: return False
+        if plugin.id in self.blacklist: return False
+        if plugin.short_name in self.blacklist: return False
         return True
 
     def resolve_capabilities(self, plugin):
