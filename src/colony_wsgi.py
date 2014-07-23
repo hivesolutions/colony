@@ -248,7 +248,7 @@ class ServerThread(threading.Thread):
 
     def __init__(
         self,
-        server = "waitress",
+        server = "netius",
         host = "127.0.0.1",
         port = 8080,
         ssl = False,
@@ -287,7 +287,7 @@ class ServerThread(threading.Thread):
             raise
 
 def serve_multiple(
-    server = "waitress",
+    server = "netius",
     hosts = ("127.0.0.1",),
     ports = (8080,),
     ssl = False,
@@ -317,7 +317,7 @@ def serve_multiple(
     return threads
 
 def serve(
-    server = "waitress",
+    server = "netius",
     host = "127.0.0.1",
     port = 8080,
     ssl = False,
