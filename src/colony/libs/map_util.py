@@ -56,10 +56,30 @@ def map_clean(map):
     # retrieves the map keys
     map_keys = map.keys()
 
-    # iterates over all the map keys
-    for map_key in map_keys:
-        # removes the map entry
-        del map[map_key]
+    # iterates over all the map keys deleting
+    # the complete set of item present in it
+    for map_key in map_keys: del map[map_key]
+
+def map_get(map, keys = []):
+    """
+    Recursively retrieves values from the provided map using
+    the sequence of keys provided.
+
+    This method may suffer from stack overflow (recursion) so
+    a reasonable list of keys should be provided to avoid that.
+
+    @type map: Dictionary
+    @param map: The map (containing maps) from which the value
+    is going to be retrieved using a recursive strategy.
+    @type keys: List
+    @param keys: The list of keys to be used in the recursive
+    retrieval of values from the map.
+    @rtype: Object
+    @return: The final value retrieved through recursion
+    """
+
+    if not keys: return map
+    return map_get(map[keys[0]], keys[1:])
 
 def map_copy(source_map, destiny_map):
     """
