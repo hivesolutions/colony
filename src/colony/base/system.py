@@ -2399,7 +2399,7 @@ class PluginManager(object):
         # applies the round fix so that all the python interpreter
         # version use an uniform rounding strategy and avoid the
         # typical errors for rounding operations
-        colony.libs.apply()
+        colony.libs.round_apply()
 
     def get_all_modules(self, path, suffix = None):
         """

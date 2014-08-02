@@ -78,7 +78,7 @@ def roundi(value, places):
     rounder = math.pow(10, places)
     return _round(value * rounder, 0) / rounder
 
-def apply():
+def round_apply():
     """
     Applies the "old" rounding strategy to the current
     interpreted in a global fashion (override).
