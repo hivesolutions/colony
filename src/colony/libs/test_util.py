@@ -98,10 +98,6 @@ class ColonyTestCase(unittest.TestCase):
         that should be raised by the function.
         @type function: Function
         @param function: The function to be invoked.
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         """
 
         try:
