@@ -65,11 +65,6 @@ def load_plugin(lazy_loading = False, metadata_enabled = True):
         def decorator_interceptor(*args, **kwargs):
             """
             The interceptor function for the load allowed decorator.
-
-            @type args: pointer
-            @param args: The function arguments list.
-            @type kwargs: pointer pointer
-            @param kwargs: The function arguments map.
             """
 
             # calls the callback function
@@ -89,14 +84,10 @@ def load_plugin(lazy_loading = False, metadata_enabled = True):
 
     def decorator(function, *args, **kwargs):
         """
-        The decorator function for the load_allowed decorator.
+        The decorator function for the load allowed decorator.
 
         @type function: Function
         @param function: The function to be decorated.
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         @rtype: Function
         @return: The decorator interceptor function.
         """
@@ -136,10 +127,6 @@ def plugin_meta_information(metadata_key, metadata_values = {}):
 
         @type function: Function
         @param function: The function to be decorated.
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         @rtype: Function
         @return: The decorator interceptor function.
         """
@@ -183,11 +170,6 @@ def load_allowed(function):
     def decorator_interceptor(*args, **kwargs):
         """
         The interceptor function for the load allowed decorator.
-
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         """
 
         # calls the callback function
@@ -250,10 +232,6 @@ def load_allowed_capability(capability, load_plugin = False):
 
         @type function: Function
         @param function: The function to be decorated.
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         @rtype: Function
         @return: The function to be decorated.
         """
@@ -294,11 +272,6 @@ def unload_allowed(function):
     def decorator_interceptor(*args, **kwargs):
         """
         The interceptor function for the unload allowed decorator.
-
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         """
 
         # calls the callback function
@@ -361,10 +334,6 @@ def unload_allowed_capability(capability, load_plugin = False):
 
         @type function: Function
         @param function: The function to be decorated.
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         @rtype: Function
         @return: The function to be decorated.
         """
@@ -405,11 +374,6 @@ def inject_dependencies(function):
     def decorator_interceptor(*args, **kwargs):
         """
         The interceptor function for the inject dependencies decorator.
-
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         """
 
         # calls the callback function
@@ -482,14 +446,10 @@ def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
 
     def decorator(function, *args, **kwargs):
         """
-        The decorator function for the plugin_inject decorator.
+        The decorator function for the plugin inject decorator.
 
         @type function: Function
         @param function: The function to be decorated.
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         @rtype: Function
         @return: The function to be decorated.
         """
@@ -536,11 +496,6 @@ def event_handler(function):
     def decorator_interceptor(*args, **kwargs):
         """
         The interceptor function for the event handler decorator.
-
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         """
 
         # calls the callback function
@@ -615,10 +570,6 @@ def event_handler_method(event_name, load_plugin = False):
 
         @type function: Function
         @param function: The function to be decorated.
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         @rtype: Function
         @return: The function to be decorated.
         """
@@ -658,12 +609,8 @@ def set_configuration_property(function):
 
     def decorator_interceptor(*args, **kwargs):
         """
-        The interceptor function for the set configuration property decorator.
-
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
+        The interceptor function for the set configuration
+        property decorator.
         """
 
         # calls the callback function
@@ -723,10 +670,6 @@ def set_configuration_property_method(property_name, load_plugin = False):
 
         @type function: Function
         @param function: The function to be decorated.
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         @rtype: Function
         @return: The function to be decorated.
         """
@@ -756,7 +699,8 @@ def set_configuration_property_method(property_name, load_plugin = False):
 
 def unset_configuration_property(function):
     """
-    Decorator that redirects the unsetting of configuration properties into the defined methods.
+    Decorator that redirects the unsetting of configuration
+    properties into the defined methods.
 
     @type function: Function
     @param function: The function to be decorated.
@@ -766,12 +710,8 @@ def unset_configuration_property(function):
 
     def decorator_interceptor(*args, **kwargs):
         """
-        The interceptor function for the unset configuration property decorator.
-
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
+        The interceptor function for the unset configuration
+        property decorator.
         """
 
         # calls the callback function
@@ -830,10 +770,6 @@ def unset_configuration_property_method(property_name, load_plugin = False):
 
         @type function: Function
         @param function: The function to be decorated.
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         @rtype: Function
         @return: The function to be decorated.
         """
@@ -873,14 +809,10 @@ def plugin_call(load_plugin = True):
 
     def decorator(function, *args, **kwargs):
         """
-        The decorator function for the plugin_call decorator.
+        The decorator function for the plugin call decorator.
 
         @type function: Function
         @param function: The function to be decorated.
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         @rtype: Function
         @return: The decorator interceptor function.
         """
@@ -907,11 +839,6 @@ def create_load_plugin_interceptor(function):
     def decorator_interceptor(*args, **kwargs):
         """
         The interceptor function for the decorator.
-
-        @type args: pointer
-        @param args: The function arguments list.
-        @type kwargs: pointer pointer
-        @param kwargs: The function arguments map.
         """
 
         # retrieves the original plugin instance
