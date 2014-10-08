@@ -65,10 +65,9 @@ def calculate_tax_number_control_value(tax_number):
     if not number_digits == 8:
         raise RuntimeError("Invalid tax number length '%d'" % number_digits)
 
-    # calculates the control value for the number
+    # calculates the control value for the number and then
+    # returns it to the caller method
     control_value = calculate_control_value(tax_number)
-
-    # returns the control value
     return control_value
 
 def calculate_id_number_control_value(id_number):
@@ -93,10 +92,9 @@ def calculate_id_number_control_value(id_number):
     # adds zeros to the right of the number (if necessary)
     id_number *= 10 ** (8 - number_digits)
 
-    # calculates the control value for the number
+    # calculates the control value for the number and then
+    # returns it to the caller method
     control_value = calculate_control_value(id_number)
-
-    # returns the control value
     return control_value
 
 def calculate_control_value(number):
