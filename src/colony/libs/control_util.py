@@ -48,8 +48,8 @@ def calculate_tax_number_control_value(tax_number):
     """
     Calculates the control value for the tax number.
 
-    @type id_number: int
-    @param id_number: The tax number to calculate the
+    @type tax_number: int
+    @param tax_number: The tax number to calculate the
     control value.
     @rtype: int
     @return: The calculated control value.
@@ -58,8 +58,10 @@ def calculate_tax_number_control_value(tax_number):
     # calculates the number of digits in the number
     number_digits = number_util.get_number_length(tax_number)
 
-    # in case the number of digits is invalid
-    # must raise an exception indicating the error
+    # in case the number of digits is invalid  must raise an
+    # exception indicating the error, note that this requirement
+    # in terms of size ensures that no tax number may start with
+    # a number like zero (reducing the length of the valid digits)
     if not number_digits == 8:
         raise RuntimeError("Invalid tax number length '%d'" % number_digits)
 
