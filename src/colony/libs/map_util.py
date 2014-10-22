@@ -367,7 +367,7 @@ def map_output(map, output_method = sys.stdout.write, indentation = ""):
     point from the line.
 
     @type map: Dictionary
-    @param map: The map to be outputed (pretty print).
+    @param map: The map to be outputted (pretty print).
     @type output_method: Function
     @param output_method: The output function (method) to be
     used for outputting the value.
