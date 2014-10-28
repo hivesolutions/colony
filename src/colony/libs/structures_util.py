@@ -121,14 +121,14 @@ class JournaledList(list):
 
     def clear_jounal(self):
         """
-        Clears the jounal, reseting it to the original
-        state (iternal structures state).
+        Clears the journal, reseting it to the original
+        state (internal structures state).
         This method should be called whenever a new jounalized
         unit is required for a new phase
         """
 
-        self._appends[:] = []
-        self._removes[:] = []
+        del self._appends[:]
+        del self._removes[:]
 
     def get_appends(self):
         """
