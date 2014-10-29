@@ -1,4 +1,5 @@
 {
+	"1.2.8" : ["Better entry point definition for colony"],
     "1.2.7" : ["Small set of bug fixes"],
     "1.2.6" : ["Added support for unique generation in observer"],
     "1.2.5" : ["New utilities and libraries"],

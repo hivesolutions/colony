@@ -44,7 +44,7 @@ import setuptools
 
 setuptools.setup(
     name = "colony",
-    version = "1.2.7",
+    version = "1.2.8",
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
     description = "Colony Framework",
@@ -52,14 +52,6 @@ setuptools.setup(
     keywords = "colony plugin framework web",
     url = "http://getcolony.com",
     zip_safe = False,
-    scripts = [
-        "scripts/pypi/colony",
-        "scripts/pypi/colony.bat",
-        "scripts/pypi/colony_pypi.py",
-        "scripts/pypi/cpm",
-        "scripts/pypi/cpm.bat",
-        "scripts/pypi/cpm_pypi.py"
-    ],
     py_modules = [
         "colony_adm",
         "colony_start",
