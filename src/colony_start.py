@@ -95,7 +95,9 @@ warnings.filterwarnings("ignore", category = DeprecationWarning)
 
 def usage():
     """
-    Prints the usage for the command line.
+    Prints the usage for the command line, should be used
+    to provide extra information about the way to use this
+    command line to the user.
     """
 
     print USAGE
@@ -257,7 +259,7 @@ def run(
     return_code = plugin_manager.load_system(mode = mode, callback = callback)
     return return_code
 
-def main(cwd = None):
+def execute(cwd = None):
     """
     The main entry point of the application, should parse
     the provided command line arguments and then start the
@@ -757,6 +759,23 @@ def configure_system(layout_mode, run_mode, manager_path):
 
     # inserts the library path into the system path
     sys.path.insert(0, library_path)
+
+def main():
+    """
+    Execution function for the colony infra-structure may be used
+    for the entry point definition.
+
+    Note that a call to this function may change the current working
+    directory for the executing process.
+    """
+
+    path = os.path.dirname(__file__)
+    _path = os.getcwd()
+    try:
+        os.chdir(path)
+        execute(cwd = _path)
+    finally:
+        os.chdir(_path)
 
 if __name__ == "__main__":
     main()
