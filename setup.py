@@ -75,8 +75,8 @@ setuptools.setup(
     },
     entry_points = {
         "console_scripts" : [
-            "cpm : colony_adm:main",
-            "colony : colony_start:main",
+            "cpm = colony_adm:main",
+            "colony = colony_start:main",
             "colony_wsgi = colony_wsgi:main"
         ]
     },
