@@ -413,6 +413,9 @@ def main():
         if name_s in EXCLUDED_NAMES: continue
         kwargs[name_s] = value
 
+    host = str(host)
+    port = str(port)
+
     hosts = [value.strip() for value in host.split(",")]
     ports = [int(value.strip()) for value in port.split(",")]
 
