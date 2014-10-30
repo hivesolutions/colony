@@ -43,16 +43,16 @@ Most of the colony operation are run through the `cpm` command:
 * `cpm clone <target>` - clones the base colony instance into the target directory (new project)
 * `cpm cleanup <target>` - cleans the current instance removing extra files
 * `cpm pack <target>` - packs the current instance into a .zip file
-* `cpm generate [target]` - generates a .json descriptor file for the provided python file and then runs
+* `cpm generate [target] <...>` - generates a .json descriptor file for the provided python file and then runs
 the build operation for the generated .json file, effectively build the package item
-* `cpm build [descriptor]` - builds the target .json descriptor file into a package file
+* `cpm build [descriptor] <...>` - builds the target .json descriptor file into a package file
 * `cpm deploy [package]` - deploys the target .cbx file into the current instance
 * `cpm info [package]` - prints information about the package to the standard output
-* `cpm install [name] <repo>` - installs the package with the provided name from the remote repositories
+* `cpm install [name] <...>` - installs the package with the provided name from the remote repositories
 * `cpm upgrade` - updates the complete set of packages deployed in the instance
-* `cpm require [path]` - installs the complete set of packages defined in the requirements file
-* `cpm upload [target]` - generates a package for the provided path and then uploads it to the currently
-configured primary repository
+* `cpm require [path] <...>` - installs the complete set of packages defined in the requirements file
+* `cpm upload [target] <repo>` - generates a package for the provided path and then uploads it to the currently
+configured primary repository, or another repository if defined
 
 ## Testing
 
