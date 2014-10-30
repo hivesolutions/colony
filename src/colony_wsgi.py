@@ -105,6 +105,12 @@ prefix = colony.conf("PREFIX", None)
 # contain a set of prefix to resolution prefix values
 alias_path = colony.conf("ALIAS_PATH", None)
 
+# retrieves the (verbosity) level for the debugger using the provided
+# configuration support, defaulting to the default level in case the
+# value is not provided through configuration
+level = colony.conf("LEVEL", logging.INFO)
+level = logging.getLevelName(level)
+
 # tries to retrieve the configuration file from the environment
 # variable associated in case it fails uses the default configuration
 # file path then joins the "relative" file path to the base path
@@ -169,7 +175,7 @@ plugin_manager = colony.PluginManager(
     run_mode = run_mode,
     container = "wsgi"
 )
-plugin_manager.start_logger(logging.INFO)
+plugin_manager.start_logger(level)
 return_code = plugin_manager.load_system()
 alias = None
 
