@@ -221,11 +221,11 @@ def generate():
     # a runtime error
     if len(sys.argv) < 3: raise RuntimeError("no plugin file provided")
 
-    # retrieves the target plugin file path and uses it
+    # retrieves the target plugin file paths and uses them
     # for the generation of the descriptor file that should
     # represent the same plugin in terms of meat information
-    target = sys.argv[2]
-    _generate(target)
+    targets = sys.argv[2]
+    for target in targets: _generate(target)
 
 def build():
     # in case there're not enough arguments to be
@@ -235,8 +235,8 @@ def build():
 
     # retrieves the descriptor file from the arguments and
     # uses it to run the build structure
-    descriptor = sys.argv[2]
-    _build(descriptor)
+    descriptors = sys.argv[2:]
+    for descriptor in descriptors: _build(descriptor)
 
 def deploy():
     # in case there're not enough arguments to be
@@ -244,22 +244,22 @@ def deploy():
     # a runtime error, the name of the file is required
     if len(sys.argv) < 3: raise RuntimeError("no package provided")
 
-    # retrieves the package file from the arguments and
-    # uses it to run the deploy the package into the currently
+    # retrieves the package files from the arguments and
+    # uses them to run the deploy the packages into the currently
     # defined global instance (default colony instance)
-    package = sys.argv[2]
-    _deploy(package)
+    packages = sys.argv[2:]
+    for package in packages: _deploy(package)
 
 def install():
     # in case there're not enough arguments to be
     # able to retrieve the package file for install
     if len(sys.argv) < 3: raise RuntimeError("no name of package provided")
 
-    # runs the install operation using the provided
-    # name as reference, note that this name may contain
-    # an optional version value attached to it
-    name = sys.argv[2]
-    _install(name)
+    # runs the install operation using the provided names
+    # as reference, note that these names may contain an
+    # optional version value attached to them
+    names = sys.argv[2:]
+    for name in names: _install(name)
 
 def require():
     # in case there're not enough arguments to be
@@ -269,8 +269,8 @@ def require():
     # runs the requirements operation with the provided
     # paths, this is a recursive operation and may take
     # a while to reach the complete and final state
-    path = sys.argv[2]
-    _require(path)
+    paths = sys.argv[2:]
+    for path in paths: _require(path)
 
 def upgrade():
     _upgrade()
