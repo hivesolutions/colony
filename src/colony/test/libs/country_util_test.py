@@ -19,6 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
+__author__ = "João Magalhães <joamag@hive.pt>"
+""" The author(s) of the module """
+
 __version__ = "1.0.0"
 """ The version of the module """
 
@@ -34,9 +37,29 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from barcode_util_test import *
-from country_util_test import *
-from gtin_util_test import *
-from lazy_util_test import *
-from number_util_test import *
-from structures_util_test import *
+import colony
+
+class CountryTest(colony.ColonyTestCase):
+    """
+    Class that tests the country retrieval support.
+    """
+
+    def test_get(self):
+        """
+        Tests the get country function.
+        """
+
+        # verifies that a normal country name retrieval
+        # succeeds, retrieving valid results
+        result = colony.country_get("portugal")
+        self.assertEqual(result, ("PT", "PRT", "620"))
+
+        # verifies that a capitalized country name retrieval
+        # fails, retrieving invalid results
+        result = colony.country_get("Portugal")
+        self.assertEqual(result, (None, None, None))
+
+        # verifies that a simplified country name retrieval
+        # fails, retrieving invalid results
+        result = colony.country_get("PT")
+        self.assertEqual(result, (None, None, None))

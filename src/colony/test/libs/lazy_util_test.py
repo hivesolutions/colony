@@ -41,7 +41,7 @@ import colony
 
 class LazyClassTest(colony.ColonyTestCase):
     """
-    Class that tests the gtin calculation method.
+    Class that tests the lazy loading mechanisms.
     """
 
     def test_equals(self):
