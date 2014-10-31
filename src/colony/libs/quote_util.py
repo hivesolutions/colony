@@ -149,7 +149,7 @@ def unquote(string_value):
     string_value_splitted = string_value.split("%")
 
     # iterates over all the "percentage values" range
-    for index in xrange(1, len(string_value_splitted)):
+    for index in range(1, len(string_value_splitted)):
         # retrieves the current iteration item
         item = string_value_splitted[index]
 
