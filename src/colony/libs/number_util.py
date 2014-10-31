@@ -70,7 +70,7 @@ def get_digit(number, index):
     @return: The digit in the given index.
     """
 
-    return number / (10 ** index) % 10
+    return number // (10 ** index) % 10
 
 def to_fixed(number, places = 2):
     """
