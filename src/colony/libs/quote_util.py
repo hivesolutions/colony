@@ -160,7 +160,7 @@ def unquote(string_value):
         except KeyError:
             string_value_splitted[index] = "%" + item
         except UnicodeDecodeError:
-            string_value_splitted[index] = legacy.chr(int(item[:2], 16)) + item[2:]
+            string_value_splitted[index] = legacy.unichr(int(item[:2], 16)) + item[2:]
 
     # returns the joined "partial" string value, this string should
     # be encoded using utf-8 as the quote strategy uses that encoding
