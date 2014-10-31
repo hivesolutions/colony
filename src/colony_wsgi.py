@@ -289,7 +289,7 @@ class ServerThread(threading.Thread):
                 kwargs = self.kwargs
             )
         except:
-            os.write(sys.stderr, "Problem in '%s'" % str(self) + "\n")
+            sys.stderr.write("Problem in '%s'" % str(self) + "\n")
             raise
 
 def serve_multiple(
@@ -332,7 +332,7 @@ def serve(
     kwargs = dict()
 ):
     _globals = globals()
-    os.write(sys.stderr, "Starting with '%s' ..." % server + "\n")
+    sys.stderr.write("Starting with '%s' ..." % server + "\n")
     method = _globals.get("serve_" + server, serve_legacy)
     return_value = method(
         host = host,
@@ -342,7 +342,7 @@ def serve(
         cer_file = cer_file,
         **kwargs
     )
-    os.write(sys.stderr, "Stopped in '%s' ..." % server + "\n")
+    sys.stderr.write("Stopped in '%s' ..." % server + "\n")
     return return_value
 
 def serve_waitress(host, port, **kwargs):
@@ -402,7 +402,7 @@ def serve_cherry(host, port, **kwargs):
 def serve_legacy(host, port, **kwargs):
     import wsgiref.simple_server
     httpd = wsgiref.simple_server.make_server(host, port, application)
-    os.write(sys.stderr, "Running on http://%s:%d/" % (host, port) + "\n")
+    sys.stderr.write("Running on http://%s:%d/" % (host, port) + "\n")
     httpd.serve_forever()
 
 def main():
