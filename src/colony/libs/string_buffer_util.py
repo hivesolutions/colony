@@ -40,6 +40,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import copy
 
+from colony.base import legacy
+
 class StringBuffer(object):
     """
     The string buffer class.
@@ -364,11 +366,35 @@ class StringBuffer(object):
         Regenerates the current value (auxiliary method).
         """
 
-        # joins all the string list elements
-        self.current_value = "".join(self.string_list)
+        # retrieves the base string or bytes value and uses
+        # it to join the complete set of string values that
+        # are part of the current buffer
+        base = self._base_type()
+        self.current_value = base.join(self.string_list)
 
         # recreates the string list with the current value
         self.string_list = [self.current_value]
 
         # unsets the dirty flag
         self.dirty = False
+
+    def _base_type(self):
+        """
+        Determines the base string type value that may be used
+        to join the various string value parts of the buffer.
+
+        This is required so that no invalid types are used causing
+        an exception to be raised in the joining.
+
+        @rtype: String
+        @return: The string value that may be used as the basiss for
+        the joinin of the various components of the string list/buffer.
+        """
+
+        if not legacy.PYTHON_3: return ""
+        is_bytes = True
+        for value in self.string_list:
+            if not type(value) == str: continue
+            is_bytes = False
+            break
+        return b"" if is_bytes else ""
