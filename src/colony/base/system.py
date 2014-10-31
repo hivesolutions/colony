@@ -2657,7 +2657,8 @@ class PluginManager(object):
 
         # decodes the plugin path using the file system encoding
         # and retrieves the absolute path from this value
-        plugin_path = plugin_path.decode(file_system_encoding)
+        plugin_path = plugin_path.decode(file_system_encoding) if\
+            legacy.is_bytes(plugin_path) else plugin_path
         absolute_plugin_path = os.path.abspath(plugin_path)
 
         # retrieves the path to the directory containing the plugin file
