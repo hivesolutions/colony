@@ -128,9 +128,9 @@ def object_flatten(instance, flattening_map):
     # retrieves the type of the instance
     instance_type = type(instance)
 
-    # in case the type of instance is (just)
-    # an instance or a map (dictionary)
-    if instance_type in (types.InstanceType, dict):
+    # in case the type of instance is (just) map (dictionary)
+    # the instance should be encloses in a sequence object
+    if instance_type == dict:
         # converts the instance to a list
         # (in order to be able to work with it)
         instance = [instance]
