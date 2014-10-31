@@ -41,6 +41,8 @@ import os
 import sys
 import time
 
+from colony.base import legacy
+
 CPYTHON_ENVIRONMENT = "cpython"
 """ CPython environment value """
 
@@ -276,6 +278,6 @@ def get_timestamp_uid():
 
     timestamp = time.time()
     float_value = timestamp * (10 ** UID_PRECISION)
-    integer_value = long(float_value)
+    integer_value = legacy.LONG(float_value)
     string_value = str(integer_value)
     return string_value
