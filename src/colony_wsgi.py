@@ -413,7 +413,7 @@ def main():
     ssl = colony.conf("SSL", False)
     key_file = colony.conf("KEY_FILE", None)
     cer_file = colony.conf("CER_FILE", None)
-    for name, value in os.environ.iteritems():
+    for name, value in os.environ.items():
         if not name.startswith("SERVER_"): continue
         name_s = name.lower()[7:]
         if name_s in EXCLUDED_NAMES: continue
