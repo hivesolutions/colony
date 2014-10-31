@@ -107,28 +107,28 @@ DEFAULT_LOGGING_FILE_SIZE = 10485760
 DEFAULT_LOGGING_FILE_BACKUP_COUNT = 5
 """ The default logging file backup count """
 
-DEFAULT_CONTAINERS_PATH = u"containers"
+DEFAULT_CONTAINERS_PATH = "containers"
 """ The default containers path """
 
-DEFAULT_LIBRARIES_PATH = u"libraries"
+DEFAULT_LIBRARIES_PATH = "libraries"
 """ The default libraries path """
 
-DEFAULT_TEMPORARY_PATH = u"tmp"
+DEFAULT_TEMPORARY_PATH = "tmp"
 """ The default temporary path """
 
-DEFAULT_VARIABLE_PATH = u"var"
+DEFAULT_VARIABLE_PATH = "var"
 """ The default variable path """
 
-DEFAULT_PLUGIN_PATH = u"plugins"
+DEFAULT_PLUGIN_PATH = "plugins"
 """ The default plugin path """
 
-DEFAULT_CONFIGURATION_PATH = u"meta"
+DEFAULT_CONFIGURATION_PATH = "meta"
 """ The default configuration path """
 
-DEFAULT_PLUGIN_PATHS_FILE_PATH = u"config/general/plugins.pth"
+DEFAULT_PLUGIN_PATHS_FILE_PATH = "config/general/plugins.pth"
 """ The default plugin paths file path """
 
-DEFAULT_WORKSPACE_PATH = u"~/.colony_workspace"
+DEFAULT_WORKSPACE_PATH = "~/.colony_workspace"
 """ The default workspace path """
 
 DEFAULT_UNLOAD_SYSTEM_TIMEOUT = 600.0
