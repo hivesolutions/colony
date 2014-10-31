@@ -418,7 +418,6 @@ def _get_character_string(character_values):
         # unicode encoded value and adds it
         # to the character buffer
         character = legacy.chr(ordinal_value)
-        character = legacy.UNICODE(character)
         character_buffer.write(character)
 
     # retrieves the character string as the value from the
