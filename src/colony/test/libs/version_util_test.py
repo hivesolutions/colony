@@ -19,6 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
+__author__ = "João Magalhães <joamag@hive.pt>"
+""" The author(s) of the module """
+
 __version__ = "1.0.0"
 """ The version of the module """
 
@@ -34,10 +37,28 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from .barcode_util_test import *
-from .country_util_test import *
-from .gtin_util_test import *
-from .lazy_util_test import *
-from .number_util_test import *
-from .structures_util_test import *
-from .version_util_test import *
+import colony
+
+class VersionTest(colony.ColonyTestCase):
+    """
+    Test class for the complete set of functions associated
+    with the version manipulation.
+    """
+
+    def test_version_cmp(self):
+        """
+        Verifies a series of conditions associated with comparison
+        of version strings.
+        """
+
+        result = colony.version_cmp("1.2.3", "1.x.x")
+        self.assertEqual(result, True)
+
+        result = colony.version_cmp("1.10.3", "1.x.x")
+        self.assertEqual(result, True)
+
+        result = colony.version_cmp("1.0.0", "x.x.x")
+        self.assertEqual(result, True)
+
+        result = colony.version_cmp("1.0.0", "2.x.x")
+        self.assertEqual(result, False)

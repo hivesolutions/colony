@@ -67,7 +67,7 @@ class JournaledListTest(colony.ColonyTestCase):
         jounaled_list.append(4)
         self.assertEqual(appends, [4, 5, 6, 4])
 
-        # verifies that the contents of the jounaled list
+        # verifies that the contents of the journaled list
         # are the expected ones
         self.assertEqual(jounaled_list, [1, 2, 3, 4, 5, 6, 4])
 
@@ -157,7 +157,7 @@ class JournaledListTest(colony.ColonyTestCase):
         Tests the clear journal method of the journaled list.
         """
 
-        # creates a jounaled list with elements from an existent
+        # creates a journaled list with elements from an existent
         # list and then adds and removes some extra elements (that are going to
         # be journalized) to test the appending and removal of them
         jounaled_list = colony.JournaledList([1, 2, 3])
@@ -193,7 +193,7 @@ class JournaledListTest(colony.ColonyTestCase):
         Tests the _append method of the journaled list.
         """
 
-        # creates a jounaled list with elements from an existent
+        # creates a journaled list with elements from an existent
         # list and then adds some extra elements (that are not going to
         # be journalized) to test the (not jounalized) appending of them
         jounaled_list = colony.JournaledList([1, 2, 3])
