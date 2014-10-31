@@ -43,8 +43,6 @@ import sys
 import copy
 import stat
 import time
-import types
-import thread
 import signal
 import inspect
 import unittest
@@ -57,11 +55,12 @@ import logging.handlers
 
 import colony.libs
 
-import util
-import config
-import loggers
-import exceptions
-import information
+from colony.base import util
+from colony.base import legacy
+from colony.base import config
+from colony.base import loggers
+from colony.base import exceptions
+from colony.base import information
 
 GLOBAL_CONFIG = config.GLOBAL_CONFIG
 """ The global static configuration of the manager that
@@ -1397,7 +1396,7 @@ class Plugin(object):
 
         # in case the thread id logging option is activated
         if GLOBAL_CONFIG.get("thread_id_logging", False):
-            formatting_message += "[" + str(thread.get_ident()) + "] "
+            formatting_message += "[" + str(threading.current_thread().ident) + "] "
 
         # appends the formatting message to the logging message and
         # returns it to the caller method
@@ -1423,7 +1422,7 @@ class Plugin(object):
             # retrieves the capability allowed type
             capability_allowed_type = type(capability_allowed)
 
-            if capability_allowed_type == types.TupleType:
+            if capability_allowed_type == tuple:
                 capability_allowed_name = capability_allowed[0]
             else:
                 capability_allowed_name = capability_allowed
@@ -2176,7 +2175,7 @@ class PluginManager(object):
             # starts the main loop, this is a blocking call that should
             # return only at the end of the plugin manger life cycle
             self.main_loop()
-        except BaseException, exception:
+        except BaseException as exception:
             # handles the system exception and changes the return code of
             # the call to an error value (notifies caller process)
             self._handle_system_exception(exception)
@@ -2583,8 +2582,8 @@ class PluginManager(object):
             # an error in case an exception occurs in the importing
             if plugin in sys.modules: continue
             try: __import__(plugin)
-            except BaseException, exception:
-                self.error("Problem importing module %s: %s" % (plugin, unicode(exception)))
+            except BaseException as exception:
+                self.error("Problem importing module %s: %s" % (plugin, legacy.UNICODE(exception)))
 
         # prints an info message
         self.info("Finished loading plugins")
@@ -3368,7 +3367,7 @@ class PluginManager(object):
                     elif plugin.loading_type == LAZY_LOADING_TYPE:
                         # calls the lazy load plugin method in the plugin (plugin bootup process)
                         plugin.lazy_load_plugin()
-                except BaseException, exception:
+                except BaseException as exception:
                     # sets the exception in the plugin
                     plugin.exception = exception
 
@@ -3381,7 +3380,7 @@ class PluginManager(object):
             # to the caller method in error
             self.error(
                 "Problem loading plugin '%s' v%s '%s'" %
-                (plugin.name, plugin.version, unicode(plugin.exception))
+                (plugin.name, plugin.version, legacy.UNICODE(plugin.exception))
             )
             return False
 
@@ -3416,7 +3415,7 @@ class PluginManager(object):
                 try:
                     # calls the end load plugin method in the plugin (plugin bootup process)
                     plugin.end_load_plugin()
-                except BaseException, exception:
+                except BaseException as exception:
                     # sets the exception in the plugin
                     plugin.exception = exception
 
@@ -3431,7 +3430,7 @@ class PluginManager(object):
             # to the caller method in error
             self.error(
                 "Problem end loading plugin '%s' v%s '%s'" %
-                (plugin.name, plugin.version, unicode(plugin.exception))
+                (plugin.name, plugin.version, legacy.UNICODE(plugin.exception))
             )
             return False
 
@@ -3530,9 +3529,9 @@ class PluginManager(object):
             try:
                 # calls the unload plugin method in the plugin (plugin shutdown process)
                 plugin.unload_plugin()
-            except BaseException, exception:
+            except BaseException as exception:
                 # prints the error message
-                self.error("There was an exception: %s" % unicode(exception))
+                self.error("There was an exception: %s" % legacy.UNICODE(exception))
 
                 # sets the exception in the plugin
                 plugin.exception = exception
@@ -3546,7 +3545,7 @@ class PluginManager(object):
             # to the caller method in error
             self.error(
                 "Problem unloading plugin '%s' v%s '%s'" %
-                (plugin.name, plugin.version, unicode(plugin.exception))
+                (plugin.name, plugin.version, legacy.UNICODE(plugin.exception))
             )
             return False
 
@@ -3570,7 +3569,7 @@ class PluginManager(object):
             try:
                 # calls the end unload plugin method in the plugin (plugin shutdown process)
                 plugin.end_unload_plugin()
-            except BaseException, exception:
+            except BaseException as exception:
                 # sets the exception in the plugin
                 plugin.exception = exception
 
@@ -3583,7 +3582,7 @@ class PluginManager(object):
             # to the caller method in error
             self.error(
                 "Problem end unloading plugin '%s' v%s %s" %
-                (plugin.name, plugin.version, unicode(plugin.exception))
+                (plugin.name, plugin.version, legacy.UNICODE(plugin.exception))
             )
             return False
 
@@ -3865,7 +3864,7 @@ class PluginManager(object):
             plugin_capability_allowed_type = type(plugin_capability_allowed)
 
             # in case the plugin capability allowed type is tuple
-            if plugin_capability_allowed_type == types.TupleType:
+            if plugin_capability_allowed_type == tuple:
                 # retrieves the plugin capability allowed string and diffusion policy
                 plugin_capability_allowed_string, _diffusion_policy = plugin_capability_allowed
             else:
@@ -3907,7 +3906,7 @@ class PluginManager(object):
             capability_type = type(capability)
 
             # in case the capability type is tuple
-            if capability_type == types.TupleType:
+            if capability_type == tuple:
                 # retrieves the real capability and diffusion policy
                 capability, diffusion_policy = capability
 
@@ -4844,7 +4843,7 @@ class PluginManager(object):
                 string_buffer.write(previous_value)
 
                 # in case the values is a string
-                if values_type in types.StringTypes:
+                if values_type in legacy.STRINGS:
                     # writes the values (simple string) into
                     # the string buffer
                     string_buffer.write(values)
@@ -5494,7 +5493,7 @@ class PluginManager(object):
 
         # in case the thread id logging option is activated
         if GLOBAL_CONFIG.get("thread_id_logging", False):
-            formatting_message += "[" + str(thread.get_ident()) + "] "
+            formatting_message += "[" + str(threading.current_thread().ident) + "] "
 
         # appends the formatting message to the logging message
         logger_message = formatting_message + message
@@ -5509,7 +5508,7 @@ class PluginManager(object):
 
         # iterates over all the plugin instances to
         # print their default description
-        for plugin in self.plugin_instances: print plugin
+        for plugin in self.plugin_instances: print(plugin)
 
     def get_prefix_paths(self):
         """
@@ -6045,11 +6044,11 @@ class PluginManager(object):
             self.warning("Unloading system due to signal: '%s'" % signum)
             self.unload_system(True)
             self.warning("Unloaded system due to signal: '%s'" % signum)
-        except Exception, exception:
+        except Exception as exception:
             # prints an error message about the problem in the unloading process
             # then stops the blocking system structures and exists the current
             # process with an error value (notifies the operative system)
-            self.error("Problem unloading the system '%s', killing the system..." % unicode(exception))
+            self.error("Problem unloading the system '%s', killing the system..." % legacy.UNICODE(exception))
             self._stop_blocking_system_structures()
             exit(2)
 
@@ -6105,7 +6104,7 @@ class PluginManager(object):
             # retrieves the exception type and the message that is
             # going to be used to represent the message
             exception_type = exception.__class__.__name__
-            exception_message = unicode(exception) or "Unknown error"
+            exception_message = legacy.UNICODE(exception) or "Unknown error"
 
             # print an information message about the unloading
             # of the current system, this is printed at the beginning
@@ -6125,10 +6124,10 @@ class PluginManager(object):
                 "Unloaded system due to exception: '%s' of type '%s'" %
                 (exception_message, exception_type)
             )
-        except (KeyboardInterrupt, SystemExit), exception:
+        except (KeyboardInterrupt, SystemExit)as exception:
             # retrieves the message that is going to be used for the
             # representation of the exception in the logging
-            exception_message = unicode(exception) or "Unknown error"
+            exception_message = legacy.UNICODE(exception) or "Unknown error"
 
             # prints an error message about the problem in the unloading
             # of the current plugin system, required for debugging
@@ -6464,7 +6463,7 @@ class PackageDependency(Dependency):
         # just a single package, and in case it's a single package converts
         # it into a single item sequence to be compliant with a sequence
         import_name_t = type(self.import_name)
-        is_sequence = import_name_t in (types.ListType, types.TupleType)
+        is_sequence = import_name_t in (list, tuple)
         import_name = self.import_name if is_sequence else (self.import_name,)
 
         # iterates over the complete set of package items in the import name
@@ -6931,7 +6930,7 @@ def convert_to_capability_list(capability_list):
         capability_type = type(capability)
 
         # in case the capability type is tuple
-        if capability_type == types.TupleType:
+        if capability_type == tuple:
             # retrieves the capability value and diffusion policy
             capability_value, _diffusion_policy = capability
         else:
@@ -7278,11 +7277,11 @@ class PluginEventThread(threading.Thread):
 
                 # calls the event thread method
                 self.method()
-            except BaseException, exception:
+            except BaseException as exception:
                 # prints an error message to the current logging infra-structure
                 # then sets the exception in the plugin instance and signals the
                 # error state in the plugin (to be used latter)
-                self.plugin.error("Problem starting thread plugin: " + unicode(exception))
+                self.plugin.error("Problem starting thread plugin: " + legacy.UNICODE(exception))
                 self.plugin.exception = exception
                 self.plugin.error_state = True
 
