@@ -39,9 +39,10 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import sys
 import copy
-import types
 import calendar
 import datetime
+
+from colony.base import legacy
 
 def map_clean(map):
     """
@@ -123,7 +124,7 @@ def map_copy_deep(source_map, destiny_map):
         # in case the source value type is not a dictionary
         # continues the loop, nothing to be done in the
         # current iteration
-        if not source_value_type == types.DictType: continue
+        if not source_value_type == dict: continue
 
         # creates the destiny value map and sets the
         # destiny value in the destiny map
@@ -156,13 +157,13 @@ def map_duplicate(item):
 
     # in case the current item is a sequence
     # must "copy" all of its elements
-    if _type in (types.ListType, types.TupleType):
+    if _type in (list, tuple):
         return [map_duplicate(value) for value in item]
 
     # in case the current item is a map
     # must create a new map with the result
     # of the copy of all the elements
-    elif _type == types.DictType:
+    elif _type == dict:
         # creates the item map to be populated
         # with the copied values
         _item = {}
@@ -248,7 +249,7 @@ def map_extend(base_map, extension_map, override = True, recursive = False, copy
 
         # in case the value is a map and the
         # recursive flag is set
-        if recursive and value_type == types.DictType:
+        if recursive and value_type == dict:
             # retrieves the result map value in
             # case it's set
             result_map_value = result_map.get(key, {})
@@ -352,7 +353,7 @@ def map_get_values(map, key):
     values_type = type(values)
 
     # in case the values element is not a list
-    if not values_type == types.ListType:
+    if not values_type == list:
         # creates the list with the values element
         values = [values]
 
@@ -381,9 +382,9 @@ def map_output(map, output_method = sys.stdout.write, indentation = ""):
         map_value = map[key]
 
         # outputs the map value
-        if type(map_value) == types.DictType:
+        if type(map_value) == dict:
             # defines the key string
-            key_string = indentation + unicode(key) + ":"
+            key_string = indentation + legacy.UNICODE(key) + ":"
 
             # outputs the key string
             output_method(key_string)
@@ -396,7 +397,7 @@ def map_output(map, output_method = sys.stdout.write, indentation = ""):
         # otherwise it must be a "simple" value
         else:
             # creates a string representation of the map value
-            map_value_string = indentation + unicode(key) + " = " + unicode(map_value)
+            map_value_string = indentation + legacy.UNICODE(key) + " = " + legacy.UNICODE(map_value)
 
             # outputs the map value string
             output_method(map_value_string)
@@ -432,13 +433,13 @@ def map_normalize(item, operation = None):
 
     # in case the current item is a sequence
     # must normalize all of its elements
-    if _type in (types.ListType, types.TupleType):
+    if _type in (list, tuple):
         return [map_normalize(value, operation) for value in item]
 
     # in case the current item is a map
     # must create a new map with the result
     # of the normalization of all the elements
-    elif _type == types.DictType:
+    elif _type == dict:
         # creates the item map to be populated
         # with the normalized values
         _item = {}
