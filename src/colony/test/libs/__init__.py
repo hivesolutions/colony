@@ -34,9 +34,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from barcode_util_test import *
-from country_util_test import *
-from gtin_util_test import *
-from lazy_util_test import *
-from number_util_test import *
-from structures_util_test import *
+from .barcode_util_test import *
+from .country_util_test import *
+from .gtin_util_test import *
+from .lazy_util_test import *
+from .number_util_test import *
+from .structures_util_test import *
