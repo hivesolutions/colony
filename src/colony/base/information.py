@@ -90,7 +90,7 @@ INFORMATION_PATH = "../res/colony.json"
 complete "release" information about the current
 colony implementation running """
 
-def generate(information = None, encoding = "utf-8"):
+def generate(information = None, encoding = DEFAULT_ENCODING):
     # sets the various environment variables as the
     # global reference to their values to avoid
     # confusing local allocation
@@ -150,11 +150,11 @@ def generate(information = None, encoding = "utf-8"):
     # map must contain all the information required
     # for the generation of these string, otherwise
     # this function will fails in exception
-    VERSION = (VERSION % information).encode(DEFAULT_ENCODING)
-    RELEASE = (RELEASE % information).encode(DEFAULT_ENCODING)
-    BUILD = (BUILD % information).encode(DEFAULT_ENCODING)
-    RELEASE_DATE = (RELEASE_DATE % information).encode(DEFAULT_ENCODING)
-    RELEASE_DATE_TIME = (RELEASE_DATE_TIME % information).encode(DEFAULT_ENCODING)
+    VERSION = VERSION % information
+    RELEASE = RELEASE % information
+    BUILD = BUILD % information
+    RELEASE_DATE = RELEASE_DATE % information
+    RELEASE_DATE_TIME = RELEASE_DATE_TIME % information
 
 # runs the generate task at import time to provide
 # the most update values to the importer agent
