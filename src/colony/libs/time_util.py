@@ -39,7 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import datetime
 
-import list_util
+from colony.libs import list_util
 
 DAY_VALUE = "day"
 """ The day value """
