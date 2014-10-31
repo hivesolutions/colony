@@ -1,6 +1,7 @@
 *.pyc
 *.egg
 
+.coverage
 session.shelve*
 
 /dist/
