@@ -44,7 +44,7 @@ import stat
 BUFFER_SIZE = 4096
 """ The size of the buffer for file operations """
 
-LONG_PATH_PREFIX = u"\\\\?\\"
+LONG_PATH_PREFIX = "\\\\?\\"
 """ The windows long path prefix """
 
 CURRENT_DIRECTORY = "."
