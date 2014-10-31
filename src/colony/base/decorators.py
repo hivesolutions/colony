@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import inspect
+
 from colony.base import system
 
 METHOD_NAME_VALUE = "method_name"
@@ -527,8 +529,11 @@ def event_handler(function):
             event_handler_function_name = event_handler_function.__name__
             event_handler_method = getattr(original_plugin, event_handler_function_name)
 
-            # retrieves the number of arguments for the function
-            number_arguments = event_handler_function.func_code.co_argcount
+            # retrieves the number of arguments for the function by
+            # inspecting the specification of the function, this may
+            # be an expensive operation and should be used with care
+            spec = inspect.getargspec(event_handler_function)
+            number_arguments = len(spec.args)
 
             # in case the length of the arguments is insufficient
             if len(all_method_args) < number_arguments:
