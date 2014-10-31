@@ -100,7 +100,7 @@ def usage():
     command line to the user.
     """
 
-    print USAGE
+    print(USAGE)
 
 def print_information():
     """
@@ -109,14 +109,14 @@ def print_information():
     used when running the system.
     """
 
-    print BRANDING_TEXT % (
+    print( BRANDING_TEXT % (
         colony.VERSION,
         colony.RELEASE,
         colony.BUILD,
         colony.RELEASE_DATE
-    )
-    print VERSION_PRE_TEXT + sys.version
-    print HELP_TEXT
+    ))
+    print(VERSION_PRE_TEXT + sys.version)
+    print(HELP_TEXT)
 
 def run(
     manager_path,
@@ -300,11 +300,11 @@ def execute(cwd = None):
                  "plugin_dir="
             ]
         )
-    except getopt.GetoptError, error:
+    except getopt.GetoptError as error:
         # prints the error description so that the user is able
         # to react to the error, then prints the possible usage
         # for the command and exists in error
-        print str(error)
+        print(str(error))
         usage()
         sys.exit(2)
 
