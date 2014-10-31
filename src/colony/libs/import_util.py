@@ -39,6 +39,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import sys
 
+from colony.base import legacy
+
 def __import__(module_name, persist_value = True):
     """
     Importer function to be used in the process of importing
@@ -160,4 +162,4 @@ def reload_import(path, hard = True):
         # system module and then forces a reload on the
         # module (to flush the contents)
         module = sys.modules[path]
-        reload(module)
+        legacy.reload(module)
