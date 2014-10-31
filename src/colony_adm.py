@@ -95,7 +95,7 @@ def resolve_manager(path, ensure = True):
     return manager_path
 
 def output(message):
-    print (" " * INDENT) +  message
+    print(" " * INDENT) +  message
 
 def indent():
     global INDENT
