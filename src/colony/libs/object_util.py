@@ -40,19 +40,29 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import copy
 import types
 
+from colony.base import legacy
+
 NOT_SET_VALUE = None
 """ The value to be set when the value is not set (defined) """
 
 TOPPER_VALUE = "_topper"
 """ The value of the attribute to hold the top values """
 
-LIST_TYPES = (types.ListType, types.TupleType)
+LIST_TYPES = (list, tuple)
 """ A tuple with the various list types """
 
 INVALID_ATTRIBUTE_NAMES = ("__doc__", "__module__")
 """ The set of invalid attribute names (for printing) """
 
-VALID_ATTRIBUTE_TYPES = (types.IntType, types.FloatType, types.BooleanType, types.StringType, types.UnicodeType, types.NoneType)
+VALID_ATTRIBUTE_TYPES = (
+    int,
+    legacy.LONG,
+    float,
+    bool,
+    str,
+    legacy.UNICODE,
+    type(None)
+)
 """ The set of valid attribute types (for printing) """
 
 def object_attribute_names(instance):
@@ -120,7 +130,7 @@ def object_flatten(instance, flattening_map):
 
     # in case the type of instance is (just)
     # an instance or a map (dictionary)
-    if instance_type in (types.InstanceType, types.DictionaryType):
+    if instance_type in (types.InstanceType, dict):
         # converts the instance to a list
         # (in order to be able to work with it)
         instance = [instance]
@@ -140,7 +150,7 @@ def object_flatten(instance, flattening_map):
 
 def object_print_list(instances_list):
     """
-    Prints some information on the obects
+    Prints some information on the objects
     in the given list, for debugging purposes.
 
     @type instances_list: List
@@ -156,7 +166,7 @@ def object_print_list(instances_list):
         object_print(instance)
 
         # prints a blank line
-        print ""
+        print("")
 
 def object_print(instance):
     """
@@ -191,7 +201,7 @@ def object_print(instance):
             continue
 
         # prints the attribute name and the attribute value
-        print "%s: %s" % (attribute_name, attribute)
+        print("%s: %s" % (attribute_name, attribute))
 
 def _object_flatten(instances_list, flattening_map):
     """
@@ -263,12 +273,12 @@ def __object_flatten_to_one(base_instance, instance, flattening_map):
 
         # in case the value if of type string
         # (a leaf of the flattening structure)
-        if value_type == types.StringType:
+        if value_type == str:
             # sets the leaf value in the base instance
             __object_set_attr(base_instance, value, instance_value)
         # in case the value is of type dictionary
         # (defined to one relation)
-        elif value_type == types.DictionaryType:
+        elif value_type == dict:
             # "flattens" the to one instance relation (recursion)
             __object_flatten_to_one(base_instance, instance_value, value)
 
@@ -307,12 +317,12 @@ def __object_flatten_to_one_map(base_map, instance, flattening_map):
 
         # in case the value if of type string
         # (a leaf of the flattening structure)
-        if value_type == types.StringType:
+        if value_type == str:
             # sets the leaf value in the base map
             base_map[value] = instance_value
         # in case the value is of type dictionary
         # (defined to one relation)
-        elif value_type == types.DictionaryType:
+        elif value_type == dict:
             # "flattens" the to one instance relation (recursion)
             __object_flatten_to_one_map(base_map, instance_value, value)
 
@@ -513,7 +523,7 @@ def __object_has_attr(instance, attribute_name):
     Checks if an attribute with the given name
     exists in the given instance.
     This method provides an additional layer of abstraction
-    that allows it to be used in ojects or in maps.
+    that allows it to be used in objects or in maps.
 
     @type instance: Object
     @param instance: The instance to be checked
@@ -530,7 +540,7 @@ def __object_has_attr(instance, attribute_name):
     instance_type = type(instance)
 
     # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
+    if instance_type == dict:
         # checks if the attribute name exists in
         # instance (map)
         return attribute_name in instance
@@ -561,7 +571,7 @@ def __object_get_attr(instance, attribute_name):
     instance_type = type(instance)
 
     # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
+    if instance_type == dict:
         # returns the attribute from the map
         # (dictionary) with the normal accessor
         return instance[attribute_name]
@@ -593,7 +603,7 @@ def __object_set_attr(instance, attribute_name, attribute):
     instance_type = type(instance)
 
     # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
+    if instance_type == dict:
         # sets the attribute using the normal
         # map setter
         instance[attribute_name] = attribute
@@ -624,7 +634,7 @@ def __object_del_attr(instance, attribute_name):
     instance_type = type(instance)
 
     # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
+    if instance_type == dict:
         # calls the del operator in the instance
         # map (dictionary)
         del instance[attribute_name]
@@ -650,7 +660,7 @@ def __object_keys(instance):
     instance_type = type(instance)
 
     # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
+    if instance_type == dict:
         # returns the instance (map) keys values
         # using the normal map method
         return instance.keys()
@@ -676,7 +686,7 @@ def __object_items(instance):
     instance_type = type(instance)
 
     # in case the instance type is dictionary
-    if instance_type == types.DictionaryType:
+    if instance_type == dict:
         # returns the instance (map) keys values
         # using the normal map method
         return instance.items()
