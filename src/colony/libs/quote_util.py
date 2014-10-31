@@ -37,7 +37,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import string_buffer_util
+from colony.base import legacy
+
+from colony.libs import string_buffer_util
 
 QUOTE_SAFE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.-"
 """ The string containing all the safe characters to be quoted """
@@ -158,7 +160,7 @@ def unquote(string_value):
         except KeyError:
             string_value_splitted[index] = "%" + item
         except UnicodeDecodeError:
-            string_value_splitted[index] = unichr(int(item[:2], 16)) + item[2:]
+            string_value_splitted[index] = legacy.chr(int(item[:2], 16)) + item[2:]
 
     # returns the joined "partial" string value, this string should
     # be encoded using utf-8 as the quote strategy uses that encoding

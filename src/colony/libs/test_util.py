@@ -37,10 +37,11 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import types
 import unittest
 
 import xml.dom.minidom
+
+from colony.base import legacy
 
 class ColonyTestCase(unittest.TestCase):
     """
@@ -104,11 +105,11 @@ class ColonyTestCase(unittest.TestCase):
             # invokes the function that should trigger the evaluation process,
             # note that the execution is dynamic with the provided arguments
             function(*args, **kwargs)
-        except Exception, exception:
+        except Exception as exception:
             # checks if the current exception assert mode is string or value
             # oriented and then uses the string mode flag to find out the correct
             # expected exception name (for exception string description)
-            string_mode = True if type(expected_exception) in types.StringTypes else False
+            string_mode = True if type(expected_exception) in legacy.STRINGS else False
             expected_exception_name =expected_exception if string_mode else expected_exception.__name__
 
             # retrieves the exception class and then uses it
