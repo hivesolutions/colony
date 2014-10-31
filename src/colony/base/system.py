@@ -947,7 +947,7 @@ class Plugin(object):
         for valid in valids:
             module = sys.modules[valid]
             if not module: continue
-            try: reload(module)
+            try: legacy.reload(module)
             except ImportError: del sys.modules[valid]
 
     def get_configuration_property(self, property_name):
