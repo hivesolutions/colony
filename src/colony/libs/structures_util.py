@@ -365,6 +365,19 @@ class OrderedMapIterator(object):
 
         self.current_index = 0
 
+    def __next__(self):
+        """
+        Retrieves the next ordered map key.
+
+        This is the magic method responsible for the retrieval of
+        the next value (should forward the request).
+
+        @rtype: String
+        @return: The next key in the ordered map.
+        """
+
+        return self.next()
+
     def next(self):
         """
         Retrieves the next ordered map key.
