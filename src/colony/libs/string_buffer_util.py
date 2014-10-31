@@ -387,8 +387,8 @@ class StringBuffer(object):
         an exception to be raised in the joining.
 
         @rtype: String
-        @return: The string value that may be used as the basiss for
-        the joinin of the various components of the string list/buffer.
+        @return: The string value that may be used as the basis for
+        the joining of the various components of the string list/buffer.
         """
 
         if not legacy.PYTHON_3: return ""
