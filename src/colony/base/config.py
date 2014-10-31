@@ -41,7 +41,7 @@ import os
 import sys
 import json
 
-import util
+from colony.base import util
 
 FILE_NAME = "colony.json"
 """ The default name of the file that is going to be
