@@ -423,5 +423,5 @@ def _get_character_string(character_values):
     # retrieves the character string as the value from the
     # character buffer and then returns the value
     character_string = character_buffer.get_value()
-    character_string = legacy.str(character_string)
+    character_string = character_string.decode("unicode_escape")
     return character_string
