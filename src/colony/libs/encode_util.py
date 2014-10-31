@@ -39,6 +39,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import binascii
 
+from colony.base import legacy
+
 def encode_two_complement_string(long_value):
     """
     Encode a long to a two's complement little-endian binary string.
@@ -88,7 +90,7 @@ def encode_two_complement_string(long_value):
         number_bits = number_nibbles * 4
 
         # puts the negative indication as the last digit
-        long_value += 1L << number_bits
+        long_value += 1 << number_bits
 
         # converts the long value to the hexadecimal string value
         long_value_hexadecial = hex(long_value)
@@ -141,19 +143,19 @@ def decode_two_complement_string(data):
     # in case the data length is zero
     if data_length == 0:
         # return zero
-        return 0L
+        return legacy.LONG(0)
 
     # converts the (inverted) data to hexadecimal string
     long_value_hexadecial = binascii.hexlify(data[::-1])
 
     # converts the long value hexadecimal to integer
     # using base 16
-    long_value = long(long_value_hexadecial, 16)
+    long_value = legacy.LONG(long_value_hexadecial, 16)
 
     # in case the last digit is 0x80 (negative)
     if data[-1] >= "\x80":
         # puts the negative indication as the last digit
-        long_value -= 1L << (data_length * 8)
+        long_value -= legacy.LONG(1) << (data_length * 8)
 
     # returns the long value
     return long_value
