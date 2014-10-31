@@ -446,7 +446,7 @@ def _generate_plugin(path):
     # executes the main plugin python file so that it's possible
     # to retrieve the plugin structure and process it, at the end
     # of the "finding iteration" the plugin should have been found
-    execfile(path, variables)
+    colony.legacy.execfile(path, variables)
     for name, value in variables.items():
         if not name.endswith("Plugin"): continue
         plugin = value
