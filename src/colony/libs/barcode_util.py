@@ -417,11 +417,10 @@ def _get_character_string(character_values):
         # converts the ordinal value into an
         # unicode encoded value and adds it
         # to the character buffer
-        character = legacy.chr(ordinal_value)
+        character = legacy.unichr(ordinal_value)
         character_buffer.write(character)
 
     # retrieves the character string as the value from the
     # character buffer and then returns the value
     character_string = character_buffer.get_value()
-    character_string = character_string.decode("unicode_escape")
     return character_string
