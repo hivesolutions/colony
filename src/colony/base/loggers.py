@@ -37,8 +37,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import types
 import logging
+
+from colony.base import legacy
 
 try:
     import zmq
@@ -124,7 +125,7 @@ class BroadcastHandler(logging.Handler):
             # in case the type of the message is unicode encodes it using the
             # default encoding for the transmission, then sends the message
             # through the socket
-            if type(message) == types.UnicodeType: message = message.encode("utf-8")
+            if type(message) == legacy.UNICODE: message = message.encode("utf-8")
             self.socket.send("colony %s" % message)
 
             # flushes the current stream
