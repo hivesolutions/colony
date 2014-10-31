@@ -19,6 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Colony Framework. If not, see <http://www.gnu.org/licenses/>.
 
+__author__ = "João Magalhães <joamag@hive.pt>"
+""" The author(s) of the module """
+
 __version__ = "1.0.0"
 """ The version of the module """
 
@@ -34,4 +37,20 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from util_test import *
+import colony
+
+class UtilTest(colony.ColonyTestCase):
+    """
+    Test case for the verification of util related
+    methods and functions of colony.
+    """
+
+    def timestamp_test(self):
+        """
+        Tests and verifies the timestamp related functions
+        of the coony infra-structure.
+        """
+
+        uuid = colony.get_timestamp_uid()
+        self.assertNotEqual(uuid, None)
+        self.assertEqual(type(uuid), str)
