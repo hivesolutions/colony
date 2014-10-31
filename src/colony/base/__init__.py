@@ -48,7 +48,6 @@ from .config import *
 from .decorators import *
 from .exceptions import *
 from .information import *
-from .legacy import *
 from .loggers import *
 from .system import *
 from .test import *
