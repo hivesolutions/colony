@@ -49,7 +49,7 @@ class JournaledListTest(colony.ColonyTestCase):
         Tests the append method of the journaled list.
         """
 
-        # creates a jounaled list with elements from an existent
+        # creates a journaled list with elements from an existent
         # list and then adds some extra elements (that are going to
         # be journalized) to test the appending of them
         jounaled_list = colony.JournaledList([1, 2, 3])
