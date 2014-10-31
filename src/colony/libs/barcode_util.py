@@ -37,7 +37,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import string_buffer_util
+from colony.base import legacy
+
+from colony.libs import string_buffer_util
 
 DIGIT_ENCODING_MAP = {
     "0" : "NNWWN",
@@ -415,7 +417,8 @@ def _get_character_string(character_values):
         # converts the ordinal value into an
         # unicode encoded value and adds it
         # to the character buffer
-        character = unichr(ordinal_value)
+        character = legacy.chr(ordinal_value)
+        character = legacy.UNICODE(character)
         character_buffer.write(character)
 
     # retrieves the character string as the value from the
