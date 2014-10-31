@@ -41,8 +41,8 @@ import os
 import tempfile
 import threading
 
-import list_util
-import path_util
+from colony.libs import list_util
+from colony.libs import path_util
 
 PATH_TUPLE_PROCESS_METHOD_PREFIX = "_process_path_tuple_"
 """ The prefix to the path tuple process method """
@@ -401,7 +401,7 @@ class FileContext(object):
             # checks the directory for items and removes
             # the directory in the path (recursively)
             not directory_items and os.removedirs(directory_path)
-        except BaseException, exception:
+        except BaseException as exception:
             if not handle_exception: raise exception
 
     def remove_file(self, file_path, handle_exception = False):
@@ -424,7 +424,7 @@ class FileContext(object):
         try:
             # removes the file path
             os.remove(file_path)
-        except BaseException, exception:
+        except BaseException as exception:
             if not handle_exception: raise exception
 
     def remove_directory_immediate(self, directory_path, handle_exception = False):
@@ -931,7 +931,7 @@ class FileTransactionContext(FileContext, TransactionContext):
                 # checks the virtual directory for items and removes
                 # the directory in the virtual path (recursively)
                 not virtual_directory_items and os.removedirs(virtual_directory_path)
-            except BaseException, exception:
+            except BaseException as exception:
                 if not handle_exception: raise exception
 
         # creates a path tuple with the directory path
@@ -968,7 +968,7 @@ class FileTransactionContext(FileContext, TransactionContext):
             try:
                 # removes the virtual file path
                 os.remove(virtual_file_path)
-            except BaseException, exception:
+            except BaseException as exception:
                 if not handle_exception: raise exception
 
         # creates a path tuple with the file path
@@ -1003,7 +1003,7 @@ class FileTransactionContext(FileContext, TransactionContext):
         try:
             # removes the directory in the (real) directory path
             path_util.remove_directory(real_directory_path)
-        except BaseException, exception:
+        except BaseException as exception:
             if not handle_exception: raise exception
 
     def get_file_path(self, file_path, replace_files = True):
@@ -1395,7 +1395,7 @@ class FileTransactionContext(FileContext, TransactionContext):
                     # checks the directory for items and removes
                     # the directory in the path (recursively)
                     not directory_items and os.removedirs(file_path)
-                except BaseException, exception:
+                except BaseException as exception:
                     if not handle_exception: raise exception
             # in case the removal is not recursive
             else:
@@ -1403,12 +1403,12 @@ class FileTransactionContext(FileContext, TransactionContext):
                     # checks the directory for items and removes
                     # the directory in the path
                     not directory_items and os.remove(file_path)
-                except BaseException, exception:
+                except BaseException as exception:
                     if not handle_exception: raise exception
         # otherwise it must be a "normal" file
         else:
             try:
                 # removes the file path
                 os.remove(file_path)
-            except BaseException, exception:
+            except BaseException as exception:
                 if not handle_exception: raise exception
