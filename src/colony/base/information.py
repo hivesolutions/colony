@@ -90,7 +90,7 @@ INFORMATION_PATH = "../res/colony.json"
 complete "release" information about the current
 colony implementation running """
 
-def generate(information = None):
+def generate(information = None, encoding = "utf-8"):
     # sets the various environment variables as the
     # global reference to their values to avoid
     # confusing local allocation
@@ -129,8 +129,10 @@ def generate(information = None):
         file_path = os.path.join(directory, INFORMATION_PATH)
         file_path = os.path.normpath(file_path)
         file = open(file_path, "rb")
-        try: information = json.load(file)
+        try: data = file.read()
         finally: file.close()
+        data = data.decode(encoding)
+        information = json.loads(data)
 
         # retrieves the current datetime and formats it
         # according to the two pre-defined formats
