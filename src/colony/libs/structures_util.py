@@ -37,8 +37,6 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import types
-
 class JournaledList(list):
     """
     List structure that keeps track of the append and
@@ -500,7 +498,7 @@ def is_dictionary(object):
     object_type = type(object)
 
     # in case the object type is dictionary
-    if object_type == types.DictType:
+    if object_type == dict:
         # returns true
         return True
 
