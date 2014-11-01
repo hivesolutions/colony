@@ -1,4 +1,5 @@
 {
+    "1.2.12" : ["Fixed blocking issue in builtins assignment"],
     "1.2.11" : ["Initial experimental Python 3 support"],
     "1.2.10" : ["Fixed problem in verbosity level for logging"],
     "1.2.9" : ["Support for multiple arguments in cpm"],
