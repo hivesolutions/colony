@@ -101,5 +101,9 @@ def round_apply():
     if not new_round: return
 
     # updates the built-in round function with the new
-    # round function so that the rounds are coherent
-    globals()["__builtins__"]["round"] = roundi
+    # round function so that the rounds are coherent, note
+    # that the builtins reference may be either map based
+    # or module based, logic must take care of both cases
+    builtins = globals()["__builtins__"]
+    if type(builtins) == dict: builtins["round"] = roundi
+    else: builtins.round = roundi
