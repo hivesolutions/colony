@@ -497,35 +497,6 @@ class MultipleValueMap(object):
         # removes the value
         values.remove(value)
 
-def is_dictionary(object):
-    """
-    Validates if the given object is a valid
-    dictionary object.
-
-    @type object: Object
-    @param object: The object to be validated.
-    @rtype: bool
-    @return: If the given object is a valid
-    dictionary object.
-    """
-
-    # retrieves the object type
-    object_type = type(object)
-
-    # in case the object type is dictionary
-    if object_type == dict:
-        # returns true
-        return True
-
-    # in case the object type id ordered map
-    # (this is the custom dictionary class)
-    if object_type == OrderedMap:
-        # returns true
-        return True
-
-    # returns false
-    return False
-
 class FormatTuple(object):
     """
     Tuple based structure that may be used to represent
@@ -692,3 +663,32 @@ class FileReference(object):
         finally: file.close()
         if self.encoding: data = data.decode(self.encoding)
         return data
+
+def is_dictionary(object):
+    """
+    Validates if the given object is a valid
+    dictionary object.
+
+    @type object: Object
+    @param object: The object to be validated.
+    @rtype: bool
+    @return: If the given object is a valid
+    dictionary object.
+    """
+
+    # retrieves the object type
+    object_type = type(object)
+
+    # in case the object type is dictionary
+    if object_type == dict:
+        # returns true
+        return True
+
+    # in case the object type id ordered map
+    # (this is the custom dictionary class)
+    if object_type == OrderedMap:
+        # returns true
+        return True
+
+    # returns false
+    return False

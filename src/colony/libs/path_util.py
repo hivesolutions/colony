@@ -508,7 +508,7 @@ def is_parent_path(path, parent_path):
         # returns false (invalid)
         return True
 
-def relative_path_windows(path, start_path = CURRENT_DIRECTORY):
+def _relative_path_windows(path, start_path = CURRENT_DIRECTORY):
     """
     "Calculates" the relative path between the base path
     and the given "start" path.
@@ -574,7 +574,7 @@ def relative_path_windows(path, start_path = CURRENT_DIRECTORY):
     # the relatives list
     return os.path.join(*relatives_list)
 
-def relative_path_posix(path, start = CURRENT_DIRECTORY):
+def _relative_path_posix(path, start = CURRENT_DIRECTORY):
     """
     "Calculates" the relative path between the base path
     and the given "start" path.
@@ -652,10 +652,10 @@ if NT_PLATFORM_VALUE in sys.builtin_module_names or CE_PLATFORM_VALUE in sys.bui
     # sets the separator value and the relative
     # path method values (for windows)
     SEPARATOR = "\\"
-    relative_path = relative_path_windows
+    relative_path = _relative_path_windows
 # otherwise it should be a posix environment
 else:
     # sets the separator value and the relative
     # path method values (for posix)
     SEPARATOR = "/"
-    relative_path = relative_path_posix
+    relative_path = _relative_path_posix

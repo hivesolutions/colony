@@ -118,7 +118,12 @@ SEPARATORS = {
 }
 """ The separators map """
 
-def format_seconds_smart(seconds, mode = SIMPLE_VALUE, includes = DEFAULT_INCLUDES, minimize = MINIMIZE_MULTIPLE):
+def format_seconds_smart(
+    seconds,
+    mode = SIMPLE_VALUE,
+    includes = DEFAULT_INCLUDES,
+    minimize = MINIMIZE_MULTIPLE
+):
     """
     Formats the given seconds according to the given
     mode, includes and minimization support.
