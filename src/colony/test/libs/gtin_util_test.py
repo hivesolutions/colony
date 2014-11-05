@@ -50,25 +50,25 @@ class GtinTest(colony.ColonyTestCase):
         """
 
         # calculates the control value
-        control_value = colony.calculate_control_value(629104150021)
+        control_value = colony.calculate_control_value_gtin(629104150021)
 
         # asserts the control value
         self.assertEqual(control_value, 3)
 
         # calculates the control value
-        control_value = colony.calculate_control_value(978097123458)
+        control_value = colony.calculate_control_value_gtin(978097123458)
 
         # asserts the control value
         self.assertEqual(control_value, 1)
 
         # calculates the control value
-        control_value = colony.calculate_control_value(978097123456)
+        control_value = colony.calculate_control_value_gtin(978097123456)
 
         # asserts the control value
         self.assertEqual(control_value, 7)
 
         # calculates the control value
-        control_value = colony.calculate_control_value(978097123457)
+        control_value = colony.calculate_control_value_gtin(978097123457)
 
         # asserts the control value
         self.assertEqual(control_value, 4)
