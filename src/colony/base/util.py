@@ -89,7 +89,7 @@ class WaitInput(object):
         # returns an empty (wait string)
         return ""
 
-class Event(object):
+class QueueEvent(object):
     """
     The class that describes an event to be
     used in a generic event queue.

@@ -2237,7 +2237,7 @@ class PluginManager(object):
         if thread_safe:
             # creates the exit event and adds it to the
             # event queue to be executed in back thread
-            exit_event = util.Event("exit")
+            exit_event = util.QueueEvent("exit")
             self.add_event(exit_event)
         else:
             # unloads the thread based plugins
@@ -2796,7 +2796,7 @@ class PluginManager(object):
             plugin_thread = self.plugin_threads_map[plugin_id]
 
             # creates the plugin exit event
-            event = util.Event("exit")
+            event = util.QueueEvent("exit")
 
             # adds the load event to the thread queue
             plugin_thread.add_event(event)
@@ -3340,10 +3340,10 @@ class PluginManager(object):
             # in case the loading type of the plugin is eager
             if plugin.loading_type == EAGER_LOADING_TYPE or type == FULL_LOAD_TYPE:
                 # creates the plugin load event
-                event = util.Event("load")
+                event = util.QueueEvent("load")
             else:
                 # creates the plugin lazy load event
-                event = util.Event("lazy_load")
+                event = util.QueueEvent("lazy_load")
 
             # adds the load event to the thread queue
             plugin_thread.add_event(event)
@@ -3401,7 +3401,7 @@ class PluginManager(object):
             plugin_thread.set_end_load_complete(False)
 
             # creates the plugin end load event
-            event = util.Event("end_load")
+            event = util.QueueEvent("end_load")
 
             # adds the end load event to the thread queue
             plugin_thread.add_event(event)
@@ -3518,7 +3518,7 @@ class PluginManager(object):
             plugin_thread.set_unload_complete(False)
 
             # creates the plugin unload event
-            event = util.Event("unload")
+            event = util.QueueEvent("unload")
 
             # adds the unload event to the thread queue
             plugin_thread.add_event(event)
@@ -3559,7 +3559,7 @@ class PluginManager(object):
             plugin_thread.set_end_unload_complete(False)
 
             # creates the plugin end unload event
-            event = util.Event("end_unload")
+            event = util.QueueEvent("end_unload")
 
             # adds the end unload event to the thread queue
             plugin_thread.add_event(event)
@@ -3599,7 +3599,7 @@ class PluginManager(object):
 
         # creates the exit event that will be used to "kill"
         # each of the plugin threads that is running
-        exit_event = util.Event("exit")
+        exit_event = util.QueueEvent("exit")
 
         # iterates over all the available plugin threads
         # joining all the threads into the current thread
