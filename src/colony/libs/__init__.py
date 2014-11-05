@@ -100,8 +100,9 @@ from .math_util import ceil_integer, greatest_common_divisor, fast_exponentiatio
 from .number_util import get_number_length, get_digit, to_fixed
 from .object_util import object_attribute_names, object_attribute_values, object_flatten,\
     object_print_list, object_print
-from .observer_util import *
-from .os_util import *
+from .observer_util import unique, notify, message, action, progress, register_g, unregister_g,\
+    notify_g
+from .os_util import kill_process
 from .path_util import *
 from .protection_util import *
 from .quote_util import *
