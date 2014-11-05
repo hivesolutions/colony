@@ -1,4 +1,5 @@
 {
+    "1.2.15" : ["Support for eager loading in legacy"],
     "1.2.14" : ["New pickle support in legacy"],
     "1.2.13" : ["Better legacy support"],
     "1.2.12" : ["Fixed blocking issue in builtins assignment"],
