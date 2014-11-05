@@ -73,13 +73,13 @@ def kill_process(pid, signal = None):
     # in case the current operative system is windows based
     if os_name in WINDOWS_PLATFORMS_VALUE:
         # kills the process using windows methods
-        kill_process_windows(pid)
+        _kill_process_windows(pid)
     # otherwise it must be a unix platform
     else:
         # kills the process using unix methods
-        kill_process_unix(pid)
+        _kill_process_unix(pid)
 
-def kill_process_windows(pid):
+def _kill_process_windows(pid):
     """
     Kills the process with the given pid (process identifier).
     This class focus in the strategy used in windows operative
@@ -97,7 +97,7 @@ def kill_process_windows(pid):
         # crates a process to kill the process with the given pid
         subprocess.Popen(WINDOWS_KILL_COMMAND % pid, shell = True)
 
-def kill_process_unix(pid, _signal = None):
+def _kill_process_unix(pid, _signal = None):
     """
     Kills the process with the given pid (process identifier).
     This class focus in the strategy used in unix platforms.
