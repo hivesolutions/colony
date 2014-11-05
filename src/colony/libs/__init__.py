@@ -88,7 +88,7 @@ from .host_util import get_hostname, get_hostname_local, get_address_ip4, get_ad
     get_addresses_ip4, get_addresses_ip6, get_addresses_family, get_address_tuples,\
     ip4_address_from_network, ip4_address_to_network, ip6_address_from_network,\
     ip6_address_to_network
-from .import_util import reload_import, __import__
+from .import_util import reload_import
 from .lazy_util import LazyClass, LazyIteratorClass, is_lazy, Lazy, LazyIterator
 from .list_util import list_intersect, list_extend, list_no_duplicates
 from .logging_util import getLogger, getLevelName, DummyLogger, StreamHandler, Formatter
@@ -124,3 +124,5 @@ from .visitor_util import visit, dispatch_visit
 
 from .bank_util import calculate_control_value as calculate_control_value_bank
 from .gtin_util import calculate_control_value as calculate_control_value_gtin
+
+from .import_util import __import__
