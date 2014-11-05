@@ -95,7 +95,7 @@ def quote(string_value, safe = "/"):
         # sets the safe map in the cache quote safe maps
         QUOTE_SAFE_MAPS[cache_key] = safe_map
 
-    # maps the getitem method of the map to all the string
+    # maps the get item method of the map to all the string
     # value to retrieve the valid items
     resolution_list = map(safe_map.__getitem__, string_value)
 
