@@ -45,14 +45,26 @@ class QuoteTest(colony.ColonyTestCase):
     with the quoting/unquoting process of strings.
     """
 
-    def test_basic(self):
+    def test_quote(self):
         """
-        Validates a series of basic operations related with
-        the quoting and unquoting.
+        Validates/verifies that the quoting support is complete
+        and correctly working.
         """
 
         value = colony.quote("João Magalhães")
         self.assertEqual(value, "Jo%C3%A3o%20Magalh%C3%A3es")
 
+        value = colony.quote("想更快瀏覽網頁")
+        self.assertEqual(value, "%E6%83%B3%E6%9B%B4%E5%BF%AB%E7%80%8F%E8%A6%BD%E7%B6%B2%E9%A0%81")
+
+    def test_unquote(self):
+        """
+        Validates and verifies that the unquoting (reverse operation)
+        works using the default infra-structure.
+        """
+
         value = colony.unquote("Jo%C3%A3o%20Magalh%C3%A3es")
         self.assertEqual(value, "João Magalhães")
+
+        value = colony.unquote("%E6%83%B3%E6%9B%B4%E5%BF%AB%E7%80%8F%E8%A6%BD%E7%B6%B2%E9%A0%81")
+        self.assertEqual(value, "想更快瀏覽網頁")
