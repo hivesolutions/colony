@@ -67,7 +67,7 @@ def calculate_tax_number_control_value(tax_number):
 
     # calculates the control value for the number and then
     # returns it to the caller method
-    control_value = calculate_control_value(tax_number)
+    control_value = _calculate_control_value(tax_number)
     return control_value
 
 def calculate_id_number_control_value(id_number):
@@ -94,10 +94,10 @@ def calculate_id_number_control_value(id_number):
 
     # calculates the control value for the number and then
     # returns it to the caller method
-    control_value = calculate_control_value(id_number)
+    control_value = _calculate_control_value(id_number)
     return control_value
 
-def calculate_control_value(number):
+def _calculate_control_value(number):
     """
     Calculates the control value for the given
     number.
