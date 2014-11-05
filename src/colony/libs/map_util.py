@@ -117,7 +117,7 @@ def map_copy_deep(source_map, destiny_map):
     map_copy(source_map, destiny_map)
 
     # iterates over all the source map items
-    for source_key, source_value in source_map.iteritems():
+    for source_key, source_value in legacy.iteritems(source_map):
         # retrieves the source value type
         source_value_type = type(source_value)
 
@@ -170,7 +170,7 @@ def map_duplicate(item):
 
         # iterates over all the items to copy
         # them and sets them in the new items map
-        for key, value in item.iteritems():
+        for key, value in legacy.iteritems(item):
             _item[key] = map_duplicate(value)
         return _item
 
@@ -237,7 +237,7 @@ def map_extend(base_map, extension_map, override = True, recursive = False, copy
 
     # iterates over all the keys and values
     # in the extension map
-    for key, value in extension_map.iteritems():
+    for key, value in legacy.iteritems(extension_map):
         # in case the override flag is not set
         # and the key already exists in the result map
         if not override and key in result_map:
@@ -446,7 +446,7 @@ def map_normalize(item, operation = None):
 
         # iterates over all the items to normalize
         # them and sets them in the new items map
-        for key, value in item.iteritems():
+        for key, value in legacy.iteritems(item):
             _item[key] = map_normalize(value, operation)
         return _item
 

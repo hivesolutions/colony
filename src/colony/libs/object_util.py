@@ -256,7 +256,7 @@ def __object_flatten_to_one(base_instance, instance, flattening_map):
 
     # iterates over all the keys and values
     # in the flattening map structure
-    for key, value in flattening_map.iteritems():
+    for key, value in legacy.iteritems(flattening_map):
         # retrieves the value type
         value_type = type(value)
 
@@ -300,7 +300,7 @@ def __object_flatten_to_one_map(base_map, instance, flattening_map):
 
     # iterates over all the keys and values
     # in the flattening map structure
-    for key, value in flattening_map.iteritems():
+    for key, value in legacy.iteritems(flattening_map):
         # retrieves the value type
         value_type = type(value)
 
@@ -410,7 +410,7 @@ def __object_flush_topper(instances_list):
 
         # iterates over all the "topper" map
         # items (to set them in the instance)
-        for key, value in _topper.iteritems():
+        for key, value in legacy.iteritems(_topper):
             # sets the item in the instance
             __object_set_attr(instance, key, value)
 
@@ -662,12 +662,12 @@ def __object_keys(instance):
     if instance_type == dict:
         # returns the instance (map) keys values
         # using the normal map method
-        return instance.keys()
+        return legacy.keys(instance)
     # otherwise the instance is a "normal" instance
     else:
         # returns the instance dictionary keys
         # (the instance names)
-        return instance.__dict__.keys()
+        return legacy.keys(instance)
 
 def __object_items(instance):
     """
@@ -688,9 +688,9 @@ def __object_items(instance):
     if instance_type == dict:
         # returns the instance (map) keys values
         # using the normal map method
-        return instance.items()
+        return legacy.items(instance)
     # otherwise the instance is a "normal" instance
     else:
         # returns the instance dictionary keys
         # (the instance names)
-        return instance.__dict__.items()
+        return legacy.items(instance.__dict__)

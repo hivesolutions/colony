@@ -39,6 +39,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import math
 
+from colony.base import legacy
+
 def ceil_integer(value):
     """
     Retrieves the ceil of a value and then converts it
@@ -155,7 +157,7 @@ def item_set_total(item_set):
     """
 
     # retrieves the item set values
-    item_set_values = item_set.values()
+    item_set_values = legacy.values(item_set)
 
     # calculates the total value
     total_value = sum(item_set_values)

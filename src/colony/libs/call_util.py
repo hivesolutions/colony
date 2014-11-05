@@ -40,6 +40,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import time
 import inspect
 
+from colony.base import legacy
+
 DEFAULT_NUMBER_RETRIES = 3
 """ The default number of retries to register or unregister """
 
@@ -123,7 +125,7 @@ def call_safe(callable, *args, **kwargs):
     # used in the call and validates them against the method specification
     # in case they do not exist in the specification deletes them from
     # the map of keyword based arguments (not going to be sent)
-    for name in kwargs.keys():
+    for name in legacy.keys(kwargs):
         if name in method_args: continue
         del kwargs[name]
 

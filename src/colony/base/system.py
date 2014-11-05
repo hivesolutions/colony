@@ -840,7 +840,7 @@ class Plugin(object):
         """
 
         # the names of the events fired by self
-        event_names_list = self.event_plugins_fired_loaded_map.keys()
+        event_names_list = legacy.keys(self.event_plugins_fired_loaded_map)
 
         # retrieves all the events and super events that match the generated event
         events_or_super_events_list = get_all_events_or_super_events_in_list(event_name, event_names_list)
@@ -5177,7 +5177,7 @@ class PluginManager(object):
         """
 
         # the names of the events fired by self
-        event_names_list = self.event_plugins_fired_loaded_map.keys()
+        event_names_list = legacy.keys(self.event_plugins_fired_loaded_map)
 
         # retrieves all the events and super events that match the generated event
         events_or_super_events_list = get_all_events_or_super_events_in_list(event_name, event_names_list)

@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+from colony.base import legacy
+
 class JournaledList(list):
     """
     List structure that keeps track of the append and
@@ -243,7 +245,7 @@ class OrderedMap(object):
 
     def extend(self, map):
         # iterates over all the map items
-        for key, value in map.iteritems():
+        for key, value in legacy.iteritems(map):
             # sets the item in the structure
             self.__setitem__(key, value)
 
