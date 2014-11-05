@@ -64,7 +64,8 @@ class QuoteTest(colony.ColonyTestCase):
     def test_unquote(self):
         """
         Validates and verifies that the unquoting (reverse operation)
-        works using the default infra-structure.
+        works using the default infra-structure. Will try to decode
+        values from a variety of languages.
         """
 
         value = colony.unquote("Hello%20World")
