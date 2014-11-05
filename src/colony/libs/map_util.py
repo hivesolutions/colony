@@ -55,7 +55,7 @@ def map_clean(map):
     """
 
     # retrieves the map keys
-    map_keys = map.keys()
+    map_keys = legacy.eager(map.keys())
 
     # iterates over all the map keys deleting
     # the complete set of item present in it
