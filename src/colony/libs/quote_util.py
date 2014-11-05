@@ -47,11 +47,12 @@ QUOTE_SAFE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678
 QUOTE_SAFE_MAPS = {}
 """ The map of cached (buffered) safe lists to be quoted """
 
-HEX_TO_CHAR_MAP = dict(("%02x" % i, chr(i)) for i in range(256))
-""" The map associating the hexadecimal byte (256) values with the integers """
+HEX_TO_CHAR_MAP = dict((legacy.bytes("%02x" % i), legacy.bytes(chr(i))) for i in range(256))
+""" The map associating the hexadecimal byte (256) values
+with the integers, the association is done using byte values """
 
 # updates the map with the upper case values
-HEX_TO_CHAR_MAP.update(("%02X" % i, chr(i)) for i in range(256))
+HEX_TO_CHAR_MAP.update((legacy.bytes("%02X" % i), legacy.bytes(chr(i))) for i in range(256))
 
 def quote(string_value, safe = "/"):
     """
@@ -147,30 +148,35 @@ def unquote(string_value):
     @type string_value: String
     @param string_value: The string value to be unquoted.
     @rtype: String
-    @return: The unquoted string value.
+    @return: The unquoted string value, this value is either
+    returned as an utf-8 encoded string or an unicode string.
     """
 
     # forces the encoding of the string value as a string and
     # then splits the string value around percentage value
     # so that the various partial encoded values are decoded
-    string_value = str(string_value)
-    string_value_splitted = string_value.split("%")
+    string_value = legacy.bytes(string_value)
+    string_value_splitted = string_value.split(b"%")
 
-    # iterates over all the "percentage values" range
+    # iterates over all the "percentage values" range to decode
+    # the complete set of percent encoded characters
     for index in range(1, len(string_value_splitted)):
-        # retrieves the current iteration item
+        # retrieves the current iteration item, that is going to
+        # be decoded using the hexadecimal to character map
         item = string_value_splitted[index]
 
         try:
             string_value_splitted[index] = HEX_TO_CHAR_MAP[item[:2]] + item[2:]
         except KeyError:
-            string_value_splitted[index] = "%" + item
+            string_value_splitted[index] = b"%" + item
         except UnicodeDecodeError:
             string_value_splitted[index] = legacy.unichr(int(item[:2], 16)) + item[2:]
 
-    # returns the joined "partial" string value, this string should
-    # be encoded using utf-8 as the quote strategy uses that encoding
-    return "".join(string_value_splitted)
+    # joins the various partial string values to be able to retrieve
+    # the full unquoted utf-8 encoded string/bytes values, the value
+    # is then decoded in case the current environment requires it
+    unquoted = b"".join(string_value_splitted)
+    return unquoted.decode("utf-8") if legacy.PYTHON_3 else unquoted
 
 def unquote_plus(string_value):
     """
