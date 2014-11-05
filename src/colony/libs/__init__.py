@@ -103,21 +103,24 @@ from .object_util import object_attribute_names, object_attribute_values, object
 from .observer_util import unique, notify, message, action, progress, register_g, unregister_g,\
     notify_g
 from .os_util import kill_process
-from .path_util import *
-from .protection_util import *
-from .quote_util import *
-from .round_util import *
-from .scheduling_util import *
-from .size_util import *
-from .stack_util import *
-from .string_buffer_util import *
-from .string_util import *
-from .structures_util import *
-from .test_util import *
-from .time_util import *
-from .update_thread_util import *
-from .version_util import *
-from .visitor_util import *
+from .path_util import SEPARATOR, normalize_path, align_path, copy_directory, copy_link, copy_file,\
+    remove_directory, link, link_copy, ensure_file_path, is_parent_path, relative_path
+from .protection_util import public, Protected
+from .quote_util import quote, quote_plus, unquote, unquote_plus, url_encode
+from .round_util import roundi, round_apply
+from .scheduling_util import Scheduler
+from .size_util import size_round_unit
+from .stack_util import get_instance_module_directory, get_call_module_directory
+from .string_buffer_util import StringBuffer
+from .string_util import xor_string_value, to_underscore, to_camelcase, pluralize, capitalize_all,\
+    join
+from .structures_util import JournaledList, OrderedMap, OrderedMapIterator, MultipleValueMap,\
+    FormatTuple, FileReference, is_dictionary
+from .test_util import ColonyTestCase
+from .time_util import format_seconds_smart, format_seconds, timestamp_datetime
+from .update_thread_util import UpdateThread
+from .version_util import version_cmp, version_is_concrete
+from .visitor_util import visit, dispatch_visit
 
 from .bank_util import calculate_control_value as calculate_control_value_bank
 from .gtin_util import calculate_control_value as calculate_control_value_gtin
