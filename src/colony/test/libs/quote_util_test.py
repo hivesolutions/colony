@@ -51,11 +51,14 @@ class QuoteTest(colony.ColonyTestCase):
         and correctly working.
         """
 
-        value = colony.quote("João Magalhães")
-        self.assertEqual(value, "Jo%C3%A3o%20Magalh%C3%A3es")
+        value = colony.quote("Hello World")
+        self.assertEqual(value, "Hello%20World")
 
-        value = colony.quote("想更快瀏覽網頁")
-        self.assertEqual(value, "%E6%83%B3%E6%9B%B4%E5%BF%AB%E7%80%8F%E8%A6%BD%E7%B6%B2%E9%A0%81")
+        value = colony.quote("Olá Mundo")
+        self.assertEqual(value, "Ol%C3%A1%20Mundo")
+
+        value = colony.quote("你好世界")
+        self.assertEqual(value, "%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
 
     def test_unquote(self):
         """
@@ -63,8 +66,11 @@ class QuoteTest(colony.ColonyTestCase):
         works using the default infra-structure.
         """
 
-        value = colony.unquote("Jo%C3%A3o%20Magalh%C3%A3es")
-        self.assertEqual(value, "João Magalhães")
+        value = colony.unquote("Hello%20World")
+        self.assertEqual(value, "Hello World")
 
-        value = colony.unquote("%E6%83%B3%E6%9B%B4%E5%BF%AB%E7%80%8F%E8%A6%BD%E7%B6%B2%E9%A0%81")
-        self.assertEqual(value, "想更快瀏覽網頁")
+        value = colony.unquote("Ol%C3%A1%20Mundo")
+        self.assertEqual(value, "Olá Mundo")
+
+        value = colony.unquote("%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
+        self.assertEqual(value, "你好世界")
