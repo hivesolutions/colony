@@ -64,7 +64,7 @@ setuptools.setup(
         "colony.test.base",
         "colony.test.libs"
     ],
-    test_suite = "colony.test.colony_test",
+    test_suite = "colony.test",
     package_dir = {
         "" : os.path.normpath("src")
     },
