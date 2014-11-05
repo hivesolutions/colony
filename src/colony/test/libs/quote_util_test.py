@@ -48,7 +48,8 @@ class QuoteTest(colony.ColonyTestCase):
     def test_quote(self):
         """
         Validates/verifies that the quoting support is complete
-        and correctly working.
+        and correctly working. Uses a lot of languages to try
+        to add complexity to the set of tests.
         """
 
         value = colony.quote("Hello World")
