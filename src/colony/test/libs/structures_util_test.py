@@ -52,28 +52,28 @@ class JournaledListTest(colony.ColonyTestCase):
         # creates a journaled list with elements from an existent
         # list and then adds some extra elements (that are going to
         # be journalized) to test the appending of them
-        jounaled_list = colony.JournaledList([1, 2, 3])
-        jounaled_list.append(4)
-        jounaled_list.append(5)
-        jounaled_list.append(6)
+        journaled_list = colony.JournaledList([1, 2, 3])
+        journaled_list.append(4)
+        journaled_list.append(5)
+        journaled_list.append(6)
 
         # retrieves the list of appends and tests it
         # against the appended values
-        appends = jounaled_list.get_appends()
+        appends = journaled_list.get_appends()
         self.assertEqual(appends, [4, 5, 6])
 
         # appends one extra value to the list
         # and re-tests the appends list
-        jounaled_list.append(4)
+        journaled_list.append(4)
         self.assertEqual(appends, [4, 5, 6, 4])
 
         # verifies that the contents of the journaled list
         # are the expected ones
-        self.assertEqual(jounaled_list, [1, 2, 3, 4, 5, 6, 4])
+        self.assertEqual(journaled_list, [1, 2, 3, 4, 5, 6, 4])
 
         # retrieves the removes list, that must be empty and
         # tests it against an empty list
-        removes = jounaled_list.get_removes()
+        removes = journaled_list.get_removes()
         self.assertEqual(removes, [])
 
     def test_remove(self):
@@ -81,32 +81,32 @@ class JournaledListTest(colony.ColonyTestCase):
         Tests the remove method of the journaled list.
         """
 
-        # creates a jounaled list with elements from an existent
+        # creates a journaled list with elements from an existent
         # list and then adds some extra elements (that are going to
         # be journalized) to test the removal of them
-        jounaled_list = colony.JournaledList([1, 2, 3])
-        jounaled_list.remove(1)
-        jounaled_list.remove(2)
-        jounaled_list.remove(3)
+        journaled_list = colony.JournaledList([1, 2, 3])
+        journaled_list.remove(1)
+        journaled_list.remove(2)
+        journaled_list.remove(3)
 
         # retrieves the list of removes and tests it
         # against the appended values
-        removes = jounaled_list.get_removes()
+        removes = journaled_list.get_removes()
         self.assertEqual(removes, [1, 2, 3])
 
         # tries to remove the first element one more time
         # (this should raise a value error, and the removes
         # list should remain the same)
-        self.assert_raises(ValueError, jounaled_list.remove, 1)
+        self.assert_raises(ValueError, journaled_list.remove, 1)
         self.assertEqual(removes, [1, 2, 3])
 
-        # verifies that the contents of the jounaled list
+        # verifies that the contents of the journaled list
         # are now empty
-        self.assertEqual(jounaled_list, [])
+        self.assertEqual(journaled_list, [])
 
         # retrieves the appends list, that must be empty and
         # tests it against an empty list
-        appends = jounaled_list.get_appends()
+        appends = journaled_list.get_appends()
         self.assertEqual(appends, [])
 
     def test_overriding(self):
@@ -115,40 +115,40 @@ class JournaledListTest(colony.ColonyTestCase):
         the reverse.
         """
 
-        # creates a jounaled list with elements from an existent
+        # creates a journaled list with elements from an existent
         # list and then adds (and removes) some extra elements (that are going to
         # be journalized) to test the overriding of them
-        jounaled_list = colony.JournaledList([1, 2, 3])
-        jounaled_list.append(1)
-        jounaled_list.append(1)
-        jounaled_list.remove(1)
+        journaled_list = colony.JournaledList([1, 2, 3])
+        journaled_list.append(1)
+        journaled_list.append(1)
+        journaled_list.remove(1)
 
         # retrieves the list of appends and tests it
         # against the expected values
-        appends = jounaled_list.get_appends()
+        appends = journaled_list.get_appends()
         self.assertEqual(appends, [1])
 
         # retrieves the list of removes and tests it
         # against the expected values
-        removes = jounaled_list.get_removes()
+        removes = journaled_list.get_removes()
         self.assertEqual(removes, [])
 
         # removes one value and tests the appends
         # and removes list (again)
-        jounaled_list.remove(1)
+        journaled_list.remove(1)
         self.assertEqual(appends, [])
         self.assertEqual(removes, [])
 
         # removes one value and tests the appends
         # and removes list (again)
-        jounaled_list.remove(1)
+        journaled_list.remove(1)
         self.assertEqual(appends, [])
         self.assertEqual(removes, [1])
 
         # appends two values and tests the appends
         # and removes list (again)
-        jounaled_list.append(1)
-        jounaled_list.append(1)
+        journaled_list.append(1)
+        journaled_list.append(1)
         self.assertEqual(appends, [1])
         self.assertEqual(removes, [])
 
@@ -160,33 +160,33 @@ class JournaledListTest(colony.ColonyTestCase):
         # creates a journaled list with elements from an existent
         # list and then adds and removes some extra elements (that are going to
         # be journalized) to test the appending and removal of them
-        jounaled_list = colony.JournaledList([1, 2, 3])
-        jounaled_list.append(1)
-        jounaled_list.remove(2)
-        jounaled_list.remove(3)
+        journaled_list = colony.JournaledList([1, 2, 3])
+        journaled_list.append(1)
+        journaled_list.remove(2)
+        journaled_list.remove(3)
 
         # retrieves the list of appends and tests it
         # against the expected values
-        appends = jounaled_list.get_appends()
+        appends = journaled_list.get_appends()
         self.assertEqual(appends, [1])
 
         # retrieves the list of removes and tests it
         # against the expected values
-        removes = jounaled_list.get_removes()
+        removes = journaled_list.get_removes()
         self.assertEqual(removes, [2, 3])
 
         # verifies that the journaled list contains
         # the expected values
-        self.assertEqual(jounaled_list, [1, 1])
+        self.assertEqual(journaled_list, [1, 1])
 
         # clears the journal and verifies that both
         # the appends and removes lists are now empty
-        jounaled_list.clear_jounal()
+        journaled_list.clear_jounal()
         self.assertEqual(appends, [])
         self.assertEqual(removes, [])
 
         # verifies that the journaled list remains unmodified
-        self.assertEqual(jounaled_list, [1, 1])
+        self.assertEqual(journaled_list, [1, 1])
 
     def test__append(self):
         """
@@ -196,28 +196,28 @@ class JournaledListTest(colony.ColonyTestCase):
         # creates a journaled list with elements from an existent
         # list and then adds some extra elements (that are not going to
         # be journalized) to test the (not jounalized) appending of them
-        jounaled_list = colony.JournaledList([1, 2, 3])
-        jounaled_list._append(4)
-        jounaled_list._append(5)
-        jounaled_list._append(6)
+        journaled_list = colony.JournaledList([1, 2, 3])
+        journaled_list._append(4)
+        journaled_list._append(5)
+        journaled_list._append(6)
 
         # retrieves the list of appends and tests it
         # against the empty list (not jounalized)
-        appends = jounaled_list.get_appends()
+        appends = journaled_list.get_appends()
         self.assertEqual(appends, [])
 
         # appends one extra value to the list
         # and re-tests the appends list
-        jounaled_list._append(4)
+        journaled_list._append(4)
         self.assertEqual(appends, [])
 
-        # verifies that the contents of the jounaled list
+        # verifies that the contents of the journaled list
         # are the expected ones
-        self.assertEqual(jounaled_list, [1, 2, 3, 4, 5, 6, 4])
+        self.assertEqual(journaled_list, [1, 2, 3, 4, 5, 6, 4])
 
         # retrieves the removes list, that must be empty and
         # tests it against an empty list
-        removes = jounaled_list.get_removes()
+        removes = journaled_list.get_removes()
         self.assertEqual(removes, [])
 
     def test__remove(self):
@@ -225,35 +225,35 @@ class JournaledListTest(colony.ColonyTestCase):
         Tests the _remove method of the journaled list.
         """
 
-        # creates a jounaled list with elements from an existent
+        # creates a journaled list with elements from an existent
         # list and then adds some extra elements (that are not going to
         # be journalized) to test the (not jounalized) removal of them
-        jounaled_list = colony.JournaledList([1, 2, 3])
-        jounaled_list._remove(1)
-        jounaled_list._remove(2)
-        jounaled_list._remove(3)
+        journaled_list = colony.JournaledList([1, 2, 3])
+        journaled_list._remove(1)
+        journaled_list._remove(2)
+        journaled_list._remove(3)
 
         # retrieves the list of removes and tests it
         # against the empty list (not jounalized)
-        removes = jounaled_list.get_removes()
+        removes = journaled_list.get_removes()
         self.assertEqual(removes, [])
 
         # tries to remove the first element one more time
         # (this should raise a value error, and the removes
         # list should remain the same)
-        self.assert_raises(ValueError, jounaled_list._remove, 1)
+        self.assert_raises(ValueError, journaled_list._remove, 1)
         self.assertEqual(removes, [])
 
-        # verifies that the contents of the jounaled list
+        # verifies that the contents of the journaled list
         # are empty
-        self.assertEqual(jounaled_list, [])
+        self.assertEqual(journaled_list, [])
 
         # retrieves the appends list, that must be empty and
         # tests it against an empty list
-        appends = jounaled_list.get_appends()
+        appends = journaled_list.get_appends()
         self.assertEqual(appends, [])
 
-class OrderedMap(colony.ColonyTestCase):
+class OrderedMapTest(colony.ColonyTestCase):
     """
     Class that tests the ordered map structure.
     """
