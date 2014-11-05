@@ -41,6 +41,8 @@ import os
 import tempfile
 import threading
 
+from colony.base import legacy
+
 from colony.libs import list_util
 from colony.libs import path_util
 
@@ -118,7 +120,7 @@ class FileRotator(object):
         # updates the closed status
         self.closed = True
 
-    def write(self, string_value, flush = True):
+    def write(self, string_value, flush = True, encoding = "utf-8"):
         """
         Writes the given string value using
         the current file rotator.
@@ -139,8 +141,14 @@ class FileRotator(object):
             # updates the rotator
             self._update_rotator()
 
-        # writes the string value to the
-        # current file
+        # verifies if the provided string value is "decoded" as unicode
+        # if that's the case runs the encoding process using the value
+        # of the encoding attribute as the reference for the encoding
+        is_unicode = type(string_value) == legacy.UNICODE
+        if is_unicode: string_value = string_value.encode(encoding)
+
+        # writes the string value to the current file, note that the
+        # value that is being written is already encoded as bytes
         self.current_file.write(string_value)
 
         # flushes the data in the current file
