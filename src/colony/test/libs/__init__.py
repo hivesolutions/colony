@@ -39,6 +39,6 @@ from .country_util_test import CountryTest
 from .gtin_util_test import GtinTest
 from .lazy_util_test import LazyClassTest
 from .number_util_test import NumberTest
-from .quote_util_test import QuoteTest 
+from .quote_util_test import QuoteTest
 from .structures_util_test import JournaledListTest, OrderedMapTest
 from .version_util_test import VersionTest

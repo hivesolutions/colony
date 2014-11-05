@@ -65,11 +65,14 @@ def quote(string_value, safe = "/"):
     @return: The quoted string value.
     """
 
-    # creates the cache key tuple
-    cache_key = (
-        safe,
-        QUOTE_SAFE_CHAR
-    )
+    # in case the provided string value is unicode based it
+    # must be encoded first using the default encoder
+    is_unicode = type(string_value) == legacy.UNICODE
+    if is_unicode: string_value = string_value.encode("utf-8")
+
+    # creates the cache key tuple, that is going to be used
+    # to avoid the re-creation of the safe map in every operation
+    cache_key = (safe, QUOTE_SAFE_CHAR)
 
     try:
         # in case the cache key is not defined
@@ -85,21 +88,24 @@ def quote(string_value, safe = "/"):
 
         # iterates over all the ascii values
         for index in range(256):
-            # retrieves the character for the
-            # given index
+            # retrieves the character for the given index,
+            # note that this strategy takes into account the
+            # current version of the python environment
             character = chr(index)
+            reference = index if legacy.PYTHON_3 else character
 
             # adds the "valid" character or the safe map entry
-            safe_map[character] = (character in safe) and character or ("%%%02X" % index)
+            safe_map[reference] = character if (character in safe) else ("%%%02X" % index)
 
         # sets the safe map in the cache quote safe maps
         QUOTE_SAFE_MAPS[cache_key] = safe_map
 
     # maps the get item method of the map to all the string
-    # value to retrieve the valid items
+    # values to retrieve the valid items
     resolution_list = map(safe_map.__getitem__, string_value)
 
     # joins the resolution list to retrieve the quoted value
+    # this will trigger the lazy loaded map operation
     return "".join(resolution_list)
 
 def quote_plus(string_value, safe = ""):
