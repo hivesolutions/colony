@@ -100,8 +100,8 @@ from .math_util import ceil_integer, greatest_common_divisor, fast_exponentiatio
 from .number_util import get_number_length, get_digit, to_fixed
 from .object_util import object_attribute_names, object_attribute_values, object_flatten,\
     object_print_list, object_print
-from .observer_util import unique, notify, message, action, progress, register_g, unregister_g,\
-    notify_g
+from .observer_util import unique, notify, message, action, progress, register_g,\
+    unregister_g, notify_g
 from .os_util import kill_process
 from .path_util import SEPARATOR, normalize_path, align_path, copy_directory, copy_link, copy_file,\
     remove_directory, link, link_copy, ensure_file_path, is_parent_path, relative_path
@@ -112,8 +112,8 @@ from .scheduling_util import Scheduler
 from .size_util import size_round_unit
 from .stack_util import get_instance_module_directory, get_call_module_directory
 from .string_buffer_util import StringBuffer
-from .string_util import xor_string_value, to_underscore, to_camelcase, pluralize, capitalize_all,\
-    join
+from .string_util import xor_string_value, to_underscore, to_camelcase, pluralize,\
+    capitalize_all, join
 from .structures_util import JournaledList, OrderedMap, OrderedMapIterator, MultipleValueMap,\
     FormatTuple, FileReference, is_dictionary
 from .test_util import ColonyTestCase
