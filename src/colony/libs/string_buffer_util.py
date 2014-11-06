@@ -53,16 +53,22 @@ class StringBuffer(object):
     closed = False
     """ The closed value """
 
-    def __init__(self, fast = True):
+    def __init__(self, fast = True, btype = None):
         """
         Constructor of the class.
 
+        @type btype: Type
+        @param btype: The default base type to be used for the result
+        in case it's not provided a smart operation will try to determine
+        the best type of string for the joining.
         @type fast: bool
-        @param fast: The fast flag to control the string buffer type.
+        @param fast: The fast flag to control the string buffer type, notice
+        that using the fast flag has it's toll in terms of features.
         """
 
         self.string_list = []
         self.current_value = str()
+        self.btype = btype
         self.dirty = False
         self.current_position = 0
         self.current_size = 0
@@ -386,12 +392,19 @@ class StringBuffer(object):
         This is required so that no invalid types are used causing
         an exception to be raised in the joining.
 
+        In case the current python interpreter does not allow
+        byte buffers or in case the base type is fixed in the
+        constructor, this method returns immediately.
+
         @rtype: String
         @return: The string value that may be used as the basis for
         the joining of the various components of the string list/buffer.
         """
 
         if not legacy.PYTHON_3: return ""
+        if self.btype == str: return ""
+        if self.btype == legacy.BYTES: return b""
+        if self.btype == legacy.UNICODE: return legacy.u("")
         is_bytes = True
         for value in self.string_list:
             if not type(value) == str: continue
