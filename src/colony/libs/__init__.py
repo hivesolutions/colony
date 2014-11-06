@@ -117,7 +117,8 @@ from .string_util import xor_string_value, to_underscore, to_camelcase, pluraliz
 from .structures_util import JournaledList, OrderedMap, OrderedMapIterator, MultipleValueMap,\
     FormatTuple, FileReference, is_dictionary
 from .test_util import ColonyTestCase
-from .time_util import format_seconds_smart, format_seconds, timestamp_datetime
+from .time_util import SIMPLE_VALUE, BASIC_VALUE, EXTENDED_VALUE, EXTENDED_SIMPLE_VALUE,\
+    MINIMIZE_MULTIPLE, MINIMIZE_UNIQUE, format_seconds_smart, format_seconds, timestamp_datetime
 from .update_thread_util import UpdateThread
 from .version_util import version_cmp, version_is_concrete
 from .visitor_util import visit, dispatch_visit
