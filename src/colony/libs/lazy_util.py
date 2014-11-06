@@ -82,6 +82,9 @@ class LazyIteratorClass(object):
     def __iter__(self):
         return self
 
+    def __next__(self):
+        raise StopIteration()
+
     def next(self):
         raise StopIteration()
 
