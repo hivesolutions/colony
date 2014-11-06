@@ -62,6 +62,11 @@ class QuoteTest(colony.ColonyTestCase):
         self.assertEqual(result, "%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
 
     def test_quote_plus(self):
+        """
+        Plus version testing of the quoting operation, this test is
+        analogous to the previous test.
+        """
+
         result = colony.quote_plus("Hello World")
         self.assertEqual(result, "Hello+World")
 
@@ -88,6 +93,11 @@ class QuoteTest(colony.ColonyTestCase):
         self.assertEqual(result, "你好世界")
 
     def test_unquote_plus(self):
+        """
+        Plus version testing of the unquoting operation, this test is
+        analogous to the previous test.
+        """
+
         result = colony.unquote_plus("Hello+World")
         self.assertEqual(result, "Hello World")
 
@@ -98,6 +108,11 @@ class QuoteTest(colony.ColonyTestCase):
         self.assertEqual(result, "你好世界")
 
     def test_url_encode(self):
+        """
+        Test for the url encode operation that encodes the key to value
+        attributes that is present in the query string for urls.
+        """
+
         items = (("message", "Hello World"), ("mensagem", "Olá Mundo"))
 
         result = colony.url_encode(attributes_list = items, plus_encoding = False)
