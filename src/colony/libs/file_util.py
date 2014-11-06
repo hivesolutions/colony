@@ -238,10 +238,10 @@ class FileRotator(object):
         current file count.
         """
 
-        # retrieves the file count range
-        file_count_range = range(1, self.file_count + 1)
-
-        # reverses the file count range
+        # retrieves the file count range and runs the
+        # reverse operation in it to obtains the correct
+        # range value to be used in the rotator operation
+        file_count_range = legacy.eager(range(1, self.file_count + 1))
         file_count_range.reverse()
 
         # iterates over the range of the
@@ -251,17 +251,19 @@ class FileRotator(object):
             # file path and the index string
             target_file_path = self.base_file_path + "." + str(index)
 
-            # in case the target file path exists
-            if os.path.exists(target_file_path):
-                # in case the index is small than
-                # the file count
-                if index < self.file_count:
-                    # renames the file with an incremented index
-                    os.rename(target_file_path, self.base_file_path + "." + str(index + 1))
-                # otherwise (overflow occurred)
-                else:
-                    # removes the target file
-                    os.remove(target_file_path)
+            # in case the target file path does not exist
+            # there's nothing to be done, skips the loop
+            if not os.path.exists(target_file_path): continue
+
+            # in case the index is small than
+            # the file count
+            if index < self.file_count:
+                # renames the file with an incremented index
+                os.rename(target_file_path, self.base_file_path + "." + str(index + 1))
+            # otherwise (overflow occurred)
+            else:
+                # removes the target file
+                os.remove(target_file_path)
 
         # closes the current file
         self.current_file and self._close_current_file(True)
