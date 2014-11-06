@@ -46,7 +46,9 @@ from colony.base import legacy
 class ColonyTestCase(unittest.TestCase):
     """
     The base class to be used for all the colony
-    based test cases.
+    based test cases. It should contain a series
+    of facilities aimed at simplifying the creation
+    of unit tests under the colony infra-structure.
     """
 
     @staticmethod
@@ -60,6 +62,15 @@ class ColonyTestCase(unittest.TestCase):
     @staticmethod
     def get_description():
         return "The base Colony Framework test case"
+
+    def setUp(self):
+        if not hasattr(self.plugin, "test"): return
+        self.test = self.plugin.test
+        self.test.set_up(self)
+
+    def tearDown(self):
+        if not hasattr(self.plugin, "test"): return
+        self.test.tear_down(self)
 
     def assert_type(self, value, expected_type):
         """
