@@ -52,27 +52,56 @@ class QuoteTest(colony.ColonyTestCase):
         to add complexity to the set of tests.
         """
 
-        value = colony.quote("Hello World")
-        self.assertEqual(value, "Hello%20World")
+        result = colony.quote("Hello World")
+        self.assertEqual(result, "Hello%20World")
 
-        value = colony.quote("Olá Mundo")
-        self.assertEqual(value, "Ol%C3%A1%20Mundo")
+        result = colony.quote("Olá Mundo")
+        self.assertEqual(result, "Ol%C3%A1%20Mundo")
 
-        value = colony.quote("你好世界")
-        self.assertEqual(value, "%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
+        result = colony.quote("你好世界")
+        self.assertEqual(result, "%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
+
+    def test_quote_plus(self):
+        result = colony.quote_plus("Hello World")
+        self.assertEqual(result, "Hello+World")
+
+        result = colony.quote_plus("Olá Mundo")
+        self.assertEqual(result, "Ol%C3%A1+Mundo")
+
+        result = colony.quote_plus("你好世界")
+        self.assertEqual(result, "%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
 
     def test_unquote(self):
         """
         Validates and verifies that the unquoting (reverse operation)
         works using the default infra-structure. Will try to decode
-        values from a variety of languages.
+        results from a variety of languages.
         """
 
-        value = colony.unquote("Hello%20World")
-        self.assertEqual(value, "Hello World")
+        result = colony.unquote("Hello%20World")
+        self.assertEqual(result, "Hello World")
 
-        value = colony.unquote("Ol%C3%A1%20Mundo")
-        self.assertEqual(value, "Olá Mundo")
+        result = colony.unquote("Ol%C3%A1%20Mundo")
+        self.assertEqual(result, "Olá Mundo")
 
-        value = colony.unquote("%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
-        self.assertEqual(value, "你好世界")
+        result = colony.unquote("%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
+        self.assertEqual(result, "你好世界")
+
+    def test_unquote_plus(self):
+        result = colony.unquote_plus("Hello+World")
+        self.assertEqual(result, "Hello World")
+
+        result = colony.unquote_plus("Ol%C3%A1+Mundo")
+        self.assertEqual(result, "Olá Mundo")
+
+        result = colony.unquote_plus("%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
+        self.assertEqual(result, "你好世界")
+
+    def test_url_encode(self):
+        items = (("message", "Hello World"), ("mensagem", "Olá Mundo"))
+
+        result = colony.url_encode(attributes_list = items, plus_encoding = False)
+        self.assertEqual(result, "message=Hello%20World&mensagem=Ol%C3%A1%20Mundo")
+
+        result = colony.url_encode(attributes_list = items, plus_encoding = True)
+        self.assertEqual(result, "message=Hello+World&mensagem=Ol%C3%A1+Mundo")

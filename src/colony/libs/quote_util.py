@@ -198,13 +198,19 @@ def unquote_plus(string_value):
     # returns the unquoted string value
     return unquote(string_value)
 
-def url_encode(attributes_map, plus_encoding = False):
+def url_encode(attributes_map = None, attributes_list = None, plus_encoding = False):
     """
-    Encodes the given attributes into url encoding.
+    Encodes the given attributes into url encoding. The
+    attributes may be either provided as a map or alternatively
+    as a sequence of key value tuples.
 
-    @type attributes_map: Dictionary.
+    @type attributes_map: Dictionary
     @param attributes_map: The map of attributes to be encoded
-    using url encoding.
+    using url encoding, if this value is defined the attributes
+    list is not going to be used.
+    @type attributes_list: List
+    @param attributes_list: The list of key and value tuples
+    that are going to be processed as the attributes.
     @type plus_encoding: bool
     @param plus_encoding: If the plus encoding should be used.
     @rtype: String
@@ -217,11 +223,17 @@ def url_encode(attributes_map, plus_encoding = False):
     # creates a string buffer to hold the encoded attribute values
     string_buffer = string_buffer_util.StringBuffer()
 
-    # sets the is first flag
+    # retrieves the reference to the proper items sequence to be used
+    # notice that the attributes map has preference to the list version
+    items = legacy.iteritems(attributes_map) if attributes_map else attributes_list
+
+    # sets the is first flag, that is going to be used in the iteration
+    # cycle to define the first iteration (exceptional iteration)
     is_first = True
 
-    # iterates over all the attribute keys and values
-    for attribute_key, attribute_value in legacy.iteritems(attributes_map):
+    # iterates over all the attribute keys and values to be able to
+    # quote their values and append the value to the buffer
+    for attribute_key, attribute_value in items:
         # quotes both the attribute key and value
         attribute_key_quoted = quote_method(attribute_key)
         attribute_value_quoted = quote_method(attribute_value)
