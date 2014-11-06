@@ -67,7 +67,7 @@ class Test(object):
         return ()
 
     def set_up(self, test_case):
-        pass
+        if hasattr(self.plugin, "system"): test_case.system = self.plugin.system
 
     def tear_down(self, test_case):
         pass
