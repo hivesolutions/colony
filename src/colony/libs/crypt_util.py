@@ -40,6 +40,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import re
 import hashlib
 
+from colony.base import legacy
+
 HASH_VALUE = "hash"
 """ The hash value """
 
@@ -179,7 +181,7 @@ def password_match(password_hash, password, salt = ""):
     base_password_value = base_password_match.group(VALUE_VALUE)
 
     # creates the password (word) from the
-    # password an the salt
+    # password an the salt (secure work)
     password_word = password + salt
 
     # sets the initial value for the passwords
@@ -197,7 +199,9 @@ def password_match(password_hash, password, salt = ""):
         hash = hashlib.new(base_password_hash)
 
         # updates the hash value with the
-        # password word
+        # password word, note that the value
+        # is ensured to be a valid byte value
+        password_word = legacy.bytes(password_word)
         hash.update(password_word)
 
         # retrieves the hash value from the
