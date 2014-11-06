@@ -48,7 +48,7 @@ class UtilTest(colony.ColonyTestCase):
     def timestamp_test(self):
         """
         Tests and verifies the timestamp related functions
-        of the coony infra-structure.
+        of the colony infra-structure.
         """
 
         uuid = colony.get_timestamp_uid()
