@@ -166,11 +166,13 @@ def unquote(string_value):
         item = string_value_splitted[index]
 
         try:
+            # tries to run the decoding operation using the hexadecimal
+            # to character map and appends the remaining string value
             string_value_splitted[index] = HEX_TO_CHAR_MAP[item[:2]] + item[2:]
         except KeyError:
+            # in case the decoding failed (no processing possible) the raw
+            # value is set instead of the decoded value (fallback strategy)
             string_value_splitted[index] = b"%" + item
-        except UnicodeDecodeError:
-            string_value_splitted[index] = legacy.unichr(int(item[:2], 16)) + item[2:]
 
     # joins the various partial string values to be able to retrieve
     # the full unquoted utf-8 encoded string/bytes values, the value

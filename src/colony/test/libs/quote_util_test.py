@@ -92,6 +92,9 @@ class QuoteTest(colony.ColonyTestCase):
         result = colony.unquote("%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
         self.assertEqual(result, "你好世界")
 
+        result = colony.unquote("Hello%20World%GG")
+        self.assertEqual(result, "Hello World%GG")
+
     def test_unquote_plus(self):
         """
         Plus version testing of the unquoting operation, this test is
@@ -106,6 +109,9 @@ class QuoteTest(colony.ColonyTestCase):
 
         result = colony.unquote_plus("%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C")
         self.assertEqual(result, "你好世界")
+
+        result = colony.unquote_plus("Hello+World%GG")
+        self.assertEqual(result, "Hello World%GG")
 
     def test_url_encode(self):
         """
