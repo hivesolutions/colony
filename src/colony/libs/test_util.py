@@ -64,11 +64,13 @@ class ColonyTestCase(unittest.TestCase):
         return "The base Colony Framework test case"
 
     def setUp(self):
+        if not hasattr(self, "plugin"): return
         if not hasattr(self.plugin, "test"): return
         self.test = self.plugin.test
         self.test.set_up(self)
 
     def tearDown(self):
+        if not hasattr(self, "plugin"): return
         if not hasattr(self.plugin, "test"): return
         self.test.tear_down(self)
 
