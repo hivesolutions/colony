@@ -2562,10 +2562,15 @@ class PluginManager(object):
 
     def load_plugins(self, plugins):
         """
-        Imports a module starting the plugin.
+        Runs the import module operation for each of the
+        provided plugin items.
+
+        The provided plugins should be a series of string
+        based full module path values.
 
         @type plugins: List
-        @param plugins: The list of plugins to be loaded.
+        @param plugins: The list of plugins to be loaded
+        these should be string based module references.
         """
 
         # prints an info message about the import operation
@@ -2576,6 +2581,8 @@ class PluginManager(object):
         # runs the import operation for each of them in case that
         # operation is required by module inexistence
         for plugin in plugins:
+            print(plugin)
+
             # in case the plugin module is already loaded continues
             # the loop as no loading is required for it, otherwise
             # runs the proper loading process for the plugin logging
