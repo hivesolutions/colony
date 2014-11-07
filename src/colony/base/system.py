@@ -5329,17 +5329,17 @@ class PluginManager(object):
         regarding global system settings.
         """
 
-        self.system_information_map = {
-            "layout_mode" : self.get_layout_mode(),
-            "run_mode" : self.get_run_mode(),
-            "timestamp" : self.get_timestamp(),
-            "version" : self.get_version(),
-            "release" : self.get_release(),
-            "build" : self.get_build(),
-            "release_date" : self.get_release_date(),
-            "release_date_time" : self.get_release_date_time(),
-            "environment" : self.get_environment()
-        }
+        self.system_information_map = dict(
+            layout_mode = self.get_layout_mode(),
+            run_mode = self.get_run_mode(),
+            timestamp = self.get_timestamp(),
+            version = self.get_version(),
+            release = self.get_release(),
+            build = self.get_build(),
+            release_date = self.get_release_date(),
+            release_date_time = self.get_release_date_time(),
+            environment = self.get_environment()
+        )
 
     def get_log_handler(self, name):
         """
