@@ -187,10 +187,8 @@ def item_set_percentage(item_name, item_set):
     item_value = item_set.get(item_name, None)
 
     # in case the item value is not defined
-    # or is zero
-    if not item_value:
-        # returns zero (avoids division by zero)
-        return 0
+    # or is zero, avoiding division by zero
+    if not item_value: return 0
 
     # calculates the total value from the
     # item set
