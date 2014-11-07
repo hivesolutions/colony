@@ -2076,13 +2076,17 @@ class PluginManager(object):
         self.logger_handlers["broadcast"] = broadcast_handler
         self.logger_handlers["memory"] = memory_handler
 
-    def load_system(self, mode = None, callback = None):
+    def load_system(self, mode = None, args = None, callback = None):
         """
         Starts the process of loading the plugin system.
 
         This is the main entry point of the system from
         which either a command is executed or the main
         loop is started (blocking call).
+
+        The arguments parameter provides a simple way of
+        customizing the mode based execution, ultimately
+        these arguments should come from command line.
 
         An optional callback argument may be used to have
         a function called at the end of the loading process.
@@ -2095,6 +2099,10 @@ class PluginManager(object):
         be used for this loading, this should be unset for the
         default execution mode. This variable should be used for
         non standard modes (eg: testing).
+        @type args: List
+        @param args: The list of string based arguments coming
+        from a command line system that should condition/control
+        the mode based execution.
         @type callback: Function
         @param callback: The callback function to be called at the
         end of the current plugin manager's loading process. This
@@ -2146,6 +2154,7 @@ class PluginManager(object):
             # containing directives that will condition the initialization
             configuration = dict(
                 mode = mode,
+                args = args,
                 library_paths = self.library_paths,
                 meta_paths = self.meta_paths,
                 plugin_paths =  self.plugin_paths,
@@ -2479,6 +2488,7 @@ class PluginManager(object):
         # unpacks the complete set of configuration items that
         # are going to be used in the plugin system initialization
         mode = configuration.get("mode", None)
+        args = configuration.get("args", None)
         library_paths = configuration.get("library_paths", [])
         plugin_paths = configuration.get("plugin_paths", [])
         plugins = configuration.get("plugins", [])
@@ -2520,7 +2530,7 @@ class PluginManager(object):
         # runs the complete set of conditional modes for the initialization
         # of the system taking into account the mode configuration value note
         # that if the mode is not found or invalid and exception is raised
-        self.exec_mode(mode)
+        self.exec_mode(mode, args = args)
 
     def set_python_path(self, library_paths, plugin_paths):
         """
@@ -3108,7 +3118,7 @@ class PluginManager(object):
             # on this file (avoids leaks)
             file.close()
 
-    def exec_mode(self, mode):
+    def exec_mode(self, mode, args = None):
         """
         Executes the provided mode of execution but only if
         the valid is correctly defined and the proper method
@@ -3121,6 +3131,11 @@ class PluginManager(object):
         @param mode: The (execution) mode that is going to be
         used for the performing of the execution, should be
         a valid one and defined in the manager.
+        @type args: List
+        @param args: The arguments (coming from command line)
+        that may be used to control/customize the execution
+        of the target run mode, these values should consist
+        of plain strings (to be casted at execution time).
         """
 
         if not mode: return
@@ -3128,10 +3143,11 @@ class PluginManager(object):
             "execution mode '%s' not found or invalid" % mode
         )
         self.info("Executing mode '%s'..." % mode)
+        args = args or ()
         method = getattr(self, "run_" + mode)
-        method()
+        method(args = args)
 
-    def run_test(self, verbosity = 2, raise_e = True):
+    def run_test(self, verbosity = 2, raise_e = True, args = []):
         """
         Runs the test mode for the current plugin manager, this should
         consist on the retrieval of the test capability aware plugins
@@ -3146,6 +3162,10 @@ class PluginManager(object):
         @type raise_e: bool
         @param raise_e: If an exception should be raised in case the tests
         execution process fails (one or more tests failed).
+        @type args: List
+        @param args: Sequence containing a series of string based arguments
+        coming from the command line, these should be used to condition the
+        way the method is going to perform its execution.
         @rtype: bool
         @return: If the execution of the unit tests from the proper plugins
         was successful or not, the details of the execution should be read
@@ -3156,10 +3176,14 @@ class PluginManager(object):
         # value as the execution is considered to be successful by default
         result = True
 
-        # retrieves the complete set of plugin (instances) that have the
-        # test capability and starts the iteration process on all of them
-        # to run the corresponding unit tests (just for loaded plugins)
-        plugins = self.get_plugins_by_capability("test")
+        # verifies if any (command line) argument was provided if that's the
+        # case tries to retrieve the associated plugins, otherwise retrieves
+        # the complete set of "testable" plugins (all of them are going to run)
+        if args: plugins = [self.get_plugin(arg) for arg in args]
+        else: plugins = self.get_plugins_by_capability("test")
+
+        # iterates over the complete set of plugins that are meant to be tested
+        # and performs the unit testing for all of them (may take some time)
         for plugin in plugins:
             # verifies if the identifier or the short name of the plugin
             # are present in the black list for testing, if that's the case

@@ -125,6 +125,7 @@ def run(
     meta_path,
     plugin_path,
     mode = None,
+    margs = [],
     level = "WARNING",
     layout_mode = "default",
     run_mode = "default",
@@ -159,6 +160,11 @@ def run(
     @param mode: The mode that is going to be used for non
     standard execution of the plugin manager (eg: testing). This
     value is not set by default (for default execution).
+    @type margs: List
+    @param margs: The arguments (coming from command line) that
+    are going to be provided at execution time to the function
+    responsible for the mode execution, these arguments should
+    consist on a series of string based values.
     @type level: String
     @param level: The logging level described as a string that is
     going to be used by the underlying colony logging infra-structure.
@@ -256,7 +262,11 @@ def run(
     # call and the flow control is only returned at the end of
     # the execution of the colony infra-structure, then the
     # returned code is returned to the caller function
-    return_code = plugin_manager.load_system(mode = mode, callback = callback)
+    return_code = plugin_manager.load_system(
+        mode = mode,
+        args = margs,
+        callback = callback
+    )
     return return_code
 
 def execute(cwd = None):
@@ -312,6 +322,11 @@ def execute(cwd = None):
     # value from the command line (as expected)
     if args: mode = args[0]
     else: mode = None
+
+    # retrieves the complete set of arguments that are going to be
+    # provided for the mode execution, these arguments are considered
+    # to be (mode) context specific and valuable only inside context
+    margs = args[1:]
 
     # retrieves the file system encoding
     file_system_encoding = sys.getfilesystemencoding()
@@ -416,6 +431,7 @@ def execute(cwd = None):
         meta_path_striped,
         plugin_path_striped,
         mode = mode,
+        margs = margs,
         level = level,
         layout_mode = layout_mode,
         run_mode = run_mode,
