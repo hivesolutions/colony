@@ -277,7 +277,9 @@ class StringBuffer(object):
 
     def regenerate(self):
         """
-        Regenerates the current value.
+        Regenerates the current value, this is an
+        expensive operation and should be performed
+        only in extreme situations.
         """
 
         # in case the buffer is dirty
@@ -347,6 +349,29 @@ class StringBuffer(object):
 
         # returns the "last" element
         return self.string_list[index]
+
+    def output_file(self, path):
+        """
+        Outputs the current file contents to the file
+        defined in the target path.
+
+        This method provides a simple way to debug the
+        information contained in the buffer.
+
+        @type path: String
+        @param path: The path to the file that is going
+        to be used to place the buffer contents.
+        """
+
+        position = self.tell()
+        self.seek(0)
+        try:
+            contents = self.read()
+            file = open(path, "wb")
+            try: file.write(contents)
+            finally: file.close()
+        finally:
+            self.seek(position)
 
     def _write_fast(self, string_value):
         """
