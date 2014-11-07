@@ -3185,6 +3185,13 @@ class PluginManager(object):
         # iterates over the complete set of plugins that are meant to be tested
         # and performs the unit testing for all of them (may take some time)
         for plugin in plugins:
+            # verifies if the plugin (instance) is valid and if that's not the
+            # case raises an exception because a very serious underlying problem
+            # has occurred and notification is required
+            if not plugin: raise exceptions.ColonyException(
+                "problem loading a plugin for unit test execution"
+            )
+
             # verifies if the identifier or the short name of the plugin
             # are present in the black list for testing, if that's the case
             # the current plugin is skipped as no test is meant to be executed
