@@ -44,7 +44,11 @@ from colony.base import legacy
 
 class StringBuffer(object):
     """
-    The string buffer class.
+    The string buffer class, used to provide an
+    in-memory file like object for fast access.
+
+    The class is provided as an alternative to the
+    pre-defined memory buffers.
     """
 
     softspace = 0
