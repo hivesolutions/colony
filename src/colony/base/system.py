@@ -2581,8 +2581,6 @@ class PluginManager(object):
         # runs the import operation for each of them in case that
         # operation is required by module inexistence
         for plugin in plugins:
-            print(plugin)
-
             # in case the plugin module is already loaded continues
             # the loop as no loading is required for it, otherwise
             # runs the proper loading process for the plugin logging
