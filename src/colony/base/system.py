@@ -3013,7 +3013,7 @@ class PluginManager(object):
 
         for plugin in self.plugin_instances:
             if not PLUGIN_MANAGER_EXTENSION_TYPE in plugin.capabilities: continue
-            self._load_plugin(plugin, None, PLUGIN_MANAGER_EXTENSION_TYPE)
+            self._load_plugin(plugin, loading_type = PLUGIN_MANAGER_EXTENSION_TYPE)
 
     def load_startup_plugins(self):
         """
@@ -3025,7 +3025,7 @@ class PluginManager(object):
             # searches for the startup type in the plugin capabilities
             # in case the plugins contains such capability must load
             # it because it's considered to be a startup plugin
-            if STARTUP_TYPE in plugin.capabilities: self._load_plugin(plugin, None, STARTUP_TYPE)
+            if STARTUP_TYPE in plugin.capabilities: self._load_plugin(plugin, loading_type = STARTUP_TYPE)
 
     def load_main_plugins(self):
         """
@@ -3037,7 +3037,7 @@ class PluginManager(object):
             # searches for the main type in the plugin capabilities
             # in case the plugins contains such capability must load
             # it because it's considered to be a main plugin
-            if MAIN_TYPE in plugin.capabilities: self._load_plugin(plugin, None, MAIN_TYPE)
+            if MAIN_TYPE in plugin.capabilities: self._load_plugin(plugin, loading_type = MAIN_TYPE)
 
     def install_signal_handlers(self):
         """
