@@ -1,4 +1,5 @@
 {
+    "1.2.19" : ["Fixed unicode legacy issue"],
     "1.2.18" : ["Fixed legacy issue"],
     "1.2.17" : ["Better support for unit testing"],
     "1.2.16" : ["Fixed issues related with eager loading"],
