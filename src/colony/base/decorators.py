@@ -39,7 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import inspect
 
-from colony.base import system
+from . import system
 
 METHOD_NAME_VALUE = "method_name"
 """ The method name value """

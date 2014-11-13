@@ -55,12 +55,12 @@ import logging.handlers
 
 import colony.libs
 
-from colony.base import util
-from colony.base import legacy
-from colony.base import config
-from colony.base import loggers
-from colony.base import exceptions
-from colony.base import information
+from . import util
+from . import legacy
+from . import config
+from . import loggers
+from . import exceptions
+from . import information
 
 GLOBAL_CONFIG = config.GLOBAL_CONFIG
 """ The global static configuration of the manager that

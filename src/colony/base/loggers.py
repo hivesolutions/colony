@@ -39,7 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import logging
 
-from colony.base import legacy
+from . import legacy
 
 try:
     import zmq
