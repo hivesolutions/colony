@@ -41,7 +41,7 @@ import os
 import sys
 import time
 
-from colony.base import legacy
+from . import legacy
 
 CPYTHON_ENVIRONMENT = "cpython"
 """ CPython environment value """

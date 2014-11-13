@@ -39,7 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 from colony.base import legacy
 
-from colony.libs import string_buffer_util
+from . import string_buffer_util
 
 QUOTE_SAFE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.-"
 """ The string containing all the safe characters to be quoted """

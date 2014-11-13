@@ -43,8 +43,8 @@ import threading
 
 from colony.base import legacy
 
-from colony.libs import list_util
-from colony.libs import path_util
+from . import list_util
+from . import path_util
 
 PATH_TUPLE_PROCESS_METHOD_PREFIX = "_process_path_tuple_"
 """ The prefix to the path tuple process method """

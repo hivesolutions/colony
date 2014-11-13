@@ -37,7 +37,7 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from colony.libs import number_util
+from . import number_util
 
 COEFFICIENT_VALUES = (
     2, 3, 4, 5, 6, 7, 8, 9
