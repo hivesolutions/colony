@@ -140,8 +140,10 @@ def password_crypt(password, salt = "", hash_method = MD5_VALUE):
         # hash method
         hash = hashlib.new(hash_method)
 
-        # updates the hash value with the
-        # password word
+        # converts the password word into a bytes
+        # based string (if required) and updates
+        # the hash value with the password word
+        password_word = legacy.bytes(password_word)
         hash.update(password_word)
 
         # retrieves the hash value from the
@@ -159,7 +161,7 @@ def password_crypt(password, salt = "", hash_method = MD5_VALUE):
 def password_match(password_hash, password, salt = ""):
     """
     Checks if the given password hash value matched
-    the given password using the given (optional) stal.
+    the given password using the given (optional) salt.
     The matching process executes the original hash function
     in order to check for same results.
 
