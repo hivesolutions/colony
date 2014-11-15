@@ -109,6 +109,9 @@ class StringBuffer(object):
         """
         Writes the given string value to the string buffer.
 
+        The method implementation is a placeholder as runtime
+        replacement will be performed at build time.
+
         @type string_value: String
         @param string_value: The string value to be written.
         """
