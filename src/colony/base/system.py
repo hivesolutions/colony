@@ -4290,7 +4290,8 @@ class PluginManager(object):
         # the current plugin in assertion
         if not plugin.is_loaded(): self._load_plugin(plugin)
 
-        # returns the (loaded) plugin
+        # returns the (loaded) plugin instance, should
+        # be the same as the provided by parameter
         return plugin
 
     def get_plugin(self, plugin_id, plugin_version = None):
