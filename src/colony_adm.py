@@ -507,6 +507,12 @@ def _generate_plugin(path):
     )
     structure_s = json.dumps(structure)
 
+    # verifies if the data type of the provided structure string
+    # is unicode based if that's the case encodes the structure
+    # using the default encoding associated with json
+    if colony.legacy.is_unicode(structure_s):
+        structure_s = structure_s.encode("utf-8")
+
     # creates the final path of the descriptor file and writes the serialized contents
     # into the file closing it for writing at the end, note that the target file is
     # defined by convention from the plugin's short name
@@ -551,6 +557,9 @@ def _generate_config(path):
         resources = resources
     )
     structure_s = json.dumps(structure)
+
+    if colony.legacy.is_unicode(structure_s):
+        structure_s = structure_s.encode("utf-8")
 
     descriptor_path = os.path.join(path, name + "_config.json")
     descriptor_file = open(descriptor_path, "wb")
@@ -691,6 +700,8 @@ def _deploy(path, timestamp = None):
     # deployed and then writes the contents of it into the info based file
     # that is going to be used as a meta information provid3er
     descriptor_s = json.dumps(descriptor)
+    is_unicode = colony.legacy.is_unicode(descriptor_s)
+    if is_unicode: descriptor_s = descriptor_s.encode("utf-8")
     file = open(spec_path, "wb")
     try: file.write(descriptor_s)
     finally: file.close()
