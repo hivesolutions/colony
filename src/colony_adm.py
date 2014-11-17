@@ -105,8 +105,27 @@ def unindent():
     global INDENT
     INDENT -= 1
 
+def help():
+    output("CPM - package management for Colony Framework")
+    print("")
+    print("  cpm clone <target>           Clones the base colony instance into the target directory (new project)")
+    print("  cpm cleanup <target>         Cleans the current instance removing extra files")
+    print("  cpm pack <target>            Packs the current instance into a .zip file")
+    print("  cpm generate [target] <...>  Generates a .json descriptor file for the provided python "\
+        "file and then runs the build operation for the generated .json file, effectively build the package item"
+    )
+    print("  cpm build [descriptor] <...> Builds the target .json descriptor file into a package file")
+    print("  cpm deploy [package]         Deploys the target .cbx ile into the current instance")
+    print("  cpm info [package]           Prints information about the package to the standard output")
+    print("  cpm install [name] <...>     Installs the package with the provided name from the remote repositories")
+    print("  cpm upgrade                  Updates the complete set of packages deployed in the instance")
+    print("  cpm require [path] <...>     Installs the complete set of packages defined in the requirements file")
+    print("  cpm upload [target] <repo>   Generates a package for the provided path and then uploads it "\
+        "to the currently configured primary repository, or another repository if defined"
+    )
+
 def version():
-    output("CPM - package management for colony framework")
+    output("CPM - package management for Colony Framework")
 
 def env():
     # retrieves the current working directory (cwd)
@@ -224,7 +243,7 @@ def generate():
     # retrieves the target plugin file paths and uses them
     # for the generation of the descriptor file that should
     # represent the same plugin in terms of meat information
-    targets = sys.argv[2]
+    targets = sys.argv[2:]
     for target in targets: _generate(target)
 
 def build():
@@ -1133,13 +1152,9 @@ def _zip_directory(path, relative, file):
         else: file.write(_path, _relative)
 
 def main():
-    # in case the number of arguments is not sufficient
-    # raises an exception indicating the problem
-    if len(sys.argv) < 2: raise RuntimeError("operation not defined")
-
     # retrieves the operation from the provided arguments
     # and retrieves the associated function to be executed
-    operation = sys.argv[1]
+    operation = "help" if len(sys.argv) < 2 else sys.argv[1]
     _globals = globals()
     function = _globals.get(operation, None)
     if function: function()
