@@ -1018,6 +1018,7 @@ def _exists(info, upgrade = False):
     try: data = file.read()
     finally: file.close()
 
+    data = data.decode("utf-8")
     descriptor = json.loads(data)
     if not info["version"] == descriptor["version"]: return False
     if info["timestamp"] > descriptor["timestamp"]: return False

@@ -1,4 +1,5 @@
 {
+    "1.2.25" : ["Fixed issue with omni admin"],
     "1.2.24" : ["Fixed json file reading in admin"],
     "1.2.23" : ["Fixed unicode issues in admin"],
     "1.2.22" : ["Fixed legacy issue in exec file"],
