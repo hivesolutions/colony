@@ -1,4 +1,5 @@
 {
+    "1.2.22" : ["Fixed legacy issue in exec file"],
     "1.2.21" : ["Better admin support"],
     "1.2.20" : ["Fixed bugs in legacy support"],
     "1.2.19" : ["Fixed unicode legacy issue"],
