@@ -578,8 +578,13 @@ def _build(path, short_name = True):
     # opens the descriptor file to be read in the binary
     # format and loads its json contents to be used
     file = open(path, "rb")
-    try: descriptor = json.load(file, "utf-8")
+    try: data = file.read()
     finally: file.close()
+
+    # decodes the "raw" data using the default json encoding
+    # and then runs the proper json decoding/loading
+    data = data.decode("utf-8")
+    descriptor = json.loads(data)
 
     # retrieves the various attributes from the descriptor
     # file and uses them to infer in some properties
@@ -658,9 +663,14 @@ def _deploy(path, timestamp = None):
     # the package that is currently being deployed
     spec_path = os.path.join(temp_path, "spec.json")
     file = open(spec_path, "rb")
-    try: descriptor = json.load(file, "utf-8")
+    try: data = file.read()
     finally: file.close()
     os.remove(spec_path)
+
+    # decodes the "raw" data using the default json encoding
+    # and then runs the proper json decoding/loading
+    data = data.decode("utf-8")
+    descriptor = json.loads(data)
 
     # attaches the timestamp to the descriptor map in case it's been defined
     # by the passing arguments, this is required for compliance
@@ -971,9 +981,14 @@ def _read(path):
     # the package that is going to have information printed
     spec_path = os.path.join(temp_path, "spec.json")
     file = open(spec_path, "rb")
-    try: descriptor = json.load(file, "utf-8")
+    try: data = file.read()
     finally: file.close()
     shutil.rmtree(temp_path)
+
+    # decodes the "raw" data using the default json encoding
+    # and then runs the proper json decoding/loading
+    data = data.decode("utf-8")
+    descriptor = json.loads(data)
 
     # returns the read descriptor dictionary to the caller metho/function
     # so that it may be used to interpret the current package in action
