@@ -65,7 +65,9 @@ class Protected(object):
     """
 
     def __new__(cls, *args, **kwargs):
-        # creates a new object reference
+        # creates a new object reference, note that
+        # the object is created without arguments,
+        # avoiding possible runtime errors
         object_reference = object.__new__(cls)
 
         # initializes the class reference with the new
@@ -88,7 +90,8 @@ class Protected(object):
                     # returns the attribute (valid)
                     return attribute
 
-            # raises the attribute error
+            # raises the attribute error, meaning that the attribute
+            # exits but it's not exposed as a public attribute
             raise AttributeError("attribute '%s' of class '%s' is not public" % (name, cls.__name__))
 
         def __setattr__(self, name, value):
