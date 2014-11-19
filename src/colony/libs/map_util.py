@@ -211,19 +211,22 @@ def map_extend(
     """
     Extends the given map with the extension map,
     retrieving a map resulting of the merge of both maps.
+
     In case the override flag is set the values are overridden
     in case they already exist in the base map.
+
     An optional recursive flag allows the extension to be
     made recursive in case the value is a map.
+
     The base map may be changed or left untouched based on
     the copy base map flag.
 
     @type base_map: Dictionary
-    @param base_map: The map to be used as base for
-    the merge.
+    @param base_map: The map to be used as base for the merge,
+    should contain more values at the end of the merge.
     @type extension_map: Dictionary
     @param extension_map: The map to be used to extend the base
-    one.
+    one, this map may be recursively percolated if requested.
     @type override: bool
     @param override: If a value should be overridden in
     case it already exists in the base map.
@@ -239,41 +242,45 @@ def map_extend(
     """
 
     # copies the base map to create the initial result map (optional)
-    result_map = copy_base_map and copy.copy(base_map) or base_map
+    result_map = copy.copy(base_map) if copy_base_map else base_map
 
     # iterates over all the keys and values
     # in the extension map
     for key, value in legacy.iteritems(extension_map):
-        # in case the override flag is not set
-        # and the key already exists in the result map
+        # in case the override flag is not set and
+        # the key already exists in the result map
+        # must skip the current iteration loop
         if not override and key in result_map:
-            # continues the loop
             continue
 
-        # retrieves the type for the value
+        # retrieves the data type for the current value in
+        # iteration so that it may be used to determine the
+        # need for the recursive percolated copy/merge
         value_type = type(value)
 
-        # in case the value is a map and the
-        # recursive flag is set, must try to
-        # extend the current item with the
-        # new one as expected
+        # in case the value is a map and the recursive flag
+        # is set, must try to extend the current item with
+        # the new one, as expected
         if recursive and value_type == dict:
             #  tries to retrieve the result map value, so
             # that it's possible to extend the current value
-            # with the previously existing one
+            # with the previously existing one, a default map
+            # is created in case it does not exists so that
+            # it's possible to used as the base for population
             result_map_value = result_map.get(key, {})
 
             # extends the map that is currently in the result
-            # map with the new value (recursive step) note that
-            # this is only performed in case the value is set
-            # avoiding unnecessary extra calls (performance issues)
+            # map with the new value (recursive step), note
+            # that a new map may have been created to be used
+            # as the placeholder of new map values, this avoids
+            # collision between sub-maps (would cause problems)
             value = map_extend(
                 result_map_value,
                 value,
                 override = override,
                 recursive = recursive,
                 copy_base_map = copy_base_map
-            ) if result_map_value else value
+            )
 
         # sets the (extension) value in the result map
         result_map[key] = value
