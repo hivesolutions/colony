@@ -91,7 +91,10 @@ class Protected(object):
 
             # raises the attribute error, meaning that the attribute
             # exits but it's not exposed as a public attribute
-            raise AttributeError("attribute '%s' of class '%s' is not public" % (name, cls.__name__))
+            raise AttributeError(
+                "attribute '%s' of class '%s' is not public" %
+                (name, cls.__name__)
+            )
 
         def __setattr__(self, name, value):
             cls.__setattr__(self, name, value)
