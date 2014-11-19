@@ -109,7 +109,7 @@ def print_information():
     used when running the system.
     """
 
-    print( BRANDING_TEXT % (
+    print(BRANDING_TEXT % (
         colony.VERSION,
         colony.RELEASE,
         colony.BUILD,
