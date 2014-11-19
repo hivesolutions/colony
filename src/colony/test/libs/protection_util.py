@@ -58,8 +58,15 @@ class ProtectionTest(colony.ColonyTestCase):
         self.assert_raises(AttributeError, getattr, mock, "protected")
 
 class ProtectionMock(colony.Protected):
+    """
+    Mock class to be used in the testing of protected
+    attributes, should inherit from the (abstract) class
+    responsible for the "protection".
+    """
 
     name = "protected"
+    """ The name attribute, should be protected by
+    the protected infra-structure """
 
     @colony.public
     def public(self):
