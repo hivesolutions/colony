@@ -303,11 +303,15 @@ def map_check_parameters(map, parameters_list, exception = Exception):
     """
 
     # iterates over all the parameters in the parameters list
+    # to try to verify for their existence in the map
     for parameter in parameters_list:
-        # in case the parameter is not in the map
-        if not parameter in map:
-            # raises the exception
-            raise exception(parameter)
+        # in case the parameter is in the map must continue
+        # the current loop, no exception raised this time
+        if parameter in map: continue
+
+        # raises the provided exception as the parameter does
+        # not exist in the provided map
+        raise exception(parameter)
 
 def map_get_value_cast(map, key, cast_type = str, default_value = None):
     """
