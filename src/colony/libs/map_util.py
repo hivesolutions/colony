@@ -201,7 +201,13 @@ def map_remove(removal_map, destiny_map):
         # removes the key item from the destiny map
         del destiny_map[key]
 
-def map_extend(base_map, extension_map, override = True, recursive = False, copy_base_map = True):
+def map_extend(
+    base_map,
+    extension_map,
+    override = True,
+    recursive = False,
+    copy_base_map = True
+):
     """
     Extends the given map with the extension map,
     retrieving a map resulting of the merge of both maps.
@@ -248,15 +254,26 @@ def map_extend(base_map, extension_map, override = True, recursive = False, copy
         value_type = type(value)
 
         # in case the value is a map and the
-        # recursive flag is set
+        # recursive flag is set, must try to
+        # extend the current item with the
+        # new one as expected
         if recursive and value_type == dict:
-            # retrieves the result map value in
-            # case it's set
+            #  tries to retrieve the result map value, so
+            # that it's possible to extend the current value
+            # with the previously existing one
             result_map_value = result_map.get(key, {})
 
-            # extends the map that is currently
-            # in the result map with the new value (recursive step)
-            value = map_extend(result_map_value, value, override, recursive, copy_base_map)
+            # extends the map that is currently in the result
+            # map with the new value (recursive step) note that
+            # this is only performed in case the value is set
+            # avoiding unnecessary extra calls (performance issues)
+            value = map_extend(
+                result_map_value,
+                value,
+                override = override,
+                recursive = recursive,
+                copy_base_map = copy_base_map
+            ) if result_map_value else value
 
         # sets the (extension) value in the result map
         result_map[key] = value
