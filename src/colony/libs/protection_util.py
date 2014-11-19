@@ -50,10 +50,9 @@ def public(function):
     @return: The sent function (returned as a normal decorator).
     """
 
-    # sets the function to public
+    # sets the (decorated) function as public and then returns
+    # the function to the caller (default decorator behavior)
     function.__public__ = True
-
-    # returns the function
     return function
 
 class Protected(object):
