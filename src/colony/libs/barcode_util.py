@@ -139,7 +139,7 @@ def encode_2_of_5(string_value):
     encoded_value = encoded_buffer.get_value()
 
     # returns the 2 of 5 encoded value
-    return  encoded_value
+    return encoded_value
 
 def encode_code_128(value, code_set = "A"):
     """

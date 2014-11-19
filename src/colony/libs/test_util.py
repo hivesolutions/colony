@@ -123,7 +123,7 @@ class ColonyTestCase(unittest.TestCase):
             # oriented and then uses the string mode flag to find out the correct
             # expected exception name (for exception string description)
             string_mode = True if type(expected_exception) in legacy.STRINGS else False
-            expected_exception_name =expected_exception if string_mode else expected_exception.__name__
+            expected_exception_name = expected_exception if string_mode else expected_exception.__name__
 
             # retrieves the exception class and then uses it
             # to retrieve the exception name

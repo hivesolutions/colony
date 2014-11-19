@@ -1980,7 +1980,7 @@ class PluginManager(object):
             DEFAULT_LOGGING_FILE_NAME_EXTENSION
         logger_err_file_name = DEFAULT_LOGGING_FILE_NAME_PREFIX +\
             DEFAULT_LOGGING_FILE_NAME_SEPARATOR + self.run_mode +\
-             DEFAULT_LOGGING_ERR_FILE_NAME_EXTENSION
+            DEFAULT_LOGGING_ERR_FILE_NAME_EXTENSION
 
         # creates the complete logger file path by adding the "complete"
         # logger file name to the "base" logger path, this is done both
@@ -2157,7 +2157,7 @@ class PluginManager(object):
                 args = args,
                 library_paths = self.library_paths,
                 meta_paths = self.meta_paths,
-                plugin_paths =  self.plugin_paths,
+                plugin_paths = self.plugin_paths,
                 plugins = self.referred_modules
             )
 

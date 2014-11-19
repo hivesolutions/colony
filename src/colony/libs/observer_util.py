@@ -37,7 +37,7 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-COUNTER=0
+COUNTER = 0
 """ The global counter value that will be used in the
 pseudo unique number generation by incrementing the
 number by one value per generation cycle """
