@@ -404,30 +404,32 @@ def map_output(map, output_method = sys.stdout.write, indentation = ""):
     @param indentation: The indentation level to be used.
     """
 
-    # iterates over all the keys in the map
+    # iterates over all the keys in the map in order to render
+    # their value to the provided output method/function
     for key in map:
         # retrieves the map value
         map_value = map[key]
 
-        # outputs the map value
+        # outputs the map value, meaning that a key to value
+        # association will be "printed" to the output method
         if type(map_value) == dict:
-            # defines the key string
+            # defines the key string with the proper indentation
+            # value and the key value and outputs it properly
             key_string = indentation + legacy.UNICODE(key) + ":"
-
-            # outputs the key string
             output_method(key_string)
 
-            # defines the output map indentation
+            # defines the "new" output map indentation and runs the
+            # recursive operation so that the new map is printed
             output_map_identation = indentation + "  "
-
-            # outputs the map value
             map_output(map_value, output_method, output_map_identation)
-        # otherwise it must be a "simple" value
-        else:
-            # creates a string representation of the map value
-            map_value_string = indentation + legacy.UNICODE(key) + " = " + legacy.UNICODE(map_value)
 
-            # outputs the map value string
+        # otherwise it must be a "simple" value and so the a "simple"
+        # key and value string is going to be printed to the method
+        else:
+            # creates a string representation of the map value and
+            # then "runs" it to the output method
+            map_value_string = indentation + legacy.UNICODE(key) +\
+                " = " + legacy.UNICODE(map_value)
             output_method(map_value_string)
 
 def map_normalize(item, operation = None):
