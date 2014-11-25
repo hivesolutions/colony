@@ -381,9 +381,11 @@ def map_get_values(map, key):
     values_type = type(values)
 
     # in case the values element is not a list
-    if not values_type == list:
-        # creates the list with the values element
-        values = [values]
+    # the values element is converted into a
+    # a list with the original values in it,
+    # ensuring that the returned value is always
+    # a valid sequence value, ready to be iterated
+    if not values_type == list: values = [values]
 
     # returns the values
     return values
