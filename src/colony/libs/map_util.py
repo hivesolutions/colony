@@ -86,20 +86,27 @@ def map_copy(source_map, destiny_map):
     """
     Copies the contents of the source map to the destiny map.
 
+    Note that in case the value already exists in the destiny
+    map the copy step will be ignored.
+
     @type source_map: Dictionary
     @param source_map: The source map of the copy.
     @type destiny_map: Dictionary
     @param destiny_map: The destiny map of the copy.
     """
 
-    # iterates over all the source map keys
+    # iterates over all the source map keys in order to copy
+    # the complete set of values from the source to destiny map
     for source_map_key in source_map:
-        # retrieves the source map value
+        # retrieves the source map value, that may be set
+        # in the destiny map in case no duplicate key exists
         source_map_value = source_map[source_map_key]
 
         # in case the key is not present in the destiny map
-        if not source_map_key in destiny_map or destiny_map[source_map_key] == None or destiny_map[source_map_key] == "none":
-            # adds the value to the destiny map
+        # must add it into the destiny map (ensures existence)
+        if not source_map_key in destiny_map or\
+            destiny_map[source_map_key] == None or\
+            destiny_map[source_map_key] == "none":
             destiny_map[source_map_key] = source_map_value
 
 def map_copy_deep(source_map, destiny_map):
