@@ -94,8 +94,9 @@ def resolve_manager(path, ensure = True):
     if ensure: colony.ensure_tree(manager_path)
     return manager_path
 
-def output(message):
+def output(message, flush = True):
     print((" " * INDENT) + message)
+    if flush: sys.stdout.flush()
 
 def indent():
     global INDENT
@@ -807,7 +808,7 @@ def _install(name = None, id = None, version = None, upgrade = False):
         result = appier.get(url, params = params)
         package = result[0] if result else dict()
         if not package: continue
-        repo_url = _repo_url;
+        repo_url = _repo_url
         break
 
     # in case no package has been found for any of the defined repos
