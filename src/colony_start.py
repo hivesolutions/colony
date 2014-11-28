@@ -41,7 +41,6 @@ import os
 import sys
 import glob
 import getopt
-import logging
 import warnings
 
 import colony
@@ -250,7 +249,7 @@ def run(
     # resolves the string based level into the proper integer
     # that describes the logging level and then uses that value
     # to start the logging infra-structure of colony
-    level = logging.getLevelName(level)
+    level = colony.getLevelName(level)
     plugin_manager.start_logger(level)
 
     # creates the callback function to be used in the process of

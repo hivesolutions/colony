@@ -109,7 +109,7 @@ alias_path = colony.conf("ALIAS_PATH", None)
 # configuration support, defaulting to the default level in case the
 # value is not provided through configuration
 level = colony.conf("LEVEL", logging.INFO)
-level = logging.getLevelName(level)
+level = colony.getLevelName(level)
 
 # tries to retrieve the configuration file from the environment
 # variable associated in case it fails uses the default configuration
