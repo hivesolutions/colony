@@ -3740,8 +3740,8 @@ class PluginManager(object):
             # prints a debug  message about the missing dependency
             # for the plugin and return in error (test failed)
             self.debug(
-                "Problem with dependency for plugin '%s' v%s" %
-                (plugin.name, plugin.version)
+                "Problem with dependency '%s' for plugin '%s' v%s" %
+                (str(plugin_dependency), plugin.name, plugin.version)
             )
             return False
 
