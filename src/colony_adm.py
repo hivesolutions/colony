@@ -868,6 +868,10 @@ def _require(path, upgrade = False):
     try: contents = file.read()
     finally: file.close()
 
+    # decodes the provided contents using the expected encoding
+    # of the require file (as defined is specification)
+    contents = contents.decode("utf-8")
+
     # splits the lines in the current file and removes the ones
     # that are not considered valid, after that runs the install
     # operation for each one of the dependency requests
