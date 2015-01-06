@@ -410,7 +410,7 @@ def main():
     server = colony.conf("SERVER", "legacy")
     host = colony.conf("HOST", "127.0.0.1")
     port = colony.conf("PORT", "8080")
-    ssl = colony.conf("SSL", False)
+    ssl = colony.conf("SSL", False, cast = bool)
     key_file = colony.conf("KEY_FILE", None)
     cer_file = colony.conf("CER_FILE", None)
     for name, value in os.environ.items():
