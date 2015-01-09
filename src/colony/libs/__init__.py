@@ -77,7 +77,7 @@ from .barcode_util import encode_2_of_5, encode_code_128, encode_code_39
 from .cache_util import DataCacheMap
 from .call_util import execute_retries, call_safe
 from .control_util import calculate_tax_number_control_value, calculate_id_number_control_value
-from .country_util import country_get
+from .country_util import COUNTRIES, country_get
 from .crypt_util import password_crypt, password_match, password_strength, md5_crypt,\
     generate_hash_digest_map
 from .encode_util import encode_two_complement_string, decode_two_complement_string
