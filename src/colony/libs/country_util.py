@@ -238,7 +238,7 @@ COUNTRIES = {
 tuple containing the iso 3166 information (two character
 code, three character code and the number code) """
 
-def country_get(name):
+def country_get(name, relaxed = True):
     """
     Retrieves a tuple containing the complete set of iso 3166
     information for the country with the provided name.
@@ -246,13 +246,21 @@ def country_get(name):
     The returned tuple contains a two character code a three
     character code and the number code.
 
+    An optional relaxed flag allows an automatic conversion of
+    the country name to a lower cased version for easy retrieval.
+
     @type name: String
     @param name: The name of the country for which the information
     is meant to be retrieved.
+    @type relaxed: bool
+    @param relaxed: If the (country) name retrieval should take a
+    relaxed approach meaning that it will be first converted into
+    a lower cased version to avoid collisions.
     @rtype: Tuple
     @return: A tuple containing the iso 3166 information for the
     request country.
     @see: http://en.wikipedia.org/wiki/ISO_3166
     """
 
-    return COUNTRIES.get(name.lower(), (None, None, None))
+    if relaxed: name = name.lower()
+    return COUNTRIES.get(name, (None, None, None))

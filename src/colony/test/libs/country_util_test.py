@@ -55,8 +55,13 @@ class CountryTest(colony.ColonyTestCase):
         self.assertEqual(result, ("PT", "PRT", "620"))
 
         # verifies that a capitalized country name retrieval
-        # fails, retrieving invalid results
+        # still works, under the relaxed flag mode
         result = colony.country_get("Portugal")
+        self.assertEqual(result, ("PT", "PRT", "620"))
+
+        # verifies that a capitalized country name retrieval
+        # fails if the relaxed flag is not set
+        result = colony.country_get("Portugal", relaxed = False)
         self.assertEqual(result, (None, None, None))
 
         # verifies that a simplified country name retrieval
