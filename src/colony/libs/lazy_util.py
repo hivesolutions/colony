@@ -47,6 +47,9 @@ class LazyClass(object):
     def __repr__(self):
         return "<lazy>"
 
+    def __hash__(self):
+        return None.__hash__()
+
     def __eq__(self, other):
         if other == None: return True
         return hash(self) == hash(other)
