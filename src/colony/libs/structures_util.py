@@ -46,6 +46,10 @@ class Decimal(float):
         self.places = places
         return super(Decimal, self).__new__(self, value)
 
+    def __cmp__(self, other):
+        other = round(other, self.places)
+        return float.__cmp__(self, other)
+
     def __lt__(self, other):
         other = round(other, self.places)
         return float.__lt__(self, other)
