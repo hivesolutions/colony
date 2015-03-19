@@ -39,6 +39,84 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 from colony.base import legacy
 
+class Decimal(float):
+
+    def __new__(self, value = 0.0, places = 12):
+        value = round(value, places)
+        self.places = places
+        return super(Decimal, self).__new__(self, value)
+
+    def __lt__(self, other):
+        other = round(other, self.places)
+        return float.__lt__(self, other)
+
+    def __le__(self, other):
+        other = round(other, self.places)
+        return float.__le__(self, other)
+
+    def __eq__(self, other):
+        other = round(other, self.places)
+        return float.__eq__(self, other)
+
+    def __ne__(self, other):
+        other = round(other, self.places)
+        return float.__ne__(self, other)
+
+    def __gt__(self, other):
+        other = round(other, self.places)
+        return float.__gt__(self, other)
+
+    def __ge__(self, other):
+        other = round(other, self.places)
+        return float.__gt__(self, other)
+
+    def __add__(self, other):
+        other = round(other, self.places)
+        result = float.__add__(self, other)
+        result = round(result, self.places)
+        return result
+
+    def __sub__(self, other):
+        other = round(other, self.places)
+        return float.__sub__(self, other)
+
+    def __mul__(self, other):
+        result = float.__mul__(self, other)
+        result = round(result, self.places)
+        return result
+
+    def __floordiv__(self, other):
+        other = round(other, self.places)
+        return float.__floordiv__(self, other)
+
+    def __mod__(self, other):
+        other = round(other, self.places)
+        return float.__mod__(self, other)
+
+    def __divmod__(self, other):
+        other = round(other, self.places)
+        return float.__divmod__(self, other)
+
+    def __lshift__(self, other):
+        other = round(other, self.places)
+        return float.__lshift__(self, other)
+
+    def __rshift__(self, other):
+        other = round(other, self.places)
+        return float.__rshift__(self, other)
+
+    def __and__(self, other):
+        other = round(other, self.places)
+        return float.__and__(self, other)
+
+    def __xor__(self, other):
+        other = round(other, self.places)
+        return float.__xor__(self, other)
+
+    def __or__(self, other):
+        other = round(other, self.places)
+        return float.__or__(self, other)
+
 class JournaledList(list):
     """
     List structure that keeps track of the append and

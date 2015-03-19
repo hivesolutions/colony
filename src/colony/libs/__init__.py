@@ -114,8 +114,8 @@ from .stack_util import get_instance_module_directory, get_call_module_directory
 from .string_buffer_util import StringBuffer
 from .string_util import xor_string_value, to_underscore, to_camelcase, pluralize,\
     capitalize_all, join
-from .structures_util import JournaledList, OrderedMap, OrderedMapIterator, MultipleValueMap,\
-    FormatTuple, FileReference, is_dictionary
+from .structures_util import Decimal, JournaledList, OrderedMap, OrderedMapIterator,\
+    MultipleValueMap, FormatTuple, FileReference, is_dictionary
 from .test_util import ColonyTestCase
 from .time_util import SIMPLE_VALUE, BASIC_VALUE, EXTENDED_VALUE, EXTENDED_SIMPLE_VALUE,\
     MINIMIZE_MULTIPLE, MINIMIZE_UNIQUE, format_seconds_smart, format_seconds, timestamp_datetime

@@ -39,6 +39,21 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import colony
 
+class DecimalTest(colony.ColonyTestCase):
+    """
+    Class that tests the decimal (fixed point) data structure
+    so that it ensured to be conformant with required operations.
+    """
+
+    def test_arithmetic(self):
+        """
+        Tests a series of arithmetic operations around the
+        decimal data structure (critical operations).
+        """
+
+        result = colony.Decimal(12.2) * 34.23
+        self.assertEqual(result, 417.606)
+
 class JournaledListTest(colony.ColonyTestCase):
     """
     Class that tests the journaled list structure.
