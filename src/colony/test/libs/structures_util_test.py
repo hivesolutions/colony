@@ -54,6 +54,9 @@ class DecimalTest(colony.ColonyTestCase):
         result = colony.Decimal(12.2) * 34.23
         self.assertEqual(result, 417.606)
 
+        result = 12.2 * 34.23
+        self.assertNotEqual(result, 417.606)
+
 class JournaledListTest(colony.ColonyTestCase):
     """
     Class that tests the journaled list structure.

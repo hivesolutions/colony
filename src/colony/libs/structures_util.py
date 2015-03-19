@@ -71,14 +71,14 @@ class Decimal(float):
         return float.__gt__(self, other)
 
     def __add__(self, other):
-        other = round(other, self.places)
         result = float.__add__(self, other)
         result = round(result, self.places)
         return result
 
     def __sub__(self, other):
-        other = round(other, self.places)
-        return float.__sub__(self, other)
+        result = float.__sub__(self, other)
+        result = round(result, self.places)
+        return result
 
     def __mul__(self, other):
         result = float.__mul__(self, other)
@@ -86,16 +86,19 @@ class Decimal(float):
         return result
 
     def __floordiv__(self, other):
-        other = round(other, self.places)
-        return float.__floordiv__(self, other)
+        result = float.__floordiv__(self, other)
+        result = round(result, self.places)
+        return result
 
     def __mod__(self, other):
-        other = round(other, self.places)
-        return float.__mod__(self, other)
+        result = float.__mod__(self, other)
+        result = round(result, self.places)
+        return result
 
     def __divmod__(self, other):
-        other = round(other, self.places)
-        return float.__divmod__(self, other)
+        result = float.__divmod__(self, other)
+        result = round(result, self.places)
+        return result
 
     def __lshift__(self, other):
         other = round(other, self.places)
