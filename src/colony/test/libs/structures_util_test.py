@@ -63,6 +63,12 @@ class DecimalTest(colony.ColonyTestCase):
         result = 88.151 - 88.15
         self.assertNotEqual(result, 0.001)
 
+        result = colony.Decimal(88.151) - 823.35
+        self.assertEqual(result, -735.199)
+
+        result = 88.151 - 823.35
+        self.assertNotEqual(result, -735.199)
+
 class JournaledListTest(colony.ColonyTestCase):
     """
     Class that tests the journaled list structure.
