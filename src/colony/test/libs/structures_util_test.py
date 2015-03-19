@@ -103,9 +103,9 @@ class DecimalTest(colony.ColonyTestCase):
         self.assertEqual(type(key), colony.Decimal)
 
         map = dict()
-        map[key] = "string"
+        map[key] = "value"
         result = map[key]
-        self.assertEqual(result, "string")
+        self.assertEqual(result, "value")
 
 class JournaledListTest(colony.ColonyTestCase):
     """
