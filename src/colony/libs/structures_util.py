@@ -680,15 +680,11 @@ def is_dictionary(object):
     object_type = type(object)
 
     # in case the object type is dictionary
-    if object_type == dict:
-        # returns true
-        return True
+    if object_type == dict: return True
 
     # in case the object type id ordered map
     # (this is the custom dictionary class)
-    if object_type == OrderedMap:
-        # returns true
-        return True
+    if object_type == OrderedMap: return True
 
     # returns false
     return False
