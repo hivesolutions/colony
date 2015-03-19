@@ -42,36 +42,36 @@ from colony.base import legacy
 class Decimal(float):
 
     def __new__(self, value = 0.0, places = 12):
-        value = round(value, places)
         self.places = places
+        value = round(value, places)
         return super(Decimal, self).__new__(self, value)
 
     def __cmp__(self, other):
-        other = round(other, self.places)
+        other = self._normalize(other)
         return float.__cmp__(self, other)
 
     def __lt__(self, other):
-        other = round(other, self.places)
+        other = self._normalize(other)
         return float.__lt__(self, other)
 
     def __le__(self, other):
-        other = round(other, self.places)
+        other = self._normalize(other)
         return float.__le__(self, other)
 
     def __eq__(self, other):
-        other = round(other, self.places)
+        other = self._normalize(other)
         return float.__eq__(self, other)
 
     def __ne__(self, other):
-        other = round(other, self.places)
+        other = self._normalize(other)
         return float.__ne__(self, other)
 
     def __gt__(self, other):
-        other = round(other, self.places)
+        other = self._normalize(other)
         return float.__gt__(self, other)
 
     def __ge__(self, other):
-        other = round(other, self.places)
+        other = self._normalize(other)
         return float.__gt__(self, other)
 
     def __add__(self, other):
@@ -105,16 +105,20 @@ class Decimal(float):
         return result
 
     def __and__(self, other):
-        other = round(other, self.places)
+        other = self._normalize(other)
         return float.__and__(self, other)
 
     def __xor__(self, other):
-        other = round(other, self.places)
+        other = self._normalize(other)
         return float.__xor__(self, other)
 
     def __or__(self, other):
-        other = round(other, self.places)
+        other = self._normalize(other)
         return float.__or__(self, other)
+
+    def _normalize(self, value):
+        if not type(value) == float: return value
+        return round(value, self.places)
 
 class JournaledList(list):
     """
