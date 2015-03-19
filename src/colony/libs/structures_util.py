@@ -61,7 +61,9 @@ class Decimal(float):
 
     def __cmp__(self, other):
         other = self._normalize(other)
-        return float.__cmp__(self, other)
+        if float.__gt__(self, other): return 1
+        if float.__lt__(self, other): return -1
+        return 0
 
     def __lt__(self, other):
         other = self._normalize(other)
