@@ -70,11 +70,37 @@ def roundi(value, places):
     @type places: int
     @param places: The number of decimal places to be used
     in the rounding operation.
+    @rtype: float
+    @return: The resulting rounded value according to the
+    round half up strategy.
     @see: http://docs.python.org/2/tutorial/floatingpoint.html
     """
 
     rounder = math.pow(10, places)
     return _round(value * rounder, 0) / rounder
+
+def roundt(value, places):
+    """
+    Simple rounding utility function that performs the currently
+    selected rounding operation on the provided value and then
+    re-casts the resulting value back to the original data type.
+
+    This function is relevant/useful for situation where the base
+    value inherits indirectly from the float class.
+
+    @type value: float
+    @param value: The value that is meant to be rounded and then
+    "casted" back to the original data type.
+    @param places: The number of decimal places to be used
+    in the rounding operation.
+    @rtype: float
+    @return: The resulting rounded value according to the
+    default rounding strategy defined.
+    """
+
+    value_t = type(value)
+    result = round(value, places)
+    return value_t(result)
 
 def round_apply():
     """
