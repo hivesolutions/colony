@@ -76,6 +76,11 @@ class DecimalTest(colony.ColonyTestCase):
         self.assertEqual(type(result), float)
 
     def test_boolean(self):
+        """
+        Runs a series of tests on the boolean based operators
+        defined for the decimal data structure.
+        """
+
         result = colony.Decimal(12.2) and 12.2
         self.assertEqual(result, 12.2)
         self.assertEqual(type(result), float)
