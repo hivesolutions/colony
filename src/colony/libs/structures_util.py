@@ -56,6 +56,9 @@ class Decimal(float):
         value = round(value, places)
         return super(Decimal, self).__new__(self, value)
 
+    def __hash__(self):
+        return float.__hash__(self)
+
     def __cmp__(self, other):
         other = self._normalize(other)
         return float.__cmp__(self, other)

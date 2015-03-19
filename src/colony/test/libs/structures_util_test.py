@@ -93,6 +93,20 @@ class DecimalTest(colony.ColonyTestCase):
         self.assertEqual(result, colony.Decimal(12.2))
         self.assertEqual(type(result), colony.Decimal)
 
+    def test_operations(self):
+        """
+        Runs a series of general operations testing for the
+        decimal data structure.
+        """
+
+        key = colony.Decimal(88.151) - 88.15
+        self.assertEqual(type(key), colony.Decimal)
+
+        map = dict()
+        map[key] = "string"
+        result = map[key]
+        self.assertEqual(result, "string")
+
 class JournaledListTest(colony.ColonyTestCase):
     """
     Class that tests the journaled list structure.
