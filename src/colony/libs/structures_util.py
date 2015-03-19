@@ -52,6 +52,7 @@ class Decimal(float):
 
     def __new__(self, value = 0.0, places = 12):
         self.places = places
+        value = float(value)
         value = round(value, places)
         return super(Decimal, self).__new__(self, value)
 
