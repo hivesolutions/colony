@@ -46,7 +46,8 @@ class Decimal(float):
     structure with the same name.
 
     Provides a simple unified way of re-using the float data
-    type to performed fixed point operations.
+    type to performed fixed point operations, using techniques
+    around the special rounding method.
     """
 
     def __new__(self, value = 0.0, places = 12):
