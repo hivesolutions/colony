@@ -40,6 +40,14 @@ __license__ = "GNU General Public License (GPL), Version 3"
 from colony.base import legacy
 
 class Decimal(float):
+    """
+    Fixed point rational number representation/manipulation
+    structure aimed at replacing the internal python data
+    structure with the same name.
+
+    Provides a simple unified way of re-using the float data
+    type to performed fixed point operations.
+    """
 
     def __new__(self, value = 0.0, places = 12):
         self.places = places
