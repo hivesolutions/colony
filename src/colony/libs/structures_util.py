@@ -82,7 +82,7 @@ class Decimal(float):
 
     def __ge__(self, other):
         other = self._normalize(other)
-        return float.__gt__(self, other)
+        return float.__ge__(self, other)
 
     def __add__(self, other):
         result = float.__add__(self, other)
