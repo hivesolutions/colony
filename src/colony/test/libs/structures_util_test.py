@@ -72,14 +72,14 @@ class DecimalTest(colony.ColonyTestCase):
         decimal data structure (critical operations).
         """
 
-        result = colony.Decimal(532687.23) * 4534.23
-        self.assertEqual(result, 2415326418.8829)
+        result = colony.Decimal(12.2) * 34.23
+        self.assertEqual(result, 417.606)
 
         result = colony.Decimal(12687.23) * 34.132
         self.assertEqual(result, 433040.53436)
 
-        result = colony.Decimal(12.2) * 34.23
-        self.assertEqual(result, 417.606)
+        result = colony.Decimal(532687.23) * 4534.23
+        self.assertEqual(result, 2415326418.8829)
 
         result = 12.2 * 34.23
         self.assertNotEqual(result, 417.606)
