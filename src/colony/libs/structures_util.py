@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008-2015 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import math
+
 from colony.base import legacy
 
 FLOAT_PRECISION = 14
@@ -60,7 +62,8 @@ class Decimal(float):
 
     def __new__(self, value = 0.0):
         value = float(value)
-        count = str(value).index(".")
+        integer = abs(int(value // 1))
+        count = 1 if integer == 0 else int(math.log10(integer)) + 1
         places = FLOAT_PRECISION - count
         self.places = places
         value = round(value, places)
