@@ -108,6 +108,12 @@ class DecimalTest(colony.ColonyTestCase):
         result = 88.151 - 823.35
         self.assertEqual(type(result), float)
 
+        result = colony.Decimal(1.55)
+        self.assertEqual(result, 1.55)
+
+        result = colony.Decimal(9999999999.155555555555555555)
+        self.assertEqual(result, 9999999999.15555555555555555)
+
         result = colony.Decimal(88.151) / 1
         self.assertEqual(result, 88.151)
         self.assertEqual(type(result), colony.Decimal)
