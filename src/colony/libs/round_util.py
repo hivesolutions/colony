@@ -77,7 +77,9 @@ def roundi(value, places):
     """
 
     rounder = math.pow(10, places)
-    return _round_t(value * rounder, 0) / rounder
+    new = _round(value * rounder, 0) / rounder
+    old = _round(value, places)
+    return old if old > new else new
 
 def roundt(value, places):
     """
