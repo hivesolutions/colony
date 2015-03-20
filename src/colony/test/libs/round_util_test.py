@@ -100,7 +100,6 @@ class RoundTest(colony.ColonyTestCase):
         result = colony.roundi(99999999.995, 2)
         self.assertEqual(result, 100000000.0)
 
-
     def test_roundt(self):
         result = colony.roundt(2.675, 2)
         self.assertEqual(type(result), float)

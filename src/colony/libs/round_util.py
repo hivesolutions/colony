@@ -40,7 +40,11 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import sys
 import math
 
-DELTA = 1 / math.pow(10, 14)
+FLOAT_PRECISION = 14
+""" The amount of precision (in decimal places) that
+is going to be used in the calculus of the delta """
+
+DELTA = 1 / math.pow(10, FLOAT_PRECISION)
 """ The delta value that is going to be applied to
 the round operation representing the old strategy of
 rounding, this is required so that a proper half way
