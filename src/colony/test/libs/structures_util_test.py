@@ -120,6 +120,9 @@ class DecimalTest(colony.ColonyTestCase):
         result = round(colony.Decimal(88.151), 2)
         self.assertEqual(type(result), float)
 
+        result = sum([colony.Decimal(88.151)])
+        self.assertEqual(type(result), float)
+
 class JournaledListTest(colony.ColonyTestCase):
     """
     Class that tests the journaled list structure.
