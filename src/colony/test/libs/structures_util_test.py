@@ -45,6 +45,20 @@ class DecimalTest(colony.ColonyTestCase):
     so that it ensured to be conformant with required operations.
     """
 
+    def test_basic(self):
+        """
+        Runs a series of basic sanity tests for the decimal
+        data structure.
+        """
+
+        result = -colony.Decimal(12.2)
+        self.assertEqual(result, -12.2)
+        self.assertEqual(type(result), colony.Decimal)
+
+        result = abs(colony.Decimal(-12.2))
+        self.assertEqual(result, 12.2)
+        self.assertEqual(type(result), colony.Decimal)
+
     def test_arithmetic(self):
         """
         Tests a series of arithmetic operations around the
