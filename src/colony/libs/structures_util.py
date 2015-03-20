@@ -167,13 +167,25 @@ class Decimal(float):
         other = self._normalize(other)
         return float.__and__(self, other)
 
-    def __xor__(self, other):
+    def __rand__(self, other):
         other = self._normalize(other)
-        return float.__xor__(self, other)
+        return float.__rand__(self, other)
 
     def __or__(self, other):
         other = self._normalize(other)
         return float.__or__(self, other)
+
+    def __ror__(self, other):
+        other = self._normalize(other)
+        return float.__ror__(self, other)
+
+    def __xor__(self, other):
+        other = self._normalize(other)
+        return float.__xor__(self, other)
+
+    def __rxor__(self, other):
+        other = self._normalize(other)
+        return float.__rxor__(self, other)
 
     def _normalize(self, value):
         if not type(value) == float: return value
