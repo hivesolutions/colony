@@ -42,4 +42,8 @@ import colony
 class RoundTest(colony.ColonyTestCase):
 
     def test_apply(self):
-        pass
+        colony.round_apply(force = True)
+        try:
+            self.assertEqual(round, colony.roundi)
+        finally:
+            colony.round_unapply()

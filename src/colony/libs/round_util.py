@@ -102,7 +102,7 @@ def roundt(value, places):
     result = round(value, places)
     return value_t(result)
 
-def round_apply():
+def round_apply(force = False):
     """
     Applies the "old" rounding strategy to the current
     interpreted in a global fashion (override).
@@ -111,6 +111,10 @@ def round_apply():
     interpreters that uses the new rounding method
     avoiding the apply of the calculus for old rounding
     method interpreters (provides performance).
+
+    @type force: bool
+    @param force: If the apply operation should be performed
+    for environments where it's not required (old rounding).
     """
 
     # unpacks the system's version information tuple
@@ -124,7 +128,7 @@ def round_apply():
     # in case it's not no apply occurs (not required)
     new_round = major > 3 or (major == 3 and minor >= 1) or\
         (major == 2 and minor >= 7)
-    if not new_round: return
+    if not new_round and not force: return
 
     # updates the built-in round function with the new
     # round function so that the rounds are coherent, note
@@ -134,13 +138,17 @@ def round_apply():
     if type(builtins) == dict: builtins["round"] = roundi
     else: builtins.round = roundi
 
-def round_unapply():
+def round_unapply(force = False):
     """
     Reverts the apply operation of the "old" rounding
     strategy back to the original built-in rounding.
 
     This method should be used carefully as it may produce
     some unexpected results.
+
+    @type force: bool
+    @param force: If the unapply operation should be performed
+    for environments where it's not required (old rounding).
     """
 
     # unpacks the system's version information tuple
@@ -154,7 +162,7 @@ def round_unapply():
     # in case it's not no unapply occurs (not required)
     new_round = major > 3 or (major == 3 and minor >= 1) or\
         (major == 2 and minor >= 7)
-    if not new_round: return
+    if not new_round and not force: return
 
     # updates the built-in round function with the old
     # round function so that the rounds are reverted, note
