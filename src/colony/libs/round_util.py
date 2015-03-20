@@ -77,7 +77,7 @@ def roundi(value, places):
     """
 
     rounder = math.pow(10, places)
-    return _round(value * rounder, 0) / rounder
+    return _round_t(value * rounder, 0) / rounder
 
 def roundt(value, places):
     """
@@ -133,3 +133,69 @@ def round_apply():
     builtins = globals()["__builtins__"]
     if type(builtins) == dict: builtins["round"] = roundi
     else: builtins.round = roundi
+
+def round_unapply():
+    """
+    Reverts the apply operation of the "old" rounding
+    strategy back to the original built-in rounding.
+
+    This method should be used carefully as it may produce
+    some unexpected results.
+    """
+
+    # unpacks the system's version information tuple
+    # into its major and minor values to be used for
+    # the checking of the new round method
+    major = sys.version_info[0]
+    minor = sys.version_info[1]
+
+    # verifies that the current executing version of
+    # the interpreter is using the new rounding methods
+    # in case it's not no unapply occurs (not required)
+    new_round = major > 3 or (major == 3 and minor >= 1) or\
+        (major == 2 and minor >= 7)
+    if not new_round: return
+
+    # updates the built-in round function with the old
+    # round function so that the rounds are reverted, note
+    # that the builtins reference may be either map based
+    # or module based, logic must take care of both cases
+    builtins = globals()["__builtins__"]
+    if type(builtins) == dict: builtins["round"] = _round_t
+    else: builtins.round = _round_t
+
+def _round_t(value, places):
+    """
+    Internal function similar to the the type one but uses
+    the internal (built-in) version of the rounder to perform
+    the rounding operation.
+
+    This function should only be used for old python 2 based
+    versions and not for the new python 3+ versions where the
+    proper overriding of the __round__ method is preferred.
+
+    @type value: float
+    @param value: The value that is meant to be rounded and then
+    "casted" back to the original data type.
+    @param places: The number of decimal places to be used
+    in the rounding operation.
+    @rtype: float
+    @return: The resulting rounded value according to the
+    default rounding strategy defined.
+    """
+
+    value_t = type(value)
+    result = _round(value, places)
+    return value_t(result)
+
+# verifies if the current interpreter version is python 3+ and
+# if that's the case used the builtin round function instead to
+# allow data type casting through the __round__ magic method
+if sys.version_info[0] >= 3: _round_t = _round
+
+# updates the round reference in the builtin dictionary so that
+# the proper type based casting is used instead of the builtin
+# functions (allows proper data type casting for python 2)
+builtins = globals()["__builtins__"]
+if type(builtins) == dict: builtins["round"] = _round_t
+else: builtins.round = _round_t

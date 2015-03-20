@@ -63,6 +63,9 @@ class DecimalTest(colony.ColonyTestCase):
         self.assertEqual(result, 12.2)
         self.assertEqual(type(result), colony.Decimal)
 
+        result = round(colony.Decimal(88.151), 2)
+        self.assertEqual(type(result), colony.Decimal)
+
     def test_arithmetic(self):
         """
         Tests a series of arithmetic operations around the
@@ -132,15 +135,6 @@ class DecimalTest(colony.ColonyTestCase):
         map[key] = "value"
         result = map[key]
         self.assertEqual(result, "value")
-
-    def test_limitations(self):
-        """
-        Tests aimed at testing the limitations of the current
-        implementation of the decimal data structure.
-        """
-
-        result = round(colony.Decimal(88.151), 2)
-        self.assertEqual(type(result), float)
 
 class JournaledListTest(colony.ColonyTestCase):
     """
