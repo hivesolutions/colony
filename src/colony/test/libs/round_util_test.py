@@ -40,10 +40,19 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import colony
 
 class RoundTest(colony.ColonyTestCase):
+    """
+    Test case bundle aimed at verifying the integrity of the
+    round associated functions.
+    """
 
     def test_apply(self):
         colony.round_apply(force = True)
-        try:
-            self.assertEqual(round, colony.roundi)
-        finally:
-            colony.round_unapply()
+        try: self.assertEqual(round, colony.roundi)
+        finally: colony.round_unapply()
+
+    def test_unapply(self):
+        _round = round
+        colony.round_apply(force = True)
+        try: self.assertEqual(round, colony.roundi)
+        finally: colony.round_unapply()
+        self.assertEqual(round, _round)
