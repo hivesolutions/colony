@@ -46,6 +46,8 @@ the number of decimal places for their round """
 
 _round = round
 
+DELTA = 1 / math.pow(10, 12)
+
 def roundi(value, places):
     """
     Rounds the provided float value to the provided
@@ -77,9 +79,7 @@ def roundi(value, places):
     """
 
     rounder = math.pow(10, places)
-    new = _round_t(value * rounder, 0) / rounder
-    old = _round_t(value, places)
-    return old if old > new else new
+    return _round_t(value * rounder + DELTA, 0) / rounder
 
 def roundt(value, places):
     """
