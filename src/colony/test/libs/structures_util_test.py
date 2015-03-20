@@ -51,6 +51,10 @@ class DecimalTest(colony.ColonyTestCase):
         data structure.
         """
 
+        result = +colony.Decimal(12.2)
+        self.assertEqual(result, +12.2)
+        self.assertEqual(type(result), colony.Decimal)
+
         result = -colony.Decimal(12.2)
         self.assertEqual(result, -12.2)
         self.assertEqual(type(result), colony.Decimal)
