@@ -48,7 +48,7 @@ class Decimal(float):
     Provides a simple unified way of re-using the float data
     type to performed fixed point operations, using techniques
     around the special rounding method.
-    
+
     The implementation of the data structure is not aimed at
     performance and because of that it should not be used for
     task that are considered performance intensive.
