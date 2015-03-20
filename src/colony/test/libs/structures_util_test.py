@@ -122,6 +122,14 @@ class DecimalTest(colony.ColonyTestCase):
         self.assertEqual(result, 88.151)
         self.assertEqual(type(result), colony.Decimal)
 
+        result = 88 - colony.Decimal(88.15)
+        self.assertEqual(result, -0.15)
+        self.assertEqual(type(result), colony.Decimal)
+
+        result = 88.151 - colony.Decimal(88.15)
+        self.assertEqual(result, 0.001)
+        self.assertEqual(type(result), colony.Decimal)
+
     def test_boolean(self):
         """
         Runs a series of tests on the boolean based operators
