@@ -187,6 +187,26 @@ class Decimal(float):
         other = self._normalize(other)
         return float.__rxor__(self, other)
 
+    def __round__(self, n):
+        result = float.__round__(self, n)
+        result = Decimal(result, places = self.places)
+        return result
+
+    def __floor__(self, n):
+        result = float.__floor__(self)
+        result = Decimal(result, places = self.places)
+        return result
+
+    def __ceil__(self, n):
+        result = float.__ceil__(self)
+        result = Decimal(result, places = self.places)
+        return result
+
+    def __trunc__(self, n):
+        result = float.__trunc__(self)
+        result = Decimal(result, places = self.places)
+        return result
+
     def _normalize(self, value):
         if not type(value) == float: return value
         return round(value, self.places)
