@@ -40,13 +40,17 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import sys
 import math
 
+DELTA = 1 / math.pow(10, 14)
+""" The delta value that is going to be applied to
+the round operation representing the old strategy of
+rounding, this is required so that a proper half way
+up strategy is applied in the rounding """
+
 QUANTIFIERS = {}
 """ The map of quantifier strings indexed by
 the number of decimal places for their round """
 
 _round = round
-
-DELTA = 1 / math.pow(10, 12)
 
 def roundi(value, places):
     """
@@ -78,8 +82,7 @@ def roundi(value, places):
     @see: http://docs.python.org/2/tutorial/floatingpoint.html
     """
 
-    rounder = math.pow(10, places)
-    return _round_t(value * rounder + DELTA, 0) / rounder
+    return _round_t(value + DELTA, places)
 
 def roundt(value, places):
     """
