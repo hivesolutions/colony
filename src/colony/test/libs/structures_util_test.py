@@ -121,7 +121,7 @@ class DecimalTest(colony.ColonyTestCase):
         self.assertEqual(type(result), float)
 
         result = sum([colony.Decimal(88.151)])
-        self.assertEqual(type(result), float)
+        self.assertEqual(type(result), colony.Decimal)
 
 class JournaledListTest(colony.ColonyTestCase):
     """

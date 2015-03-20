@@ -98,6 +98,11 @@ class Decimal(float):
         result = Decimal(result, places = self.places)
         return result
 
+    def __radd__(self, other):
+        result = float.__radd__(self, other)
+        result = Decimal(result, places = self.places)
+        return result
+
     def __sub__(self, other):
         result = float.__sub__(self, other)
         result = Decimal(result, places = self.places)
