@@ -79,8 +79,14 @@ class RoundTest(colony.ColonyTestCase):
         result = colony.roundi(2.945, 2)
         self.assertEqual(result, 2.95)
 
-        result = colony.roundi(2.9444444, 2)
+        result = colony.roundi(2.9444, 2)
         self.assertEqual(result, 2.94)
+
+        result = colony.roundi(2.9444444444444444444444, 2)
+        self.assertEqual(result, 2.94)
+
+        result = colony.roundi(2.9944444444444444444444, 2)
+        self.assertEqual(result, 2.99)
 
     def test_roundt(self):
         result = colony.roundt(2.675, 2)
