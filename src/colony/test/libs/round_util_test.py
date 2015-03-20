@@ -45,6 +45,10 @@ class RoundTest(colony.ColonyTestCase):
     round associated functions.
     """
 
+    def test_roundi(self):
+        result = colony.roundi(2.675, 2)
+        self.assertEqual(result, 2.68)        
+
     def test_apply(self):
         colony.round_apply(force = True)
         try: self.assertEqual(round, colony.roundi)
