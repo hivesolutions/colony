@@ -109,14 +109,14 @@ class Decimal(float):
         result = Decimal(result, places = self.places)
         return result
 
-    def __mod__(self, other):
-        result = float.__mod__(self, other)
+    def __div__(self, other):
+        result = float.__div__(self, other)
         result = Decimal(result, places = self.places)
         return result
 
-    def __divmod__(self, other):
-        result = float.__divmod__(self, other)
-        result = round(result, self.places)
+    def __mod__(self, other):
+        result = float.__mod__(self, other)
+        result = Decimal(result, places = self.places)
         return result
 
     def __and__(self, other):
