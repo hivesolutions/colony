@@ -47,8 +47,12 @@ class RoundTest(colony.ColonyTestCase):
 
     def test_legacy(self):
         is_new = colony.round_is_new()
+
         result = round(2.675, 2)
         self.assertEqual(result, 2.67 if is_new else 2.68)
+
+        result = round(2.685, 2)
+        self.assertEqual(result, 2.69)
 
     def test_roundi(self):
         result = colony.roundi(2.675, 2)
