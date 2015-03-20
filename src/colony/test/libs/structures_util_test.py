@@ -117,7 +117,7 @@ class DecimalTest(colony.ColonyTestCase):
         implementation of the decimal data structure.
         """
 
-        result = round(colony.Decimal(88.151))
+        result = round(colony.Decimal(88.151), 2)
         self.assertEqual(type(result), float)
 
 class JournaledListTest(colony.ColonyTestCase):
