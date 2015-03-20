@@ -99,6 +99,7 @@ def roundt(value, places):
     """
 
     value_t = type(value)
+    value_t = value_t if issubclass(value_t, float) else float
     result = round(value, places)
     return value_t(result)
 
