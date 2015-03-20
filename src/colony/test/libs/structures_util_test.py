@@ -79,6 +79,10 @@ class DecimalTest(colony.ColonyTestCase):
         self.assertEqual(result, 88.151)
         self.assertEqual(type(result), colony.Decimal)
 
+        result = sum([colony.Decimal(88.151)])
+        self.assertEqual(result, 88.151)
+        self.assertEqual(type(result), colony.Decimal)
+
     def test_boolean(self):
         """
         Runs a series of tests on the boolean based operators
@@ -119,9 +123,6 @@ class DecimalTest(colony.ColonyTestCase):
 
         result = round(colony.Decimal(88.151), 2)
         self.assertEqual(type(result), float)
-
-        result = sum([colony.Decimal(88.151)])
-        self.assertEqual(type(result), colony.Decimal)
 
 class JournaledListTest(colony.ColonyTestCase):
     """

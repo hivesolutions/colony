@@ -108,8 +108,18 @@ class Decimal(float):
         result = Decimal(result, places = self.places)
         return result
 
+    def __rsub__(self, other):
+        result = float.__rsub__(self, other)
+        result = Decimal(result, places = self.places)
+        return result
+
     def __mul__(self, other):
         result = float.__mul__(self, other)
+        result = Decimal(result, places = self.places)
+        return result
+
+    def __rmul__(self, other):
+        result = float.__rmul__(self, other)
         result = Decimal(result, places = self.places)
         return result
 
@@ -118,8 +128,18 @@ class Decimal(float):
         result = Decimal(result, places = self.places)
         return result
 
+    def __rfloordiv__(self, other):
+        result = float.__rfloordiv__(self, other)
+        result = Decimal(result, places = self.places)
+        return result
+
     def __div__(self, other):
         result = float.__div__(self, other)
+        result = Decimal(result, places = self.places)
+        return result
+
+    def __rdiv__(self, other):
+        result = float.__rdiv__(self, other)
         result = Decimal(result, places = self.places)
         return result
 
@@ -128,8 +148,18 @@ class Decimal(float):
         result = Decimal(result, places = self.places)
         return result
 
+    def __rtruediv__(self, other):
+        result = float.__rtruediv__(self, other)
+        result = Decimal(result, places = self.places)
+        return result
+
     def __mod__(self, other):
         result = float.__mod__(self, other)
+        result = Decimal(result, places = self.places)
+        return result
+
+    def __rmod__(self, other):
+        result = float.__rmod__(self, other)
         result = Decimal(result, places = self.places)
         return result
 
