@@ -59,10 +59,10 @@ class Decimal(float):
     """
 
     def __new__(self, value = 0.0):
-        count = len(str(value).split(".", 1)[0])
+        value = float(value)
+        count = str(value).index(".")
         places = FLOAT_PRECISION - count
         self.places = places
-        value = float(value)
         value = round(value, places)
         return super(Decimal, self).__new__(self, value)
 
