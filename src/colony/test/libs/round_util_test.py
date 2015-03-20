@@ -47,7 +47,17 @@ class RoundTest(colony.ColonyTestCase):
 
     def test_roundi(self):
         result = colony.roundi(2.675, 2)
-        self.assertEqual(result, 2.68)        
+        self.assertEqual(result, 2.68)
+
+    def test_roundt(self):
+        result = colony.roundt(2.675, 2)
+        self.assertEqual(type(result), float)
+
+        result = colony.roundt(colony.Decimal(2.675), 2)
+        self.assertEqual(type(result), colony.Decimal)
+
+        result = colony.roundt(2, 2)
+        self.assertEqual(type(result), int)
 
     def test_apply(self):
         colony.round_apply(force = True)

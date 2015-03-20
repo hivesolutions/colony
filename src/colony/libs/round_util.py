@@ -100,7 +100,8 @@ def roundt(value, places):
 
     value_t = type(value)
     result = round(value, places)
-    return value_t(result)
+    result_t = type(result)
+    return value_t(result) if result_t == value_t else result
 
 def round_apply(force = False):
     """
