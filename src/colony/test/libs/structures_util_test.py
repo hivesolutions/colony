@@ -75,6 +75,10 @@ class DecimalTest(colony.ColonyTestCase):
         result = 88.151 - 823.35
         self.assertEqual(type(result), float)
 
+        result = colony.Decimal(88.151) / 1
+        self.assertEqual(result, 88.151)
+        self.assertEqual(type(result), colony.Decimal)
+
     def test_boolean(self):
         """
         Runs a series of tests on the boolean based operators
@@ -106,6 +110,15 @@ class DecimalTest(colony.ColonyTestCase):
         map[key] = "value"
         result = map[key]
         self.assertEqual(result, "value")
+
+    def test_limitations(self):
+        """
+        Tests aimed at testing the limitations of the current
+        implementation of the decimal data structure.
+        """
+
+        result = round(colony.Decimal(88.151))
+        self.assertEqual(type(result), float)
 
 class JournaledListTest(colony.ColonyTestCase):
     """
