@@ -173,6 +173,22 @@ class Decimal(float):
         other = self._normalize(other)
         return float.__rxor__(self, other)
 
+    def __pos__(self):
+        result = float.__pos__(self)
+        return Decimal(result, places = self.places)
+
+    def __neg__(self):
+        result = float.__neg__(self)
+        return Decimal(result, places = self.places)
+
+    def __abs__(self):
+        result = float.__abs__(self)
+        return Decimal(result, places = self.places)
+
+    def __invert__(self):
+        result = float.__invert__(self)
+        return Decimal(result, places = self.places)
+
     def __round__(self, n):
         result = float.__round__(self, n)
         return Decimal(result, places = self.places)
