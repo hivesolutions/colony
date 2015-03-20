@@ -95,73 +95,59 @@ class Decimal(float):
 
     def __add__(self, other):
         result = float.__add__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __radd__(self, other):
         result = float.__radd__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __sub__(self, other):
         result = float.__sub__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __rsub__(self, other):
         result = float.__rsub__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __mul__(self, other):
         result = float.__mul__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __rmul__(self, other):
         result = float.__rmul__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __floordiv__(self, other):
         result = float.__floordiv__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __rfloordiv__(self, other):
         result = float.__rfloordiv__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __div__(self, other):
         result = float.__div__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __rdiv__(self, other):
         result = float.__rdiv__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __truediv__(self, other):
         result = float.__truediv__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __rtruediv__(self, other):
         result = float.__rtruediv__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __mod__(self, other):
         result = float.__mod__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __rmod__(self, other):
         result = float.__rmod__(self, other)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __and__(self, other):
         other = self._normalize(other)
@@ -189,23 +175,19 @@ class Decimal(float):
 
     def __round__(self, n):
         result = float.__round__(self, n)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __floor__(self, n):
         result = float.__floor__(self)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __ceil__(self, n):
         result = float.__ceil__(self)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def __trunc__(self, n):
         result = float.__trunc__(self)
-        result = Decimal(result, places = self.places)
-        return result
+        return Decimal(result, places = self.places)
 
     def _normalize(self, value):
         if not type(value) == float: return value
