@@ -114,6 +114,11 @@ class Decimal(float):
         result = Decimal(result, places = self.places)
         return result
 
+    def __truediv__(self, other):
+        result = float.__truediv__(self, other)
+        result = Decimal(result, places = self.places)
+        return result
+
     def __mod__(self, other):
         result = float.__mod__(self, other)
         result = Decimal(result, places = self.places)
