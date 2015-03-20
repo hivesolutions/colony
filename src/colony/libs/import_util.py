@@ -56,7 +56,7 @@ def __import__(module_name, persist_value = True):
     @type persist_value: bool
     @param persist_value: If the globals/locals value shall be
     persisted in the caller in case it's is not available there.
-    @rtype: Module
+    @rtype: module
     @return: The imported module.
     """
 
