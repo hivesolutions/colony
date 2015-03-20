@@ -117,17 +117,10 @@ def round_apply(force = False):
     for environments where it's not required (old rounding).
     """
 
-    # unpacks the system's version information tuple
-    # into its major and minor values to be used for
-    # the checking of the new round method
-    major = sys.version_info[0]
-    minor = sys.version_info[1]
-
     # verifies that the current executing version of
     # the interpreter is using the new rounding methods
     # in case it's not no apply occurs (not required)
-    new_round = major > 3 or (major == 3 and minor >= 1) or\
-        (major == 2 and minor >= 7)
+    new_round = round_is_new()
     if not new_round and not force: return
 
     # updates the built-in round function with the new
@@ -151,6 +144,35 @@ def round_unapply(force = False):
     for environments where it's not required (old rounding).
     """
 
+    # verifies that the current executing version of
+    # the interpreter is using the new rounding methods
+    # in case it's not no unapply occurs (not required)
+    new_round = round_is_new()
+    if not new_round and not force: return
+
+    # updates the built-in round function with the old
+    # round function so that the rounds are reverted, note
+    # that the builtins reference may be either map based
+    # or module based, logic must take care of both cases
+    builtins = globals()["__builtins__"]
+    if type(builtins) == dict: builtins["round"] = _round_t
+    else: builtins.round = _round_t
+
+def round_is_new():
+    """
+    Verifies that the current execution version of the interpreter
+    is running the new rounding strategy, meaning that the round
+    operations will be performed using the half way undefined strategy.
+
+    This method infers the strategy that is currently in use for
+    rounding based on the version of the interpreted.
+
+    @rtype: bool
+    @return: If the current (python) interpreter is running the
+    new rounding strategy (half way undefined).
+    @see: http://docs.python.org/2/tutorial/floatingpoint.html
+    """
+
     # unpacks the system's version information tuple
     # into its major and minor values to be used for
     # the checking of the new round method
@@ -162,15 +184,7 @@ def round_unapply(force = False):
     # in case it's not no unapply occurs (not required)
     new_round = major > 3 or (major == 3 and minor >= 1) or\
         (major == 2 and minor >= 7)
-    if not new_round and not force: return
-
-    # updates the built-in round function with the old
-    # round function so that the rounds are reverted, note
-    # that the builtins reference may be either map based
-    # or module based, logic must take care of both cases
-    builtins = globals()["__builtins__"]
-    if type(builtins) == dict: builtins["round"] = _round_t
-    else: builtins.round = _round_t
+    return new_round
 
 def _round_t(value, places):
     """

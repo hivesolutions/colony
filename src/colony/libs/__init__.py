@@ -107,7 +107,7 @@ from .path_util import SEPARATOR, normalize_path, align_path, copy_directory, co
     remove_directory, link, link_copy, ensure_file_path, is_parent_path, relative_path
 from .protection_util import public, Protected
 from .quote_util import quote, quote_plus, unquote, unquote_plus, url_encode
-from .round_util import roundi, roundt, round_apply, round_unapply
+from .round_util import roundi, roundt, round_apply, round_unapply, round_is_new
 from .scheduling_util import Scheduler
 from .size_util import size_round_unit
 from .stack_util import get_instance_module_directory, get_call_module_directory
