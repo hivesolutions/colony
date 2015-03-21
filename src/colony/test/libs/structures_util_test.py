@@ -162,6 +162,40 @@ class DecimalTest(colony.ColonyTestCase):
         result = map[key]
         self.assertEqual(result, "value")
 
+    def test_coercing(self):
+        """
+        Runs a series of coercing tests for the decimal data
+        type conversion to other types and vice-versa
+        """
+
+        result = int(colony.Decimal(12.2))
+        self.assertEqual(result, 12)
+        self.assertEqual(type(result), int)
+
+        result = int(colony.Decimal(12.99))
+        self.assertEqual(result, 12)
+        self.assertEqual(type(result), int)
+
+        result = float(colony.Decimal(12.99))
+        self.assertEqual(result, 12.99)
+        self.assertEqual(type(result), float)
+
+        result = str(colony.Decimal(12.99))
+        self.assertEqual(result, "12.99")
+        self.assertEqual(type(result), str)
+
+        result = colony.Decimal(int(12))
+        self.assertEqual(result, 12.0)
+        self.assertEqual(type(result), colony.Decimal)
+
+        result = colony.Decimal(float(12.99))
+        self.assertEqual(result, 12.99)
+        self.assertEqual(type(result), colony.Decimal)
+
+        result = colony.Decimal("12.99")
+        self.assertEqual(result, 12.99)
+        self.assertEqual(type(result), colony.Decimal)
+
 class JournaledListTest(colony.ColonyTestCase):
     """
     Class that tests the journaled list structure.
