@@ -6508,14 +6508,32 @@ class PackageDependency(Dependency):
         # value and tries to import every single one of them, in case one of
         # the import fails a message is logged and an invalid value is returned
         for import_name_item in import_name:
-            try: __import__(import_name_item)
-            except ImportError:
-                if not manager.logger: return False
-                manager.logger.info("Package '%s' v%s does not exist in your system" % (self.name, self.version))
-                if self.url:
-                    manager.logger.info("You can download the package at %s" % self.url)
+            # creates an unsets the imported flag that will control the import
+            # process, if this value is set after the loop at least one of the
+            # alias imports has been successful
+            imported = False
 
-                return False
+            # verifies if the current import name item is of type and in case it's
+            # not coerces the value into a portable sequence so that it's able to
+            # iterate over the complete set of items to import them properly
+            is_sequence = type(import_name_item) in (list, tuple)
+            import_name_items = import_name_item if is_sequence else (import_name_item,)
+            for _import_name_item in import_name_items:
+                try: __import__(_import_name_item)
+                except ImportError: continue
+                else: imported = True; break
+
+            # verifies if the imported flag has been set, if that's the case at least
+            # one of the alias imports has been imported with success (available) and as
+            # such nothing need to be done for the fallback process
+            if imported: continue
+
+            # verifies if the (plugin) manager logger is available and if that't not the
+            # case returns immediately (in error) otherwise prints the logging messages
+            if not manager.logger: return False
+            manager.logger.info("Package '%s' v%s does not exist in your system" % (self.name, self.version))
+            if self.url: manager.logger.info("You can download the package at %s" % self.url)
+            return False
 
         # returns a valid value to the caller method as the complete set of packages
         # were able to be imported with success (no problems occurred)
