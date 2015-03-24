@@ -786,7 +786,7 @@ def _install(name = None, id = None, version = None, upgrade = False):
     # remote request of package retrieval
     params = dict()
     if name: params["name"] = name
-    if id: params["id"] = id
+    if id: params["identifier"] = id
 
     # retrieves the proper repository url that is currently defined
     # then enforces the value to be a valid sequence, so that the
