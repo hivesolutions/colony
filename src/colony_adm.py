@@ -974,7 +974,7 @@ def _upload(path, repo = "colony", generate = True, delete = True):
     ))
     appier.post(url, data_m = dict(
         sid = auth["sid"],
-        id = descriptor["id"],
+        identifier = descriptor["id"],
         name = descriptor["short_name"],
         version = descriptor["version"],
         type = descriptor["type"],
