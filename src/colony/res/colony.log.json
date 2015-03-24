@@ -1,4 +1,5 @@
 {
+    "1.3.6" : ["Fixed issue with uploading of packages"],
     "1.3.5" : ["New support for the alias in package dependencies"],
     "1.3.4" : ["Better decimal support, major stability improvements"],
     "1.3.3" : ["Fixed issues from the decimal data structure"],
