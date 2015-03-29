@@ -285,11 +285,16 @@ class StringBuffer(object):
         only in extreme situations.
         """
 
-        # in case the buffer is dirty
-        # or the mode fast is enabled
-        if self.dirty or self.fast:
-            # regenerates the current value
-            self._regenerate()
+        # in case either the current buffer is not
+        # dirty of the fast mode is not enabled the
+        # regeneration mode is ignored, returns
+        if not self.dirty: return
+        if not self.fast: return
+
+        # runs the regenerate operation for the current
+        # buffer so that the complete set of partial
+        # values are joined as a simple buffer value
+        self._regenerate()
 
     def duplicate(self):
         """
