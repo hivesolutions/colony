@@ -285,11 +285,10 @@ class StringBuffer(object):
         only in extreme situations.
         """
 
-        # in case either the current buffer is not
-        # dirty of the fast mode is not enabled the
-        # regeneration mode is ignored, returns
-        if not self.dirty: return
-        if not self.fast: return
+        # in case both the current buffer is not dirty
+        # and the fast mode is not enabled the regeneration
+        # operation is ignored, control flow returned
+        if not self.dirty and not self.fast: return
 
         # runs the regenerate operation for the current
         # buffer so that the complete set of partial
