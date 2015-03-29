@@ -406,6 +406,9 @@ class StringBuffer(object):
     def _regenerate(self):
         """
         Regenerates the current value (auxiliary method).
+
+        This may be a very expensive method as it re-joins
+        the complete set of parts of the current buffer.
         """
 
         # retrieves the base string or bytes value and uses
@@ -417,7 +420,9 @@ class StringBuffer(object):
         # recreates the string list with the current value
         self.string_list = [self.current_value]
 
-        # unsets the dirty flag
+        # unsets the dirty flag, so that the re-generate
+        # operation is marked as not required until new
+        # data is added to the current string buffer
         self.dirty = False
 
     def _base_type(self):
