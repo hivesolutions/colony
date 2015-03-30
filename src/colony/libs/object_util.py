@@ -260,10 +260,9 @@ def __object_flatten_to_one(base_instance, instance, flattening_map):
         # is no such instance value (attribute)
         instance_value = __object_has_attr(instance, key) and __object_get_attr(instance, key) or None
 
-        # in case the instance value is not set
-        if instance_value == None:
-            # continues the loop
-            continue
+        # in case the instance value is not set, must
+        # continue the loop (skips the current iteration)
+        if instance_value == None: continue
 
         # in case the value if of type string
         # (a leaf of the flattening structure)
