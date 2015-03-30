@@ -189,15 +189,10 @@ def object_print(instance):
         attribute = __object_get_attr(instance, attribute_name)
         attribute_type = type(attribute)
 
-        # in case the attribute name is invalid
-        if attribute_name in INVALID_ATTRIBUTE_NAMES:
-            # continues the loop
-            continue
-
-        # in case the attribute type is not valid
-        if not attribute_type in VALID_ATTRIBUTE_TYPES:
-            # continues the loop
-            continue
+        # in case the attribute name or the type is invalid
+        # must skip the current loop (not required)
+        if attribute_name in INVALID_ATTRIBUTE_NAMES: continue
+        if not attribute_type in VALID_ATTRIBUTE_TYPES: continue
 
         # prints the attribute name and the attribute value
         print("%s: %s" % (attribute_name, attribute))
@@ -339,7 +334,7 @@ def __object_flatten_to_many(instances_list, flattening_map):
     for flattening.
     @rtype: List
     @return: The resulting list after the "to-many" operations
-    that inclute cartesian product.
+    that include cartesian product.
     """
 
     # creates the new instances list
