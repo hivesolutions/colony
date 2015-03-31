@@ -1,5 +1,5 @@
 {
-	"1.3.11" : ["Support for non strict mode in object attribute retrieval"],
+    "1.3.11" : ["Support for non strict mode in object attribute retrieval"],
     "1.3.10" : ["New map flatten support"],
     "1.3.9" : ["Fixed issue with string buffer"],
     "1.3.8" : ["Better legacy support"],
