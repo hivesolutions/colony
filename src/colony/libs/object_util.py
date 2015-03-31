@@ -86,12 +86,17 @@ def object_attribute_names(instance):
     # returns the valid attribute names (ready for print)
     return valid_attribute_names
 
-def object_attribute_values(instance, valid_attribute_names = None):
+def object_attribute_values(instance, valid_attribute_names = None, strict = True):
     """
     Function that retrieves the valid attribute
     values for printing.
+
     A valid attribute is considered to be an attribute
     that may have it's value ready for printing.
+
+    A non strict mode is possible to be used where in
+    case an attribute is not found the value is set
+    as not valid (invalid value).
 
     @type instance: Object
     @param instance: The instance to retrieve the (valid)
@@ -99,6 +104,10 @@ def object_attribute_values(instance, valid_attribute_names = None):
     @type valid_attribute_names: List
     @param valid_attribute_names: List of valid attribute
     names that may be used to retrieve valid attribute values.
+    @type strict: bool
+    @param strict: If a strict based strategy should be used
+    for the retrieval of the object attributes, meaning that
+    an exception is raised in case the attribute does not exist.
     @rtype: List
     @return: The valid attribute value according to the
     the state for printing the value.
@@ -107,7 +116,7 @@ def object_attribute_values(instance, valid_attribute_names = None):
     # retrieves the valid attribute names in order
     # to use them to retrieve the valid attribute values
     valid_attribute_names = valid_attribute_names or object_attribute_names(instance)
-    valid_attribute_values = [__object_get_attr(instance, value) for value in valid_attribute_names]
+    valid_attribute_values = [__object_get_attr(instance, value, strict = strict) for value in valid_attribute_names]
 
     # returns the valid attribute values (ready for print)
     return valid_attribute_values
@@ -543,19 +552,30 @@ def __object_has_attr(instance, attribute_name):
         # in the instance
         return hasattr(instance, attribute_name)
 
-def __object_get_attr(instance, attribute_name):
+def __object_get_attr(instance, attribute_name, default = None, strict = True):
     """
     Retrieves an attribute with the given name from the
     given instance.
+
     This method provides an additional layer of abstraction
     that allows it to be used in objects or in maps.
 
+    Note that the strict mode ensures that if the attribute
+    is not present an exception is properly raised.
+
     @type instance: Object
-    @param instance: The instance to retrieve the
-    attribute.
+    @param instance: The instance to retrieve the attribute, this
+    may be either a dictionary or an object instance.
     @type attribute_name: String
-    @param attribute_name: The name of the attribute
-    to be retrieved from the instance.
+    @param attribute_name: The name of the attribute to be retrieved
+    from the instance.
+    @type default: Object
+    @param default: The default value to be returned in the value is
+    not found, this is only used in case the strict mode is not set.
+    @type strict: bool
+    @param strict: If the strict mode should be used, meaning that
+    the attributes must be set under the instance otherwise an exception
+    will be raised.
     @rtype: Object
     @return: The retrieved attribute from the instance.
     """
@@ -563,16 +583,20 @@ def __object_get_attr(instance, attribute_name):
     # retrieves the instance type
     instance_type = type(instance)
 
-    # in case the instance type is dictionary
+    # in case the instance type is dictionary the typical
+    # dictionary access operation is used
     if instance_type == dict:
-        # returns the attribute from the map
-        # (dictionary) with the normal accessor
-        return instance[attribute_name]
-    # otherwise the instance is a "normal" instance
+        if strict: return instance[attribute_name]
+        else: return instance.get(attribute_name, default)
+
+    # otherwise the instance is a "normal" instance, note
+    # that the attribute is first verified for presence
+    # in case the non strict mode is currently in use
     else:
-        # calls the normal has getattr function
-        # in the instance
-        return getattr(instance, attribute_name)
+        if strict: return getattr(instance, attribute_name)
+        elif hasattr(instance, attribute_name):
+            return getattr(instance, attribute_name)
+        else: return default
 
 def __object_set_attr(instance, attribute_name, attribute):
     """
