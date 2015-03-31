@@ -295,6 +295,29 @@ def map_extend(
     # returns the result map
     return result_map
 
+def map_flatten(map):
+    """
+    Flattens the provided map, meaning that in case there's a
+    value in the map associated with another map the name in
+    that map will be linearized into the top level map.
+
+    @type map: Dictionary
+    @param map: The map that is going to be linearized/flatten
+    and for each relations will be set in the top level.
+    @rtype: Dictionary
+    @return: The resulting flatten map, note that the original
+    map is not changed.
+    """
+
+    # creates a new dictionary/map to hold the resulting map,
+    # then retrieves the various linear key and value pairs
+    # for the complete set of relations setting the values
+    # in the resulting map and returns the map to caller method
+    result = dict()
+    pairs = _map_flatten_pairs(map)
+    for key, value in pairs: result[key] = value
+    return result
+
 def map_check_parameters(map, parameters_list, exception = Exception):
     """
     Checks if the parameters in the parameters list are defined
@@ -493,6 +516,33 @@ def map_normalize(item, operation = None):
     # (reduce) operation must be performed on it
     else:
         return operation(item)
+
+def _map_flatten_pairs(map):
+    """
+    Retrieves the complete set of linear key to value pairs
+    of the attributes of the provided map.
+
+    Any dictionary based value of the provided map will be
+    linearized using an extra recursion step.
+
+    @type map: Dictionary
+    @param map: The map that is the basis of the recursion
+    step for the retrieval of the key value pairs.
+    @rtype: Generator
+    @return: A generator that yields the various key to value
+    linear relations, using a recursive approach.
+    """
+
+    # iterates over the complete set of key value pairs of the
+    # provided map to verify if the pair is map based and if
+    # that's the case run a new depth of recursion with a new
+    # composite name, so that all relations are linearized
+    for key, value in legacy.iteritems(map):
+        is_class = hasattr(value, "__class__")
+        is_map = is_class and issubclass(value.__class__, dict)
+        if not is_map: yield key, value; continue
+        pairs = _map_flatten_pairs(value)
+        for _key, _value in pairs: yield key + "." + _key, _value
 
 def _map_reduce(value):
     """

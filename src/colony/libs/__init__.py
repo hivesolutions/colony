@@ -93,8 +93,8 @@ from .lazy_util import LazyClass, LazyIteratorClass, is_lazy, Lazy, LazyIterator
 from .list_util import list_intersect, list_extend, list_no_duplicates
 from .logging_util import getLogger, getLevelName, DummyLogger, StreamHandler, Formatter
 from .map_util import map_clean, map_get, map_copy, map_copy_deep, map_duplicate,\
-    map_remove, map_extend, map_check_parameters, map_get_value_cast, map_get_values,\
-    map_output, map_normalize
+    map_remove, map_extend, map_flatten, map_check_parameters, map_get_value_cast,\
+    map_get_values, map_output, map_normalize
 from .math_util import ceil_integer, greatest_common_divisor, fast_exponentiation,\
     item_set_total, item_set_percentage
 from .number_util import get_number_length, get_digit, to_fixed
