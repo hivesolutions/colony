@@ -931,6 +931,7 @@ def _upload(path, repo = "colony", generate = True, delete = True):
             delete = delete
         )
         return
+    if not expansion: raise RuntimeError("no path found for '%s'" % path)
     path = expansion[0]
 
     # in case the generate flag is active the package file is generated
