@@ -251,6 +251,7 @@ def _delta(value):
     integer = abs(int(value // 1))
     count = 1 if integer == 0 else int(math.log10(integer)) + 1
     places = FLOAT_PRECISION - count
+    if places < 1: places = 1
     delta = 1 / math.pow(10, places)
     return delta
 
