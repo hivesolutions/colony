@@ -64,6 +64,7 @@ class DecimalTest(colony.ColonyTestCase):
         self.assertEqual(type(result), colony.Decimal)
 
         result = round(colony.Decimal(88.151), 2)
+        self.assertEqual(result, 88.15)
         self.assertEqual(type(result), colony.Decimal)
 
     def test_arithmetic(self):
@@ -134,7 +135,7 @@ class DecimalTest(colony.ColonyTestCase):
         self.assertEqual(result, 770.155)
         self.assertEqual(type(result), colony.Decimal)
 
-        result = round(result, 2)
+        result = colony.roundi(result, 2)
         self.assertEqual(result, 770.16)
         self.assertEqual(type(result), colony.Decimal)
 

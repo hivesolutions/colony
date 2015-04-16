@@ -40,7 +40,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import sys
 import math
 
-FLOAT_PRECISION = 14
+FLOAT_PRECISION = 11
 """ The amount of precision (in decimal places) that
 is going to be used in the calculus of the delta """
 
