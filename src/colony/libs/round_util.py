@@ -88,15 +88,15 @@ def roundi(value, places, precise = True):
     @param precise: If the precise mode should be used where
     the delta value is calculated taking into account the
     number of places of the provided float, otherwise the
-    "safe" delta is used, which should be good for most of 
-    the float number to be used. 
+    "safe" delta is used, which should be good for most of
+    the float number to be used.
     @rtype: float
     @return: The resulting rounded value according to the
     round half up strategy.
     @see: http://docs.python.org/2/tutorial/floatingpoint.html
     """
 
-    delta = _delta(value) if precise else DELTA 
+    delta = _delta(value) if precise else DELTA
     return _round_t(value + delta, places)
 
 def roundt(value, places):
@@ -231,6 +231,23 @@ def _round_t(value, places):
     return result if type(result) == value_t else value_t(result)
 
 def _delta(value):
+    """
+    Calculates the proper minimum delta value that may be
+    applied to the provided value so that it's still able
+    to represent the "next" value.
+
+    This is an expensive operation operation and should be
+    used carefully to avoid extra computation.
+
+    @type value: float
+    @param value: The value for which the proper (minimum)
+    delta value is going to be calculated.
+    @rtype: float
+    @param float: The (minimum) delta value calculated for
+    the provided float value, this value may be used for
+    proper "old" rounding strategy.
+    """
+
     integer = abs(int(value // 1))
     count = 1 if integer == 0 else int(math.log10(integer)) + 1
     places = FLOAT_PRECISION - count
