@@ -96,6 +96,24 @@ def roundi(value, places, precise = False):
     return _round_t(value + delta, places)
 
 def rounds(value, places):
+    """
+    Considered to be the "safest" way of rounding a number either
+    a "native" float number or a decimal, this operation should
+    always be used whenever the rounding result should be accurate.
+
+    Note that this is an expensive operation and proper care should
+    be taken to avoid extra processor usage.
+
+    @type value: float
+    @param value: The floating point value to be rounded
+    @type places: int
+    @param places: The number of decimal places to be used
+    in the rounding operation.
+    @rtype: float
+    @return: The resulting rounded value according to the
+    current (most precise) way of rounding.
+    """
+
     return roundi(value, places, precise = True)
 
 def roundt(value, places):

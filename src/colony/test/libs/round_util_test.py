@@ -93,6 +93,9 @@ class RoundTest(colony.ColonyTestCase):
         result = colony.roundi(2.995, 2)
         self.assertEqual(result, 3.0)
 
+        result = colony.roundi(770.155, 2)
+        self.assertEqual(result, 770.16)
+
         result = colony.roundi(99999999.995, 2)
         self.assertEqual(result, 100000000.0)
 
@@ -101,6 +104,55 @@ class RoundTest(colony.ColonyTestCase):
 
         result = colony.roundi(999999999999999999999999999.995, 2)
         is_new and self.assertEqual(result, 1000000000000000000000000000.0)
+
+    def test_rounds(self):
+        result = colony.rounds(2.675, 2)
+        self.assertEqual(result, 2.68)
+
+        result = colony.rounds(2.685, 2)
+        self.assertEqual(result, 2.69)
+
+        result = colony.rounds(2.68, 2)
+        self.assertEqual(result, 2.68)
+
+        result = colony.rounds(2.683, 2)
+        self.assertEqual(result, 2.68)
+
+        result = colony.rounds(2.689, 2)
+        self.assertEqual(result, 2.69)
+
+        result = colony.rounds(2.695, 2)
+        self.assertEqual(result, 2.70)
+
+        result = colony.rounds(2.999, 2)
+        self.assertEqual(result, 3.0)
+
+        result = colony.rounds(2.945, 2)
+        self.assertEqual(result, 2.95)
+
+        result = colony.rounds(2.9444, 2)
+        self.assertEqual(result, 2.94)
+
+        result = colony.rounds(2.9444444444444444444444, 2)
+        self.assertEqual(result, 2.94)
+
+        result = colony.rounds(2.9944444444444444444444, 2)
+        self.assertEqual(result, 2.99)
+
+        result = colony.rounds(2.995, 2)
+        self.assertEqual(result, 3.0)
+
+        result = colony.rounds(770.155, 2)
+        self.assertEqual(result, 770.16)
+
+        result = colony.rounds(99999999.995, 2)
+        self.assertEqual(result, 100000000.0)
+
+        result = colony.rounds(999999999999999999999999999.9944444444444444444444, 2)
+        self.assertEqual(result, 999999999999999999999999999.99)
+
+        result = colony.rounds(999999999999999999999999999.995, 2)
+        self.assertEqual(result, 1000000000000000000000000000.0)
 
     def test_roundt(self):
         result = colony.roundt(2.675, 2)
