@@ -40,11 +40,15 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import sys
 import math
 
-FLOAT_PRECISION = 11
+FLOAT_PRECISION = 14
 """ The amount of precision (in decimal places) that
 is going to be used in the calculus of the delta """
 
-DELTA = 1 / math.pow(10, FLOAT_PRECISION)
+SAFE_PRECISION = 6
+""" The quantity/amount of precision (in decimal places)
+that is considered safe for a proper generic delta value """
+
+DELTA = 1 / math.pow(10, SAFE_PRECISION)
 """ The delta value that is going to be applied to
 the round operation representing the old strategy of
 rounding, this is required so that a proper half way
@@ -56,7 +60,7 @@ the number of decimal places for their round """
 
 _round = round
 
-def roundi(value, places):
+def roundi(value, places, precise = True):
     """
     Rounds the provided float value to the provided
     number of decimal places returning a floating
@@ -80,13 +84,20 @@ def roundi(value, places):
     @type places: int
     @param places: The number of decimal places to be used
     in the rounding operation.
+    @type precise: bool
+    @param precise: If the precise mode should be used where
+    the delta value is calculated taking into account the
+    number of places of the provided float, otherwise the
+    "safe" delta is used, which should be good for most of 
+    the float number to be used. 
     @rtype: float
     @return: The resulting rounded value according to the
     round half up strategy.
     @see: http://docs.python.org/2/tutorial/floatingpoint.html
     """
 
-    return _round_t(value + DELTA, places)
+    delta = _delta(value) if precise else DELTA 
+    return _round_t(value + delta, places)
 
 def roundt(value, places):
     """
@@ -218,6 +229,13 @@ def _round_t(value, places):
     value_t = type(value)
     result = _round(value, places)
     return result if type(result) == value_t else value_t(result)
+
+def _delta(value):
+    integer = abs(int(value // 1))
+    count = 1 if integer == 0 else int(math.log10(integer)) + 1
+    places = FLOAT_PRECISION - count
+    delta = 1 / math.pow(10, places)
+    return delta
 
 # verifies if the current interpreter version is python 3+ and
 # if that's the case used the builtin round function instead to

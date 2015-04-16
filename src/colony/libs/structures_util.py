@@ -41,7 +41,7 @@ import math
 
 from colony.base import legacy
 
-FLOAT_PRECISION = 11
+FLOAT_PRECISION = 14
 """ The amount of precision (in decimal places) that
 is going to be used for the decimal internal usage """
 
