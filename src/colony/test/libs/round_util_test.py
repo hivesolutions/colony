@@ -93,11 +93,11 @@ class RoundTest(colony.ColonyTestCase):
         result = colony.roundi(2.995, 2)
         self.assertEqual(result, 3.0)
 
-        result = colony.roundi(770.155, 2)
-        self.assertEqual(result, 770.16)
-
         result = colony.roundi(99999999.995, 2)
         self.assertEqual(result, 100000000.0)
+
+        result = colony.roundi(770.155, 2)
+        is_new and self.assertEqual(result, 770.15)
 
         result = colony.roundi(999999999999999999999999999.9944444444444444444444, 2)
         is_new and self.assertEqual(result, 999999999999999999999999999.99)
@@ -142,11 +142,11 @@ class RoundTest(colony.ColonyTestCase):
         result = colony.rounds(2.995, 2)
         self.assertEqual(result, 3.0)
 
-        result = colony.rounds(770.155, 2)
-        self.assertEqual(result, 770.16)
-
         result = colony.rounds(99999999.995, 2)
         self.assertEqual(result, 100000000.0)
+
+        result = colony.rounds(770.155, 2)
+        self.assertEqual(result, 770.16)
 
         result = colony.rounds(999999999999999999999999999.9944444444444444444444, 2)
         self.assertEqual(result, 999999999999999999999999999.99)
