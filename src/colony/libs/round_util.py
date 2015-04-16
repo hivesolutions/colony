@@ -101,6 +101,9 @@ def rounds(value, places):
     a "native" float number or a decimal, this operation should
     always be used whenever the rounding result should be accurate.
 
+    For the decimal data type usage this is considered to be the
+    only way of ensuring proper and deterministic rounding.
+
     Note that this is an expensive operation and proper care should
     be taken to avoid extra processor usage.
 
