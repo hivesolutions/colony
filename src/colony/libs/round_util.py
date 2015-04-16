@@ -44,11 +44,7 @@ FLOAT_PRECISION = 14
 """ The amount of precision (in decimal places) that
 is going to be used in the calculus of the delta """
 
-SAFE_PRECISION = 6
-""" The quantity/amount of precision (in decimal places)
-that is considered safe for a proper generic delta value """
-
-DELTA = 1 / math.pow(10, SAFE_PRECISION)
+DELTA = 1 / math.pow(10, FLOAT_PRECISION)
 """ The delta value that is going to be applied to
 the round operation representing the old strategy of
 rounding, this is required so that a proper half way
@@ -60,7 +56,7 @@ the number of decimal places for their round """
 
 _round = round
 
-def roundi(value, places, precise = True):
+def roundi(value, places, precise = False):
     """
     Rounds the provided float value to the provided
     number of decimal places returning a floating
@@ -98,6 +94,9 @@ def roundi(value, places, precise = True):
 
     delta = _delta(value) if precise else DELTA
     return _round_t(value + delta, places)
+
+def rounds(value, places):
+    return roundi(value, places, precise = True)
 
 def roundt(value, places):
     """
