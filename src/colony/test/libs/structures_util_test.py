@@ -135,7 +135,7 @@ class DecimalTest(colony.ColonyTestCase):
         self.assertEqual(result, 770.155)
         self.assertEqual(type(result), colony.Decimal)
 
-        result = colony.roundi(result, 2)
+        result = colony.rounds(result, 2)
         self.assertEqual(result, 770.16)
         self.assertEqual(type(result), colony.Decimal)
 
