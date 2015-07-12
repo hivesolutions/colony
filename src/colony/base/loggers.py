@@ -72,7 +72,7 @@ LEVEL_ALIAS = dict(
     CRIT = "CRITICAL"
 )
 """ Map defining a series of alias that may be used latter
-for proper debug level resolution """
+for proper debug level resolution, standard compliant """
 
 class BroadcastHandler(logging.Handler):
     """
