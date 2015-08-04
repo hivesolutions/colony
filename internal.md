@@ -8,7 +8,7 @@ In order to build colony for the PyPI run the following commands:
 
 In order to build it for source distribution use:
 
-* `python setup.py sdist upload`
+* `python setup.py sdist bdist_wheel upload`
 
 TO build the "dumb" binary file use:
 
