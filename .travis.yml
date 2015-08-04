@@ -6,6 +6,7 @@ python:
   - "3.2"
   - "3.3"
   - "3.4"
+  - "3.5-dev"
   - "pypy"
   - "pypy3"
 install:
@@ -13,3 +14,14 @@ install:
   - pip install coveralls
 script: coverage run --source=colony setup.py test
 after_success: coveralls
+git:
+  submodules: false
+deploy:
+  provider: pypi
+  user: joamag
+  password:
+    secure: pYCkACqoBOL72mzYDBYu552uNAZwhVejxQGwi1qmJe5aSrBSTPJ/Fl+tLPYueVDXc6nbYAs2VV0gOZD4F90RiuNT7A+QDE/dNzRzveCP457pQMdq3MLWJh9NdkpKQuQtxWOalc4szLqgub1EhPs37tiwC1F+CTLt9cqrmRFpLio=
+  distributions: sdist bdist_wheel
+  on:
+    tags: true
+    python: "2.7"
