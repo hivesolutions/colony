@@ -46,7 +46,7 @@ setuptools.setup(
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
     description = "Colony Framework",
-    license = "GNU General Public License (GPL), Version 3",
+    license = "Apache License, Version 2.0",
     keywords = "colony plugin framework web",
     url = "http://getcolony.com",
     zip_safe = False,

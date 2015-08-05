@@ -100,7 +100,7 @@ To find python native extension required for some of the plugins used the follow
 
 ## License
 
-Colony is an open-source project licensed under the [GNU General Public License Version 3](http://www.gnu.org/licenses/gpl.html).
+Colony is an open-source project currently licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/).
 
 ## Build Automation
 
