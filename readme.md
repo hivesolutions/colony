@@ -104,6 +104,6 @@ Colony is an open-source project currently licensed under the [Apache License, V
 
 ## Build Automation
 
-[![Build Status](https://travis-ci.org/hivesolutions/colony.png?branch=master)](https://travis-ci.org/hivesolutions/colony)
-[![Coverage Status](https://coveralls.io/repos/hivesolutions/colony/badge.png?branch=master)](https://coveralls.io/r/hivesolutions/colony?branch=master)
-[![PyPi Status](https://img.shields.io/pypi/v/colony.png)](https://pypi.python.org/pypi/colony)
+[![Build Status](https://travis-ci.org/hivesolutions/colony.svg?branch=master)](https://travis-ci.org/hivesolutions/colony)
+[![Coverage Status](https://coveralls.io/repos/hivesolutions/colony/badge.svg?branch=master)](https://coveralls.io/r/hivesolutions/colony?branch=master)
+[![PyPi Status](https://img.shields.io/pypi/v/colony.svg)](https://pypi.python.org/pypi/colony)
