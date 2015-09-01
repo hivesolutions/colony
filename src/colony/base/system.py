@@ -936,9 +936,9 @@ class Plugin(object):
         # of valid modules for reloading and runs the sorting operation so that
         # the final list of valid modules for reload is defined from the larger
         # (longest module names) to the shortest as required for correct loading
-        sorter = lambda a, b: len(a) - len(b)
+        sorter = lambda item: len(item)
         valids = list(set(valids))
-        valids.sort(sorter, reverse = True)
+        valids.sort(key = sorter, reverse = True)
 
         # iterates over the complete set of valid modules for reloading and runs
         # and tries to run the reloading logic for each of them, in case it fails
