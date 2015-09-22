@@ -37,9 +37,8 @@ __copyright__ = "Copyright (c) 2008-2015 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
-import inspect
-
 from . import system
+from . import legacy
 
 METHOD_NAME_VALUE = "method_name"
 """ The method name value """
@@ -532,7 +531,7 @@ def event_handler(function):
             # retrieves the number of arguments for the function by
             # inspecting the specification of the function, this may
             # be an expensive operation and should be used with care
-            spec = inspect.getargspec(event_handler_function)
+            spec = legacy.getargspec(event_handler_function)
             number_arguments = len(spec.args)
 
             # in case the length of the arguments is insufficient
