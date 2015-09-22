@@ -1,4 +1,5 @@
 {
+    "1.3.14" : ["Fixed getargspec() for python 3.6"],
     "1.3.13" : ["Support for PyPi deployment from travis],
     "1.3.12" : ["New round method for safe rouding"],
     "1.3.11" : ["Support for non strict mode in object attribute retrieval"],
