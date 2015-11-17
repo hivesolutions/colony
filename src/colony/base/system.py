@@ -3453,10 +3453,10 @@ class PluginManager(object):
                     # calls the end load plugin method in the plugin (plugin bootup process)
                     plugin.end_load_plugin()
                 except BaseException as exception:
-                    # sets the exception in the plugin
+                    # sets the exception and the error state flag in
+                    # the plugin so that the loading process is properly
+                    # handled at the "front" of the operation
                     plugin.exception = exception
-
-                    # sets the plugin error state flag
                     plugin.error_state = True
 
         # in case the plugin is in an error state, there's a problem

@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008-2015 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+import unittest
+
 class Test(object):
     """
     The base and abstract test class from which all the
@@ -71,3 +73,15 @@ class Test(object):
 
     def tear_down(self, test_case):
         pass
+
+    def run_all(self, plugin = None, runner = None, verbosity = 1):
+        suite = unittest.TestSuite()
+        loader = unittest.TestLoader()
+
+        for test_case in self.get_bundle():
+            test_case.plugin = plugin
+            partial = loader.loadTestsFromTestCase(test_case)
+            suite.addTest(partial)
+
+        runner = runner or unittest.TextTestRunner(verbosity = verbosity)
+        return runner.run(suite)
