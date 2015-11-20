@@ -165,6 +165,7 @@ def unquote(string_value, strict = True):
     is_unicode = type(string_value) == legacy.UNICODE
     encoding = "ascii" if strict else "utf-8"
     if is_unicode: string_value = string_value.encode(encoding)
+    if strict: string_value.decode("ascii")
     string_value_splitted = string_value.split(b"%")
 
     # iterates over all the "percentage values" range to decode
@@ -210,8 +211,11 @@ def unquote_plus(string_value, strict = True):
     """
 
     # replaces the plus sign with a space, this is considered
-    # the default plus symbol substitution
-    string_value = string_value.replace("+", " ")
+    # the default plus symbol substitution, note that the proper
+    # replacement operation is used according to base data type
+    is_bytes = legacy.is_bytes(string_value)
+    if is_bytes: string_value = string_value.replace(b"+", b" ")
+    else: string_value = string_value.replace("+", " ")
 
     # returns the unquoted string value
     return unquote(string_value, strict = strict)

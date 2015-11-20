@@ -98,7 +98,25 @@ class QuoteTest(colony.ColonyTestCase):
         result = colony.unquote("你好世界", strict = False)
         self.assertEqual(result, "你好世界")
 
-        self.assert_raises(UnicodeEncodeError, colony.unquote, "你好世界", strict = True)
+        result = colony.unquote(b"\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c", strict = False)
+        self.assertEqual(result, "你好世界")
+
+        result = colony.unquote(colony.legacy.u("你好世界"), strict = False)
+        self.assertEqual(result, "你好世界")
+
+        self.assert_raises(
+            UnicodeDecodeError,
+            colony.unquote,
+            b"\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c",
+            strict = True
+        )
+
+        self.assert_raises(
+            UnicodeEncodeError,
+            colony.unquote,
+            colony.legacy.u("你好世界"),
+            strict = True
+        )
 
     def test_unquote_plus(self):
         """
@@ -121,7 +139,25 @@ class QuoteTest(colony.ColonyTestCase):
         result = colony.unquote_plus("你好世界", strict = False)
         self.assertEqual(result, "你好世界")
 
-        self.assert_raises(UnicodeEncodeError, colony.unquote_plus, "你好世界", strict = True)
+        result = colony.unquote_plus(b"\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c", strict = False)
+        self.assertEqual(result, "你好世界")
+
+        result = colony.unquote_plus(colony.legacy.u("你好世界"), strict = False)
+        self.assertEqual(result, "你好世界")
+
+        self.assert_raises(
+            UnicodeDecodeError,
+            colony.unquote_plus,
+            b"\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c",
+            strict = True
+        )
+
+        self.assert_raises(
+            UnicodeEncodeError,
+            colony.unquote_plus,
+            colony.legacy.u("你好世界"),
+            strict = True
+        )
 
     def test_url_encode(self):
         """
