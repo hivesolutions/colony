@@ -118,7 +118,7 @@ class ColonyTestCase(unittest.TestCase):
             # invokes the function that should trigger the evaluation process,
             # note that the execution is dynamic with the provided arguments
             function(*args, **kwargs)
-        except Exception as exception:
+        except BaseException as exception:
             # checks if the current exception assert mode is string or value
             # oriented and then uses the string mode flag to find out the correct
             # expected exception name (for exception string description)

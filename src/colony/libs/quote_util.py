@@ -139,7 +139,7 @@ def quote_plus(string_value, safe = ""):
     # returns the quoted string value
     return quote(string_value, safe)
 
-def unquote(string_value):
+def unquote(string_value, strict = True):
     """
     Unquotes the given string value according to the url
     encoding specification.
@@ -149,6 +149,11 @@ def unquote(string_value):
     @param string_value: The string value to be unquoted, this
     string should be either encoded as an utf-8 based string
     or decoded with the proper unicode representation.
+    @type strict: bool
+    @param strict: If the unquoting operation should be performed
+    using a strict approach meaning that all the characters are
+    properly validated for ascii compliance, avoid duplicated
+    unquoting operations.
     @rtype: String
     @return: The unquoted string value, this value is either
     returned as an utf-8 encoded string or an unicode string.
@@ -157,8 +162,9 @@ def unquote(string_value):
     # forces the encoding of the string value as a string and
     # then splits the string value around percentage value
     # so that the various partial encoded values are decoded
-    is_bytes = legacy.is_bytes(string_value)
-    if not is_bytes: string_value = string_value.encode("utf-8")
+    is_unicode = type(string_value) == legacy.UNICODE
+    encoding = "ascii" if strict else "utf-8"
+    if is_unicode: string_value = string_value.encode(encoding)
     string_value_splitted = string_value.split(b"%")
 
     # iterates over all the "percentage values" range to decode
@@ -183,7 +189,7 @@ def unquote(string_value):
     unquoted = b"".join(string_value_splitted)
     return unquoted.decode("utf-8") if legacy.PYTHON_3 else unquoted
 
-def unquote_plus(string_value):
+def unquote_plus(string_value, strict = True):
     """
     Unquotes the given string value according to
     the url encoding specification. This kind of unquote
@@ -191,7 +197,14 @@ def unquote_plus(string_value):
     The implementation is based on the python base library.
 
     @type string_value: String
-    @param string_value: The string value to be unquoted.
+    @param string_value: The string value to be unquoted, this
+    string should be either encoded as an utf-8 based string
+    or decoded with the proper unicode representation.
+    @type strict: bool
+    @param strict: If the unquoting operation should be performed
+    using a strict approach meaning that all the characters are
+    properly validated for ascii compliance, avoid duplicated
+    unquoting operations.
     @rtype: String
     @return: The unquoted string value.
     """
@@ -201,7 +214,7 @@ def unquote_plus(string_value):
     string_value = string_value.replace("+", " ")
 
     # returns the unquoted string value
-    return unquote(string_value)
+    return unquote(string_value, strict = strict)
 
 def url_encode(attributes_map = None, attributes_list = None, plus_encoding = False):
     """
