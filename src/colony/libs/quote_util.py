@@ -146,7 +146,9 @@ def unquote(string_value):
     The implementation is based on the python base library.
 
     @type string_value: String
-    @param string_value: The string value to be unquoted.
+    @param string_value: The string value to be unquoted, this
+    string should be either encoded as an utf-8 based string
+    or decoded with the proper unicode representation.
     @rtype: String
     @return: The unquoted string value, this value is either
     returned as an utf-8 encoded string or an unicode string.
@@ -155,7 +157,8 @@ def unquote(string_value):
     # forces the encoding of the string value as a string and
     # then splits the string value around percentage value
     # so that the various partial encoded values are decoded
-    string_value = legacy.bytes(string_value)
+    is_bytes = legacy.is_bytes(string_value)
+    if not is_bytes: string_value = string_value.encode("utf-8")
     string_value_splitted = string_value.split(b"%")
 
     # iterates over all the "percentage values" range to decode
