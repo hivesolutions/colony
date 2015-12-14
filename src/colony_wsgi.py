@@ -223,6 +223,8 @@ def get_alias():
         # based json module (may not exist) the closes the file
         # to avoid any memory reference leak
         import json
+        alias_path = os.path.expanduser(alias_path)
+        alias_path = os.path.normpath(alias_path)
         file = open(alias_path, "rb")
         try: alias = json.load(file)
         finally: file.close()
