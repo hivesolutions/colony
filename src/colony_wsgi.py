@@ -111,6 +111,12 @@ alias_path = colony.conf("ALIAS_PATH", None)
 level = colony.conf("LEVEL", logging.INFO)
 level = colony.getLevelName(level)
 
+# retrieves the complete set of configuration variables associated
+# with the various paths to be used by colony, these are going to
+# be used as the initial values for the various path lists
+meta_paths = colony.conf("META_PATH", [], cast = list)
+plugin_paths = colony.conf("PLUGIN_PATH", [], cast = list)
+
 # tries to retrieve the configuration file from the environment
 # variable associated in case it fails uses the default configuration
 # file path then joins the "relative" file path to the base path
@@ -139,23 +145,26 @@ try: colony_configuration = __import__(configuration_module_name)
 except ImportError: import colony.config.base as module; colony_configuration = module
 
 # initializes the lists that will contain both the path to the
-# plugins and the paths to the configuration (meta) files
-plugin_paths = []
-meta_paths = []
+# plugins and the paths to the configuration (meta) files, these
+# are only going to be used temporarily for glob expansion
+_meta_paths = []
+_plugin_paths = []
 
 # iterates over each of the plugin paths to resolve them using
 # the glob based approach then "takes" the final list into a
 # final step of absolute path normalization
 for plugin_path in colony_configuration.plugin_path_list:
-    plugin_paths += glob.glob(os.path.join(manager_path, plugin_path))
-plugin_paths = [os.path.abspath(plugin_path) for plugin_path in plugin_paths]
+    plugin_paths += os.path.join(manager_path, plugin_path)
+for plugin_path in plugin_paths: _plugin_paths += glob.glob(plugin_path)
+plugin_paths = [os.path.abspath(plugin_path) for plugin_path in _plugin_paths]
 
 # iterates over each of the meta paths to resolve them using
 # the glob based approach then "takes" the final list into a
 # final step of absolute path normalization
 for meta_path in colony_configuration.meta_path_list:
-    meta_paths += glob.glob(os.path.join(manager_path, meta_path))
-meta_paths = [os.path.abspath(meta_path) for meta_path in meta_paths]
+    meta_paths += os.path.join(manager_path, meta_path)
+for meta_path in meta_paths: _meta_paths += glob.glob(meta_path)
+meta_paths = [os.path.abspath(meta_path) for meta_path in _meta_paths]
 
 # creates the plugin manager instance with the current file path
 # as the manager path and the corresponding relative log path,
