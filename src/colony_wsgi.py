@@ -154,7 +154,7 @@ _plugin_paths = []
 # the glob based approach then "takes" the final list into a
 # final step of absolute path normalization
 for plugin_path in colony_configuration.plugin_path_list:
-    plugin_paths += os.path.join(manager_path, plugin_path)
+    plugin_paths.append(os.path.join(manager_path, plugin_path))
 for plugin_path in plugin_paths: _plugin_paths += glob.glob(plugin_path)
 plugin_paths = [os.path.abspath(plugin_path) for plugin_path in _plugin_paths]
 
@@ -162,7 +162,7 @@ plugin_paths = [os.path.abspath(plugin_path) for plugin_path in _plugin_paths]
 # the glob based approach then "takes" the final list into a
 # final step of absolute path normalization
 for meta_path in colony_configuration.meta_path_list:
-    meta_paths += os.path.join(manager_path, meta_path)
+    meta_paths.append(os.path.join(manager_path, meta_path))
 for meta_path in meta_paths: _meta_paths += glob.glob(meta_path)
 meta_paths = [os.path.abspath(meta_path) for meta_path in _meta_paths]
 
