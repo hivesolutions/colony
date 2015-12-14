@@ -1,4 +1,5 @@
 {
+	"1.3.18" : ["Major path related code fix"],
     "1.3.17" : ["Support for plugin path env variable in wsgi"],
     "1.3.16" : ["New support for home alias in alias path"],
     "1.3.15" : ["Better support for url encoding"],
