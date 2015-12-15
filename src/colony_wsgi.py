@@ -104,6 +104,8 @@ prefix = colony.conf("PREFIX", None)
 # about the mapping prefixes for the http server, the file should
 # contain a set of prefix to resolution prefix values
 alias_path = colony.conf("ALIAS_PATH", None)
+alias_path = alias_path and os.path.expanduser(alias_path)
+alias_path = alias_path and os.path.normpath(alias_path)
 
 # retrieves the (verbosity) level for the debugger using the provided
 # configuration support, defaulting to the default level in case the
@@ -232,8 +234,6 @@ def get_alias():
         # based json module (may not exist) the closes the file
         # to avoid any memory reference leak
         import json
-        alias_path = os.path.expanduser(alias_path)
-        alias_path = os.path.normpath(alias_path)
         file = open(alias_path, "rb")
         try: alias = json.load(file)
         finally: file.close()
