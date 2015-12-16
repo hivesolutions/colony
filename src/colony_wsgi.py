@@ -107,6 +107,13 @@ alias_path = colony.conf("ALIAS_PATH", None)
 alias_path = alias_path and os.path.expanduser(alias_path)
 alias_path = alias_path and os.path.normpath(alias_path)
 
+# gathers the path to the removal file that contains json information
+# about the removal meta information to be used at runtime to shorten
+# the provided url path values (useful under proxy redirection)
+removal_path = colony.conf("REMOVAL_PATH", None)
+removal_path = removal_path and os.path.expanduser(removal_path)
+removal_path = removal_path and os.path.normpath(removal_path)
+
 # retrieves the (verbosity) level for the debugger using the provided
 # configuration support, defaulting to the default level in case the
 # value is not provided through configuration
@@ -189,13 +196,16 @@ plugin_manager = colony.PluginManager(
 plugin_manager.start_logger(level)
 return_code = plugin_manager.load_system()
 alias = None
+removal = None
 
 def application(environ, start_response):
     try:
-        # retrieves the currently set alias list, loading
-        # it in case this is the first run, this value may
-        # be unset and no alias mapping is performed
+        # retrieves the currently set alias and removal lists,
+        # loading them it in case this is the first run, these
+        # value may be unset and no mapping is performed under
+        # such situations (applicable for both alias and removal)
         alias = get_alias()
+        removal = get_removal()
 
         # retrieves the wsgi plugin and uses it to handle
         # the wsgi request (request redirection) any inner
@@ -203,7 +213,7 @@ def application(environ, start_response):
         # message should be returned to the end user
         wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
         if not wsgi_plugin: raise colony.PluginSystemException("no wsgi plugin found")
-        sequence = wsgi_plugin.handle(environ, start_response, prefix, alias)
+        sequence = wsgi_plugin.handle(environ, start_response, prefix, alias, removal)
     except:
         # in case the run mode is development the exception should
         # be processed and a description sent to the output
@@ -245,6 +255,32 @@ def get_alias():
     # returns the map containing the alias that were loaded from the
     # file, this value may be unsets in case there was an error
     return alias
+
+def get_removal():
+    global removal
+    global removal_path
+
+    # in case either the removal is defined (file already loaded)
+    # or there's no removal file to be loaded the currently set
+    # removal variable is retrieved (cached value)
+    if removal or not removal_path: return removal
+
+    try:
+        # tries to load the json file using the default python
+        # based json module (may not exist) the closes the file
+        # to avoid any memory reference leak
+        import json
+        file = open(removal_path, "rb")
+        try: removal = json.load(file)
+        finally: file.close()
+    except:
+        # unsets the removal path to avoid any further file reading
+        # avoiding any duplicated reading
+        removal_path = None
+
+    # returns the map containing the removal that were loaded from the
+    # file, this value may be unsets in case there was an error
+    return removal
 
 @atexit.register
 def unload_system():
