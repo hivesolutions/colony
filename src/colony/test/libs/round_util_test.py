@@ -94,7 +94,7 @@ class RoundTest(colony.ColonyTestCase):
         self.assertEqual(result, 3.0)
 
         result = colony.roundi(1171.735, 2)
-        self.assertEqual(result, 1171.74)
+        self.assertNotEqual(result, 1171.74)
 
         result = colony.roundi(99999999.995, 2)
         self.assertEqual(result, 100000000.0)
