@@ -230,7 +230,7 @@ def application(environ, start_response):
     # method to retrieve the contents of the message to be sent
     return sequence
 
-def get_alias():
+def get_alias(encoding = "utf-8"):
     global alias
     global alias_path
 
@@ -245,8 +245,10 @@ def get_alias():
         # to avoid any memory reference leak
         import json
         file = open(alias_path, "rb")
-        try: alias = json.load(file)
+        try: data = file.read()
         finally: file.close()
+        data = data.decode(encoding)
+        alias = json.loads(data)
     except:
         # unsets the alias path to avoid any further file reading
         # avoiding any duplicated reading
@@ -256,7 +258,7 @@ def get_alias():
     # file, this value may be unsets in case there was an error
     return alias
 
-def get_rewrite():
+def get_rewrite(encoding = "utf-8"):
     global rewrite
     global rewrite_path
 
@@ -271,8 +273,10 @@ def get_rewrite():
         # to avoid any memory reference leak
         import json
         file = open(rewrite_path, "rb")
-        try: rewrite = json.load(file)
+        try: data = file.read()
         finally: file.close()
+        data = data.decode(encoding)
+        rewrite = json.loads(data)
     except:
         # unsets the rewrite path to avoid any further file reading
         # avoiding any duplicated reading
