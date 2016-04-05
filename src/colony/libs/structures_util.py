@@ -203,11 +203,11 @@ class Decimal(float):
         return Decimal(result)
 
     def __floor__(self):
-        result = float.__floor__(self)
+        result = math.floor(float(self))
         return Decimal(result)
 
     def __ceil__(self):
-        result = float.__ceil__(self)
+        result = math.ceil(float(self))
         return Decimal(result)
 
     def __trunc__(self):
