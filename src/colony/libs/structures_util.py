@@ -202,15 +202,15 @@ class Decimal(float):
         result = float.__round__(self, n)
         return Decimal(result)
 
-    def __floor__(self, n):
+    def __floor__(self):
         result = float.__floor__(self)
         return Decimal(result)
 
-    def __ceil__(self, n):
+    def __ceil__(self):
         result = float.__ceil__(self)
         return Decimal(result)
 
-    def __trunc__(self, n):
+    def __trunc__(self):
         result = float.__trunc__(self)
         return Decimal(result)
 
