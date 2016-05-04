@@ -56,7 +56,7 @@ the number of decimal places for their round """
 
 _round = round
 
-def roundi(value, places, precise = False):
+def roundi(value, places = 0, precise = False):
     """
     Rounds the provided float value to the provided
     number of decimal places returning a floating
@@ -95,7 +95,7 @@ def roundi(value, places, precise = False):
     delta = _delta(value) if precise else DELTA
     return _round_t(value + delta, places)
 
-def rounds(value, places):
+def rounds(value, places = 0):
     """
     Considered to be the "safest" way of rounding a number either
     a "native" float number or a decimal, this operation should
@@ -119,7 +119,7 @@ def rounds(value, places):
 
     return roundi(value, places, precise = True)
 
-def roundt(value, places):
+def roundt(value, places = 0):
     """
     Simple rounding utility function that performs the currently
     selected rounding operation on the provided value and then
@@ -226,7 +226,7 @@ def round_is_new():
         (major == 2 and minor >= 7)
     return new_round
 
-def _round_t(value, places):
+def _round_t(value, places = 0):
     """
     Internal function similar to the the type one but uses
     the internal (built-in) version of the rounder to perform
