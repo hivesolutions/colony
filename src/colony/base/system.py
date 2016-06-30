@@ -22,7 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.3.22"
+__version__ = "1.3.23"
 """ The version of the module """
 
 __revision__ = "$LastChangedRevision$"
