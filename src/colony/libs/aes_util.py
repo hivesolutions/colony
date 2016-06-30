@@ -39,6 +39,8 @@ __license__ = "Apache License, Version 2.0"
 
 import os
 
+from colony.base import legacy
+
 try: import Crypto.Cipher.AES
 except: Crypto = None
 
@@ -131,7 +133,7 @@ class AesCipher(object):
         """
 
         remaining = self.block_size - len(value) % self.block_size
-        padding = remaining * chr(remaining)
+        padding = remaining * legacy.chr(remaining)
         return value + padding
 
     def unpad(self, value):
