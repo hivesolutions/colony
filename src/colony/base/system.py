@@ -1788,6 +1788,7 @@ class PluginManager(object):
 
         self.blacklist = config.conf("BLACKLIST", [], cast = list)
         self.blacktest = config.conf("BLACKTEST", [], cast = list)
+        self.exec_delay = config.conf("EXEC_DELAY", 0.0, cast = float)
 
         self.plugins = util.Plugins()
         self.retrieve_lock = threading.RLock()
@@ -3143,6 +3144,9 @@ class PluginManager(object):
             "execution mode '%s' not found or invalid" % mode
         )
         self.info("Executing mode '%s'..." % mode)
+        if self.exec_delay:
+            self.info("Sleeping for %.2f seconds..." % self.exec_delay)
+            time.sleep(self.exec_delay)
         args = args or ()
         method = getattr(self, "run_" + mode)
         method(args = args)
