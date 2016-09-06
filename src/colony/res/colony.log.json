@@ -1,4 +1,5 @@
 {
+    "1.3.24": ["Support for EXEC_DELAY for sleep before exec mode"],
     "1.3.23": ["Small AES util fix"],
     "1.3.22": ["Legacy support fixed"],
     "1.3.21": ["New configuration support"],
