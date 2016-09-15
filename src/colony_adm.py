@@ -959,6 +959,7 @@ def _upload(path, repo = "colony", generate = True, delete = True):
     if not type(repo_url) in (list, tuple): repo_url = (("colony", repo_url),)
     repo_url = dict(repo_url)
     repo_url = repo_url.get(repo)
+    repo_url = colony.conf("REPO_URL_" + repo.upper(), repo_url)
     if not repo_url: raise RuntimeError("repository not found")
 
     # prints a message about the upload operation that is going to occur
