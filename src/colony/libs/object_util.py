@@ -146,7 +146,7 @@ def object_flatten(instance, flattening_map):
     # nor a list
     elif not instance_type in LIST_TYPES:
         # raises a runtime error (no valid instance type)
-        raise RuntimeError("invalid instance type")
+        raise RuntimeError("Invalid instance type")
 
     # flattens the structure of the instance (list)
     # using the flattening map (the returned structure

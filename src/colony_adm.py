@@ -204,7 +204,7 @@ def cleanup():
 
     # in case not target path is defined must raise
     # a runtime error
-    if not target: raise RuntimeError("no instance found")
+    if not target: raise RuntimeError("No instance found")
 
     # runs the cleanup command on the target path
     # so that all the non required files are removed
@@ -229,7 +229,7 @@ def pack():
 
     # in case not target path is defined must raise
     # a runtime error, because it's not possible to proceed
-    if not target: raise RuntimeError("no instance found")
+    if not target: raise RuntimeError("No instance found")
 
     # runs the pack command on the target path
     # to create the packed file for the colony instance
@@ -239,7 +239,7 @@ def generate():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
     # a runtime error
-    if len(sys.argv) < 3: raise RuntimeError("no plugin file provided")
+    if len(sys.argv) < 3: raise RuntimeError("No plugin file provided")
 
     # retrieves the target plugin file paths and uses them
     # for the generation of the descriptor file that should
@@ -251,7 +251,7 @@ def build():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
     # a runtime error
-    if len(sys.argv) < 3: raise RuntimeError("no descriptor provided")
+    if len(sys.argv) < 3: raise RuntimeError("No descriptor provided")
 
     # retrieves the descriptor file from the arguments and
     # uses it to run the build structure
@@ -262,7 +262,7 @@ def deploy():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
     # a runtime error, the name of the file is required
-    if len(sys.argv) < 3: raise RuntimeError("no package provided")
+    if len(sys.argv) < 3: raise RuntimeError("No package provided")
 
     # retrieves the package files from the arguments and
     # uses them to run the deploy the packages into the currently
@@ -273,7 +273,7 @@ def deploy():
 def install():
     # in case there're not enough arguments to be
     # able to retrieve the package file for install
-    if len(sys.argv) < 3: raise RuntimeError("no name of package provided")
+    if len(sys.argv) < 3: raise RuntimeError("No name of package provided")
 
     # runs the install operation using the provided names
     # as reference, note that these names may contain an
@@ -284,7 +284,7 @@ def install():
 def require():
     # in case there're not enough arguments to be
     # able to retrieve the requirements file
-    if len(sys.argv) < 3: raise RuntimeError("no requirements file provided")
+    if len(sys.argv) < 3: raise RuntimeError("No requirements file provided")
 
     # runs the requirements operation with the provided
     # paths, this is a recursive operation and may take
@@ -299,7 +299,7 @@ def upload():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
     # a runtime error, the name of the file is required
-    if len(sys.argv) < 3: raise RuntimeError("no plugin file provided")
+    if len(sys.argv) < 3: raise RuntimeError("No plugin file provided")
 
     # in case there's an extra argument provided it's assumed
     # that it's the name of the target repo
@@ -316,7 +316,7 @@ def info():
     # in case there're not enough arguments to be
     # able to retrieve the specification file raises
     # a runtime error, the name of the file is required
-    if len(sys.argv) < 3: raise RuntimeError("no package provided")
+    if len(sys.argv) < 3: raise RuntimeError("No package provided")
 
     # retrieves the package file from the arguments and
     # uses it to runs the information command to be able
@@ -426,7 +426,7 @@ def _generate(path, build = True, delete = True):
     # indicating the problem (as expected by the current specification)
     if is_plugin: descriptor_path = _generate_plugin(path)
     elif is_config: descriptor_path = _generate_config(path)
-    else: raise RuntimeError("invalid path provided for generation")
+    else: raise RuntimeError("Invalid path provided for generation")
 
     # sets the default result value (nothing is returned by default) so the value is
     # not defined (unset/invalid value)
@@ -473,7 +473,7 @@ def _generate_plugin(path):
 
     # in case no plugin structure has been found an exception is raised
     # indicating that no plugin has been found (problem situation)
-    if not plugin: raise RuntimeError("no plugin found")
+    if not plugin: raise RuntimeError("No plugin found")
 
     # uses the typical approach to the generation of the plugin short name
     # this strategy is defined as the standard one and should be respected
@@ -813,7 +813,7 @@ def _install(name = None, id = None, version = None, upgrade = False):
 
     # in case no package has been found for any of the defined repos
     # an exception must be raised indicating the problem to the user
-    if not package: raise RuntimeError("package not found")
+    if not package: raise RuntimeError("Package not found")
 
     # constructs the proper url for package information retrieval and
     # runs it so that the complete set of information (including dependencies)
@@ -931,7 +931,7 @@ def _upload(path, repo = "colony", generate = True, delete = True):
             delete = delete
         )
         return
-    if not expansion: raise RuntimeError("no path found for '%s'" % path)
+    if not expansion: raise RuntimeError("No path found for '%s'" % path)
     path = expansion[0]
 
     # in case the generate flag is active the package file is generated
@@ -1165,7 +1165,7 @@ def main():
     _globals = globals()
     function = _globals.get(operation, None)
     if function: function()
-    else: raise RuntimeError("invalid operation")
+    else: raise RuntimeError("Invalid operation")
 
 if __name__ == "__main__":
     main()
