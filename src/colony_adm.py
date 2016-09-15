@@ -960,11 +960,11 @@ def _upload(path, repo = "colony", generate = True, delete = True):
     repo_url = dict(repo_url)
     repo_url = repo_url.get(repo)
     repo_url = colony.conf("REPO_URL_" + repo.upper(), repo_url)
-    if not repo_url: raise RuntimeError("repository not found")
+    if not repo_url: raise RuntimeError("URL for repository '%s' not found" % repo)
 
     # prints a message about the upload operation that is going to occur
     # so that the end user knows where the upload is going
-    output("Uploading %s into %s repo" % (descriptor["short_name"], repo))
+    output("Uploading %s into %s repo (%s)" % (descriptor["short_name"], repo, repo_url))
 
     # creates the url format, taking into account the defined url and the
     # current descriptor and then runs the upload, using a post operation
