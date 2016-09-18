@@ -108,7 +108,7 @@ def call_safe(callable, *args, **kwargs):
     @callable callable: The callable that is going to have the keyword
     based arguments validated and the get called.
     @rtype: object
-    @return: The resulting value from the safe call to the provided
+    @return: The resulting value from the safe call of the provided
     callable, this may have any data type.
     """
 
