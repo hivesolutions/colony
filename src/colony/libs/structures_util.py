@@ -198,7 +198,7 @@ class Decimal(float):
         result = float.__invert__(self)
         return Decimal(result)
 
-    def __round__(self, n):
+    def __round__(self, n = 0):
         result = float.__round__(self, n)
         return Decimal(result)
 
