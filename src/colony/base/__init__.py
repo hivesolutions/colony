@@ -44,7 +44,7 @@ from . import system
 from . import test
 from . import util
 
-from .config import conf, conf_prefix, conf_s
+from .config import conf, conf_prefix, conf_suffix, conf_s, conf_d
 from .decorators import load_plugin, plugin_meta_information, load_allowed, load_allowed_capability,\
     unload_allowed, unload_allowed_capability, inject_dependencies, plugin_inject, event_handler,\
     event_handler_method, set_configuration_property, set_configuration_property_method,\
