@@ -3409,10 +3409,9 @@ class PluginManager(object):
                         # calls the lazy load plugin method in the plugin (plugin bootup process)
                         plugin.lazy_load_plugin()
                 except BaseException as exception:
-                    # sets the exception in the plugin
+                    # sets the exception in the plugin and then sets the error
+                    # state flag in it, properly identifying the issue
                     plugin.exception = exception
-
-                    # sets the plugin error state flag
                     plugin.error_state = True
 
         # in case the plugin is in an error state
@@ -3611,10 +3610,9 @@ class PluginManager(object):
                 # calls the end unload plugin method in the plugin (plugin shutdown process)
                 plugin.end_unload_plugin()
             except BaseException as exception:
-                # sets the exception in the plugin
+                # sets the exception in the plugin and then sets the
+                # plugin error state flag, indicating that a problem occurred
                 plugin.exception = exception
-
-                # sets the plugin error state flag
                 plugin.error_state = True
 
         # in case the plugin is in an error state
