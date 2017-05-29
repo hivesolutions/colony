@@ -94,3 +94,8 @@ class LoggersTest(colony.ColonyTestCase):
 
         self.assertEqual(len(latest), 2)
         self.assertEqual(latest, ["hello world 2", "hello world"])
+
+        latest = memory_handler.get_latest(count = 1, level = logging.INFO)
+
+        self.assertEqual(len(latest), 1)
+        self.assertEqual(latest, ["hello world 2"])
