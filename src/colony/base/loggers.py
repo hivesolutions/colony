@@ -205,7 +205,9 @@ class MemoryHandler(logging.Handler):
 
     def get_latest(self, count = None, level = None):
         count = count or 100
+        is_level = level and not legacy.is_string(level)
+        if is_level: level = logging.getLevelName(level)
         level = level.upper() if level else level
         level = LEVEL_ALIAS.get(level, level)
-        messages = self.messages_l.get(level, ()) if level else self.messages
+        messages = self.messages_l.get(level, []) if level else self.messages
         return messages[:count]
