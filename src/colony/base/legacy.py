@@ -328,6 +328,12 @@ def build_opener(*args, **kwargs):
 def urlparse(*args, **kwargs):
     return _urlparse.urlparse(*args, **kwargs)
 
+def urlunparse(*args, **kwargs):
+    return _urlparse.urlunparse(*args, **kwargs)
+
+def parse_qs(*args, **kwargs):
+    return _urlparse.parse_qs(*args, **kwargs)
+
 def urlencode(*args, **kwargs):
     if PYTHON_3: return urllib.parse.urlencode(*args, **kwargs)
     else: return urllib.urlencode(*args, **kwargs) #@UndefinedVariable
@@ -347,10 +353,6 @@ def unquote(*args, **kwargs):
 def unquote_plus(*args, **kwargs):
     if PYTHON_3: return urllib.parse.unquote_plus(*args, **kwargs)
     else: return urllib.unquote_plus(*args, **kwargs) #@UndefinedVariable
-
-def parse_qs(*args, **kwargs):
-    if PYTHON_3: return urllib.parse.parse_qs(*args, **kwargs)
-    else: return _urlparse.parse_qs(*args, **kwargs) #@UndefinedVariable
 
 def cmp_to_key(*args, **kwargs):
     if PYTHON_3: return dict(key = functools.cmp_to_key(*args, **kwargs)) #@UndefinedVariable
