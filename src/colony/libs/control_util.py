@@ -105,8 +105,7 @@ def _calculate_control_value(number):
     @type number: int
     @param number: The number to calculate the control value.
     @rtype: int
-    @return: The control value for the given
-    number.
+    @return: The control value for the given number.
     """
 
     # calculates the number of digits in the number
@@ -117,14 +116,12 @@ def _calculate_control_value(number):
 
     # iterates over the range of the number of digits
     for index in range(number_digits):
-        # retrieves the current digit
+        # retrieves the current digit and then the associated
+        # coefficient value, incrementing then the accumulator
+        # with the current digit multiplied with the current
+        # coefficient (as expected by algorithm)
         current_digit = number_util.get_digit(number, index)
-
-        # retrieves the current coefficient
         current_coefficient = COEFFICIENT_VALUES[index]
-
-        # increments the accumulator with the current digit
-        # multiplied with the current coefficient
         accumulator += current_digit * current_coefficient
 
     # calculates the partial value from
@@ -132,15 +129,12 @@ def _calculate_control_value(number):
     partial_value = accumulator % 11
 
     # in case the partial value is zero
-    # or one
-    if partial_value in (0, 1):
-        # sets the control value as zero
-        control_value = 0
-    # otherwise
-    else:
-        # calculates the control value based
-        # on the partial value
-        control_value = 11 - partial_value
+    # or one sets the control value as zero
+    if partial_value in (0, 1): control_value = 0
+
+    # otherwise calculates the control value based
+    # on the partial value
+    else: control_value = 11 - partial_value
 
     # returns the control value
     return control_value
