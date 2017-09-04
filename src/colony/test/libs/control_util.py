@@ -39,36 +39,27 @@ __license__ = "Apache License, Version 2.0"
 
 import colony
 
-class GtinTest(colony.ColonyTestCase):
+class ControlTest(colony.ColonyTestCase):
     """
-    Class that tests the gtin calculation method.
+    Class that tests the control values calculation method.
     """
 
-    def test_calculate_control_value(self):
+    def test_calculate_tax_number_control_value(self):
         """
-        Tests the calculate control value function.
+        Tests the calculate tax number control value function.
         """
 
-        # calculates the control value
-        control_value = colony.calculate_control_value_gtin(629104150021)
+        control_value = colony.calculate_tax_number_control_value(23587818)
+        self.assertEqual(control_value, 9)
 
-        # asserts the control value
-        self.assertEqual(control_value, 3)
+        control_value = colony.calculate_tax_number_control_value(50860598)
+        self.assertEqual(control_value, 9)
 
-        # calculates the control value
-        control_value = colony.calculate_control_value_gtin(978097123458)
+        control_value = colony.calculate_tax_number_control_value(50000175)
+        self.assertEqual(control_value, 8)
 
-        # asserts the control value
-        self.assertEqual(control_value, 1)
+        control_value = colony.calculate_tax_number_control_value(50464975)
+        self.assertEqual(control_value, 2)
 
-        # calculates the control value
-        control_value = colony.calculate_control_value_gtin(978097123456)
-
-        # asserts the control value
-        self.assertEqual(control_value, 7)
-
-        # calculates the control value
-        control_value = colony.calculate_control_value_gtin(978097123457)
-
-        # asserts the control value
-        self.assertEqual(control_value, 4)
+        control_value = colony.calculate_tax_number_control_value(98046859)
+        self.assertEqual(control_value, 0)
