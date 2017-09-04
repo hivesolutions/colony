@@ -61,10 +61,10 @@ def kill_process(pid, signal = None):
     Kills the process with the given pid (process identifier)
     and "using" the given signal.
 
-    @type pid: int
-    @param pid: The identifier of the process to be killed.
-    @type signal: signal
-    @param signal: The signal to be used to kill the process.
+    :type pid: int
+    :param pid: The identifier of the process to be killed.
+    :type signal: signal
+    :param signal: The signal to be used to kill the process.
     """
 
     # retrieves the current os name
@@ -85,8 +85,8 @@ def _kill_process_windows(pid):
     This class focus in the strategy used in windows operative
     systems.
 
-    @type pid: int
-    @param pid: The identifier of the process to be killed.
+    :type pid: int
+    :param pid: The identifier of the process to be killed.
     """
 
     # in case the os module contains the kill method
@@ -102,8 +102,8 @@ def _kill_process_unix(pid, _signal = None):
     Kills the process with the given pid (process identifier).
     This class focus in the strategy used in unix platforms.
 
-    @type pid: int
-    @param pid: The identifier of the process to be killed.
+    :type pid: int
+    :param pid: The identifier of the process to be killed.
     """
 
     # sets the signal value

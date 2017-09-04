@@ -250,8 +250,8 @@ class JournaledList(list):
         Appends an object to the list, keeping the registry
         of the operation in the appends list.
 
-        @type object: Object
-        @param object: The object to be appended to the list.
+        :type object: Object
+        :param object: The object to be appended to the list.
         """
 
         # appends the object to the list
@@ -276,8 +276,8 @@ class JournaledList(list):
         Removes an object from the list, keeping the registry
         of the operation in the removes list.
 
-        @type object: Object
-        @param object: The object to be removed from the list.
+        :type object: Object
+        :param object: The object to be removed from the list.
         """
 
         # removes the object from the list, an exception
@@ -314,8 +314,8 @@ class JournaledList(list):
         Retrieves the list of the current (valid) append operations
         from the journaled list.
 
-        @rtype: List
-        @return: The list of the current (valid) append operations
+        :rtype: List
+        :return: The list of the current (valid) append operations
         from the journaled list.
         """
 
@@ -326,8 +326,8 @@ class JournaledList(list):
         Retrieves the list of the current (valid) remove operations
         from the journaled list.
 
-        @rtype: List
-        @return: The list of the current (valid) remove operations
+        :rtype: List
+        :return: The list of the current (valid) remove operations
         from the journaled list.
         """
 
@@ -338,8 +338,8 @@ class JournaledList(list):
         Appends an object to the list, avoiding the keeping
         of a log on that operation (simple operation).
 
-        @type object: Object
-        @param object: The object to be appended to the list.
+        :type object: Object
+        :param object: The object to be appended to the list.
         """
 
         list.append(self, object)
@@ -349,8 +349,8 @@ class JournaledList(list):
         Removes an object from the list, avoiding the keeping
         of a log on that operation (simple operation).
 
-        @type object: Object
-        @param object: The object to be removed from the list.
+        :type object: Object
+        :param object: The object to be removed from the list.
         """
 
         list.remove(self, object)
@@ -381,11 +381,11 @@ class OrderedMap(object):
         to the default sorting operation in the map keys and then
         all of their values are entered.
 
-        @type ordered_keys: bool
-        @param ordered_keys: If the keys should also be provided
+        :type ordered_keys: bool
+        :param ordered_keys: If the keys should also be provided
         in an ordered fashion (expensive remove operation).
-        @type map: Dictionary
-        @param map: The map to be used to populate the ordered map
+        :type map: Dictionary
+        :param map: The map to be used to populate the ordered map
         initially using the default key order.
         """
 
@@ -457,8 +457,8 @@ class OrderedMap(object):
         manner and then the associated items are inserted
         using the order of the keys.
 
-        @type map: Dictionary
-        @param map: The map that is going to be used to
+        :type map: Dictionary
+        :param map: The map that is going to be used to
         populate the current ordered map using the default
         order of the keys.
         """
@@ -474,11 +474,11 @@ class OrderedMap(object):
         Adds an item with the given key to the
         internal structures.
 
-        @type key: String
-        @param key: The key of the element to be added
+        :type key: String
+        :param key: The key of the element to be added
         to the internal structures.
-        @type value: Object
-        @param value: The value of the element to be added
+        :type value: Object
+        :param value: The value of the element to be added
         to the internal structures.
         """
 
@@ -505,8 +505,8 @@ class OrderedMap(object):
         Removes the item with the given key from the
         internal structures.
 
-        @type key: String
-        @param key: The key of the element to be removed
+        :type key: String
+        :param key: The key of the element to be removed
         from the internal structures.
         """
 
@@ -538,8 +538,8 @@ class OrderedMapIterator(object):
         """
         Constructor of the class.
 
-        @type ordered_map: OrderedMap
-        @param ordered_map: The ordered map to be used by the iterator.
+        :type ordered_map: OrderedMap
+        :param ordered_map: The ordered map to be used by the iterator.
         """
 
         self.ordered_map = ordered_map
@@ -553,8 +553,8 @@ class OrderedMapIterator(object):
         This is the magic method responsible for the retrieval of
         the next value (should forward the request).
 
-        @rtype: String
-        @return: The next key in the ordered map.
+        :rtype: String
+        :return: The next key in the ordered map.
         """
 
         return self.next()
@@ -563,8 +563,8 @@ class OrderedMapIterator(object):
         """
         Retrieves the next ordered map key.
 
-        @rtype: String
-        @return: The next key in the ordered map.
+        :rtype: String
+        :return: The next key in the ordered map.
         """
 
         # retrieves the ordered map length
@@ -664,10 +664,10 @@ class MultipleValueMap(object):
         """
         Unsets the value from the specified key.
 
-        @type key: Object
-        @param key: The key where to unset the value.
-        @type value: Object
-        @param value: The value to unset.
+        :type key: Object
+        :param key: The key where to unset the value.
+        :type value: Object
+        :param value: The value to unset.
         """
 
         # retrieves the values
@@ -696,8 +696,8 @@ class FormatTuple(object):
         """
         Constructor of the class.
 
-        @type format_string: String
-        @param format_string: The format string to be
+        :type format_string: String
+        :param format_string: The format string to be
         used during the process of formatting.
         """
 
@@ -711,11 +711,11 @@ class FormatTuple(object):
         format string and (optional) series of arguments for the
         formatting.
 
-        @type format_string: String
-        @param format_string: The string to be used for formatting of
+        :type format_string: String
+        :param format_string: The string to be used for formatting of
         the string result.
-        @rtype: FormatTuple
-        @return: The resulting format tuple object from the
+        :rtype: FormatTuple
+        :return: The resulting format tuple object from the
         building "generated" from the provided arguments.
         """
 
@@ -755,11 +755,11 @@ class FormatTuple(object):
         In case no format string is provided the default format
         string is used instead.
 
-        @type format_string: String
-        @param format_string: The string to be used for formatting of
+        :type format_string: String
+        :param format_string: The string to be used for formatting of
         the final string result.
-        @rtype: String
-        @return: The "final" resulting string after the format of it.
+        :rtype: String
+        :return: The "final" resulting string after the format of it.
         """
 
         # retrieves the "final" format string, using the
@@ -777,8 +777,8 @@ class FormatTuple(object):
         Retrieves the currently associated string for formatting
         in the current format tuple.
 
-        @rtype: String
-        @return: The currently available format string.
+        :rtype: String
+        :return: The currently available format string.
         """
 
         return self.format_string
@@ -788,8 +788,8 @@ class FormatTuple(object):
         Sets the currently associated string for formatting
         in the current format tuple.
 
-        @type: String
-        @param: The string to be set as the currently
+        :type: String
+        :param: The string to be set as the currently
         available format string.
         """
 
@@ -816,11 +816,11 @@ class FileReference(object):
         """
         Constructor of the class.
 
-        @type path: String
-        @param path: The path to the file that is being described
+        :type path: String
+        :param path: The path to the file that is being described
         by the current file reference object to be created.
-        @type encoding: String
-        @param encoding: String describing the encoding used by the
+        :type encoding: String
+        :param encoding: String describing the encoding used by the
         referenced file (only for text based).
         """
 
@@ -832,8 +832,8 @@ class FileReference(object):
         Reads the complete set of the contents from the file that
         is currently being described.
 
-        @type mode: String
-        @param mode: The file open mode to be used for the reading
+        :type mode: String
+        :param mode: The file open mode to be used for the reading
         (may control binary/text modes).
         """
 
@@ -848,10 +848,10 @@ def is_dictionary(object):
     Validates if the given object is a valid
     dictionary object.
 
-    @type object: Object
-    @param object: The object to be validated.
-    @rtype: bool
-    @return: If the given object is a valid
+    :type object: Object
+    :param object: The object to be validated.
+    :rtype: bool
+    :return: If the given object is a valid
     dictionary object.
     """
 

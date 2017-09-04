@@ -59,14 +59,14 @@ def execute_retries(
     The method returns the return value from the call or raises the last
     known exception.
 
-    @type callable: Callable
-    @param callable: The callable to be called using retries.
-    @type number_retries: int
-    @param number_retries: The number of retries to be used.
-    @type retry_sleep: int´
-    @param retry_sleep: The sleep time between retries.
-    @rtype: Object
-    @return: The return value from the callable.
+    :type callable: Callable
+    :param callable: The callable to be called using retries.
+    :type number_retries: int
+    :param number_retries: The number of retries to be used.
+    :type retry_sleep: int´
+    :param retry_sleep: The sleep time between retries.
+    :rtype: Object
+    :return: The return value from the callable.
     """
 
     # iterates over the range of the number retries (plus one)
@@ -104,11 +104,11 @@ def call_safe(callable, *args, **kwargs):
     the callable definition the callable is immediately considered
     to be valid and the call is ran.
 
-    @type callable: Callable
-    @callable callable: The callable that is going to have the keyword
+    :type callable: Callable
+    :param callable: The callable that is going to have the keyword
     based arguments validated and the get called.
-    @rtype: object
-    @return: The resulting value from the safe call of the provided
+    :rtype: object
+    :return: The resulting value from the safe call of the provided
     callable, this may have any data type.
     """
 

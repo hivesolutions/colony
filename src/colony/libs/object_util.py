@@ -71,11 +71,11 @@ def object_attribute_names(instance):
     A valid attribute is considered to be an attribute
     that may have it's value ready for printing.
 
-    @type instance: Object
-    @param instance: The instance to retrieve the (valid)
+    :type instance: Object
+    :param instance: The instance to retrieve the (valid)
     attribute names.
-    @rtype: List
-    @return: The valid attribute names according to the
+    :rtype: List
+    :return: The valid attribute names according to the
     the state for printing the value.
     """
 
@@ -98,18 +98,18 @@ def object_attribute_values(instance, valid_attribute_names = None, strict = Tru
     case an attribute is not found the value is set
     as not valid (invalid value).
 
-    @type instance: Object
-    @param instance: The instance to retrieve the (valid)
+    :type instance: Object
+    :param instance: The instance to retrieve the (valid)
     attribute values.
-    @type valid_attribute_names: List
-    @param valid_attribute_names: List of valid attribute
+    :type valid_attribute_names: List
+    :param valid_attribute_names: List of valid attribute
     names that may be used to retrieve valid attribute values.
-    @type strict: bool
-    @param strict: If a strict based strategy should be used
+    :type strict: bool
+    :param strict: If a strict based strategy should be used
     for the retrieval of the object attributes, meaning that
     an exception is raised in case the attribute does not exist.
-    @rtype: List
-    @return: The valid attribute value according to the
+    :rtype: List
+    :return: The valid attribute value according to the
     the state for printing the value.
     """
 
@@ -126,10 +126,10 @@ def object_flatten(instance, flattening_map):
     Flattens the given instance using the given flattening
     map as reference for the flattening process.
 
-    @type instance: Object
-    @param instance: The instance to be flatten.
-    @type flattening_map: Dictionary
-    @param flattening_map: Map describing the structure
+    :type instance: Object
+    :param instance: The instance to be flatten.
+    :type flattening_map: Dictionary
+    :param flattening_map: Map describing the structure
     for flattening.
     """
 
@@ -161,8 +161,8 @@ def object_print_list(instances_list):
     Prints some information on the objects
     in the given list, for debugging purposes.
 
-    @type instances_list: List
-    @param instances_list: The list of instances
+    :type instances_list: List
+    :param instances_list: The list of instances
     to be printed for debugging.
     """
 
@@ -181,8 +181,8 @@ def object_print(instance):
     Prints some debug information on the
     instance, for debugging purposes.
 
-    @type instance: Object
-    @param instance: The instance to be printed
+    :type instance: Object
+    :param instance: The instance to be printed
     for debugging.
     """
 
@@ -213,13 +213,13 @@ def _object_flatten(instances_list, flattening_map):
     This function implements the concrete behavior for the
     flattening of an instance.
 
-    @type instance: Object
-    @param instance: The instance to be flatten.
-    @type flattening_map: Dictionary
-    @param flattening_map: Map describing the structure
+    :type instance: Object
+    :param instance: The instance to be flatten.
+    :type flattening_map: Dictionary
+    :param flattening_map: Map describing the structure
     for flattening.
-    @rtype: List
-    @return: The list of instances in the flatten state.
+    :rtype: List
+    :return: The list of instances in the flatten state.
     """
 
     # iterates over all the "base" instances
@@ -247,14 +247,14 @@ def __object_flatten_to_one(base_instance, instance, flattening_map):
     to "map" the "to-one" relations in the instance
     according to the flattening map.
 
-    @type base_instance: Object
-    @param base_instance: The base (top level) instance to
+    :type base_instance: Object
+    :param base_instance: The base (top level) instance to
     be used to set the top level attributes.
-    @type instance: Object
-    @param instance: The current concrete instance in the
+    :type instance: Object
+    :param instance: The current concrete instance in the
     recursion set.
-    @type flattening_map: Dictionary
-    @param flattening_map: Map describing the structure
+    :type flattening_map: Dictionary
+    :param flattening_map: Map describing the structure
     for flattening.
     """
 
@@ -290,14 +290,14 @@ def __object_flatten_to_one_map(base_map, instance, flattening_map):
     to "map" the "to-one" relations in the instance
     according to the flattening map.
 
-    @type base_map: Dictionary
-    @param base_map: The base (top level) map to
+    :type base_map: Dictionary
+    :param base_map: The base (top level) map to
     be used to set the top level attributes.
-    @type instance: Object
-    @param instance: The current concrete instance in the
+    :type instance: Object
+    :param instance: The current concrete instance in the
     recursion set.
-    @type flattening_map: Dictionary
-    @param flattening_map: Map describing the structure
+    :type flattening_map: Dictionary
+    :param flattening_map: Map describing the structure
     for flattening.
     """
 
@@ -334,14 +334,14 @@ def __object_flatten_to_many(instances_list, flattening_map):
     to "map" the "to-many" relations in the instance
     according to the flattening map.
 
-    @type instances_list: List
-    @param instances_list: The list of instances to have
+    :type instances_list: List
+    :param instances_list: The list of instances to have
     the "to-many" relations mapped.
-    @type flattening_map: Dictionary
-    @param flattening_map: Map describing the structure
+    :type flattening_map: Dictionary
+    :param flattening_map: Map describing the structure
     for flattening.
-    @rtype: List
-    @return: The resulting list after the "to-many" operations
+    :rtype: List
+    :return: The resulting list after the "to-many" operations
     that include cartesian product.
     """
 
@@ -393,8 +393,8 @@ def __object_flush_topper(instances_list):
     Flushes (clears) the temporary "topper"
     map in all the instances in the given list.
 
-    @type instances_list: List
-    @param instances_list: The list of instances to have
+    :type instances_list: List
+    :param instances_list: The list of instances to have
     the "topper" map cleared.
     """
 
@@ -428,8 +428,8 @@ def __object_flush_null(instances_list):
     This method allows every object to become uniform
     with the others.
 
-    @type instances_list: List
-    @param instances_list: The list of instances to have
+    :type instances_list: List
+    :param instances_list: The list of instances to have
     the null values flushed.
     """
 
@@ -469,15 +469,15 @@ def __object_flatten_product(first_list, second_list, flattening_map):
     Both lists are "multiplied" and then using the flattening
     map the second list item is filtered accordingly.
 
-    @type first_list: List
-    @param first_list: The first (base) list for the cartesian
+    :type first_list: List
+    :param first_list: The first (base) list for the cartesian
     product.
-    @type second_list: List
-    @param second_list: The second list for the cartesian product.
-    @type flattening_map: Dictionary
-    @param flattening_map: Map describing the structure
+    :type second_list: List
+    :param second_list: The second list for the cartesian product.
+    :type flattening_map: Dictionary
+    :param flattening_map: Map describing the structure
     for flattening.
-    @see: http://en.wikipedia.org/wiki/Cartesian_product
+    :see: http://en.wikipedia.org/wiki/Cartesian_product
     """
 
     # creates the initial product list
@@ -527,14 +527,14 @@ def __object_has_attr(instance, attribute_name):
     This method provides an additional layer of abstraction
     that allows it to be used in objects or in maps.
 
-    @type instance: Object
-    @param instance: The instance to be checked
+    :type instance: Object
+    :param instance: The instance to be checked
     for attribute.
-    @type attribute_name: String
-    @param attribute_name: The name of the attribute
+    :type attribute_name: String
+    :param attribute_name: The name of the attribute
     to be checked in the instance.
-    @rtype: bool
-    @return: The result of the has attribute testing
+    :rtype: bool
+    :return: The result of the has attribute testing
     in the instance.
     """
 
@@ -563,21 +563,21 @@ def __object_get_attr(instance, attribute_name, default = None, strict = True):
     Note that the strict mode ensures that if the attribute
     is not present an exception is properly raised.
 
-    @type instance: Object
-    @param instance: The instance to retrieve the attribute, this
+    :type instance: Object
+    :param instance: The instance to retrieve the attribute, this
     may be either a dictionary or an object instance.
-    @type attribute_name: String
-    @param attribute_name: The name of the attribute to be retrieved
+    :type attribute_name: String
+    :param attribute_name: The name of the attribute to be retrieved
     from the instance.
-    @type default: Object
-    @param default: The default value to be returned in the value is
+    :type default: Object
+    :param default: The default value to be returned in the value is
     not found, this is only used in case the strict mode is not set.
-    @type strict: bool
-    @param strict: If the strict mode should be used, meaning that
+    :type strict: bool
+    :param strict: If the strict mode should be used, meaning that
     the attributes must be set under the instance otherwise an exception
     will be raised.
-    @rtype: Object
-    @return: The retrieved attribute from the instance.
+    :rtype: Object
+    :return: The retrieved attribute from the instance.
     """
 
     # retrieves the instance type
@@ -605,14 +605,14 @@ def __object_set_attr(instance, attribute_name, attribute):
     This method provides an additional layer of abstraction
     that allows it to be used in objects or in maps.
 
-    @type instance: Object
-    @param instance: The instance to retrieve the
+    :type instance: Object
+    :param instance: The instance to retrieve the
     attribute.
-    @type attribute_name: String
-    @param attribute_name: The name of the attribute
+    :type attribute_name: String
+    :param attribute_name: The name of the attribute
     to be set in the instance.
-    @type attribute: Object
-    @param attribute: The attribute (value) to be set in
+    :type attribute: Object
+    :param attribute: The attribute (value) to be set in
     the instance.
     """
 
@@ -637,14 +637,14 @@ def __object_del_attr(instance, attribute_name):
     This method provides an additional layer of abstraction
     that allows it to be used in objects or in maps.
 
-    @type instance: Object
-    @param instance: The instance to delete the
+    :type instance: Object
+    :param instance: The instance to delete the
     attribute.
-    @type attribute_name: String
-    @param attribute_name: The name of the attribute
+    :type attribute_name: String
+    :param attribute_name: The name of the attribute
     to be deleted.
-    @rtype: Object
-    @return: The retrieved attribute from the instance.
+    :rtype: Object
+    :return: The retrieved attribute from the instance.
     """
 
     # retrieves the instance type
@@ -668,8 +668,8 @@ def __object_keys(instance):
     This method provides an additional layer of abstraction
     that allows it to be used in objects or in maps.
 
-    @type instance: Object
-    @param instance: The instance to retrieve the keys
+    :type instance: Object
+    :param instance: The instance to retrieve the keys
     list (names list).
     """
 
@@ -694,8 +694,8 @@ def __object_items(instance):
     This method provides an additional layer of abstraction
     that allows it to be used in objects or in maps.
 
-    @type instance: Object
-    @param instance: The instance to retrieve the values
+    :type instance: Object
+    :param instance: The instance to retrieve the values
     and keys list (items list).
     """
 

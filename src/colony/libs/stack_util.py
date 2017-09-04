@@ -46,11 +46,11 @@ def get_instance_module_directory(instance):
     Retrieves the directory path from the given
     instance value.
 
-    @type instance: Object
-    @param instance: The instance value to be used to
+    :type instance: Object
+    :param instance: The instance value to be used to
     retrieve the module.
-    @rtype: String
-    @return: The path to the directory that contains
+    :rtype: String
+    :return: The path to the directory that contains
     the module with the given instance.
     """
 
@@ -76,11 +76,11 @@ def get_call_module_directory(depth_level = 1):
     This function is extremely dangerous as it may
     not work in a large range of python implementations.
 
-    @type depth_level: int
-    @param depth_level: The depth level of the call
+    :type depth_level: int
+    :param depth_level: The depth level of the call
     stack to be reached to retrieve the module.
-    @rtype: String
-    @return: The path to the directory that contains
+    :rtype: String
+    :return: The path to the directory that contains
     the module reference in the given level of
     the call stack.
     """

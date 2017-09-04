@@ -51,13 +51,13 @@ def __import__(module_name, persist_value = True):
     This function should be used in cases where the inversion injection
     was made using the data helper.
 
-    @type module_name: String
-    @param module_name: The name of the module to be imported.
-    @type persist_value: bool
-    @param persist_value: If the globals/locals value shall be
+    :type module_name: String
+    :param module_name: The name of the module to be imported.
+    :type persist_value: bool
+    :param persist_value: If the globals/locals value shall be
     persisted in the caller in case it's is not available there.
-    @rtype: module
-    @return: The imported module.
+    :rtype: module
+    :return: The imported module.
     """
 
     # unsets the module reference
@@ -131,12 +131,12 @@ def reload_import(path, hard = True):
     The "soft" operation modes "just" reloads the module in the
     current environment.
 
-    @type path: String
-    @param path: The (package) path to the module to be reloaded.
+    :type path: String
+    :param path: The (package) path to the module to be reloaded.
     This path should be the same as the one referring the module
     in the system modules.
-    @type hard: bool
-    @param hard: If an "hard" reload approach must be taken to provide
+    :type hard: bool
+    :param hard: If an "hard" reload approach must be taken to provide
     the reload process. The hard reload approach removes the path
     from the system modules map.
     """

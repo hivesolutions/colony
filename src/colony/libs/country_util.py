@@ -454,17 +454,17 @@ def country_get(name, relaxed = True):
     An optional relaxed flag allows an automatic conversion of
     the country name to a lower cased version for easy retrieval.
 
-    @type name: String
-    @param name: The name of the country for which the information
+    :type name: String
+    :param name: The name of the country for which the information
     is meant to be retrieved.
-    @type relaxed: bool
-    @param relaxed: If the (country) name retrieval should take a
+    :type relaxed: bool
+    :param relaxed: If the (country) name retrieval should take a
     relaxed approach meaning that it will be first converted into
     a lower cased version to avoid collisions.
-    @rtype: Tuple
-    @return: A tuple containing the iso 3166 information for the
+    :rtype: Tuple
+    :return: A tuple containing the iso 3166 information for the
     request country.
-    @see: http://en.wikipedia.org/wiki/ISO_3166
+    :see: http://en.wikipedia.org/wiki/ISO_3166
     """
 
     if relaxed: name = name.lower()

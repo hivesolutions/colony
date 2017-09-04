@@ -44,12 +44,12 @@ def list_intersect(first_list, second_list):
     Intersects the given lists, returning a list with
     the elements contained in both lists.
 
-    @type first_list: List
-    @param first_list: The first list to be used in intersection.
-    @type second_list: List
-    @param second_list: The second list to be used in intersection.
-    @rtype: List
-    @return: The list containing the elements contained
+    :type first_list: List
+    :param first_list: The first list to be used in intersection.
+    :type second_list: List
+    :param second_list: The second list to be used in intersection.
+    :rtype: List
+    :return: The list containing the elements contained
     in both lists (intersection).
     """
 
@@ -65,17 +65,17 @@ def list_extend(base_list, extension_list, copy_base_list = True):
     The base list may be changed or left untouched based on
     the copy base list flag.
 
-    @type base_list: List
-    @param base_list: The list to be used as base for
+    :type base_list: List
+    :param base_list: The list to be used as base for
     the merge.
-    @type extension_list: List
-    @param extension_list: The list to be used to extend the base
+    :type extension_list: List
+    :param extension_list: The list to be used to extend the base
     one.
-    @type copy_base_list: bool
-    @param copy_base_list: If the base list should be copied before
+    :type copy_base_list: bool
+    :param copy_base_list: If the base list should be copied before
     being extended in order to avoid loss of data.
-    @rtype: List
-    @return: The list that result of the merge of both lists.
+    :rtype: List
+    :return: The list that result of the merge of both lists.
     """
 
     # copies the base list to create the initial result list (optional)
@@ -98,17 +98,17 @@ def list_exclude(base_list, exclusion_list, copy_base_list = True):
     The base list may be changed or left untouched based on
     the copy base list flag.
 
-    @type base_list: List
-    @param base_list: The list to be used as base for
+    :type base_list: List
+    :param base_list: The list to be used as base for
     the exclusion.
-    @type exclusion_list: List
-    @param exclusion_list: The list to be used as model for
+    :type exclusion_list: List
+    :param exclusion_list: The list to be used as model for
     the exclusion of items
-    @type copy_base_list: bool
-    @param copy_base_list: If the base list should be copied before
+    :type copy_base_list: bool
+    :param copy_base_list: If the base list should be copied before
     the exclusion process in order to avoid loss of data.
-    @rtype: List
-    @return: The list that result of the exclusion of the given
+    :rtype: List
+    :return: The list that result of the exclusion of the given
     list from the provided base list.
     """
 
@@ -129,10 +129,10 @@ def list_no_duplicates(list):
     Removes the duplicated values from the given list.
     This method is expensive and should be used carefully.
 
-    @type list: List
-    @param list: The list to heave it's duplicates removed.
-    @rtype: List
-    @return: The list with the duplicates removed.
+    :type list: List
+    :param list: The list to heave it's duplicates removed.
+    :rtype: List
+    :return: The list with the duplicates removed.
     """
 
     # creates the initial result list to hold the results

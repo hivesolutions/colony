@@ -206,8 +206,8 @@ class System(object):
         plugin as the first argument to be stored for
         latter usage.
 
-        @type plugin: Plugin
-        @param plugin: The owner plugin for the system
+        :type plugin: Plugin
+        :param plugin: The owner plugin for the system
         object to be created.
         """
 
@@ -219,8 +219,8 @@ class System(object):
         with the current system, this method call depends
         on the definition of the owner plugin.
 
-        @rtype: PluginManager
-        @return: The plugin manager instance associated with
+        :rtype: PluginManager
+        :return: The plugin manager instance associated with
         the current execution context.
         """
 
@@ -369,8 +369,8 @@ class Plugin(object):
         """
         Constructor of the class.
 
-        @type manager: PluginManager
-        @param manager: The plugin manager of the system.
+        :type manager: PluginManager
+        :param manager: The plugin manager of the system.
         """
 
         self.original_id = self.id
@@ -395,8 +395,8 @@ class Plugin(object):
         """
         Returns the default representation of the class.
 
-        @rtype: String
-        @return: The default representation of the class.
+        :rtype: String
+        :return: The default representation of the class.
         """
 
         return "<%s, %s, %s, %r>" % (
@@ -519,10 +519,10 @@ class Plugin(object):
         """
         Method called at the loading of an allowed plugin.
 
-        @type plugin: Plugin
-        @param plugin: The allowed plugin that is being loaded.
-        @type capability: String
-        @param capability: Capability for which the plugin is being injected.
+        :type plugin: Plugin
+        :param plugin: The allowed plugin that is being loaded.
+        :type capability: String
+        :param capability: Capability for which the plugin is being injected.
         """
 
         # creates the plugin capability tuple that is going to represent
@@ -572,10 +572,10 @@ class Plugin(object):
         """
         Method called at the unloading of an allowed plugin.
 
-        @type plugin: Plugin
-        @param plugin: The allowed plugin that is being unloaded.
-        @type capability: String
-        @param capability: Capability for which the plugin is being injected.
+        :type plugin: Plugin
+        :param plugin: The allowed plugin that is being unloaded.
+        :type capability: String
+        :param capability: Capability for which the plugin is being injected.
         """
 
         # creates the plugin capability tuple
@@ -623,8 +623,8 @@ class Plugin(object):
         Should change the current plugin instance so that it
         is able to recognizes the newly injected plugin instance.
 
-        @type plugin: Plugin
-        @param plugin: The dependency plugin to be injected.
+        :type plugin: Plugin
+        :param plugin: The dependency plugin to be injected.
         """
 
         # adds the dependency that was injected into the list of
@@ -649,8 +649,8 @@ class Plugin(object):
         """
         Registers all the allowed events from a given plugin in self.
 
-        @type plugin: Plugin
-        @param plugin: The plugin containing the events to be registered.
+        :type plugin: Plugin
+        :param plugin: The plugin containing the events to be registered.
         """
 
         event_names_handled = [event_name for event_name in plugin.events_fired if is_event_or_super_event_in_list(event_name, self.events_handled)]
@@ -662,8 +662,8 @@ class Plugin(object):
         """
         Unregisters all the allowed events from a given plugin in self.
 
-        @type plugin: Plugin
-        @param plugin: The plugin containing the events to be unregistered.
+        :type plugin: Plugin
+        :param plugin: The plugin containing the events to be unregistered.
         """
 
         for event_name in self.event_plugins_registered_loaded_map:
@@ -694,10 +694,10 @@ class Plugin(object):
         """
         Registers a given event from a given plugin in self.
 
-        @type plugin: Plugin
-        @param plugin: The plugin containing the event to be registered.
-        @type event_name: String
-        @param event_name: The name of the event to be registered.
+        :type plugin: Plugin
+        :param plugin: The plugin containing the event to be registered.
+        :type event_name: String
+        :param event_name: The name of the event to be registered.
         """
 
         # in case the plugin is not loaded or lazy loaded
@@ -718,10 +718,10 @@ class Plugin(object):
         """
         Unregisters a given event from a given plugin in self.
 
-        @type plugin: Plugin
-        @param plugin: The plugin containing the event to be unregistered.
-        @type event_name: String
-        @param event_name: The name of the event to be unregistered.
+        :type plugin: Plugin
+        :param plugin: The plugin containing the event to be unregistered.
+        :type event_name: String
+        :param event_name: The name of the event to be unregistered.
         """
 
         # in case the plugin is not loaded or lazy loaded
@@ -739,8 +739,8 @@ class Plugin(object):
         """
         Registers a given plugin manager event in self.
 
-        @type event_neme: String
-        @param event_name: The name of the event to be registered.
+        :type event_neme: String
+        :param event_name: The name of the event to be registered.
         """
 
         # retrieves the plugin manager
@@ -756,8 +756,8 @@ class Plugin(object):
         """
         Unregisters a given plugin manager event in self.
 
-        @type event_name: String
-        @param event_name: The name of the event to be unregistered.
+        :type event_name: String
+        :param event_name: The name of the event to be unregistered.
         """
 
         # retrieves the plugin manager
@@ -773,8 +773,8 @@ class Plugin(object):
         """
         Unregisters all the handlers for the event with the given name.
 
-        @type event_name: String
-        @param event_name: The name of the event to be unregistered.
+        :type event_name: String
+        :param event_name: The name of the event to be unregistered.
         """
 
         if event_name in self.event_plugins_registered_loaded_map:
@@ -794,10 +794,10 @@ class Plugin(object):
         """
         Registers a given event in the given plugin.
 
-        @type plugin: Plugin
-        @param plugin: The plugin containing the handler to the event.
-        @type event_name: String
-        @param event_name: The name of the event to be registered.
+        :type plugin: Plugin
+        :param plugin: The plugin containing the handler to the event.
+        :type event_name: String
+        :param event_name: The name of the event to be registered.
         """
 
         if not event_name in self.event_plugins_fired_loaded_map:
@@ -814,10 +814,10 @@ class Plugin(object):
         """
         Unregisters a given event in the given plugin.
 
-        @type plugin: Plugin
-        @param plugin: The plugin containing the handler to the event.
-        @type event_name: String
-        @param event_name: The name of the event to be unregistered.
+        :type plugin: Plugin
+        :param plugin: The plugin containing the handler to the event.
+        :type event_name: String
+        :param event_name: The name of the event to be unregistered.
         """
 
         if not event_name in self.event_plugins_fired_loaded_map: return
@@ -833,10 +833,10 @@ class Plugin(object):
         Notifies all the handlers for the event with the given name
         with the give arguments.
 
-        @type event_name: String
-        @param event_name: The name of the event to be notified.
-        @type event_args: List
-        @param event_args: The arguments to be passed to the handler.
+        :type event_name: String
+        :param event_name: The name of the event to be notified.
+        :type event_args: List
+        :param event_args: The arguments to be passed to the handler.
         """
 
         # the names of the events fired by self
@@ -871,10 +871,10 @@ class Plugin(object):
         """
         Generates an event and starts the process of handler notification.
 
-        @type event_name: String
-        @param event_name: The name of the event to be notified.
-        @type event_args: List
-        @param event_args: The arguments to be passed to the handler.
+        :type event_name: String
+        :param event_name: The name of the event to be notified.
+        :type event_args: List
+        :param event_args: The arguments to be passed to the handler.
         """
 
         if not is_event_or_super_event_in_list(event_name, self.events_fired):
@@ -890,10 +890,10 @@ class Plugin(object):
         """
         The top level event handling method.
 
-        @type event_name: String
-        @param event_name: The name of the event triggered.
-        @type event_args: List
-        @param event_args: The arguments for the handler.
+        :type event_name: String
+        :param event_name: The name of the event triggered.
+        :type event_args: List
+        :param event_args: The arguments for the handler.
         """
 
         # prints a debug message
@@ -954,10 +954,10 @@ class Plugin(object):
         """
         Returns the configuration property for the given property name.
 
-        @type property_name: String
-        @param property_name: The property name to retrieve the property.
-        @rtype: Object
-        @return: The configuration property for the given property name.
+        :type property_name: String
+        :param property_name: The property name to retrieve the property.
+        :rtype: Object
+        :return: The configuration property for the given property name.
         """
 
         return self.configuration_map.get(property_name, None)
@@ -966,10 +966,10 @@ class Plugin(object):
         """
         Sets the configuration property for the given property name.
 
-        @type property_name: String
-        @param property_name: The property name to set the property.
-        @type property: String
-        @param property: The property name to set.
+        :type property_name: String
+        :param property_name: The property name to set the property.
+        :type property: String
+        :param property: The property name to set.
         """
 
         self.info(
@@ -983,8 +983,8 @@ class Plugin(object):
         """
         Unsets the configuration property for the given property name.
 
-        @type property_name: String
-        @param property_name: The property name to unset the property.
+        :type property_name: String
+        :param property_name: The property name to unset the property.
         """
 
         self.info(
@@ -1013,8 +1013,8 @@ class Plugin(object):
         """
         Returns the result of the loading test.
 
-        @rtype: bool
-        @return: The result of the loading test (if the plugin is loaded or not).
+        :rtype: bool
+        :return: The result of the loading test (if the plugin is loaded or not).
         """
 
         return self.loaded and not self.lazy_loaded and not self.error_state
@@ -1023,8 +1023,8 @@ class Plugin(object):
         """
         Returns the result of the lazy loading test.
 
-        @rtype: bool
-        @return: The result of the lazy loading test (if the
+        :rtype: bool
+        :return: The result of the lazy loading test (if the
         plugin is lazy loaded or not).
         """
 
@@ -1034,8 +1034,8 @@ class Plugin(object):
         """
         Returns the result of the loading and lazy loading tests.
 
-        @rtype: bool
-        @return: The result of the loading and lazy loading tests
+        :rtype: bool
+        :return: The result of the loading and lazy loading tests
         (if the plugin is loaded or lazy loaded or not).
         """
 
@@ -1045,8 +1045,8 @@ class Plugin(object):
         """
         Returns the result of the replica test.
 
-        @rtype: bool
-        @return: The result of the replica test (if the plugin
+        :rtype: bool
+        :return: The result of the replica test (if the plugin
         is a replica or not).
         """
 
@@ -1056,10 +1056,10 @@ class Plugin(object):
         """
         Retrieves the attribute for the given attribute name.
 
-        @type attribute_name: String
-        @param attribute_name: The name of the attribute name to retrieve.
-        @rtype: Object
-        @return: The attribute for the given attribute name.
+        :type attribute_name: String
+        :param attribute_name: The name of the attribute name to retrieve.
+        :rtype: Object
+        :return: The attribute for the given attribute name.
         """
 
         return self.attributes.get(attribute_name, None)
@@ -1072,11 +1072,11 @@ class Plugin(object):
         This checking is made recursively and so any sub capability is
         also going to be matched.
 
-        @type capability: String
-        @param capability: The capability to be checked for existence
+        :type capability: String
+        :param capability: The capability to be checked for existence
         in the current plugin.
-        @rtype: bool
-        @return: If the provided capability (name) exists in the current
+        :rtype: bool
+        :return: If the provided capability (name) exists in the current
         plugin context.
         """
 
@@ -1086,8 +1086,8 @@ class Plugin(object):
         """
         Returns the result of the metadata test.
 
-        @rtype: bool
-        @return: The result of the metadata test (if the plugin
+        :rtype: bool
+        :return: The result of the metadata test (if the plugin
         contains metadata or not).
         """
 
@@ -1098,11 +1098,11 @@ class Plugin(object):
         """
         Returns the result of the metadata key test.
 
-        @type metadata_key: String
-        @param metadata_key: The value of the metadata key
+        :type metadata_key: String
+        :param metadata_key: The value of the metadata key
         to test for metadata.
-        @rtype: bool
-        @return: The result of the metadata key test (if the
+        :rtype: bool
+        :return: The result of the metadata key test (if the
         plugin contains the metadata key or not).
         """
 
@@ -1115,8 +1115,8 @@ class Plugin(object):
         """
         Returns the metadata of the plugin.
 
-        @rtype: Dictionary
-        @return: The metadata of the plugin.
+        :rtype: Dictionary
+        :return: The metadata of the plugin.
         """
 
         if self.contains_metadata(): return self.metadata_map
@@ -1125,10 +1125,10 @@ class Plugin(object):
         """
         Returns the metadata key of the plugin.
 
-        @type metadata_key: String
-        @param metadata_key: The value of the metadata key to retrieve.
-        @rtype: Object
-        @return: The metadata key of the plugin.
+        :type metadata_key: String
+        :param metadata_key: The value of the metadata key to retrieve.
+        :rtype: Object
+        :return: The metadata key of the plugin.
         """
 
         if self.contains_metadata_key(metadata_key): return self.metadata_map[metadata_key]
@@ -1137,8 +1137,8 @@ class Plugin(object):
         """
         Treats the exception at the most abstract level.
 
-        @type exception: Exception
-        @param exception: The exception object to be treated.
+        :type exception: Exception
+        :param exception: The exception object to be treated.
         """
 
         # prints and info message
@@ -1189,7 +1189,7 @@ class Plugin(object):
         """
         Retrieves all the plugin dependencies of the plugin.
 
-        @rtype: List
+        :rtype: List
         @requires: A list containing all the plugin dependencies of the plugin.
         """
 
@@ -1205,7 +1205,7 @@ class Plugin(object):
         """
         Retrieves all the packages dependencies of the plugin.
 
-        @rtype: List
+        :rtype: List
         @requires: A list containing all the package dependencies of the plugin.
         """
 
@@ -1221,8 +1221,8 @@ class Plugin(object):
         """
         Retrieves a tuple representing the plugin (id and version).
 
-        @rtype: Tuple
-        @return: Tuple representing the plugin (id and version).
+        :rtype: Tuple
+        :return: Tuple representing the plugin (id and version).
         """
 
         return (
@@ -1237,8 +1237,8 @@ class Plugin(object):
 
         This method excludes the email part of the author.
 
-        @rtype: String
-        @return: The name component of the author attribute for
+        :rtype: String
+        :return: The name component of the author attribute for
         the current plugin.
         """
 
@@ -1253,8 +1253,8 @@ class Plugin(object):
         and should be used for presentation to a non technical
         user (not enough flexibility).
 
-        @rtype: String
-        @return: The string describing the current plugin uptime
+        :rtype: String
+        :return: The string describing the current plugin uptime
         in english language.
         """
 
@@ -1283,8 +1283,8 @@ class Plugin(object):
         The verbosity level may be controlled using
         the level parameter.
 
-        @type level: int
-        @param level: The verbosity level to be used
+        :type level: int
+        :param level: The verbosity level to be used
         in the logging for the printing of the series
         of stack trace messages.
         """
@@ -1313,8 +1313,8 @@ class Plugin(object):
         """
         Adds the given debug message to the logger.
 
-        @type message: String
-        @param message: The debug message to be added to the logger.
+        :type message: String
+        :param message: The debug message to be added to the logger.
         """
 
         # formats the logger message then prints the
@@ -1326,8 +1326,8 @@ class Plugin(object):
         """
         Adds the given info message to the logger.
 
-        @type message: String
-        @param message: The info message to be added to the logger.
+        :type message: String
+        :param message: The info message to be added to the logger.
         """
 
         # formats the logger message then prints the
@@ -1339,8 +1339,8 @@ class Plugin(object):
         """
         Adds the given warning message to the logger.
 
-        @type message: String
-        @param message: The warning message to be added to the logger.
+        :type message: String
+        :param message: The warning message to be added to the logger.
         """
 
         # formats the logger message then prints the
@@ -1353,8 +1353,8 @@ class Plugin(object):
         """
         Adds the given error message to the logger.
 
-        @type message: String
-        @param message: The error message to be added to the logger.
+        :type message: String
+        :param message: The error message to be added to the logger.
         """
 
         # formats the logger message then prints the
@@ -1367,8 +1367,8 @@ class Plugin(object):
         """
         Adds the given critical message to the logger.
 
-        @type message: String
-        @param message: The critical message to be added to the logger.
+        :type message: String
+        :param message: The critical message to be added to the logger.
         """
 
         # formats the logger message then prints the
@@ -1381,10 +1381,10 @@ class Plugin(object):
         """
         Formats the given message into a logging message.
 
-        @type message: String
-        @param message: The message to be formated into logging message.
-        @rtype: String
-        @return: The formated logging message.
+        :type message: String
+        :param message: The message to be formated into logging message.
+        :rtype: String
+        :return: The formated logging message.
         """
 
         # the default formatting message
@@ -1408,8 +1408,8 @@ class Plugin(object):
         Retrieves the names of all the allowed capabilities
         from this plugin.
 
-        @rtype: List
-        @return: The names of all the allowed capabilities
+        :rtype: List
+        :return: The names of all the allowed capabilities
         from this plugin.
         """
 
@@ -1446,8 +1446,8 @@ class PluginManagerPlugin(Plugin):
         """
         Constructor of the class.
 
-        @type manager: PluginManager
-        @param manager: The plugin manager of the system.
+        :type manager: PluginManager
+        :param manager: The plugin manager of the system.
         """
 
         Plugin.__init__(self, manager)
@@ -1720,48 +1720,48 @@ class PluginManager(object):
         """
         Constructor of the class.
 
-        @type manager_path: List
-        @param manager_path: The manager base path for execution.
-        @type logger_path: String
-        @param logger_path: The manager base path for logger.
-        @type library_paths: List
-        @param library_paths: The list of directory paths for the loading
+        :type manager_path: List
+        :param manager_path: The manager base path for execution.
+        :type logger_path: String
+        :param logger_path: The manager base path for logger.
+        :type library_paths: List
+        :param library_paths: The list of directory paths for the loading
         of the external libraries.
-        @type meta_paths: List
-        @param meta_paths: The list of directory paths for the loading
+        :type meta_paths: List
+        :param meta_paths: The list of directory paths for the loading
         of the external metadata information.
-        @type plugin_paths: List
-        @param plugin_paths: The list of directory paths for the loading
+        :type plugin_paths: List
+        :param plugin_paths: The list of directory paths for the loading
         of the plugins.
-        @type platform: int
-        @param platform: The current executing platform.
-        @type init_complete_handlers: List
-        @param init_complete_handlers: The list of handlers to be called at
+        :type platform: int
+        :param platform: The current executing platform.
+        :type init_complete_handlers: List
+        :param init_complete_handlers: The list of handlers to be called at
         the end of the plugin manager initialization.
-        @type stop_on_cycle_error: bool
-        @param stop_on_cycle_error: The boolean value for the stop on cycle error.
-        @type loop: bool
-        @param loop: The boolean value for the main loop activation.
-        @type threads: bool
-        @param threads: The boolean indicating if threads may be used in the
+        :type stop_on_cycle_error: bool
+        :param stop_on_cycle_error: The boolean value for the stop on cycle error.
+        :type loop: bool
+        :param loop: The boolean value for the main loop activation.
+        :type threads: bool
+        :param threads: The boolean indicating if threads may be used in the
         manager for both plugins and control.
-        @type signals: bool
-        @param signals: The boolean indicating if signal handlers should be
+        :type signals: bool
+        :param signals: The boolean indicating if signal handlers should be
         registered for the exiting of the system.
-        @type layout_mode: String
-        @param layout_mode: The layout mode used in the plugin loading.
-        @type run_mode: String
-        @param run_mode: The run mode used in the plugin loading.
-        @type container: String
-        @param container: The name of the plugin manager container.
-        @type prefix_paths: List
-        @param prefix_paths: The list of manager path relative paths to be
+        :type layout_mode: String
+        :param layout_mode: The layout mode used in the plugin loading.
+        :type run_mode: String
+        :param run_mode: The run mode used in the plugin loading.
+        :type container: String
+        :param container: The name of the plugin manager container.
+        :type prefix_paths: List
+        :param prefix_paths: The list of manager path relative paths to be
         set as reference for sub-projects.
-        @type daemon_pid: int
-        @param daemon_pid: The pid of the daemon process running the instance
+        :type daemon_pid: int
+        :param daemon_pid: The pid of the daemon process running the instance
         of plugin manager.
-        @type daemon_file_path: String
-        @param daemon_file_path: The file path to the daemon file, for
+        :type daemon_file_path: String
+        :param daemon_file_path: The file path to the daemon file, for
         information control.
         """
 
@@ -1826,12 +1826,12 @@ class PluginManager(object):
         This is method generates a new (unique) diffusion scope for the
         new plugin instance that is going to be created.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to create an instance.
-        @param plugin_version: plugin_version
-        @param plugin_version: The version of the plugin to create an instance.
-        @rtype: Plugin
-        @return: The created plugin instance (with an unique diffusion scope).
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to create an instance.
+        :param plugin_version: plugin_version
+        :param plugin_version: The version of the plugin to create an instance.
+        :rtype: Plugin
+        :return: The created plugin instance (with an unique diffusion scope).
         """
 
         # generates a new diffusion scope id and uses it to  create a new
@@ -1847,14 +1847,14 @@ class PluginManager(object):
         Creates a new instance of the plugin with the given id
         and version for the given diffusion scope id.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to create an instance.
-        @param plugin_version: plugin_version
-        @param plugin_version: The version of the plugin to create an instance.
-        @param diffusion_scope_id: int
-        @param diffusion_scope_id: The diffusion scope id to be used in the creation.
-        @rtype: Plugin
-        @return: The created plugin instance.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to create an instance.
+        :param plugin_version: plugin_version
+        :param plugin_version: The version of the plugin to create an instance.
+        :param diffusion_scope_id: int
+        :param diffusion_scope_id: The diffusion scope id to be used in the creation.
+        :rtype: Plugin
+        :return: The created plugin instance.
         """
 
         # in case the plugin id does not exist in the plugin classes map
@@ -1929,8 +1929,8 @@ class PluginManager(object):
         """
         Generates the replica id.
 
-        @rtype: int
-        @return: The replica id.
+        :rtype: int
+        :return: The replica id.
         """
 
         # retrieves the replica id
@@ -1946,8 +1946,8 @@ class PluginManager(object):
         """
         Generates the diffusion scope id.
 
-        @rtype: int
-        @return: The diffusion scope id.
+        :rtype: int
+        :return: The diffusion scope id.
         """
 
         # retrieves the diffusion scope id
@@ -1965,8 +1965,8 @@ class PluginManager(object):
         The start of the logger implies the creation of the
         various handlers and the update of their formatters.
 
-        @type log_level: int
-        @param log_level: The log level of the logger.
+        :type log_level: int
+        :param log_level: The log level of the logger.
         """
 
         # retrieves the minimal log level between the current
@@ -2095,21 +2095,21 @@ class PluginManager(object):
         The resulting integer value may be returned to the
         caller process as the result of the execution.
 
-        @type mode: String
-        @param mode: The type of execution mode that is going to
+        :type mode: String
+        :param mode: The type of execution mode that is going to
         be used for this loading, this should be unset for the
         default execution mode. This variable should be used for
         non standard modes (eg: testing).
-        @type args: List
-        @param args: The list of string based arguments coming
+        :type args: List
+        :param args: The list of string based arguments coming
         from a command line system that should condition/control
         the mode based execution.
-        @type callback: Function
-        @param callback: The callback function to be called at the
+        :type callback: Function
+        :param callback: The callback function to be called at the
         end of the current plugin manager's loading process. This
         may be used to execute final operations in it.
-        @rtype: int
-        @return: The return code from the execution, this value
+        :rtype: int
+        :return: The return code from the execution, this value
         should be zero for no problem situation and any other
         value for an error situation.
         """
@@ -2201,8 +2201,8 @@ class PluginManager(object):
         A timer is installed to exit the system in a forced way
         (avoid locking of the process resources).
 
-        @type thread_safe: bool
-        @param thread_safe: If the unloading should use the event mechanism
+        :type thread_safe: bool
+        :param thread_safe: If the unloading should use the event mechanism
         to provide thread safety.
         """
 
@@ -2261,8 +2261,8 @@ class PluginManager(object):
         Reloads the current plugin system, all the memory resources
         are releases and then the process is restarted.
 
-        @type thread_safe: bool
-        @param thread_safe: If the unloading should use the event mechanism
+        :type thread_safe: bool
+        :param thread_safe: If the unloading should use the event mechanism
         to provide thread safety.
         """
 
@@ -2278,8 +2278,8 @@ class PluginManager(object):
         The main loop for the plugin manager, this is the call that
         is considered to be blocking most of the manager's time.
 
-        @type timeout: float
-        @param timeout: The timeout that is going to be used as part
+        :type timeout: float
+        :param timeout: The timeout that is going to be used as part
         of the wait condition for the event queue of the main loop
         the bigger this value the greater time to respond.
         """
@@ -2333,8 +2333,8 @@ class PluginManager(object):
         be used to ensure that the adding of the event is thread
         safe as expected by the specification
 
-        @type event: Event
-        @param event: The event to add to the list of events in
+        :type event: Event
+        :param event: The event to add to the list of events in
         the plugin manager.
         """
 
@@ -2419,13 +2419,13 @@ class PluginManager(object):
         An optional argument may be provided to filter the modules
         to be retrieved to the ones that match the proved suffix.
 
-        @type path: String
-        @param path: The path to retrieve the modules.
-        @type suffix: String
-        @param suffix: The optional suffix argument used to filter
+        :type path: String
+        :param path: The path to retrieve the modules.
+        :type suffix: String
+        :param suffix: The optional suffix argument used to filter
         the modules according to their suffix in the name.
-        @rtype: List
-        @return: All the modules in the given path.
+        :rtype: List
+        :return: All the modules in the given path.
         """
 
         # starts the modules list, that will contain the complete set
@@ -2481,8 +2481,8 @@ class PluginManager(object):
         It should also start the various conditional modes that may
         be activated through proper configuration.
 
-        @type configuration: Dictionary
-        @param configuration: The configuration structure that is going
+        :type configuration: Dictionary
+        :param configuration: The configuration structure that is going
         to be used for the conditional execution of the loading process.
         """
 
@@ -2537,10 +2537,10 @@ class PluginManager(object):
         """
         Updates the python path adding the defined list of library and plugin paths.
 
-        @type library_paths: List
-        @param library_paths: The list of library paths to add to the python path.
-        @type plugin_paths: List
-        @param plugin_paths: The list of plugin paths to add to the python path.
+        :type library_paths: List
+        :param library_paths: The list of library paths to add to the python path.
+        :type plugin_paths: List
+        :param plugin_paths: The list of plugin paths to add to the python path.
         """
 
         # iterates over all the library paths in library paths
@@ -2579,8 +2579,8 @@ class PluginManager(object):
         The provided plugins should be a series of string
         based full module path values.
 
-        @type plugins: List
-        @param plugins: The list of plugins to be loaded
+        :type plugins: List
+        :param plugins: The list of plugins to be loaded
         these should be string based module references.
         """
 
@@ -2653,8 +2653,8 @@ class PluginManager(object):
         This method should also manipulate the created singleton
         by adding some attributes to it.
 
-        @type plugin: Class
-        @param plugin: The plugin to start.
+        :type plugin: Class
+        :param plugin: The plugin to start.
         """
 
         # retrieves the plugin id and description for the plugin
@@ -2720,8 +2720,8 @@ class PluginManager(object):
         """
         Stops a plugin with the given id, removing it and the referring module from the plugin system.
 
-        @type plugin_id: String
-        @param plugin: The id of the plugin to be removed from the plugin system.
+        :type plugin_id: String
+        :param plugin: The id of the plugin to be removed from the plugin system.
         """
 
         # retrieves the referring plugin module
@@ -2734,8 +2734,8 @@ class PluginManager(object):
         """
         Stops the given plugin module in the plugin manager.
 
-        @type module: String
-        @param module: The name of the plugin module to stop.
+        :type module: String
+        :param module: The name of the plugin module to stop.
         """
 
         # retrieves the module object from the loaded modules
@@ -2760,8 +2760,8 @@ class PluginManager(object):
         """
         Stops a plugin, removing it from the plugin system.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be removed from the plugin system.
+        :type plugin: Plugin
+        :param plugin: The plugin to be removed from the plugin system.
         """
 
         # retrieves the plugin id and version and then retrieves
@@ -2830,10 +2830,10 @@ class PluginManager(object):
         Optionally the plugin path may be persisted to the
         plugin paths file.
 
-        @type plugin_path: String
-        @param plugin_path: The plugin path to be added.
-        @type persist: bool
-        @param persist: If the plugin path should be persisted
+        :type plugin_path: String
+        :param plugin_path: The plugin path to be added.
+        :type persist: bool
+        :param persist: If the plugin path should be persisted
         to the plugin paths file.
         """
 
@@ -2849,8 +2849,8 @@ class PluginManager(object):
         Removes the given plugin path from the plugin paths
         registry for manager use.
 
-        @type plugin_path: String
-        @param plugin_path: The plugin path to be removed.
+        :type plugin_path: String
+        :param plugin_path: The plugin path to be removed.
         """
 
         # removes the plugin path from the plugin paths
@@ -2861,8 +2861,8 @@ class PluginManager(object):
         Persists the given plugin path into the plugin
         paths file, for later usage.
 
-        @type plugin_path: String
-        @param plugin_path: The plugin path to be persisted
+        :type plugin_path: String
+        :param plugin_path: The plugin path to be persisted
         in the plugin paths file.
         """
 
@@ -2887,10 +2887,10 @@ class PluginManager(object):
         """
         Retrieves all the available plugin classes, from the defined base plugin class.
 
-        @type base_plugin_class: Class
-        @param base_plugin_class: The base plugin class to retrieve the plugin classes.
-        @rtype: List
-        @return: The list of plugin classes.
+        :type base_plugin_class: Class
+        :param base_plugin_class: The base plugin class to retrieve the plugin classes.
+        :rtype: List
+        :return: The list of plugin classes.
         """
 
         # creates the plugin classes list
@@ -2907,12 +2907,12 @@ class PluginManager(object):
         """
         Retrieves all the sub classes for the given plugin class.
 
-        @type plugin: Class
-        @param plugin: The plugin class to retrieve the sub classes.
-        @type plugin_classes: List
-        @param plugin_classes: The current list of plugin sub classes.
-        @rtype: List
-        @return: The list of all the sub classes for the given plugin class.
+        :type plugin: Class
+        :param plugin: The plugin class to retrieve the sub classes.
+        :type plugin_classes: List
+        :param plugin_classes: The current list of plugin sub classes.
+        :rtype: List
+        :return: The list of all the sub classes for the given plugin class.
         """
 
         # retrieves all the plugin sub classes
@@ -2928,8 +2928,8 @@ class PluginManager(object):
         """
         Registers all the available capabilities for the given plugin.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to register the capabilities.
+        :type plugin: Plugin
+        :param plugin: The plugin to register the capabilities.
         """
 
         # iterates over all the plugin instance capabilities
@@ -2975,8 +2975,8 @@ class PluginManager(object):
         """
         Unregisters all the available capabilities for the given plugin.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to unregister the capabilities.
+        :type plugin: Plugin
+        :param plugin: The plugin to unregister the capabilities.
         """
 
         # iterates over all the plugin instance capabilities
@@ -3128,12 +3128,12 @@ class PluginManager(object):
         An exception will be raised in case the proper run method
         is not defined "inside" the manager.
 
-        @type mode: String
-        @param mode: The (execution) mode that is going to be
+        :type mode: String
+        :param mode: The (execution) mode that is going to be
         used for the performing of the execution, should be
         a valid one and defined in the manager.
-        @type args: List
-        @param args: The arguments (coming from command line)
+        :type args: List
+        :param args: The arguments (coming from command line)
         that may be used to control/customize the execution
         of the target run mode, these values should consist
         of plain strings (to be casted at execution time).
@@ -3160,18 +3160,18 @@ class PluginManager(object):
         The method should return a boolean value indicating if the complete
         set of tests were correctly executed or not.
 
-        @type verbosity: int
-        @param verbosity: The amount of verbosity (larger more verbose)
+        :type verbosity: int
+        :param verbosity: The amount of verbosity (larger more verbose)
         that is going to be used in the test runner.
-        @type raise_e: bool
-        @param raise_e: If an exception should be raised in case the tests
+        :type raise_e: bool
+        :param raise_e: If an exception should be raised in case the tests
         execution process fails (one or more tests failed).
-        @type args: List
-        @param args: Sequence containing a series of string based arguments
+        :type args: List
+        :param args: Sequence containing a series of string based arguments
         coming from the command line, these should be used to condition the
         way the method is going to perform its execution.
-        @rtype: bool
-        @return: If the execution of the unit tests from the proper plugins
+        :rtype: bool
+        :return: If the execution of the unit tests from the proper plugins
         was successful or not, the details of the execution should be read
         from the currently defined standard output stream.
         """
@@ -3251,14 +3251,14 @@ class PluginManager(object):
         The loading of the plugin consists the loading of the plugin itself (_load_plugin)
         and in the registration of the plugin in all the plugins that allow it.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be loaded.
-        @type type: String
-        @param type: The type of plugin to be loaded.
-        @type loading_type: String
-        @param loading_type: The loading type to be used.
-        @rtype: bool
-        @return: The result of the plugin load.
+        :type plugin: Plugin
+        :param plugin: The plugin to be loaded.
+        :type type: String
+        :param type: The type of plugin to be loaded.
+        :type loading_type: String
+        :param loading_type: The loading type to be used.
+        :rtype: bool
+        :return: The result of the plugin load.
         """
 
         # in case the plugin is already loaded, there's no need
@@ -3303,13 +3303,13 @@ class PluginManager(object):
         injection of dependencies, loading  of the plugin resources and
         loading (if necessary) and injection of allowed plugins.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be loaded.
-        @type type: String
-        @param type: The type of plugin to be loaded.
-        @type loading_type: String
-        @param loading_type: The loading type to be used.
-        @rtype: bool
+        :type plugin: Plugin
+        :param plugin: The plugin to be loaded.
+        :type type: String
+        :param type: The type of plugin to be loaded.
+        :type loading_type: String
+        :param loading_type: The loading type to be used.
+        :rtype: bool
         @requires: The result of the plugin load.
         """
 
@@ -3496,13 +3496,13 @@ class PluginManager(object):
         notification of the plugins where the plugins is allowed and in the unloading
         of the plugin resources.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be unloaded.
-        @type type: String
-        @param type: The type of plugin to be unloaded.
-        @type loading_type: String
-        @param unloading_type: The unloading type to be used.
-        @rtype: bool
+        :type plugin: Plugin
+        :param plugin: The plugin to be unloaded.
+        :type type: String
+        :param type: The type of plugin to be unloaded.
+        :type loading_type: String
+        :param unloading_type: The unloading type to be used.
+        :rtype: bool
         @requires: The result of the plugin unload.
         """
 
@@ -3652,10 +3652,10 @@ class PluginManager(object):
         """
         Tests the given plugin, to check if the loading is possible.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be checked.
-        @rtype: bool
-        @return: The result of the plugin loading check.
+        :type plugin: Plugin
+        :param plugin: The plugin to be checked.
+        :rtype: bool
+        :return: The result of the plugin loading check.
         """
 
         # in case the plugin does not pass the test plugin load execution
@@ -3721,10 +3721,10 @@ class PluginManager(object):
         This test should not trigger the loading of the dependency
         plugin but only test if it's possible to load it.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be tested for dependencies.
-        @rtype: bool
-        @return: The result of the plugin dependencies available check.
+        :type plugin: Plugin
+        :param plugin: The plugin to be tested for dependencies.
+        :rtype: bool
+        :return: The result of the plugin dependencies available check.
         """
 
         # retrieves the plugin dependencies, that are going to be used
@@ -3757,10 +3757,10 @@ class PluginManager(object):
         meaning that the current platform should be part of the registered
         list of available/compatible platforms for the plugin.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be tested for platform compatibility.
-        @rtype: bool
-        @return: The result of the plugin platform compatibility check.
+        :type plugin: Plugin
+        :param plugin: The plugin to be tested for platform compatibility.
+        :rtype: bool
+        :return: The result of the plugin platform compatibility check.
         """
 
         # retrieves the plugin platforms list and then uses it
@@ -3777,10 +3777,10 @@ class PluginManager(object):
         This test is only executed if the current manager does not allows
         threads creation and execution.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be tested for threads compatibility.
-        @rtype: bool
-        @return: The result of the plugin thread permissions check.
+        :type plugin: Plugin
+        :param plugin: The plugin to be tested for threads compatibility.
+        :rtype: bool
+        :return: The result of the plugin thread permissions check.
         """
 
         # in case the current environment does allows threads there's
@@ -3813,11 +3813,11 @@ class PluginManager(object):
         This test may be used to prevent the loading of the plugin
         under the current manager context.
 
-        @type plugin: Plugin
-        @param plugin: The plugin that is going to be tested for
+        :type plugin: Plugin
+        :param plugin: The plugin that is going to be tested for
         presence in the "blacklist".
-        @rtype: bool
-        @return: The result of the existence presence test of the
+        :rtype: bool
+        :return: The result of the existence presence test of the
         plugin in the currently loaded "blacklist".
         """
 
@@ -3831,10 +3831,10 @@ class PluginManager(object):
         structures representing the association between capabilities and plugin
         instances.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to have the capabilities resolved.
-        @rtype: bool
-        @return: The result of the resolution.
+        :type plugin: Plugin
+        :param plugin: The plugin to have the capabilities resolved.
+        :rtype: bool
+        :return: The result of the resolution.
         """
 
         # adds itself to the map of plugins that have a given capability
@@ -3848,10 +3848,10 @@ class PluginManager(object):
         """
         Injects the dependencies into the given plugin.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to haven the dependencies injected.
-        @rtype: bool
-        @return: The result of the injection.
+        :type plugin: Plugin
+        :param plugin: The plugin to haven the dependencies injected.
+        :rtype: bool
+        :return: The result of the injection.
         """
 
         # gets all the dependencies of the plugin
@@ -3890,8 +3890,8 @@ class PluginManager(object):
         """
         Injects all the allowed plugins for the given plugin.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to inject the allowed plugins.
+        :type plugin: Plugin
+        :param plugin: The plugin to inject the allowed plugins.
         """
 
         # gets all the capabilities allowed of the plugin
@@ -3929,12 +3929,12 @@ class PluginManager(object):
         Injects the given allowed plugin in the given plugin for the
         given capability.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to have the allowed plugin injected.
-        @type allowed_plugin: Plugin
-        @param allowed_plugin: The plugin to be injected as allowed in the plugin.
-        @type capability: String/Tuple
-        @param capability: The capability for witch the allowed plugin is being injected.
+        :type plugin: Plugin
+        :param plugin: The plugin to have the allowed plugin injected.
+        :type allowed_plugin: Plugin
+        :param allowed_plugin: The plugin to be injected as allowed in the plugin.
+        :type capability: String/Tuple
+        :param capability: The capability for witch the allowed plugin is being injected.
         """
 
         # in case both the plugin and the allowed plugins are valid and
@@ -3985,8 +3985,8 @@ class PluginManager(object):
         """
         Injects the plugin in all the plugins that allow one of it's capabilities.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to inject in the plugins that allow one of it's capabilities.
+        :type plugin: Plugin
+        :param plugin: The plugin to inject in the plugins that allow one of it's capabilities.
         """
 
         # gets all the capabilities of the plugin
@@ -4004,12 +4004,12 @@ class PluginManager(object):
         """
         Sets the given plugin instance in the diffusion scope loaded plugins map.
 
-        @type diffusion_scope_id: int
-        @param diffusion_scope_id: The diffusion scope id to be used.
-        @type plugin_id: String
-        @param plugin_id: The plugin id to be used.
-        @type plugin_instance: Plugin
-        @param plugin_instance: The plugin instance to be set.
+        :type diffusion_scope_id: int
+        :param diffusion_scope_id: The diffusion scope id to be used.
+        :type plugin_id: String
+        :param plugin_id: The plugin id to be used.
+        :type plugin_instance: Plugin
+        :param plugin_instance: The plugin instance to be set.
         """
 
         # in case the diffusion scope id does not exist in the diffusion scope loaded plugins map
@@ -4026,10 +4026,10 @@ class PluginManager(object):
         """
         Unsets the given plugin instance in the diffusion scope loaded plugins map.
 
-        @type diffusion_scope_id: int
-        @param diffusion_scope_id: The diffusion scope id to be used.
-        @type plugin_id: String
-        @param plugin_id: The plugin id to be used.
+        :type diffusion_scope_id: int
+        :param diffusion_scope_id: The diffusion scope id to be used.
+        :type plugin_id: String
+        :param plugin_id: The plugin id to be used.
         """
 
         # unsets the plugin instance in the diffusion scope loaded plugins map for the diffusion scope id
@@ -4077,10 +4077,10 @@ class PluginManager(object):
         """
         Adds a plugin to the capabilities plugins map.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be added to the capabilities plugins map.
-        @type capability: String
-        @param capability: The capability to be used as key in the
+        :type plugin: Plugin
+        :param plugin: The plugin to be added to the capabilities plugins map.
+        :type capability: String
+        :param capability: The capability to be used as key in the
         capabilities plugins map.
         """
 
@@ -4100,10 +4100,10 @@ class PluginManager(object):
         Retrieves the list of plugins for the given capability, according
         to the capabilities plugins map.
 
-        @type capability: String
-        @param capability: The capability to retrieve the list of plugins.
-        @rtype: List
-        @return: The list of plugins for the given capability.
+        :type capability: String
+        :param capability: The capability to retrieve the list of plugins.
+        :rtype: List
+        :return: The list of plugins for the given capability.
         """
 
         # in case the capability exists in the capabilities plugins map
@@ -4120,8 +4120,8 @@ class PluginManager(object):
         """
         Clears the capabilities plugins map, for the given capability.
 
-        @type capability: String
-        @param capability: The capability to be used to clear the capabilities
+        :type capability: String
+        :param capability: The capability to be used to clear the capabilities
         plugins map.
         """
 
@@ -4131,8 +4131,8 @@ class PluginManager(object):
         """
         Clears the capabilities plugins map, for the given plugin id.
 
-        @type plugin_id: String
-        @param plugin_id: The plugin id to be used to clear the capabilities
+        :type plugin_id: String
+        :param plugin_id: The plugin id to be used to clear the capabilities
         plugins map.
         """
 
@@ -4149,12 +4149,12 @@ class PluginManager(object):
         """
         Loads a plugin for the given plugin id and type.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to be loaded.
-        @type type: String
-        @param type: The type of plugin to be loaded.
-        @rtype: bool
-        @return: The result of the load.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to be loaded.
+        :type type: String
+        :param type: The type of plugin to be loaded.
+        :rtype: bool
+        :return: The result of the load.
         """
 
         # retrieves the plugin using the id
@@ -4192,12 +4192,12 @@ class PluginManager(object):
         """
         Unloads a plugin for the given plugin id and type.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to be unloaded.
-        @type type: String
-        @param type: The type of plugin to be unloaded.
-        @rtype: bool
-        @return: The result of the unload.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to be unloaded.
+        :type type: String
+        :param type: The type of plugin to be unloaded.
+        :rtype: bool
+        :return: The result of the unload.
         """
 
         # retrieves the plugin using the id
@@ -4223,8 +4223,8 @@ class PluginManager(object):
         """
         Retrieves all the started plugin instances.
 
-        @rtype: List
-        @return: The list with all the started plugin instances.
+        :rtype: List
+        :return: The list with all the started plugin instances.
         """
 
         return self.plugin_instances
@@ -4233,8 +4233,8 @@ class PluginManager(object):
         """
         Retrieves all the loaded plugin instances.
 
-        @rtype: List
-        @return: The list with all the loaded plugin instances.
+        :rtype: List
+        :return: The list with all the loaded plugin instances.
         """
 
         # creates the loaded plugins instances list
@@ -4259,8 +4259,8 @@ class PluginManager(object):
         remains unloaded at the end of the call an exception is
         raised indicating the problem.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be "ensured" to be loaded
+        :type plugin: Plugin
+        :param plugin: The plugin to be "ensured" to be loaded
         in the current system context.
         """
 
@@ -4281,10 +4281,10 @@ class PluginManager(object):
         This method provides a mechanism for verified plugin
         loaded state.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be "assert" for loading.
-        @rtype: Plugin
-        @return: The "asserted" and loaded plugin.
+        :type plugin: Plugin
+        :param plugin: The plugin to be "assert" for loading.
+        :rtype: Plugin
+        :return: The "asserted" and loaded plugin.
         """
 
         # in case the plugin is not loaded (loading is
@@ -4306,12 +4306,12 @@ class PluginManager(object):
         from different threads as this would block the control
         flow to avoid unwanted sync problems.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve.
-        @type plugin_version: String
-        @param plugin_version: The version of the plugin to retrieve.
-        @rtype: Plugin
-        @return: The plugin with the given id and optionally version.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve.
+        :type plugin_version: String
+        :param plugin_version: The version of the plugin to retrieve.
+        :rtype: Plugin
+        :return: The plugin with the given id and optionally version.
         """
 
         # acquires the retrieve lock so that no multiple retrieval
@@ -4339,12 +4339,12 @@ class PluginManager(object):
         The retrieval of the plugin only uses the version is it's
         specified.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve.
-        @type plugin_version: String
-        @param plugin_version: The version of the plugin to retrieve.
-        @rtype: Plugin
-        @return: The plugin with the given id and optionally version.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve.
+        :type plugin_version: String
+        :param plugin_version: The version of the plugin to retrieve.
+        :rtype: Plugin
+        :return: The plugin with the given id and optionally version.
         """
 
         # retrieves the plugin from the plugin instances map for
@@ -4371,10 +4371,10 @@ class PluginManager(object):
         """
         Retrieves an instance of a plugin with the given id.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve.
-        @rtype: Plugin
-        @return: The plugin with the given id.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve.
+        :rtype: Plugin
+        :return: The plugin with the given id.
         """
 
         if plugin_id in self.plugin_instances_map:
@@ -4385,10 +4385,10 @@ class PluginManager(object):
         """
         Retrieves an instance (not verified to be loaded) of a plugin with the given id.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve.
-        @rtype: Plugin
-        @return: The plugin with the given id.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve.
+        :rtype: Plugin
+        :return: The plugin with the given id.
         """
 
         if plugin_id in self.plugin_instances_map:
@@ -4399,12 +4399,12 @@ class PluginManager(object):
         """
         Retrieves an instance of a plugin with the given id and version.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve.
-        @type plugin_version: String
-        @param plugin_version: The version of the plugin to retrieve.
-        @rtype: Plugin
-        @return: The plugin with the given id and version.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve.
+        :type plugin_version: String
+        :param plugin_version: The version of the plugin to retrieve.
+        :rtype: Plugin
+        :return: The plugin with the given id and version.
         """
 
         if plugin_id in self.plugin_instances_map:
@@ -4416,12 +4416,12 @@ class PluginManager(object):
         """
         Retrieves an instance (not verified to be loaded) of a plugin with the given id and version.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve.
-        @type plugin_version: String
-        @param plugin_version: The version of the plugin to retrieve.
-        @rtype: Plugin
-        @return: The plugin with the given id and version.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve.
+        :type plugin_version: String
+        :param plugin_version: The version of the plugin to retrieve.
+        :rtype: Plugin
+        :return: The plugin with the given id and version.
         """
 
         if plugin_id in self.plugin_instances_map:
@@ -4433,10 +4433,10 @@ class PluginManager(object):
         """
         Retrieves all the plugins with the given capability and sub capabilities.
 
-        @type capability: String
-        @param capability: The capability of the plugins to retrieve.
-        @rtype: List
-        @return: The list of plugins for the given capability and sub capabilities.
+        :type capability: String
+        :param capability: The capability of the plugins to retrieve.
+        :rtype: List
+        :return: The list of plugins for the given capability and sub capabilities.
         """
 
         # the results list
@@ -4466,10 +4466,10 @@ class PluginManager(object):
         Retrieves all the plugins (not verified to be loaded) with the
         given capability and sub capabilities (using cache system).
 
-        @type capability: String
-        @param capability: The capability of the plugins to retrieve.
-        @rtype: List
-        @return: The list of plugins for the given capability and
+        :type capability: String
+        :param capability: The capability of the plugins to retrieve.
+        :rtype: List
+        :return: The list of plugins for the given capability and
         sub capabilities.
         """
 
@@ -4502,10 +4502,10 @@ class PluginManager(object):
         Retrieves all the plugins (not verified to be loaded) with
         the given capability and sub capabilities.
 
-        @type capability: String
-        @param capability: The capability of the plugins to retrieve.
-        @rtype: List
-        @return: The list of plugins for the given capability
+        :type capability: String
+        :param capability: The capability of the plugins to retrieve.
+        :rtype: List
+        :return: The list of plugins for the given capability
         and sub capabilities.
         """
 
@@ -4529,10 +4529,10 @@ class PluginManager(object):
         """
         Retrieves all the plugins with the given capability.
 
-        @type capability: String
-        @param capability: The capability of the plugins to retrieve.
-        @rtype: List
-        @return: The list of plugins for the given capability.
+        :type capability: String
+        :param capability: The capability of the plugins to retrieve.
+        :rtype: List
+        :return: The list of plugins for the given capability.
         """
 
         # the results list
@@ -4546,10 +4546,10 @@ class PluginManager(object):
         """
         Retrieves all the plugins with the given allowed capability and sub capabilities.
 
-        @type capability_allowed: String
-        @param capability_allowed: The capability allowed of the plugins to retrieve.
-        @rtype: List
-        @return: The list of plugins for the given capability allowed.
+        :type capability_allowed: String
+        :param capability_allowed: The capability allowed of the plugins to retrieve.
+        :rtype: List
+        :return: The list of plugins for the given capability allowed.
         """
 
         # the results list
@@ -4572,11 +4572,11 @@ class PluginManager(object):
         Retrieves all the plugins (not verified to be loaded) with
         the given allowed capability and sub capabilities.
 
-        @type capability_allowed: String
-        @param capability_allowed: The capability allowed of the
+        :type capability_allowed: String
+        :param capability_allowed: The capability allowed of the
         plugins to retrieve.
-        @rtype: List
-        @return: The list of plugins for the given capability
+        :rtype: List
+        :return: The list of plugins for the given capability
         allowed.
         """
 
@@ -4635,10 +4635,10 @@ class PluginManager(object):
         """
         Retrieves all the plugins with a dependency with the given plugin id.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin dependency.
-        @rtype: List
-        @return: The list of plugins with a dependency with the given plugin id.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin dependency.
+        :rtype: List
+        :return: The list of plugins with a dependency with the given plugin id.
         """
 
         result = self._get_plugins_by_dependency(plugin_id)
@@ -4650,10 +4650,10 @@ class PluginManager(object):
         Retrieves all the plugins (not verified to be loaded) with a dependency
         with the given plugin id.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin dependency.
-        @rtype: List
-        @return: The list of plugins with a dependency with the given plugin id.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin dependency.
+        :rtype: List
+        :return: The list of plugins with a dependency with the given plugin id.
         """
 
         # the results list that will hold the complete set of plugins
@@ -4687,10 +4687,10 @@ class PluginManager(object):
         """
         Retrieves all the plugins that allow the given capability.
 
-        @type capability: String
-        @param capability: The capability to be tested.
-        @rtype: List
-        @return: The list of plugins that allow the given capability.
+        :type capability: String
+        :param capability: The capability to be tested.
+        :rtype: List
+        :return: The list of plugins that allow the given capability.
         """
 
         # the results list
@@ -4712,10 +4712,10 @@ class PluginManager(object):
         """
         Retrieves all the plugins (not verified to be loaded) that allow the given capability.
 
-        @type capability: String
-        @param capability: The capability to be tested.
-        @rtype: List
-        @return: The list of plugins that allow the given capability.
+        :type capability: String
+        :param capability: The capability to be tested.
+        :rtype: List
+        :return: The list of plugins that allow the given capability.
         """
 
         # the results list
@@ -4739,17 +4739,17 @@ class PluginManager(object):
         in the file path for the "real" values, and returning the best
         file path of the possible file paths.
 
-        @type file_path: String
-        @param file_path: The base file path to be used as substitution
+        :type file_path: String
+        :param file_path: The base file path to be used as substitution
         base.
-        @type not_found_valid: bool
-        @param not_found_valid: If a file path should be returned even if
+        :type not_found_valid: bool
+        :param not_found_valid: If a file path should be returned even if
         the path is not found.
-        @type create_path: bool
-        @param create_path: If the file path should be created in case it
+        :type create_path: bool
+        :param create_path: If the file path should be created in case it
         does not exists.
-        @rtype: String
-        @return: The best file path of the possible file paths.
+        :rtype: String
+        :return: The best file path of the possible file paths.
         """
 
         # retrieves the string values list from the file path
@@ -4795,11 +4795,11 @@ class PluginManager(object):
         in the file path for the "real" values, and returning the list
         of possible string values, ordered by priority.
 
-        @type string_value: String
-        @param string_value: The base string value to be used as substitution
+        :type string_value: String
+        :param string_value: The base string value to be used as substitution
         base.
-        @rtype: List
-        @return: The list of possible string values, ordered by priority.
+        :rtype: List
+        :return: The list of possible string values, ordered by priority.
         """
 
         # in case the string value is invalid
@@ -4937,10 +4937,10 @@ class PluginManager(object):
         """
         Retrieves the plugin execution path for the given plugin id.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve the execution path.
-        @rtype: String
-        @return: The plugin execution path for the plugin with the given id.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve the execution path.
+        :rtype: String
+        :return: The plugin execution path for the plugin with the given id.
         """
 
         # in case the plugin id exists in the
@@ -4955,13 +4955,13 @@ class PluginManager(object):
         Retrieves the temporary plugin path for the given plugin id.
         The path may refer a directory that is not created.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve the temporary
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve the temporary
         plugin path.
-        @type extra_path: String
-        @param extra_path: The extra path to be appended.
-        @rtype: String
-        @return: The temporary plugin path for the given plugin id.
+        :type extra_path: String
+        :param extra_path: The extra path to be appended.
+        :rtype: String
+        :return: The temporary plugin path for the given plugin id.
         """
 
         # retrieves the current temporary directory
@@ -4982,11 +4982,11 @@ class PluginManager(object):
         The path may refer a directory that is not created.
         The generated path is affected by a random value and should be unique.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve the temporary
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve the temporary
         plugin generated path.
-        @rtype: String
-        @return: The temporary plugin generated path for the given plugin id.
+        :rtype: String
+        :return: The temporary plugin generated path for the given plugin id.
         """
 
         # retrieves the temporary plugin path
@@ -5013,13 +5013,13 @@ class PluginManager(object):
         The extra paths flag controls if all the "global" configuration paths
         shall be returned.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve the configuration paths.
-        @type extra_paths: bool
-        @param extra_paths: If the complete set of "global" paths should be retrieved
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve the configuration paths.
+        :type extra_paths: bool
+        :param extra_paths: If the complete set of "global" paths should be retrieved
         or if only the first one shall be retrieved.
-        @rtype: List
-        @return: The plugin configuration paths for the plugin with the given id.
+        :rtype: List
+        :return: The plugin configuration paths for the plugin with the given id.
         """
 
         # retrieves the current configuration path
@@ -5063,14 +5063,14 @@ class PluginManager(object):
         Retrieves the plugin configuration file for the given plugin id
         and configuration file path.
 
-        @type plugin_id: String
-        @param plugin_id: The plugin id to be used in the configuration
+        :type plugin_id: String
+        :param plugin_id: The plugin id to be used in the configuration
         file retrieval.
-        @type configuration_file_path: String
-        @param configuration_file_path: The path of the configuration file (relative to
+        :type configuration_file_path: String
+        :param configuration_file_path: The path of the configuration file (relative to
         the base of the plugin configuration path).
-        @rtype: File
-        @return: The configuration file retrieved.
+        :rtype: File
+        :return: The configuration file retrieved.
         """
 
         # retrieves the configuration paths for the plugin
@@ -5098,10 +5098,10 @@ class PluginManager(object):
         """
         Retrieves the plugin module name for the given plugin id.
 
-        @type plugin_id: String
-        @param plugin_id: The id of the plugin to retrieve the plugin module name.
-        @rtype: String
-        @return: The plugin module name for the given plugin id.
+        :type plugin_id: String
+        :param plugin_id: The id of the plugin to retrieve the plugin module name.
+        :rtype: String
+        :return: The plugin module name for the given plugin id.
         """
 
         # retrieves the plugin (by id)
@@ -5116,10 +5116,10 @@ class PluginManager(object):
         """
         Retrieves an instance of a plugin for the given plugin module name.
 
-        @type module: String
-        @param module: The plugin module name to retrieve.
-        @rtype: Plugin
-        @return: The plugin for the given plugin module name.
+        :type module: String
+        :param module: The plugin module name to retrieve.
+        :rtype: Plugin
+        :return: The plugin for the given plugin module name.
         """
 
         # retrieves all the plugins
@@ -5139,10 +5139,10 @@ class PluginManager(object):
         """
         Retrieves an instance of a loaded plugin for the given plugin module name.
 
-        @type module: String
-        @param module: The loaded plugin module name to retrieve.
-        @rtype: Plugin
-        @return: The loaded plugin for the given plugin module name.
+        :type module: String
+        :param module: The loaded plugin module name to retrieve.
+        :rtype: Plugin
+        :return: The loaded plugin for the given plugin module name.
         """
 
         loaded_plugins = self.get_all_loaded_plugins()
@@ -5157,10 +5157,10 @@ class PluginManager(object):
         """
         Retrieves a the plugin class for the given plugin module name.
 
-        @type module: String
-        @param module: The plugin module name to retrieve.
-        @rtype: Class
-        @return: The plugin class for the given plugin module name.
+        :type module: String
+        :param module: The plugin module name to retrieve.
+        :rtype: Class
+        :return: The plugin class for the given plugin module name.
         """
 
         for plugin in self.loaded_plugins:
@@ -5173,10 +5173,10 @@ class PluginManager(object):
         """
         Registers a given plugin manager event in the given plugin.
 
-        @type plugin: Plugin
-        @param plugin: The plugin containing the handler to the event.
-        @type event_name: String
-        @param event_name: The name of the event to be registered.
+        :type plugin: Plugin
+        :param plugin: The plugin containing the handler to the event.
+        :type event_name: String
+        :param event_name: The name of the event to be registered.
         """
 
         if not event_name in self.event_plugins_fired_loaded_map:
@@ -5192,10 +5192,10 @@ class PluginManager(object):
         """
         Unregisters a given plugin manager event in the given plugin.
 
-        @type plugin: Plugin
-        @param plugin: The plugin containing the handler to the event.
-        @type event_name: String
-        @param event_name: The name of the event to be unregistered.
+        :type plugin: Plugin
+        :param plugin: The plugin containing the handler to the event.
+        :type event_name: String
+        :param event_name: The name of the event to be unregistered.
         """
 
         if event_name in self.event_plugins_fired_loaded_map:
@@ -5209,10 +5209,10 @@ class PluginManager(object):
         """
         Notifies all the handlers for the event with the given name with the give arguments.
 
-        @type event_name: String
-        @param event_name: The name of the event to be notified.
-        @type event_args: List
-        @param event_args: The arguments to be passed to the handler.
+        :type event_name: String
+        :param event_name: The name of the event to be notified.
+        :type event_args: List
+        :param event_args: The arguments to be passed to the handler.
         """
 
         # the names of the events fired by self
@@ -5238,10 +5238,10 @@ class PluginManager(object):
         """
         Generates an event and starts the process of handler notification.
 
-        @type event_name: String
-        @param event_name: The name of the event to be notified.
-        @type event_args: List
-        @param event_args: The arguments to be passed to the handler.
+        :type event_name: String
+        :param event_name: The name of the event to be notified.
+        :type event_args: List
+        :param event_args: The arguments to be passed to the handler.
         """
 
         # prints a debug message about the event that has been generated and
@@ -5254,12 +5254,12 @@ class PluginManager(object):
         Executes a plugin manager call in all the plugin manager plugins with
         the defined execution type capability.
 
-        @type execution_type: String
-        @param execution_type: The type of execution.
-        @type arguments: List
-        @param arguments: The list of arguments for the execution.
-        @rtype: bool
-        @return: The boolean result of the AND operation between the call results.
+        :type execution_type: String
+        :param execution_type: The type of execution.
+        :type arguments: List
+        :param arguments: The list of arguments for the execution.
+        :rtype: bool
+        :return: The boolean result of the AND operation between the call results.
         """
 
         # in case the plugin manager plugins are already loaded
@@ -5288,12 +5288,12 @@ class PluginManager(object):
         Executes a plugin manager call in all the plugin manager plugins with
         the defined execution type capability (the execution is conditional).
 
-        @type execution_type: String
-        @param execution_type: The type of execution.
-        @type arguments: List
-        @param arguments: The list of arguments for the execution.
-        @rtype: bool
-        @return: The boolean result of the AND operation between the call results.
+        :type execution_type: String
+        :param execution_type: The type of execution.
+        :type arguments: List
+        :param arguments: The list of arguments for the execution.
+        :rtype: bool
+        :return: The boolean result of the AND operation between the call results.
         """
 
         # in case the plugin manager plugins are already loaded
@@ -5330,12 +5330,12 @@ class PluginManager(object):
         Tests all the available plugin manager plugins of the type execution_type
         in the search of one that is available for execution.
 
-        @type execution_type: String
-        @param execution_type: The type of execution.
-        @type arguments: List
-        @param arguments: The list of arguments for the execution.
-        @rtype: bool
-        @return: The result of the test (if successful or not).
+        :type execution_type: String
+        :param execution_type: The type of execution.
+        :type arguments: List
+        :param arguments: The list of arguments for the execution.
+        :rtype: bool
+        :return: The result of the test (if successful or not).
         """
 
         # in case the plugin manager plugins are already loaded
@@ -5382,11 +5382,11 @@ class PluginManager(object):
         logging handler is found an invalid value is
         returned instead.
 
-        @type name: String
-        @param name: The name of the log handler to be
+        :type name: String
+        :param name: The name of the log handler to be
         retrieved.
-        @rtype: Handler
-        @return: The logging handler installed in the
+        :rtype: Handler
+        :return: The logging handler installed in the
         manager logger with the provided name or and invalid
         value in case it's not found.
         """
@@ -5399,8 +5399,8 @@ class PluginManager(object):
         The verbosity level may be controlled using
         the level parameter.
 
-        @type level: int
-        @param level: The verbosity level to be used
+        :type level: int
+        :param level: The verbosity level to be used
         in the logging.
         """
 
@@ -5427,8 +5427,8 @@ class PluginManager(object):
         """
         Adds the given debug message to the logger.
 
-        @type message: String
-        @param message: The debug message to be added to the logger.
+        :type message: String
+        :param message: The debug message to be added to the logger.
         """
 
         # in case no logger is defined it's not possible
@@ -5444,8 +5444,8 @@ class PluginManager(object):
         """
         Adds the given info message to the logger.
 
-        @type message: String
-        @param message: The info message to be added to the logger.
+        :type message: String
+        :param message: The info message to be added to the logger.
         """
 
         # in case no logger is defined it's not possible
@@ -5461,8 +5461,8 @@ class PluginManager(object):
         """
         Adds the given warning message to the logger.
 
-        @type message: String
-        @param message: The warning message to be added to the logger.
+        :type message: String
+        :param message: The warning message to be added to the logger.
         """
 
         # in case no logger is defined it's not possible
@@ -5481,8 +5481,8 @@ class PluginManager(object):
         """
         Adds the given error message to the logger.
 
-        @type message: String
-        @param message: The error message to be added to the logger.
+        :type message: String
+        :param message: The error message to be added to the logger.
         """
 
         # in case no logger is defined it's not possible
@@ -5501,8 +5501,8 @@ class PluginManager(object):
         """
         Adds the given critical message to the logger.
 
-        @type message: String
-        @param message: The critical message to be added to the logger.
+        :type message: String
+        :param message: The critical message to be added to the logger.
         """
 
         # formats the logger message
@@ -5518,10 +5518,10 @@ class PluginManager(object):
         """
         Formats the given message into a logging message.
 
-        @type message: String
-        @param message: The message to be formated into logging message.
-        @rtype: String
-        @return: The formated logging message.
+        :type message: String
+        :param message: The message to be formated into logging message.
+        :rtype: String
+        :return: The formated logging message.
         """
 
         # the default formatting message
@@ -5555,8 +5555,8 @@ class PluginManager(object):
         Retrieves the list of manager path relative paths
         to be used as reference for sub-projects.
 
-        @rtype: String
-        @return: The list of manager path relative paths
+        :rtype: String
+        :return: The list of manager path relative paths
         to be used as reference for sub-projects.
         """
 
@@ -5567,11 +5567,11 @@ class PluginManager(object):
         Retrieves the environment variable for the given
         environment variable name.
 
-        @type environment_variable_name: String
-        @param environment_variable_name: The name of the environment
+        :type environment_variable_name: String
+        :param environment_variable_name: The name of the environment
         variable to be retrieved.
-        @rtype: String
-        @return: The retrieved environment variable value.
+        :rtype: String
+        :return: The retrieved environment variable value.
         """
 
         return os.environ.get(environment_variable_name, "")
@@ -5580,8 +5580,8 @@ class PluginManager(object):
         """
         Retrieves the current configuration path.
 
-        @rtype: String
-        @return: The current configuration path.
+        :rtype: String
+        :return: The current configuration path.
         """
 
         return os.path.join(self.manager_path, self.configuration_path)
@@ -5590,8 +5590,8 @@ class PluginManager(object):
         """
         Retrieves the current meta paths.
 
-        @rtype: String
-        @return: The current meta paths.
+        :rtype: String
+        :return: The current meta paths.
         """
 
         return [os.path.join(self.manager_path, meta_path) for meta_path in\
@@ -5601,8 +5601,8 @@ class PluginManager(object):
         """
         Retrieves the workspace path.
 
-        @rtype: String
-        @return: The workspace path.
+        :rtype: String
+        :return: The workspace path.
         """
 
         # retrieves the workspace path
@@ -5613,8 +5613,8 @@ class PluginManager(object):
         Sets the workspace path, updating the workspace
         path after the setting.
 
-        @type workspace_path: String
-        @param workspace_path: The workspace path.
+        :type workspace_path: String
+        :param workspace_path: The workspace path.
         """
 
         # sets the workspace path in the current instance and then
@@ -5628,8 +5628,8 @@ class PluginManager(object):
         The value that will be set depends on the provided value, in
         case the provided value is invalid the current time is set.
 
-        @type timestamp: float
-        @param timestamp: The value to set in the plugin manager
+        :type timestamp: float
+        :param timestamp: The value to set in the plugin manager
         as the timestamp, used for loading time purposes.
         """
 
@@ -5641,8 +5641,8 @@ class PluginManager(object):
         """
         Sets the value for the plugin_manager_plugins_loaded flag.
 
-        @type value: bool
-        @param value: The value to set for the plugin_manager_plugins_loaded flag.
+        :type value: bool
+        :param value: The value to set for the plugin_manager_plugins_loaded flag.
         """
 
         self.plugin_manager_plugins_loaded = value
@@ -5651,8 +5651,8 @@ class PluginManager(object):
         """
         Retrieves the current plugin_manager_plugins_loaded flag value.
 
-        @rtype: bool
-        @return: The current plugin_manager_plugins_loaded flag value.
+        :rtype: bool
+        :return: The current plugin_manager_plugins_loaded flag value.
         """
 
         return self.plugin_manager_plugins_loaded
@@ -5661,8 +5661,8 @@ class PluginManager(object):
         """
         Sets the value for the init_complete flag.
 
-        @type value: bool
-        @param value: The value to set for the init_complete flag.
+        :type value: bool
+        :param value: The value to set for the init_complete flag.
         """
 
         self.init_complete = value
@@ -5671,8 +5671,8 @@ class PluginManager(object):
         """
         Retrieves the current init_complete flag value.
 
-        @rtype: bool
-        @return: The current init_complete flag value.
+        :rtype: bool
+        :return: The current init_complete flag value.
         """
 
         return self.init_complete
@@ -5681,8 +5681,8 @@ class PluginManager(object):
         """
         Retrieves the manager base path for execution.
 
-        @rtype: String
-        @return: The manager base path for execution.
+        :rtype: String
+        :return: The manager base path for execution.
         """
 
         return self.manager_path
@@ -5691,8 +5691,8 @@ class PluginManager(object):
         """
         Retrieves the manager plugin paths for execution.
 
-        @rtype: List
-        @return: The manager plugin paths for execution.
+        :rtype: List
+        :return: The manager plugin paths for execution.
         """
 
         return self.plugin_paths
@@ -5701,8 +5701,8 @@ class PluginManager(object):
         """
         Retrieves the manager main plugin path for execution.
 
-        @rtype: String
-        @return: The manager main plugin path for execution.
+        :rtype: String
+        :return: The manager main plugin path for execution.
         """
 
         # retrieves the manager path
@@ -5733,8 +5733,8 @@ class PluginManager(object):
         """
         Retrieves the manager containers path for execution.
 
-        @rtype: String
-        @return: The manager containers path for execution.
+        :rtype: String
+        :return: The manager containers path for execution.
         """
 
         # retrieves the manager path
@@ -5751,8 +5751,8 @@ class PluginManager(object):
         """
         Retrieves the manager libraries path for execution.
 
-        @rtype: String
-        @return: The manager libraries path for execution.
+        :rtype: String
+        :return: The manager libraries path for execution.
         """
 
         # retrieves the manager path
@@ -5769,8 +5769,8 @@ class PluginManager(object):
         """
         Retrieves the manager temporary path for execution.
 
-        @rtype: String
-        @return: The manager temporary path for execution.
+        :rtype: String
+        :return: The manager temporary path for execution.
         """
 
         # retrieves the manager path
@@ -5787,8 +5787,8 @@ class PluginManager(object):
         """
         Retrieves the manager variable path for execution.
 
-        @rtype: String
-        @return: The manager variable path for execution.
+        :rtype: String
+        :return: The manager variable path for execution.
         """
 
         # retrieves the manager path
@@ -5805,8 +5805,8 @@ class PluginManager(object):
         """
         Retrieves the manager plugin paths file path for execution.
 
-        @rtype: String
-        @return: The manager plugin paths file path for execution.
+        :rtype: String
+        :return: The manager plugin paths file path for execution.
         """
 
         # retrieves the manager path
@@ -5823,8 +5823,8 @@ class PluginManager(object):
         """
         Retrieves the current base (plugin manager) layout mode.
 
-        @rtype: String
-        @return: The current base (plugin manager) layout mode.
+        :rtype: String
+        :return: The current base (plugin manager) layout mode.
         """
 
         return self.layout_mode
@@ -5833,8 +5833,8 @@ class PluginManager(object):
         """
         Retrieves the current base (plugin manager) run mode.
 
-        @rtype: String
-        @return: The current base (plugin manager) run mode.
+        :rtype: String
+        :return: The current base (plugin manager) run mode.
         """
 
         return self.run_mode
@@ -5843,8 +5843,8 @@ class PluginManager(object):
         """
         Retrieves the current base (plugin manager) timestamp.
 
-        @rtype: float
-        @return: The current base (plugin manager) timestamp.
+        :rtype: float
+        :return: The current base (plugin manager) timestamp.
         """
 
         return self.timestamp
@@ -5853,8 +5853,8 @@ class PluginManager(object):
         """
         Retrieves the current base (plugin manager) version.
 
-        @rtype: String
-        @return: The current base (plugin manager) version.
+        :rtype: String
+        :return: The current base (plugin manager) version.
         """
 
         return information.VERSION
@@ -5863,8 +5863,8 @@ class PluginManager(object):
         """
         Retrieves the current base (plugin manager) release.
 
-        @rtype: String
-        @return: The current base (plugin manager) release.
+        :rtype: String
+        :return: The current base (plugin manager) release.
         """
 
         return information.RELEASE
@@ -5873,8 +5873,8 @@ class PluginManager(object):
         """
         Retrieves the current base (plugin manager) build.
 
-        @rtype: String
-        @return: The current base (plugin manager) build.
+        :rtype: String
+        :return: The current base (plugin manager) build.
         """
 
         return information.BUILD
@@ -5883,8 +5883,8 @@ class PluginManager(object):
         """
         Retrieves the current base (plugin manager) release date.
 
-        @rtype: String
-        @return: The current base (plugin manager) release date.
+        :rtype: String
+        :return: The current base (plugin manager) release date.
         """
 
         return information.RELEASE_DATE
@@ -5893,8 +5893,8 @@ class PluginManager(object):
         """
         Retrieves the current base (plugin manager) release date time.
 
-        @rtype: String
-        @return: The current base (plugin manager) release date time.
+        :rtype: String
+        :return: The current base (plugin manager) release date time.
         """
 
         return information.RELEASE_DATE_TIME
@@ -5903,8 +5903,8 @@ class PluginManager(object):
         """
         Retrieves the current base (plugin manager) environment.
 
-        @rtype: String
-        @return: The current base (plugin manager) environment.
+        :rtype: String
+        :return: The current base (plugin manager) environment.
         """
 
         return information.ENVIRONMENT
@@ -5914,8 +5914,8 @@ class PluginManager(object):
         Retrieves a map containing a set of information
         regarding global system settings.
 
-        @rtype: Dictionary
-        @return: A map containing a set of information
+        :rtype: Dictionary
+        :return: A map containing a set of information
         regarding global system settings.
         """
 
@@ -5930,8 +5930,8 @@ class PluginManager(object):
         and should be used for presentation to a non technical
         user (not enough flexibility).
 
-        @rtype: String
-        @return: The string describing the current plugin system's
+        :rtype: String
+        :return: The string describing the current plugin system's
         uptime in english language.
         """
 
@@ -5951,8 +5951,8 @@ class PluginManager(object):
         development, this check may be used to action conditional
         code execution for debugging purposes.
 
-        @rtype: bool
-        @return: Value indicating if the current run mode is of
+        :rtype: bool
+        :return: Value indicating if the current run mode is of
         type development (for debugging purposes).
         """
 
@@ -5964,8 +5964,8 @@ class PluginManager(object):
         production, this check may be used to action conditional
         code execution for strict execution.
 
-        @rtype: bool
-        @return: Value indicating if the current run mode is of
+        :rtype: bool
+        :return: Value indicating if the current run mode is of
         type production (for strict purposes).
         """
 
@@ -5975,10 +5975,10 @@ class PluginManager(object):
         """
         Returns an echo value.
 
-        @type value: String
-        @param value: The value to be echoed.
-        @rtype: String
-        @return: The echo value.
+        :type value: String
+        :param value: The value to be echoed.
+        :rtype: String
+        :return: The echo value.
         """
 
         return value
@@ -5987,10 +5987,10 @@ class PluginManager(object):
         """
         The process command method for the manager path command.
 
-        @type arguments: String
-        @param arguments: The arguments to the process command method.
-        @rtype: Object
-        @return: The result of the command processing.
+        :type arguments: String
+        :param arguments: The arguments to the process command method.
+        :rtype: Object
+        :return: The result of the command processing.
         """
 
         return (
@@ -6001,10 +6001,10 @@ class PluginManager(object):
         """
         The process command method for the plugin path command.
 
-        @type arguments: String
-        @param arguments: The arguments to the process command method.
-        @rtype: Object
-        @return: The result of the command processing.
+        :type arguments: String
+        :param arguments: The arguments to the process command method.
+        :rtype: Object
+        :return: The result of the command processing.
         """
 
         return (
@@ -6015,10 +6015,10 @@ class PluginManager(object):
         """
         The process command method for the configuration command.
 
-        @type arguments: String
-        @param arguments: The arguments to the process command method.
-        @rtype: Object
-        @return: The result of the command processing.
+        :type arguments: String
+        :param arguments: The arguments to the process command method.
+        :rtype: Object
+        :return: The result of the command processing.
         """
 
         return self.get_plugin_configuration_paths_by_id(*arguments)
@@ -6027,10 +6027,10 @@ class PluginManager(object):
         """
         The process command method for the configuration command.
 
-        @type arguments: String
-        @param arguments: The arguments to the process command method.
-        @rtype: Object
-        @return: The result of the command processing.
+        :type arguments: String
+        :param arguments: The arguments to the process command method.
+        :rtype: Object
+        :return: The result of the command processing.
         """
 
         return (
@@ -6041,10 +6041,10 @@ class PluginManager(object):
         """
         The process command method for the prefix command.
 
-        @type arguments: String
-        @param arguments: The arguments to the process command method.
-        @rtype: Object
-        @return: The result of the command processing.
+        :type arguments: String
+        :param arguments: The arguments to the process command method.
+        :rtype: Object
+        :return: The result of the command processing.
         """
 
         return (
@@ -6069,11 +6069,11 @@ class PluginManager(object):
         process should be properly logged into the currently defined
         logging infra-structure for debugging purposes.
 
-        @type signum: int
-        @param signum: The signal number that was raised and that is
+        :type signum: int
+        :param signum: The signal number that was raised and that is
         going to be logged as "responsible" for the unloading.
-        @type frame: Frame
-        @type frame: The frame value of the current system stat that
+        :type frame: Frame
+        :type frame: The frame value of the current system stat that
         may be used for traceability or debug.
         """
 
@@ -6135,8 +6135,8 @@ class PluginManager(object):
         The handling is sever and culminates in the unloading of the
         plugin framework.
 
-        @type exception: BaseException
-        @param exception: The exception to be handled, the kind of exception
+        :type exception: BaseException
+        :param exception: The exception to be handled, the kind of exception
         gathered may be of any type and that should be expected.
         """
 
@@ -6185,10 +6185,10 @@ class PluginManager(object):
         best fitting plugin path, counting with the
         possible relative paths.
 
-        @type plugin_path: String
-        @param plugin_path: The plugin path to be converted
-        @rtype: String
-        @return: The converted plugin path.
+        :type plugin_path: String
+        :param plugin_path: The plugin path to be converted
+        :rtype: String
+        :return: The converted plugin path.
         """
 
         # retrieves the manager path
@@ -6235,10 +6235,10 @@ class Dependency(object):
         """
         Constructor of the class.
 
-        @type mandatory: bool
-        @param mandatory: The mandatory value.
-        @type conditions_list: List
-        @param conditions_list: The list of conditions.
+        :type mandatory: bool
+        :param mandatory: The mandatory value.
+        :type conditions_list: List
+        :param conditions_list: The list of conditions.
         """
 
         self.mandatory = mandatory
@@ -6248,10 +6248,10 @@ class Dependency(object):
         """
         Tests the environment for the plugin manager.
 
-        @type manager: PluginManager
-        @param manager: The current plugin manager in use.
-        @rtype: bool
-        @return: The result of the test (if successful or not).
+        :type manager: PluginManager
+        :param manager: The current plugin manager in use.
+        :rtype: bool
+        :return: The result of the test (if successful or not).
         """
 
         return True
@@ -6262,8 +6262,8 @@ class Dependency(object):
         the conditions fails the return value is invalid otherwise
         the return value is valid.
 
-        @rtype: bool
-        @return: The result of the test (if successful or not).
+        :rtype: bool
+        :return: The result of the test (if successful or not).
         """
 
         # iterates over all the conditions returning
@@ -6279,8 +6279,8 @@ class Dependency(object):
         """
         Retrieves a tuple representing the dependency.
 
-        @rtype: Tuple
-        @return: A tuple representing the dependency.
+        :rtype: Tuple
+        :return: A tuple representing the dependency.
         """
 
         return ()
@@ -6312,16 +6312,16 @@ class PluginDependency(Dependency):
         """
         Constructor of the class.
 
-        @type id: String
-        @param id: The plugin id.
-        @type version: String
-        @param version: The plugin version.
-        @type diffusion_policy: int
-        @param diffusion_policy: The diffusion policy.
-        @type mandatory: bool
-        @param mandatory: The mandatory value.
-        @type conditions_list: List
-        @param conditions_list: The list of conditions.
+        :type id: String
+        :param id: The plugin id.
+        :type version: String
+        :param version: The plugin version.
+        :type diffusion_policy: int
+        :param diffusion_policy: The diffusion policy.
+        :type mandatory: bool
+        :param mandatory: The mandatory value.
+        :type conditions_list: List
+        :param conditions_list: The list of conditions.
         """
 
         Dependency.__init__(self, mandatory, conditions_list)
@@ -6333,8 +6333,8 @@ class PluginDependency(Dependency):
         """
         Returns the default representation of the class.
 
-        @rtype: String
-        @return: The default representation of the class.
+        :rtype: String
+        :return: The default representation of the class.
         """
 
         return "<%s, %s, %s>" % (
@@ -6347,10 +6347,10 @@ class PluginDependency(Dependency):
         """
         Tests the environment for the plugin dependency and the given plugin manager.
 
-        @type manager: PluginManager
-        @param manager: The current plugin manager in use.
-        @rtype: bool
-        @return: The result of the test (if successful or not).
+        :type manager: PluginManager
+        :param manager: The current plugin manager in use.
+        :rtype: bool
+        :return: The result of the test (if successful or not).
         """
 
         Dependency.test_dependency(self, manager)
@@ -6382,8 +6382,8 @@ class PluginDependency(Dependency):
         """
         Retrieves a tuple representing the plugin dependency.
 
-        @rtype: Tuple
-        @return: A tuple representing the plugin dependency.
+        :rtype: Tuple
+        :return: A tuple representing the plugin dependency.
         """
 
         return (
@@ -6397,8 +6397,8 @@ class PluginDependency(Dependency):
         dependency, this value may be used as a portable way to represent
         the current dependency.
 
-        @rtype: Dictionary
-        @return: The map based representation of the current plugin
+        :rtype: Dictionary
+        :return: The map based representation of the current plugin
         dependency to be used in a portable way.
         """
 
@@ -6445,18 +6445,18 @@ class PackageDependency(Dependency):
         """
         Constructor of the class.
 
-        @type name: String
-        @param name: The package name.
-        @type import_name: String
-        @param import_name: The package import name.
-        @type version: String
-        @param version: The package version.
-        @type url: String
-        @param url: The package url.
-        @type mandatory: bool
-        @param mandatory: The mandatory value.
-        @type conditions_list: List
-        @param conditions_list: The list of conditions.
+        :type name: String
+        :param name: The package name.
+        :type import_name: String
+        :param import_name: The package import name.
+        :type version: String
+        :param version: The package version.
+        :type url: String
+        :param url: The package url.
+        :type mandatory: bool
+        :param mandatory: The mandatory value.
+        :type conditions_list: List
+        :param conditions_list: The list of conditions.
         """
 
         Dependency.__init__(self, mandatory, conditions_list)
@@ -6469,8 +6469,8 @@ class PackageDependency(Dependency):
         """
         Returns the default representation of the class.
 
-        @rtype: String
-        @return: The default representation of the class.
+        :rtype: String
+        :return: The default representation of the class.
         """
 
         return "<%s, %s, %s>" % (
@@ -6486,10 +6486,10 @@ class PackageDependency(Dependency):
         packages for the current dependency are going to be tested
         for the proper existence.
 
-        @type manager: PluginManager
-        @param manager: The current plugin manager in use.
-        @rtype: bool
-        @return: The result of the test (if successful or not).
+        :type manager: PluginManager
+        :param manager: The current plugin manager in use.
+        :rtype: bool
+        :return: The result of the test (if successful or not).
         """
 
         Dependency.test_dependency(self, manager)
@@ -6547,8 +6547,8 @@ class PackageDependency(Dependency):
         this value should include both the name and the proper
         version of it.
 
-        @rtype: Tuple
-        @return: A tuple representing the package dependency
+        :rtype: Tuple
+        :return: A tuple representing the package dependency
         with both of its name and version.
         """
 
@@ -6563,8 +6563,8 @@ class PackageDependency(Dependency):
         dependency, this value may be used as a portable way to represent
         the current dependency.
 
-        @rtype: Dictionary
-        @return: The map based representation of the current package
+        :rtype: Dictionary
+        :return: The map based representation of the current package
         dependency to be used in a portable way.
         """
 
@@ -6590,8 +6590,8 @@ class Condition(object):
         """
         Test the condition returning the result of the test.
 
-        @rtype: bool
-        @return: The result of the test (if successful or not).
+        :rtype: bool
+        :return: The result of the test (if successful or not).
         """
 
         return True
@@ -6609,8 +6609,8 @@ class OperativeSystemCondition(Condition):
         """
         Constructor of the class.
 
-        @type operative_system_name: String
-        @param operative_system_name: The operative system name.
+        :type operative_system_name: String
+        :param operative_system_name: The operative system name.
         """
 
         self.operative_system_name = operative_system_name
@@ -6619,8 +6619,8 @@ class OperativeSystemCondition(Condition):
         """
         Test the condition returning the result of the test.
 
-        @rtype: bool
-        @return: The result of the test (if successful or not).
+        :rtype: bool
+        :return: The result of the test (if successful or not).
         """
 
         if not Condition.test_condition(self): return False
@@ -6641,8 +6641,8 @@ class Capability(object):
         """
         Constructor of the class.
 
-        @type string_value: String
-        @param string_value: The capability string value.
+        :type string_value: String
+        :param string_value: The capability string value.
         """
 
         # in case the string value is valid
@@ -6694,8 +6694,8 @@ class Capability(object):
         """
         Retrieves the list of the capability and all super capabilities.
 
-        @rtype: List
-        @return: The list of the capability and all super capabilities.
+        :rtype: List
+        :return: The list of the capability and all super capabilities.
         """
 
         # creates the capability and super capabilities list
@@ -6729,10 +6729,10 @@ class Capability(object):
         """
         Tests if the given capability is sub capability.
 
-        @type capability: Capability
-        @param capability: The capability to be tested.
-        @rtype: bool
-        @return: The result of the is sub capability test.
+        :type capability: Capability
+        :param capability: The capability to be tested.
+        :rtype: bool
+        :return: The result of the is sub capability test.
         """
 
         # retrieves the list value self
@@ -6772,10 +6772,10 @@ class Capability(object):
         """
         Tests if the given capability is a capability or sub capability.
 
-        @type capability: Capability
-        @param capability: The capability to be tested.
-        @rtype: bool
-        @return: The result of the is capability or sub capability test.
+        :type capability: Capability
+        :param capability: The capability to be tested.
+        :rtype: bool
+        :return: The result of the is capability or sub capability test.
         """
 
         # in case the capability is equal or sub capability
@@ -6799,8 +6799,8 @@ class Event(object):
         """
         Constructor of the class.
 
-        @type string_value: String
-        @param string_value: The event string value.
+        :type string_value: String
+        :param string_value: The event string value.
         """
 
         # in case the string value is valid
@@ -6851,10 +6851,10 @@ class Event(object):
         """
         Tests if the given event is sub event.
 
-        @type event: Event
-        @param event: The event to be tested.
-        @rtype: bool
-        @return: The result of the is sub event test.
+        :type event: Event
+        :param event: The event to be tested.
+        :rtype: bool
+        :return: The result of the is sub event test.
         """
 
         # retrieves the list value self
@@ -6893,10 +6893,10 @@ class Event(object):
         """
         Tests if the given event is a event or sub event.
 
-        @type event: Event
-        @param event: The event to be tested.
-        @rtype: bool
-        @return: The result of the is event or sub event test.
+        :type event: Event
+        :param event: The event to be tested.
+        :rtype: bool
+        :return: The result of the is event or sub event test.
         """
 
         # in case the capability is equal or sub capability
@@ -6912,11 +6912,11 @@ def capability_and_super_capabilites(capability):
     """
     Retrieves the list of the capability and all super capabilities.
 
-    @type capability: String
-    @param capability: The capability to retrieve the the list of the
+    :type capability: String
+    :param capability: The capability to retrieve the the list of the
     capability and all super capabilities.
-    @rtype: List
-    @return: The list of the capability and all super capabilities.
+    :rtype: List
+    :return: The list of the capability and all super capabilities.
     """
 
     # creates the capability structure from the capability string
@@ -6930,12 +6930,12 @@ def is_capability_or_sub_capability(base_capability, capability):
     Tests if the given capability is capability or sub capability
     of the given base capability.
 
-    @type base_capability: String
-    @param base_capability: The base capability to be used for test.
-    @type capability: String
-    @param capability: The capability to be tested.
-    @rtype: bool
-    @return: The result of the test.
+    :type base_capability: String
+    :param base_capability: The base capability to be used for test.
+    :type capability: String
+    :param capability: The capability to be tested.
+    :rtype: bool
+    :return: The result of the test.
     """
 
     # creates the base capability structure from
@@ -6953,12 +6953,12 @@ def is_capability_or_sub_capability_in_list(base_capability, capability_list):
     Tests if any of the capabilities in the capability list is capability or
     sub capability of the given base capability.
 
-    @type base_capability: String
-    @param base_capability: The base capability to be used for test.
-    @type capability_list: List
-    @param capability_list: The list of capabilities to be tested.
-    @rtype: bool
-    @return: The result of the test.
+    :type base_capability: String
+    :param base_capability: The base capability to be used for test.
+    :type capability_list: List
+    :param capability_list: The list of capabilities to be tested.
+    :rtype: bool
+    :return: The result of the test.
     """
 
     for capability in capability_list:
@@ -6973,10 +6973,10 @@ def convert_to_capability_list(capability_list):
     Converts the given capability list (list of strings),
     into a list of capability objects (structures).
 
-    @type capability_list: List
-    @param capability_list: The list of capability strings.
-    @rtype: List
-    @return: The list of converted capability objects (structures).
+    :type capability_list: List
+    :param capability_list: The list of capability strings.
+    :rtype: List
+    :return: The list of converted capability objects (structures).
     """
 
     # creates the list of capability structures
@@ -7011,12 +7011,12 @@ def is_event_or_sub_event(base_event, event):
     Tests if the given event is event or sub event
     of the given base event.
 
-    @type base_event: String
-    @param base_event: The base event to be used for test.
-    @type event: String
-    @param event: The event to be tested.
-    @rtype: bool
-    @return: The result of the test.
+    :type base_event: String
+    :param base_event: The base event to be used for test.
+    :type event: String
+    :param event: The event to be tested.
+    :rtype: bool
+    :return: The result of the test.
     """
 
     # creates the base event structure from
@@ -7034,12 +7034,12 @@ def is_event_or_super_event(base_event, event):
     Tests if the given event is event or super event
     of the given base event.
 
-    @type base_event: String
-    @param base_event: The base event to be used for test.
-    @type event: String
-    @param event: The event to be tested.
-    @rtype: bool
-    @return: The result of the test.
+    :type base_event: String
+    :param base_event: The base event to be used for test.
+    :type event: String
+    :param event: The event to be tested.
+    :rtype: bool
+    :return: The result of the test.
     """
 
     # returns the result of the is event or sub event test
@@ -7051,12 +7051,12 @@ def is_event_or_sub_event_in_list(base_event, event_list):
     Tests if any of the event in the event list is event or
     sub event of the given base event.
 
-    @type base_event: String
-    @param base_event: The base event to be used for test.
-    @type event_list: List
-    @param event_list: The list of events to be tested.
-    @rtype: bool
-    @return: The result of the test.
+    :type base_event: String
+    :param base_event: The base event to be used for test.
+    :type event_list: List
+    :param event_list: The list of events to be tested.
+    :rtype: bool
+    :return: The result of the test.
     """
 
     for event in event_list:
@@ -7071,12 +7071,12 @@ def is_event_or_super_event_in_list(base_event, event_list):
     Tests if any of the event in the event list is event or
     super event of the given base event.
 
-    @type base_event: String
-    @param base_event: The base event to be used for test.
-    @type event_list: List
-    @param event_list: The list of events to be tested.
-    @rtype: bool
-    @return: The result of the test.
+    :type base_event: String
+    :param base_event: The base event to be used for test.
+    :type event_list: List
+    :param event_list: The list of events to be tested.
+    :rtype: bool
+    :return: The result of the test.
     """
 
     for event in event_list:
@@ -7092,12 +7092,12 @@ def get_all_events_or_super_events_in_list(base_event, event_list):
     Filters the event list, retrieving only the event that are events or
     super events of the base event.
 
-    @type base_event: String
-    @param base_event: The base event to be used for filtering.
-    @type event_list: List
-    @param event_list: The list of events to be filtered.
-    @rtype: List
-    @return: The filtered list of events.
+    :type base_event: String
+    :param base_event: The base event to be used for filtering.
+    :type event_list: List
+    :param event_list: The list of events to be filtered.
+    :rtype: List
+    :return: The filtered list of events.
     """
 
     # creates the events or super events list
@@ -7119,10 +7119,10 @@ def convert_to_event_list(event_list):
     Converts the given event list (list of strings),
     into a list of event objects (structures).
 
-    @type event_list: List
-    @param event_list: The list of event strings.
-    @rtype: List
-    @return: The list of converted event objects (structures).
+    :type event_list: List
+    :param event_list: The list of event strings.
+    :rtype: List
+    :return: The list of converted event objects (structures).
     """
 
     # creates the list of event structures
@@ -7189,8 +7189,8 @@ class PluginThread(threading.Thread):
         """
         Constructor of the class.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be used.
+        :type plugin: Plugin
+        :param plugin: The plugin to be used.
         """
 
         threading.Thread.__init__(self)
@@ -7220,8 +7220,8 @@ class PluginThread(threading.Thread):
         thread, this is done using the required synchronization
         mechanisms so that so race conditions are triggered.
 
-        @type event: String
-        @param event: The event to be added to the event queue.
+        :type event: String
+        :param event: The event to be added to the event queue.
         """
 
         self.condition.acquire()
@@ -7233,10 +7233,10 @@ class PluginThread(threading.Thread):
         """
         Processes the given queue event.
 
-        @type event: Event
-        @param event: The event to be processed.
-        @rtype: bool
-        @return: If the upper loop should be terminated.
+        :type event: Event
+        :param event: The event to be processed.
+        :rtype: bool
+        :return: If the upper loop should be terminated.
         """
 
         if event.event_name == "exit":
@@ -7304,10 +7304,10 @@ class PluginEventThread(threading.Thread):
         """
         Constructor of the class.
 
-        @type plugin: Plugin
-        @param plugin: The plugin that contains the method to be executed.
-        @type method: Method
-        @param method: The method for the event thread.
+        :type plugin: Plugin
+        :param plugin: The plugin that contains the method to be executed.
+        :type method: Method
+        :param method: The method for the event thread.
         """
 
         threading.Thread.__init__(self)

@@ -74,10 +74,10 @@ class Scheduler(threading.Thread):
         """
         Constructor of the class.
 
-        @type plugin: Plugin
-        @param plugin: The plugin to be used.
-        @type sleep_step: float
-        @param sleep_step: The amount of time to be used
+        :type plugin: Plugin
+        :param plugin: The plugin to be used.
+        :type sleep_step: float
+        :param sleep_step: The amount of time to be used
         during a sleep iteration.
         """
 
@@ -214,11 +214,11 @@ class Scheduler(threading.Thread):
         The sent callable is called without any arguments
         and the real time for calling may not be assured.
 
-        @type callbable: Callable
-        @param callbable: The callable object to be called
+        :type callbable: Callable
+        :param callbable: The callable object to be called
         upon in time described in the given timestamp.
-        @type timestamp: float
-        @param timestamp: The timestamp describing the
+        :type timestamp: float
+        :param timestamp: The timestamp describing the
         time for calling the callable object.
         """
 
@@ -266,8 +266,8 @@ class Scheduler(threading.Thread):
         Checks if the scheduler is currently in a busy status
         meaning that it's executing some sort of work.
 
-        @rtype: bool
-        @return: If the scheduler is executing any kind of work.
+        :rtype: bool
+        :return: If the scheduler is executing any kind of work.
         """
 
         return self.busy_flag
@@ -277,8 +277,8 @@ class Scheduler(threading.Thread):
         Checks if the scheduler is currently running, the scheduler
         is considered to be running if the continue flag is set.
 
-        @rtype: bool
-        @return: If the scheduler is currently running.
+        :rtype: bool
+        :return: If the scheduler is currently running.
         """
 
         return self.continue_flag

@@ -56,12 +56,12 @@ def xor_string_value(first_string, second_string):
     Runs the xor bitwise operation over all the items
     of both strings, retrieving the result.
 
-    @type first_string: String
-    @param first_string: The first string to the xor operation.
-    @type second_string: String
-    @param second_string: The second string to the xor operation.
-    @rtype: String
-    @return: The "string" result of the xor operation.
+    :type first_string: String
+    :param first_string: The first string to the xor operation.
+    :type second_string: String
+    :param second_string: The second string to the xor operation.
+    :rtype: String
+    :return: The "string" result of the xor operation.
     """
 
     # retrieves the length of the first string
@@ -99,11 +99,11 @@ def to_underscore(string_value):
     the underscore notation.
     This method is useful to treat class string values in python.
 
-    @type string_value: String
-    @param string_value: The camel cased string value to be converted
+    :type string_value: String
+    :param string_value: The camel cased string value to be converted
     into underscore notation.
-    @rtype: String
-    @return: The converted underscore notation string value.
+    :rtype: String
+    :return: The converted underscore notation string value.
     """
 
     # converts the string value into the initial underscore notation
@@ -124,11 +124,11 @@ def to_camelcase(string_value):
     the camel case notation.
     This method is useful to treat class string values in python.
 
-    @type string_value: String
-    @param string_value: The underscore notation string
+    :type string_value: String
+    :param string_value: The underscore notation string
     value to be converted into camel case notation.
-    @rtype: String
-    @return: The converted camel case notation string value.
+    :rtype: String
+    :return: The converted camel case notation string value.
     """
 
     # splits the string value retrieving
@@ -150,10 +150,10 @@ def pluralize(string_value):
     Pluralizes the given string value, using a
     typical heuristic for it.
 
-    @type string_value: String
-    @param string_value: The string to be pluralized.
-    @rtype: String
-    @return: The pluralized string.
+    :type string_value: String
+    :param string_value: The string to be pluralized.
+    :rtype: String
+    :return: The pluralized string.
     """
 
     return "%ss" % string_value
@@ -163,11 +163,11 @@ def capitalize_all(string_value):
     Takes a space separated string value
     and capitalizes all of its words.
 
-    @type string_value: String
-    @param string_value: The space separated string
+    :type string_value: String
+    :param string_value: The space separated string
     to be capitalized.
-    @rtype: String
-    @return: The capitalized string.
+    :rtype: String
+    :return: The capitalized string.
     """
 
     # splits the string value retrieving
@@ -190,15 +190,15 @@ def join(first_value, second_value, join_value = "/"):
     not repeated in the "join point" (no double join).
     The "join point" is guaranteed to be unique.
 
-    @type first_value: String
-    @param first_value: The first string to be joined.
-    @type second_value: String
-    @param second_value: The second string to be joined.
-    @type join_value: String
-    @param join_value: The join value to be verifies and
+    :type first_value: String
+    :param first_value: The first string to be joined.
+    :type second_value: String
+    :param second_value: The second string to be joined.
+    :type join_value: String
+    :param join_value: The join value to be verifies and
     used in the "join point".
-    @rtype: String
-    @return: The joined string ensured to be with a single
+    :rtype: String
+    :return: The joined string ensured to be with a single
     join point (not repeated).
     """
 

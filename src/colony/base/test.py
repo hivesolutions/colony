@@ -58,8 +58,8 @@ class Test(object):
         plugin as the first argument to be stored for
         latter usage.
 
-        @type plugin: Plugin
-        @param plugin: The owner plugin for the test
+        :type plugin: Plugin
+        :param plugin: The owner plugin for the test
         object to be created.
         """
 

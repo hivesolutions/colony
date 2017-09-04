@@ -79,10 +79,10 @@ def getLogger(name):
     """
     Returns the dummy logger for the given name.
 
-    @type name: String
-    @param name: The name of the logger to retrieve.
-    @rtype: DummyLogger
-    @return: The dummy logger for the gtiven name.
+    :type name: String
+    :param name: The name of the logger to retrieve.
+    :rtype: DummyLogger
+    :return: The dummy logger for the gtiven name.
     """
 
     return DummyLogger("dummy")
@@ -91,10 +91,10 @@ def getLevelName(level):
     """
     Returns the textual representation of logging level.
 
-    @type level: int
-    @param level: The logging level to retrieve the textual representation.
-    @rtype: String
-    @return: The textual representation of logging level.
+    :type level: int
+    :param level: The logging level to retrieve the textual representation.
+    :rtype: String
+    :return: The textual representation of logging level.
     """
 
     return _levelNames.get(level, ("Level %s" % level))
@@ -108,10 +108,10 @@ class DummyLogger(object):
         """
         Constructor of the class.
 
-        @type name: String
-        @param name: The name of the logger.
-        @type level: int
-        @param level: The logging level for the new logger.
+        :type name: String
+        :param name: The name of the logger.
+        :type level: int
+        :param level: The logging level for the new logger.
         """
 
         pass
@@ -120,8 +120,8 @@ class DummyLogger(object):
         """
         Sets the level of the logger.
 
-        @type level: int
-        @param level: The level of the logger.
+        :type level: int
+        :param level: The level of the logger.
         """
 
         pass
@@ -130,8 +130,8 @@ class DummyLogger(object):
         """
         Prints a debug message to the logger.
 
-        @type msg: String
-        @param msg: The message to print.
+        :type msg: String
+        :param msg: The message to print.
         """
 
         pass
@@ -140,8 +140,8 @@ class DummyLogger(object):
         """
         Prints an info message to the logger.
 
-        @type msg: String
-        @param msg: The message to print.
+        :type msg: String
+        :param msg: The message to print.
         """
 
         pass
@@ -150,8 +150,8 @@ class DummyLogger(object):
         """
         Prints a warning message to the logger.
 
-        @type msg: String
-        @param msg: The message to print.
+        :type msg: String
+        :param msg: The message to print.
         """
 
         pass
@@ -160,8 +160,8 @@ class DummyLogger(object):
         """
         Prints an error message to the logger.
 
-        @type msg: String
-        @param msg: The message to print.
+        :type msg: String
+        :param msg: The message to print.
         """
 
         pass
@@ -170,8 +170,8 @@ class DummyLogger(object):
         """
         Prints an exception message to the logger.
 
-        @type msg: String
-        @param msg: The message to print.
+        :type msg: String
+        :param msg: The message to print.
         """
 
         pass
@@ -180,8 +180,8 @@ class DummyLogger(object):
         """
         Prints a critical message to the logger.
 
-        @type msg: String
-        @param msg: The message to print.
+        :type msg: String
+        :param msg: The message to print.
         """
 
         pass
@@ -190,8 +190,8 @@ class DummyLogger(object):
         """
         Adds an handler to the logger.
 
-        @type hdlr: Handler
-        @param hdlr: The handler to add to the logger.
+        :type hdlr: Handler
+        :param hdlr: The handler to add to the logger.
         """
 
         pass
@@ -200,8 +200,8 @@ class DummyLogger(object):
         """
         Removes an handler from the logger.
 
-        @type hdlr: Handler
-        @param hdlr: The handler to remove from the logger.
+        :type hdlr: Handler
+        :param hdlr: The handler to remove from the logger.
         """
 
         pass
@@ -227,8 +227,8 @@ class Formatter(object):
         """
         Constructor of the class.
 
-        @type format: String
-        @param format: The formatter format.
+        :type format: String
+        :param format: The formatter format.
         """
 
         pass

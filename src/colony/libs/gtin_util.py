@@ -44,10 +44,10 @@ def calculate_control_value(number):
     Calculates the control value for the given
     number.
 
-    @type number: int
-    @param number: The number to calculate the control value.
-    @rtype: int
-    @return: The control value for the given
+    :type number: int
+    :param number: The number to calculate the control value.
+    :rtype: int
+    :return: The control value for the given
     number.
     """
 

@@ -48,8 +48,8 @@ class ColonyException(Exception):
         """
         Returns the unicode representation of the class.
 
-        @rtype: String
-        @return: The unicode representation of the class.
+        :rtype: String
+        :return: The unicode representation of the class.
         """
 
         return self.__str__()
@@ -66,8 +66,8 @@ class PluginSystemException(ColonyException):
         """
         Constructor of the class.
 
-        @type message: String
-        @param message: The message to be printed.
+        :type message: String
+        :param message: The message to be printed.
         """
 
         ColonyException.__init__(self)
@@ -77,8 +77,8 @@ class PluginSystemException(ColonyException):
         """
         Returns the string representation of the class.
 
-        @rtype: String
-        @return: The string representation of the class.
+        :rtype: String
+        :return: The string representation of the class.
         """
 
         return "Plugin system exception - %s" % self.message
@@ -92,8 +92,8 @@ class PluginClassNotAvailable(PluginSystemException):
         """
         Constructor of the class.
 
-        @type message: String
-        @param message: The message to be printed.
+        :type message: String
+        :param message: The message to be printed.
         """
 
         PluginSystemException.__init__(self, message)
@@ -103,8 +103,8 @@ class PluginClassNotAvailable(PluginSystemException):
         """
         Returns the string representation of the class.
 
-        @rtype: String
-        @return: The string representation of the class.
+        :rtype: String
+        :return: The string representation of the class.
         """
 
         return "Plugin class not available - %s" % self.message
@@ -118,8 +118,8 @@ class InvalidCommand(PluginSystemException):
         """
         Constructor of the class.
 
-        @type message: String
-        @param message: The message to be printed.
+        :type message: String
+        :param message: The message to be printed.
         """
 
         PluginSystemException.__init__(self, message)
@@ -129,8 +129,8 @@ class InvalidCommand(PluginSystemException):
         """
         Returns the string representation of the class.
 
-        @rtype: String
-        @return: The string representation of the class.
+        :rtype: String
+        :return: The string representation of the class.
         """
 
         return "Invalid command - %s" % self.message
@@ -144,8 +144,8 @@ class InvalidArgument(PluginSystemException):
         """
         Constructor of the class.
 
-        @type message: String
-        @param message: The message to be printed.
+        :type message: String
+        :param message: The message to be printed.
         """
 
         PluginSystemException.__init__(self, message)
@@ -155,8 +155,8 @@ class InvalidArgument(PluginSystemException):
         """
         Returns the string representation of the class.
 
-        @rtype: String
-        @return: The string representation of the class.
+        :rtype: String
+        :return: The string representation of the class.
         """
 
         return "Invalid argument - %s" % self.message
@@ -170,8 +170,8 @@ class OperationNotComplete(PluginSystemException):
         """
         Constructor of the class.
 
-        @type message: String
-        @param message: The message to be printed.
+        :type message: String
+        :param message: The message to be printed.
         """
 
         PluginSystemException.__init__(self, message)
@@ -181,8 +181,8 @@ class OperationNotComplete(PluginSystemException):
         """
         Returns the string representation of the class.
 
-        @rtype: String
-        @return: The string representation of the class.
+        :rtype: String
+        :return: The string representation of the class.
         """
 
         return "Operation not complete - %s" % self.message

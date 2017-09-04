@@ -60,10 +60,10 @@ def quote(string_value, safe = "/"):
     the url encoding specification.
     The implementation is based on the python base library.
 
-    @type string_value: String
-    @param string_value: The string value to be quoted.
-    @rtype: String
-    @return: The quoted string value.
+    :type string_value: String
+    :param string_value: The string value to be quoted.
+    :rtype: String
+    :return: The quoted string value.
     """
 
     # in case the provided string value is unicode based it
@@ -116,13 +116,13 @@ def quote_plus(string_value, safe = ""):
     takes into account the plus and the space relation.
     The implementation is based on the python base library.
 
-    @type string_value: String
-    @param string_value: The string value to be quoted.
-    @type safe: String
-    @param safe: The string containing the characters considered
+    :type string_value: String
+    :param string_value: The string value to be quoted.
+    :type safe: String
+    :param safe: The string containing the characters considered
     safe for quoting.
-    @rtype: String
-    @return: The quoted string value.
+    :rtype: String
+    :return: The quoted string value.
     """
 
     # in case there is at least one white
@@ -145,17 +145,17 @@ def unquote(string_value, strict = True):
     encoding specification.
     The implementation is based on the python base library.
 
-    @type string_value: String
-    @param string_value: The string value to be unquoted, this
+    :type string_value: String
+    :param string_value: The string value to be unquoted, this
     string should be either encoded as an utf-8 based string
     or decoded with the proper unicode representation.
-    @type strict: bool
-    @param strict: If the unquoting operation should be performed
+    :type strict: bool
+    :param strict: If the unquoting operation should be performed
     using a strict approach meaning that all the characters are
     properly validated for ascii compliance, avoid duplicated
     unquoting operations.
-    @rtype: String
-    @return: The unquoted string value, this value is either
+    :rtype: String
+    :return: The unquoted string value, this value is either
     returned as an utf-8 encoded string or an unicode string.
     """
 
@@ -197,17 +197,17 @@ def unquote_plus(string_value, strict = True):
     takes into account the plus and the space relation.
     The implementation is based on the python base library.
 
-    @type string_value: String
-    @param string_value: The string value to be unquoted, this
+    :type string_value: String
+    :param string_value: The string value to be unquoted, this
     string should be either encoded as an utf-8 based string
     or decoded with the proper unicode representation.
-    @type strict: bool
-    @param strict: If the unquoting operation should be performed
+    :type strict: bool
+    :param strict: If the unquoting operation should be performed
     using a strict approach meaning that all the characters are
     properly validated for ascii compliance, avoid duplicated
     unquoting operations.
-    @rtype: String
-    @return: The unquoted string value.
+    :rtype: String
+    :return: The unquoted string value.
     """
 
     # replaces the plus sign with a space, this is considered
@@ -226,17 +226,17 @@ def url_encode(attributes_map = None, attributes_list = None, plus_encoding = Fa
     attributes may be either provided as a map or alternatively
     as a sequence of key value tuples.
 
-    @type attributes_map: Dictionary
-    @param attributes_map: The map of attributes to be encoded
+    :type attributes_map: Dictionary
+    :param attributes_map: The map of attributes to be encoded
     using url encoding, if this value is defined the attributes
     list is not going to be used.
-    @type attributes_list: List
-    @param attributes_list: The list of key and value tuples
+    :type attributes_list: List
+    :param attributes_list: The list of key and value tuples
     that are going to be processed as the attributes.
-    @type plus_encoding: bool
-    @param plus_encoding: If the plus encoding should be used.
-    @rtype: String
-    @return: The encoded attributes string.
+    :type plus_encoding: bool
+    :param plus_encoding: If the plus encoding should be used.
+    :rtype: String
+    :return: The encoded attributes string.
     """
 
     # retrieves the quote method to be used

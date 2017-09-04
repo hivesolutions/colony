@@ -47,10 +47,10 @@ def encode_two_complement_string(long_value):
     Note that "0L" is a special case, returning an empty string, to save a
     byte.
 
-    @type long_value: int
-    @param long_value: The long value to be encoded.
-    @rtype: String
-    @return: The encoded two's complement little-endian binary string.
+    :type long_value: int
+    :param long_value: The long value to be encoded.
+    :rtype: String
+    :return: The encoded two's complement little-endian binary string.
     """
 
     # in case the long value is zero
@@ -131,10 +131,10 @@ def decode_two_complement_string(data):
     """
     Decode a long from a two's complement little-endian binary string.
 
-    @type data: String
-    @param data: The data to be used in the decoding.
-    @rtype: int
-    @return: The decoded data.
+    :type data: String
+    :param data: The data to be used in the decoding.
+    :rtype: int
+    :return: The decoded data.
     """
 
     # retrieves the data length
@@ -165,11 +165,11 @@ def _count_nibbles(long_value_hexadecial):
     Calculates the number of nibbles (4 bit group) from the given
     long value encoded in hexadecimal string.
 
-    @type long_value_hexadecial: String
-    @param long_value_hexadecial: The long value encoded in
+    :type long_value_hexadecial: String
+    :param long_value_hexadecial: The long value encoded in
     hexadecimal string to count the nibbles.
-    @rtype: int
-    @return: The number of nibbles in the given value.
+    :rtype: int
+    :return: The number of nibbles in the given value.
     """
 
     # calculates the number of "junk" characters

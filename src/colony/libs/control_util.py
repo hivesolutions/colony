@@ -48,11 +48,11 @@ def calculate_tax_number_control_value(tax_number):
     """
     Calculates the control value for the tax number.
 
-    @type tax_number: int
-    @param tax_number: The tax number to calculate the
+    :type tax_number: int
+    :param tax_number: The tax number to calculate the
     control value.
-    @rtype: int
-    @return: The calculated control value.
+    :rtype: int
+    :return: The calculated control value.
     """
 
     # calculates the number of digits in the number
@@ -74,11 +74,11 @@ def calculate_id_number_control_value(id_number):
     """
     Calculates the control value for the id number.
 
-    @type id_number: int
-    @param id_number: The id number to calculate the
+    :type id_number: int
+    :param id_number: The id number to calculate the
     control value.
-    @rtype: int
-    @return: The calculated control value.
+    :rtype: int
+    :return: The calculated control value.
     """
 
     # calculates the number of digits in the number
@@ -102,10 +102,10 @@ def _calculate_control_value(number):
     Calculates the control value for the given
     number.
 
-    @type number: int
-    @param number: The number to calculate the control value.
-    @rtype: int
-    @return: The control value for the given number.
+    :type number: int
+    :param number: The number to calculate the control value.
+    :rtype: int
+    :return: The control value for the given number.
     """
 
     # calculates the number of digits in the number

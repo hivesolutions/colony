@@ -68,8 +68,8 @@ def get_hostname():
     """"
     Retrieves the current base host name.
 
-    @rtype: String
-    @return: The current base host name.
+    :rtype: String
+    :return: The current base host name.
     """
 
     # retrieves the current host name
@@ -83,8 +83,8 @@ def get_hostname_local():
     Retrieves the current base host name.
     The host name is returned in local notation.
 
-    @rtype: String
-    @return: The current base host name (in local notation).
+    :rtype: String
+    :return: The current base host name (in local notation).
     """
 
     # retrieves the host name
@@ -104,8 +104,8 @@ def get_address_ip4():
     """
     Retrieves the current "preferred" ip4 address.
 
-    @rtype: String
-    @return: The current "preferred" ip4 address.
+    :rtype: String
+    :return: The current "preferred" ip4 address.
     """
 
     # retrieves the ip4 addresses
@@ -124,12 +124,12 @@ def get_address_ip4_force(host = DEFAULT_IP4_HOST, port = DEFAULT_PORT):
     connection. This method is way more compatible but should be used
     carefully as it requires an external "internet" connection.
 
-    @type host: String
-    @param host: The host to be used to retrieve the address.
-    @type port: int
-    @param port: The port to be used to retrieve the address.
-    @rtype: String
-    @return: The current "preferred" ip4 address.
+    :type host: String
+    :param host: The host to be used to retrieve the address.
+    :type port: int
+    :param port: The port to be used to retrieve the address.
+    :rtype: String
+    :return: The current "preferred" ip4 address.
     """
 
     # creates the force socket
@@ -163,8 +163,8 @@ def get_address_ip4_all():
     Use this method carefully as it may require
     an external "internet" connection.
 
-    @rtype: String
-    @return: The current "preferred" ip4 address.
+    :rtype: String
+    :return: The current "preferred" ip4 address.
     """
 
     # retrieves the ip4 address using the "normal" method
@@ -181,8 +181,8 @@ def get_address_ip6():
     """
     Retrieves the current "preferred" ip6 address.
 
-    @rtype: String
-    @return: The current "preferred" ip6 address.
+    :rtype: String
+    :return: The current "preferred" ip6 address.
     """
 
     # retrieves the ip6 addresses
@@ -201,12 +201,12 @@ def get_address_ip6_force(host = DEFAULT_IP6_HOST, port = DEFAULT_PORT):
     connection. This method is way more compatible but should be used
     carefully as it requires an external "internet" connection.
 
-    @type host: String
-    @param host: The host to be used to retrieve the address.
-    @type port: int
-    @param port: The port to be used to retrieve the address.
-    @rtype: String
-    @return: The current "preferred" ip6 address.
+    :type host: String
+    :param host: The host to be used to retrieve the address.
+    :type port: int
+    :param port: The port to be used to retrieve the address.
+    :rtype: String
+    :return: The current "preferred" ip6 address.
     """
 
     # creates the force socket
@@ -241,8 +241,8 @@ def get_address_ip6_all():
     Use this method carefully as it may require
     an external "internet" connection.
 
-    @rtype: String
-    @return: The current "preferred" ip6 address.
+    :rtype: String
+    :return: The current "preferred" ip6 address.
     """
 
     # retrieves the ip6 address using the "normal" method
@@ -259,8 +259,8 @@ def get_addresses_ip4():
     """
     Retrieves the list currently available ip4 addresses.
 
-    @rtype: List
-    @return: The list currently available ip4 addresses.
+    :rtype: List
+    :return: The list currently available ip4 addresses.
     """
 
     return get_addresses_family(socket.AF_INET, (LOOPBACK_IP4_ADDRESS,))
@@ -269,8 +269,8 @@ def get_addresses_ip6():
     """
     Retrieves the list currently available ip6 addresses.
 
-    @rtype: List
-    @return: The list currently available ip6 addresses.
+    :rtype: List
+    :return: The list currently available ip6 addresses.
     """
 
     return get_addresses_family(socket.AF_INET6, (LOOPBACK_IP6_ADDRESS,))
@@ -280,13 +280,13 @@ def get_addresses_family(filter_family, filter_addresses = []):
     Retrieves the list of addresses available in the
     current machine for the given family of protocols.
 
-    @type filter_family: int
-    @param filter_family: The network family to be filtered.
-    @type filter_addresses: List
-    @param filter_addresses: The list of addresses to be ignored in
+    :type filter_family: int
+    :param filter_family: The network family to be filtered.
+    :type filter_addresses: List
+    :param filter_addresses: The list of addresses to be ignored in
     the filtering.
-    @rtype: List
-    @return: The list of addresses available in the
+    :rtype: List
+    :return: The list of addresses available in the
     current machine for the given family of protocols.
     """
 
@@ -326,8 +326,8 @@ def get_address_tuples():
     Retrieves the address tuples for the current
     host network interfaces.
 
-    @rtype: List
-    @return: The list of address tuples.
+    :rtype: List
+    :return: The list of address tuples.
     """
 
     # retrieves the current host name
@@ -344,11 +344,11 @@ def ip4_address_from_network(ip4_address_network):
     Converts the given ip4 network signed byte stream into
     an ip4 address string value.
 
-    @type ip4_address_network: String
-    @param ip4_address_network: The ip4 network signed byte stream
+    :type ip4_address_network: String
+    :param ip4_address_network: The ip4 network signed byte stream
     to be converted.
-    @rtype: String
-    @return: The converted ip4 address string value.
+    :rtype: String
+    :return: The converted ip4 address string value.
     """
 
     # unpacks the data from the network signed byte stream
@@ -366,11 +366,11 @@ def ip4_address_to_network(ip4_address):
     Converts the given ip4 address string value into an
     ip4 network signed byte stream.
 
-    @type ip4_address: String
-    @param ip4_address: The ip4 address string value to be
+    :type ip4_address: String
+    :param ip4_address: The ip4 address string value to be
     converted.
-    @rtype: String
-    @return: The converted ip4 network signed byte stream.
+    :rtype: String
+    :return: The converted ip4 network signed byte stream.
     """
 
     # converts the ip4 address to a series of bytes
@@ -390,11 +390,11 @@ def ip6_address_from_network(ip6_address_network):
     Converts the given ip6 network signed short stream into
     an ip6 address string value.
 
-    @type ip6_address_network: String
-    @param ip6_address_network: The ip6 network signed short stream
+    :type ip6_address_network: String
+    :param ip6_address_network: The ip6 network signed short stream
     to be converted.
-    @rtype: String
-    @return: The converted ip6 address string value.
+    :rtype: String
+    :return: The converted ip6 address string value.
     """
 
     # unpacks the data from the network signed short stream
@@ -412,11 +412,11 @@ def ip6_address_to_network(ip6_address):
     Converts the given ip6 address string value into an
     ip6 network signed short stream.
 
-    @type ip6_address: String
-    @param ip6_address: The ip6 address string value to be
+    :type ip6_address: String
+    :param ip6_address: The ip6 address string value to be
     converted.
-    @rtype: String
-    @return: The converted ip6 network signed short stream.
+    :rtype: String
+    :return: The converted ip6 network signed short stream.
     """
 
     # converts the ip6 address to a series of shorts

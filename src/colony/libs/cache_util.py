@@ -62,14 +62,14 @@ class DataCacheMap(object):
         name and with a timestamp value equivalent to the
         one provided (if any is provided).
 
-        @type name: String
-        @param name: The key name to retrieve the the associated
+        :type name: String
+        :param name: The key name to retrieve the the associated
         data from the map.
-        @type timestamp: float
-        @param timestamp: The optional timestamp vale to be used
+        :type timestamp: float
+        :param timestamp: The optional timestamp vale to be used
         in the validation of the retrieved item.
-        @rtype: Object
-        @return: The object retrieved from the data cache map.
+        :rtype: Object
+        :return: The object retrieved from the data cache map.
         """
 
         # in case the name is not present in the data map the
@@ -93,12 +93,12 @@ class DataCacheMap(object):
         The entry must contain both the data and the timestamp
         for the association to be possible.
 
-        @type name: String
-        @param name: The name to be used as key in the map.
-        @type data: String
-        @param data: The data string to be used in the map.
-        @type timestamp: float
-        @param timestamp: The timestamp to be used in the indexing
+        :type name: String
+        :param name: The name to be used as key in the map.
+        :type data: String
+        :param data: The data string to be used in the map.
+        :type timestamp: float
+        :param timestamp: The timestamp to be used in the indexing
         process, for validation purposes.
         """
 
@@ -111,8 +111,8 @@ class DataCacheMap(object):
         """
         Removes the data item with the provided name from the map.
 
-        @type name: String
-        @param name: The name of the item to be removed, this is the
+        :type name: String
+        :param name: The name of the item to be removed, this is the
         reference key to be used in the removal process.
         """
 

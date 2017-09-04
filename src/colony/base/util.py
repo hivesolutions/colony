@@ -105,10 +105,10 @@ class QueueEvent(object):
         """
         Constructor of the class.
 
-        @type event_name: String
-        @param event_name: The name of the event.
-        @type event_args: List
-        @param event_args: The arguments of the event.
+        :type event_name: String
+        :param event_name: The name of the event.
+        :type event_args: List
+        :param event_args: The arguments of the event.
         """
 
         self.event_name = event_name
@@ -128,11 +128,11 @@ def module_import(module_name):
     operation is recursive meaning that inner packages
     are also going to be imported.
 
-    @type module_name: String
-    @param module_name: The name of the module to be imported,
+    :type module_name: String
+    :param module_name: The name of the module to be imported,
     this value may contain multiple "sub" packages.
-    @rtype: module
-    @return: The imported module as a variable reference.
+    :rtype: module
+    :return: The imported module as a variable reference.
     """
 
     module = __import__(module_name)
@@ -151,12 +151,12 @@ def resolve_manager(exec_path = None):
     Note that the master structure should only be used for
     development purposes.
 
-    @type exec_path: String
-    @param exec_path: The currently executing path, should be
+    :type exec_path: String
+    :param exec_path: The currently executing path, should be
     retrieved from the first file to be executed in the call
     stack, this is the path to be inspected for master.
-    @rtype: String
-    @return: The final "resolved" manager path after the proper
+    :rtype: String
+    :return: The final "resolved" manager path after the proper
     validation operations have been done.
     """
 
@@ -178,8 +178,8 @@ def ensure_tree(path):
     it does not exists, the permissions used for such operation
     will be the default ones (may be not secure enough).
 
-    @type path: String
-    @param path: The file path of the root plugin system directory
+    :type path: String
+    :param path: The file path of the root plugin system directory
     for which the structure is going to be created.
     """
 
@@ -220,11 +220,11 @@ def is_master(path):
     the colony instance is stored separated to the logic of colony
     typically used for production environments.
 
-    @type path: String
-    @param path: The file path that is going to be verified to
+    :type path: String
+    :param path: The file path that is going to be verified to
     be part of a colony master directory structure.
-    @rtype: bool
-    @return: If the provided path is considered to be a normalized
+    :rtype: bool
+    :return: If the provided path is considered to be a normalized
     master directory structure for colony.
     """
 
@@ -239,8 +239,8 @@ def get_environment():
     should be multiple environments depending on the
     kind of python interpreter being used.
 
-    @rtype: String
-    @return: The type of the current python environment,
+    :rtype: String
+    :return: The type of the current python environment,
     taking into account the current interpreter information.
     """
 
@@ -255,8 +255,8 @@ def get_operative_system():
     normalized operation that uses the underlying python
     infra-structure and normalizes the result.
 
-    @rtype: String
-    @return: The type of the current operative system.
+    :rtype: String
+    :return: The type of the current operative system.
     """
 
     os_name = os.name
@@ -272,8 +272,8 @@ def get_timestamp_uid():
     cryptographic operations as it's not very unique and
     it is not entropy safe.
 
-    @rtype: String
-    @return: A unique id based in the current timestamp.
+    :rtype: String
+    :return: A unique id based in the current timestamp.
     """
 
     timestamp = time.time()

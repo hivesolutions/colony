@@ -61,12 +61,12 @@ class StringBuffer(object):
         """
         Constructor of the class.
 
-        @type btype: Type
-        @param btype: The default base type to be used for the result
+        :type btype: Type
+        :param btype: The default base type to be used for the result
         in case it's not provided a smart operation will try to determine
         the best type of string for the joining.
-        @type fast: bool
-        @param fast: The fast flag to control the string buffer type, notice
+        :type fast: bool
+        :param fast: The fast flag to control the string buffer type, notice
         that using the fast flag has it's toll in terms of features.
         """
 
@@ -88,8 +88,8 @@ class StringBuffer(object):
         Reads a buffer from the string buffer with the
         given maximum size.
 
-        @type size: int
-        @param size: The maximum size of the buffer to be read.
+        :type size: int
+        :param size: The maximum size of the buffer to be read.
         """
 
         # regenerates the current value
@@ -112,8 +112,8 @@ class StringBuffer(object):
         The method implementation is a placeholder as runtime
         replacement will be performed at build time.
 
-        @type string_value: String
-        @param string_value: The string value to be written.
+        :type string_value: String
+        :param string_value: The string value to be written.
         """
 
         pass
@@ -148,10 +148,10 @@ class StringBuffer(object):
         Seeks the string buffer to the given offset with the given jump mode,
         defined with the whence.
 
-        @type offset: int
-        @param offset: The offset of the jump.
-        @type whence: int
-        @param whence: The jump mode to be used.
+        :type offset: int
+        :param offset: The offset of the jump.
+        :type whence: int
+        :param whence: The jump mode to be used.
         """
 
         if whence == os.SEEK_SET:
@@ -168,8 +168,8 @@ class StringBuffer(object):
         """
         Returns if the end of file (eof) has been reached.
 
-        @rtype: bool
-        @return: If the end of file has been reached.
+        :rtype: bool
+        :return: If the end of file has been reached.
         """
 
         return self.current_position == self.current_size
@@ -178,8 +178,8 @@ class StringBuffer(object):
         """
         Retrieves the next string item from the string buffer.
 
-        @rtype: String
-        @return: The next string item from the string buffer.
+        :rtype: String
+        :return: The next string item from the string buffer.
         """
 
         return None
@@ -188,8 +188,8 @@ class StringBuffer(object):
         """
         Retrieves the current offset position in the string buffer.
 
-        @rtype: int
-        @return: The current offset position in the string buffer.
+        :rtype: int
+        :return: The current offset position in the string buffer.
         """
 
         return self.current_position
@@ -206,10 +206,10 @@ class StringBuffer(object):
         Retrieves a line from the string buffer,
         with the given maximum size.
 
-        @type size: int
-        @param size: The maximum size of the line to be read.
-        @rtype: String
-        @return: The read line.
+        :type size: int
+        :param size: The maximum size of the line to be read.
+        :rtype: String
+        :return: The read line.
         """
 
         return None
@@ -219,10 +219,10 @@ class StringBuffer(object):
         Retrieves a series of lines from the string buffer,
         with the given maximum size.
 
-        @type sizehint: int
-        @param sizehint: The maximum size of the lines to be read.
-        @rtype: List
-        @return: The read lines.
+        :type sizehint: int
+        :param sizehint: The maximum size of the lines to be read.
+        :rtype: List
+        :return: The read lines.
         """
 
         return None
@@ -231,8 +231,8 @@ class StringBuffer(object):
         """
         Writes the given lines to the string buffer.
 
-        @type lines: List
-        @param lines: The lines to be written to the string buffer.
+        :type lines: List
+        :param lines: The lines to be written to the string buffer.
         """
 
         # iterates over all the lines
@@ -244,8 +244,8 @@ class StringBuffer(object):
         """
         Returns if the file buffer is of type tty.
 
-        @rtype: bool
-        @return: If the file buffer is of type tty.
+        :rtype: bool
+        :return: If the file buffer is of type tty.
         """
 
         return False
@@ -272,8 +272,8 @@ class StringBuffer(object):
         """
         Returns if the current buffer is empty.
 
-        @rtype: bool
-        @return: If the current buffer is empty
+        :rtype: bool
+        :return: If the current buffer is empty
         """
 
         return not self.current_size > 0
@@ -300,8 +300,8 @@ class StringBuffer(object):
         Duplicates the string buffer, returning the
         duplicated value.
 
-        @rtype: StringBuffer
-        @return: The duplicated string buffer.
+        :rtype: StringBuffer
+        :return: The duplicated string buffer.
         """
 
         # creates the new string buffer instance
@@ -321,8 +321,8 @@ class StringBuffer(object):
         """
         Rollsback the last write.
 
-        @type item_count: int
-        @param item_count: The number of items
+        :type item_count: int
+        :param item_count: The number of items
         to be "rollbacked".
         """
 
@@ -335,11 +335,11 @@ class StringBuffer(object):
         """
         Retrieves the last write.
 
-        @type index: int
-        @param index: The index to retrieve from
+        :type index: int
+        :param index: The index to retrieve from
         the string list.
-        @rtype: String
-        @return: The last write.
+        :rtype: String
+        :return: The last write.
         """
 
         # retrieves the absolute index
@@ -365,8 +365,8 @@ class StringBuffer(object):
         This method provides a simple way to debug the
         information contained in the buffer.
 
-        @type path: String
-        @param path: The path to the file that is going
+        :type path: String
+        :param path: The path to the file that is going
         to be used to place the buffer contents.
         """
 
@@ -384,8 +384,8 @@ class StringBuffer(object):
         """
         Writes the string value in fast mode.
 
-        @type string_value: String
-        @param string_value: The string value to be written.
+        :type string_value: String
+        :param string_value: The string value to be written.
         """
 
         self.string_list.append(string_value)
@@ -394,8 +394,8 @@ class StringBuffer(object):
         """
         Writes the string value in slow mode.
 
-        @type string_value: String
-        @param string_value: The string value to be written.
+        :type string_value: String
+        :param string_value: The string value to be written.
         """
 
         self.string_list.append(string_value)
@@ -437,8 +437,8 @@ class StringBuffer(object):
         byte buffers or in case the base type is fixed in the
         constructor, this method returns immediately.
 
-        @rtype: String
-        @return: The string value that may be used as the basis for
+        :rtype: String
+        :return: The string value that may be used as the basis for
         the joining of the various components of the string list/buffer.
         """
 

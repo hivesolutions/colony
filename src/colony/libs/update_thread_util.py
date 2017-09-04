@@ -77,8 +77,8 @@ class UpdateThread(threading.Thread):
         """
         Retrieves the timeout value.
 
-        @rtype: int
-        @return: The timeout value.
+        :rtype: int
+        :return: The timeout value.
         """
 
         return self.timeout
@@ -87,8 +87,8 @@ class UpdateThread(threading.Thread):
         """
         Sets the timeout value.
 
-        @type timeout: int
-        @param timeout: The timeout value.
+        :type timeout: int
+        :param timeout: The timeout value.
         """
 
         self.timeout = timeout
@@ -97,8 +97,8 @@ class UpdateThread(threading.Thread):
         """
         Retrieves the call method.
 
-        @rtype: Method
-        @return: The call method.
+        :rtype: Method
+        :return: The call method.
         """
 
         return self.call_method
@@ -107,8 +107,8 @@ class UpdateThread(threading.Thread):
         """
         Sets the call method.
 
-        @type call_method: Method
-        @param call_method: The call method.
+        :type call_method: Method
+        :param call_method: The call method.
         """
 
         self.call_method = call_method
@@ -117,8 +117,8 @@ class UpdateThread(threading.Thread):
         """
         Retrieves the call arguments.
 
-        @rtype: List
-        @return: The call arguments.
+        :rtype: List
+        :return: The call arguments.
         """
 
         return self.call_arguments
@@ -127,8 +127,8 @@ class UpdateThread(threading.Thread):
         """
         Sets the call arguments.
 
-        @type call_arguments: List
-        @param call_arguments: The call argument.
+        :type call_arguments: List
+        :param call_arguments: The call argument.
         """
 
         self.call_arguments = call_arguments

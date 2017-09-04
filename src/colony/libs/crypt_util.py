@@ -108,17 +108,17 @@ def password_crypt(password, salt = "", hash_method = MD5_VALUE):
     An optional salt may be provided for extra security.
     The generated hash is always defined in hexadecimal.
 
-    @type password: String
-    @param password: The password to be encrypted using
+    :type password: String
+    :param password: The password to be encrypted using
     the hash method.
-    @type salt: String
-    @param salt: The salt to be used during the encryption
+    :type salt: String
+    :param salt: The salt to be used during the encryption
     process.
-    @type hash_method: String
-    @param hash_method: The name of the hash method to be used
+    :type hash_method: String
+    :param hash_method: The name of the hash method to be used
     for encryption.
-    @rtype: String
-    @return: The generated (complete) hash hexadecimal string.
+    :rtype: String
+    :return: The generated (complete) hash hexadecimal string.
     """
 
     # converts the name of the hash method to lower
@@ -165,14 +165,14 @@ def password_match(password_hash, password, salt = ""):
     The matching process executes the original hash function
     in order to check for same results.
 
-    @type password_hash: String
-    @param password_hash: The complete password hash hexadecimal string.
-    @type password: String
-    @param password: The base password for checking.
-    @type salt: String
-    @param salt: The base salt for checking.
-    @rtype: bool
-    @return: The result of the password match checking.
+    :type password_hash: String
+    :param password_hash: The complete password hash hexadecimal string.
+    :type password: String
+    :param password: The base password for checking.
+    :type salt: String
+    :param salt: The base salt for checking.
+    :rtype: bool
+    :return: The result of the password match checking.
     """
 
     # tries to match the base password hash
@@ -223,10 +223,10 @@ def password_strength(password):
     The returned value is an integer ranging from the lowest
     zero value (unsafest) to a limit value (safest).
 
-    @type password: String
-    @param password: The password to be measured for strength.
-    @rtype: int
-    @return: An integer describing the strength
+    :type password: String
+    :param password: The password to be measured for strength.
+    :rtype: int
+    :return: An integer describing the strength
     level of the given password.
     """
 
@@ -294,14 +294,14 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     The magic value is set by default and should be changed
     carefully.
 
-    @type password: String
-    @param password: The password to be encrypted.
-    @type salt: String
-    @param salt: The salt to be used in encryption.
-    @type magic: String
-    @param magic: The magic value to be used in encryption.
-    @rtype: String
-    @return: The resulting md5 crypt value.
+    :type password: String
+    :param password: The password to be encrypted.
+    :type salt: String
+    :param salt: The salt to be used in encryption.
+    :type magic: String
+    :param magic: The magic value to be used in encryption.
+    :rtype: String
+    :return: The resulting md5 crypt value.
     """
 
     # creates the first hash value
@@ -442,13 +442,13 @@ def generate_hash_digest_map(file_path, hash_set = DEFAULT_HASH_SET):
     The set of hash function to be used may be controlled using the
     hash set parameter.
 
-    @type file_path: String
-    @param file_path: The path to the file to be used for hash
+    :type file_path: String
+    :param file_path: The path to the file to be used for hash
     digest calculation.
-    @type hash_set: Tuple
-    @param hash_set: The set of hash functions to be used.
-    @rtype: Dictionary
-    @return: The map containing the hash digest values for the file.
+    :type hash_set: Tuple
+    :param hash_set: The set of hash functions to be used.
+    :rtype: Dictionary
+    :return: The map containing the hash digest values for the file.
     """
 
     # creates the list to hold the various

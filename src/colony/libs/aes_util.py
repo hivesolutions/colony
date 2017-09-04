@@ -56,7 +56,7 @@ class AesCipher(object):
     The aes include the padding infra-structure for
     according to pkcs5.
 
-    @see: http://tools.ietf.org/html/rfc2898
+    :see: http://tools.ietf.org/html/rfc2898
     """
 
     key = None
@@ -71,12 +71,12 @@ class AesCipher(object):
         """
         Constructor of the class.
 
-        @type key: String
-        @param key: The symmetric key (secret) to be used
+        :type key: String
+        :param key: The symmetric key (secret) to be used
         in the aes encryption, in case it's not defined
         a new random key will be created.
-        @type block_size: int
-        @param block_size: The size of the encryption
+        :type block_size: int
+        :param block_size: The size of the encryption
         block to be used under this cipher instance, must
         be a multiple of eight.
         """
@@ -89,11 +89,11 @@ class AesCipher(object):
         Encrypts the provided raw string value according
         to the aes and pkcs5 specifications.
 
-        @type raw: String
-        @param raw: The raw string value to be used in
+        :type raw: String
+        :param raw: The raw string value to be used in
         the encryption process.
-        @rtype: String
-        @return: The encrypted string according to the aes
+        :rtype: String
+        :return: The encrypted string according to the aes
         cryptographic system in ecb mode.
         """
 
@@ -106,12 +106,12 @@ class AesCipher(object):
         Decrypts the provided encoded (encrypted) string
         into the raw value.
 
-        @type encoded: String
-        @param encoded: The encrypted string to be used
+        :type encoded: String
+        :param encoded: The encrypted string to be used
         in the decryption process, should be padded according
         to the pkcs5 schema.
-        @rtype String
-        @return: The decrypted string according to the aes
+        :rtype String
+        :return: The decrypted string according to the aes
         cryptographic system in ecb mode.
         """
 
@@ -124,11 +124,11 @@ class AesCipher(object):
         Adds the pkcs5 padding to the provided value
         it should add all the extra padding values to it.
 
-        @type value: String
-        @param value: The base value for which the padded
+        :type value: String
+        :param value: The base value for which the padded
         characters will be added.
-        @rtype: String
-        @return: The pkcs5 padded string with the padding
+        :rtype: String
+        :return: The pkcs5 padded string with the padding
         characters added to it.
         """
 
@@ -141,11 +141,11 @@ class AesCipher(object):
         Removes the pkcs5 padding from the provided value
         it should remove all the extra padding values from it.
 
-        @type value: String
-        @param value: The padded value from which all the
+        :type value: String
+        :param value: The padded value from which all the
         extra padding characters.
-        @rtype: String
-        @return: The sanitized string without the extra
+        :rtype: String
+        :return: The sanitized string without the extra
         padding characters.
         """
 
@@ -160,8 +160,8 @@ class AesCipher(object):
         for encryption and decryption, it should be of the
         same size as the block.
 
-        @rtype: String
-        @return: The symmetric key that is currently set
+        :rtype: String
+        :return: The symmetric key that is currently set
         in the aes instance.
         """
 
@@ -176,8 +176,8 @@ class AesCipher(object):
 
         The integer value should be a multiple of eight.
 
-        @rtype: int
-        @return: The size of the encryption block to be
+        :rtype: int
+        :return: The size of the encryption block to be
         used for encryption and decryption.
         """
 

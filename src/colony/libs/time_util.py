@@ -130,19 +130,19 @@ def format_seconds_smart(
     The smart mode supports the creation of format strings
     dynamically from the pre-built modes.
 
-    @type seconds: int
-    @param seconds: The number of seconds to be formatted.
-    @type mode: String
-    @param mode: The formatting mode to be used.
-    @type includes: List
-    @param includes: The list of types to be included in the
+    :type seconds: int
+    :param seconds: The number of seconds to be formatted.
+    :type mode: String
+    :param mode: The formatting mode to be used.
+    :type includes: List
+    :param includes: The list of types to be included in the
     formatted string.
-    @type minimize: String
-    @param minimize: If the includes list should be minimized
+    :type minimize: String
+    :param minimize: If the includes list should be minimized
     according to the number of seconds "available". The minimize
     string controls the way of minimization.
-    @rtype: String
-    @return: The string containing the formated seconds.
+    :rtype: String
+    :return: The string containing the formated seconds.
     """
 
     # in case the minimize flag is active
@@ -213,12 +213,12 @@ def format_seconds(seconds, format_string = DEFAULT_FORMAT):
     Formats the given seconds according to the given
     format string.
 
-    @type seconds: int
-    @param seconds: The number of seconds to be formatted.
-    @type format_string: String
-    @param format_string: The format string to be used.
-    @rtype: String
-    @return: The string containing the formated seconds.
+    :type seconds: int
+    :param seconds: The number of seconds to be formatted.
+    :type format_string: String
+    :param format_string: The format string to be used.
+    :rtype: String
+    :return: The string containing the formated seconds.
     """
 
     # calculates the number of days from the seconds
@@ -255,8 +255,8 @@ def timestamp_datetime(timestamp_string):
     """
     Converts the provided timestamp string to a datetime object.
 
-    @type timestamp_string String.
-    @param timestamp_string The timestamp value as string.
+    :type timestamp_string String.
+    :param timestamp_string The timestamp value as string.
     """
 
     # retrieves the type of the timestamp string
@@ -283,14 +283,14 @@ def _process_includes(seconds, includes, minimize_mode):
     Processes the includes list, retrieving the minimized
     includes list with only the minimum required includes.
 
-    @type seconds: int
-    @param seconds: The number of seconds to be processed.
-    @type includes: List
-    @param includes: The list of includes to be processed.
-    @rtype: List
-    @return: The processed includes
-    @type minimize_mode: String
-    @param minimize_mode: The minimize mode to be used.
+    :type seconds: int
+    :param seconds: The number of seconds to be processed.
+    :type includes: List
+    :param includes: The list of includes to be processed.
+    :rtype: List
+    :return: The processed includes
+    :type minimize_mode: String
+    :param minimize_mode: The minimize mode to be used.
     """
 
     # in case there are only seconds to be

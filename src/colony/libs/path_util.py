@@ -78,10 +78,10 @@ def normalize_path(path):
     of the current environment.
     In windows this function adds support for long path names.
 
-    @type path: String
-    @param path: The path to be normalized.
-    @rtype: String
-    @return: The normalized path.
+    :type path: String
+    :param path: The path to be normalized.
+    :rtype: String
+    :return: The normalized path.
     """
 
     # retrieves the current os name
@@ -122,10 +122,10 @@ def align_path(path):
     characters into the defined virtual separators.
     The retrieved path is system independent.
 
-    @type path: String
-    @param path: The path to the aligned (become system independent).
-    @rtype: String
-    @return: The aligned path (system independent).
+    :type path: String
+    :param path: The path to the aligned (become system independent).
+    :rtype: String
+    :return: The aligned path (system independent).
     """
 
     # aligns the path replacing the backslashes with
@@ -145,15 +145,15 @@ def copy_directory(source_path, target_path, replace_files = True, copy_hidden =
     It's possible to control the copying of hidden files using the
     optional copy hidden flag parameter.
 
-    @type source_path: String
-    @param source_path: The path to the source directory.
-    @type target_path: String
-    @param target_path: The path to the target directory.
-    @type replace_files: bool
-    @param replace_files: If the files should be replaced
+    :type source_path: String
+    :param source_path: The path to the source directory.
+    :type target_path: String
+    :param target_path: The path to the target directory.
+    :type replace_files: bool
+    :param replace_files: If the files should be replaced
     in case duplicate files are found.
-    @type copy_hidden: bool
-    @param copy_hidden: If the files considered by the os to
+    :type copy_hidden: bool
+    :param copy_hidden: If the files considered by the os to
     be of type hidden should be copied..
     """
 
@@ -226,12 +226,12 @@ def copy_link(source_path, target_path, replace_file = True):
     The symbolic link in the target path is created if not existent
     or overwritten if existent.
 
-    @type source_path: String
-    @param source_path: The path to the source symbolic link.
-    @type target_path: String
-    @param target_path: The path to the target symbolic link.
-    @type replace_file: bool
-    @param replace_file: If the file should be replaced
+    :type source_path: String
+    :param source_path: The path to the source symbolic link.
+    :type target_path: String
+    :param target_path: The path to the target symbolic link.
+    :type replace_file: bool
+    :param replace_file: If the file should be replaced
     in existent symbolic link is found.
     """
 
@@ -258,12 +258,12 @@ def copy_file(source_path, target_path, replace_file = True):
     The file in the target path is created if not existent
     or overwritten if existent.
 
-    @type source_path: String
-    @param source_path: The path to the source file.
-    @type target_path: String
-    @param target_path: The path to the target file.
-    @type replace_file: bool
-    @param replace_file: If the file should be replaced
+    :type source_path: String
+    :param source_path: The path to the source file.
+    :type target_path: String
+    :param target_path: The path to the target file.
+    :type replace_file: bool
+    :param replace_file: If the file should be replaced
     in existent files is found.
     """
 
@@ -313,8 +313,8 @@ def remove_directory(directory_path):
     Directories containing files will have their contents removed
     before being removed.
 
-    @type directory_path: String
-    @param directory_path: The path to the directory to be removed.
+    :type directory_path: String
+    :param directory_path: The path to the directory to be removed.
     """
 
     # normalizes the directory path
@@ -354,15 +354,15 @@ def link(target_path, link_path, link_name = True, replace = False):
     An optional replace flag may be set so that the link is
     removed in case it already exists.
 
-    @type target_path: String
-    @param target_path: The target path to the link.
-    @type link_path: String
-    @param link_path: The path to the link.
-    @type link_name: bool
-    @param link_name: If the link base name should be used
+    :type target_path: String
+    :param target_path: The target path to the link.
+    :type link_path: String
+    :param link_path: The path to the link.
+    :type link_name: bool
+    :param link_name: If the link base name should be used
     instead of the full path.
-    @type replace: bool
-    @param replace: If the link path should be replace (overwritten)
+    :type replace: bool
+    :param replace: If the link path should be replace (overwritten)
     in case it already exists (file overlapping).
     """
 
@@ -398,10 +398,10 @@ def link_copy(target_path, link_path):
     in the link path.
     This function acts as a stub for the symlink function.
 
-    @type target_path: String
-    @param target_path: The target path to the link.
-    @type link_path: String
-    @param link_path: The path to the "link".
+    :type target_path: String
+    :param target_path: The target path to the link.
+    :type link_path: String
+    :param link_path: The path to the "link".
     """
 
     # in case the directory exists
@@ -426,10 +426,10 @@ def ensure_file_path(file_path, default_file_path):
     In case the file does not exists the file in the default
     file path is copied to the file path.
 
-    @type file_path: String
-    @param file_path: The file path to ensure contents.
-    @type default_file_path: String
-    @param default_file_path: The path to the file to be
+    :type file_path: String
+    :param file_path: The file path to ensure contents.
+    :type default_file_path: String
+    :param default_file_path: The path to the file to be
     used in case the file path does not exist.
     """
 
@@ -485,13 +485,13 @@ def is_parent_path(path, parent_path):
     A parent path is a path that contains the given
     path at any relative depth.
 
-    @type path: String
-    @param path: The (base) path for the checking.
-    @type parent_path: String
-    @param parent_path: The path to be checked for
+    :type path: String
+    :param path: The (base) path for the checking.
+    :type parent_path: String
+    :param parent_path: The path to be checked for
     parenting.
-    @rtype: bool
-    @return: The result of the checking for parenting.
+    :rtype: bool
+    :return: The result of the checking for parenting.
     """
 
     # checks the relative path between the path and
@@ -514,12 +514,12 @@ def _relative_path_windows(path, start_path = CURRENT_DIRECTORY):
     and the given "start" path.
     This version of the calculus is target at windows platforms.
 
-    @type path: String
-    @param path: The path to be used as "target".
-    @type start_path: String
-    @param start_path: The path to be used as starting point.
-    @rtype: String
-    @return: The relative path between both paths.
+    :type path: String
+    :param path: The path to be used as "target".
+    :type start_path: String
+    :param start_path: The path to be used as starting point.
+    :rtype: String
+    :return: The relative path between both paths.
     """
 
     # in case the path is not defined (error)
@@ -580,12 +580,12 @@ def _relative_path_posix(path, start = CURRENT_DIRECTORY):
     and the given "start" path.
     This version of the calculus is target at posix platforms.
 
-    @type path: String
-    @param path: The path to be used as "target".
-    @type start_path: String
-    @param start_path: The path to be used as starting point.
-    @rtype: String
-    @return: The relative path between both paths.
+    :type path: String
+    :param path: The path to be used as "target".
+    :type start_path: String
+    :param start_path: The path to be used as starting point.
+    :rtype: String
+    :return: The relative path between both paths.
     """
 
     # in case the path is not defined (error)
@@ -620,10 +620,10 @@ def _abspath_split(path):
     is unc, prefix and path list.
     The values are returned in a tuple.
 
-    @type path: String
-    @param path: The path to be checked.
-    @rtype: Tuple
-    @return: A tuple containing the is unc, prefix and
+    :type path: String
+    :param path: The path to be checked.
+    :rtype: Tuple
+    :return: A tuple containing the is unc, prefix and
     path list util values.
     """
 

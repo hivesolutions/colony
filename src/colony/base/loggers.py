@@ -110,8 +110,8 @@ class BroadcastHandler(logging.Handler):
         Emit a record, to the output stream the record will
         be formated and then sent to the socket for broadcast.
 
-        @type record: Record
-        @param record: The log record to be sent through the
+        :type record: Record
+        :param record: The log record to be sent through the
         output socket stream.
         """
 

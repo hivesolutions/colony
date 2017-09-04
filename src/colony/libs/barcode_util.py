@@ -78,12 +78,12 @@ def encode_2_of_5(string_value):
     barcode encoding to be used with the most prominent
     true type fonts for display.
 
-    @type string_value: String
-    @param string_value: The string value to be encoded into
+    :type string_value: String
+    :param string_value: The string value to be encoded into
     the 2 of 5 barcode string representation.
-    @rtype: String
-    @return: The generated 2 of 5 barcode string representation.
-    @see: http://en.wikipedia.org/wiki/Interleaved_2_of_5
+    :rtype: String
+    :return: The generated 2 of 5 barcode string representation.
+    :see: http://en.wikipedia.org/wiki/Interleaved_2_of_5
     """
 
     # starts the encoded buffer with the default
@@ -147,12 +147,12 @@ def encode_code_128(value, code_set = "A"):
     barcode encoding to be used with the most prominent
     true type fonts for display.
 
-    @type string_value: String
-    @param string_value: The string value to be encoded into
+    :type string_value: String
+    :param string_value: The string value to be encoded into
     the code 128 barcode string representation.
-    @rtype: String
-    @return: The generated code 128 barcode string representation.
-    @see: http://en.wikipedia.org/wiki/Code_128
+    :rtype: String
+    :return: The generated code 128 barcode string representation.
+    :see: http://en.wikipedia.org/wiki/Code_128
     """
 
     # encodes the value into the proper representation
@@ -184,12 +184,12 @@ def encode_code_39(value):
     barcode encoding to be used with the most prominent
     true type fonts for display.
 
-    @type string_value: String
-    @param string_value: The string value to be encoded into
+    :type string_value: String
+    :param string_value: The string value to be encoded into
     the code 39 barcode string representation.
-    @rtype: String
-    @return: The generated code 39 barcode string representation.
-    @see: http://en.wikipedia.org/wiki/Code_39
+    :rtype: String
+    :return: The generated code 39 barcode string representation.
+    :see: http://en.wikipedia.org/wiki/Code_39
     """
 
     return "*" + value + "*"
@@ -203,14 +203,14 @@ def _interleave_digits(first_digit, second_digit):
     This process is specific for the general version of
     the 2 of 5 true type font encoding.
 
-    @type first_digit: String
-    @param first_digit: The first digit encoded in the
+    :type first_digit: String
+    :param first_digit: The first digit encoded in the
     2 of 5 normal encoding.
-    @type second_digit: String
-    @param second_digit: The second digit encoded in the
+    :type second_digit: String
+    :param second_digit: The second digit encoded in the
     2 of 5 normal encoding.
-    @rtype: String
-    @return: The interleaved representation of the concatenation
+    :rtype: String
+    :return: The interleaved representation of the concatenation
     of both digits in the normal 2 of 5 barcode format.
     """
 
@@ -246,11 +246,11 @@ def _calculate_check_digit(character_values):
     the algorithm is quite simple, the idea is to weight the
     value of each position over its own index position.
 
-    @type character_values: List
-    @param character_values: The list of character values to
+    :type character_values: List
+    :param character_values: The list of character values to
     calculate the check digit (checksum).
-    @rtype: int
-    @return: The resulting check digit for the provided set
+    :rtype: int
+    :return: The resulting check digit for the provided set
     of character values.
     """
 
@@ -282,11 +282,11 @@ def _encode_code_set_a(string_value):
     Encodes the provided string value into a list of code 128
     values using the code set a.
 
-    @type string_value: String
-    @param string_value: The string value to be converted into the
+    :type string_value: String
+    :param string_value: The string value to be converted into the
     list of code 128 values.
-    @rtype: List
-    @return: The list containing a set of code 128 numeric
+    :rtype: List
+    :return: The list containing a set of code 128 numeric
     values representing the requested string in code set a.
     """
 
@@ -318,11 +318,11 @@ def _encode_code_set_b(string_value):
     Encodes the provided string value into a list of code 128
     values using the code set b.
 
-    @type string_value: String
-    @param string_value: The string value to be converted into the
+    :type string_value: String
+    :param string_value: The string value to be converted into the
     list of code 128 values.
-    @rtype: List
-    @return: The list containing a set of code 128 numeric
+    :rtype: List
+    :return: The list containing a set of code 128 numeric
     values representing the requested string in code set b.
     """
 
@@ -354,11 +354,11 @@ def _encode_code_set_c(string_value):
     Encodes the provided string value into a list of code 128
     values using the code set c.
 
-    @type string_value: String
-    @param string_value: The string value to be converted into the
+    :type string_value: String
+    :param string_value: The string value to be converted into the
     list of code 128 values.
-    @rtype: List
-    @return: The list containing a set of code 128 numeric
+    :rtype: List
+    :return: The list containing a set of code 128 numeric
     values representing the requested string in code set c.
     """
 
@@ -393,11 +393,11 @@ def _get_character_string(character_values):
     representation of them in the code 128 true type
     font format.
 
-    @type character_values: List
-    @param character_values: The list of code 128 integer
+    :type character_values: List
+    :param character_values: The list of code 128 integer
     values to be converted into the unicode string.
-    @rtype: String
-    @return: The converted unicode string, ready to be
+    :rtype: String
+    :return: The converted unicode string, ready to be
     used in the true type font.
     """
 

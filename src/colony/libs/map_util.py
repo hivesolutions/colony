@@ -50,8 +50,8 @@ def map_clean(map):
     The clean process is "slow" as it iterates over
     all the map keys to remove its values.
 
-    @type map: Dictionary
-    @param map: The map to be cleaned.
+    :type map: Dictionary
+    :param map: The map to be cleaned.
     """
 
     # retrieves the map keys
@@ -69,14 +69,14 @@ def map_get(map, keys = []):
     This method may suffer from stack overflow (recursion) so
     a reasonable list of keys should be provided to avoid that.
 
-    @type map: Dictionary
-    @param map: The map (containing maps) from which the value
+    :type map: Dictionary
+    :param map: The map (containing maps) from which the value
     is going to be retrieved using a recursive strategy.
-    @type keys: List
-    @param keys: The list of keys to be used in the recursive
+    :type keys: List
+    :param keys: The list of keys to be used in the recursive
     retrieval of values from the map.
-    @rtype: Object
-    @return: The final value retrieved through recursion
+    :rtype: Object
+    :return: The final value retrieved through recursion
     """
 
     if not keys: return map
@@ -89,10 +89,10 @@ def map_copy(source_map, destiny_map):
     Note that in case the value already exists in the destiny
     map the copy step will be ignored.
 
-    @type source_map: Dictionary
-    @param source_map: The source map of the copy.
-    @type destiny_map: Dictionary
-    @param destiny_map: The destiny map of the copy.
+    :type source_map: Dictionary
+    :param source_map: The source map of the copy.
+    :type destiny_map: Dictionary
+    :param destiny_map: The destiny map of the copy.
     """
 
     # iterates over all the source map keys in order to copy
@@ -114,10 +114,10 @@ def map_copy_deep(source_map, destiny_map):
     Copies the contents of the source map to the destiny map.
     This mode provides a deep copy, using a recursive approach.
 
-    @type source_map: Dictionary
-    @param source_map: The source map of the copy.
-    @type destiny_map: Dictionary
-    @param destiny_map: The destiny map of the copy.
+    :type source_map: Dictionary
+    :param source_map: The source map of the copy.
+    :type destiny_map: Dictionary
+    :param destiny_map: The destiny map of the copy.
     """
 
     # copies the current source map to the destiny map
@@ -150,11 +150,11 @@ def map_duplicate(item):
     This function is useful in order to avoid reference
     overlapping in data structures.
 
-    @type item: Object
-    @param item: The item to be used as reference for duplication
+    :type item: Object
+    :param item: The item to be used as reference for duplication
     this should be a map at the initial call of the function.
-    @rtype: item: Object
-    @return: The duplicated data structure with all the references
+    :rtype: item: Object
+    :return: The duplicated data structure with all the references
     replicated in the sequences and maps.
     """
 
@@ -191,11 +191,11 @@ def map_remove(removal_map, destiny_map):
     Removes all the values with keys present in the
     removal map from the destiny map.
 
-    @type removal_map: Dictionary
-    @param removal_map: The map to be used in reference
+    :type removal_map: Dictionary
+    :param removal_map: The map to be used in reference
     with the key values.
-    @type destiny_map: Dictionary
-    @param destiny_map: The "destiny" map to have the values removed.
+    :type destiny_map: Dictionary
+    :param destiny_map: The "destiny" map to have the values removed.
     """
 
     # iterates over all the keys in
@@ -228,24 +228,24 @@ def map_extend(
     The base map may be changed or left untouched based on
     the copy base map flag.
 
-    @type base_map: Dictionary
-    @param base_map: The map to be used as base for the merge,
+    :type base_map: Dictionary
+    :param base_map: The map to be used as base for the merge,
     should contain more values at the end of the merge.
-    @type extension_map: Dictionary
-    @param extension_map: The map to be used to extend the base
+    :type extension_map: Dictionary
+    :param extension_map: The map to be used to extend the base
     one, this map may be recursively percolated if requested.
-    @type override: bool
-    @param override: If a value should be overridden in
+    :type override: bool
+    :param override: If a value should be overridden in
     case it already exists in the base map.
-    @type recursive: bool
-    @param recursive: If a value should be extended in
+    :type recursive: bool
+    :param recursive: If a value should be extended in
     case it already exists in the base map (recursive
     extension).
-    @type copy_base_map: bool
-    @param copy_base_map: If the base map should be copied before
+    :type copy_base_map: bool
+    :param copy_base_map: If the base map should be copied before
     being extended in order to avoid loss of data.
-    @rtype: Dictionary
-    @return: The map that result of the merge of both maps.
+    :rtype: Dictionary
+    :return: The map that result of the merge of both maps.
     """
 
     # copies the base map to create the initial result map (optional)
@@ -301,11 +301,11 @@ def map_flatten(map):
     value in the map associated with another map the name in
     that map will be linearized into the top level map.
 
-    @type map: Dictionary
-    @param map: The map that is going to be linearized/flatten
+    :type map: Dictionary
+    :param map: The map that is going to be linearized/flatten
     and for each relations will be set in the top level.
-    @rtype: Dictionary
-    @return: The resulting flatten map, note that the original
+    :rtype: Dictionary
+    :return: The resulting flatten map, note that the original
     map is not changed.
     """
 
@@ -324,12 +324,12 @@ def map_check_parameters(map, parameters_list, exception = Exception):
     in the given map.
     In case a check fails an exception is raised.
 
-    @type map: Dictionary
-    @param map: The dictionary to be checked.
-    @type parameters_list: List
-    @param parameters_list: The list of parameters to be checked.
-    @type exception: Exception
-    @param exception: The exception to be raised in case check fails.
+    :type map: Dictionary
+    :param map: The dictionary to be checked.
+    :type parameters_list: List
+    :param parameters_list: The list of parameters to be checked.
+    :type exception: Exception
+    :param exception: The exception to be raised in case check fails.
     """
 
     # iterates over all the parameters in the parameters list
@@ -350,18 +350,18 @@ def map_get_value_cast(map, key, cast_type = str, default_value = None):
     In case something wrong (exception raised) occurs
     the default value is returned.
 
-    @type map: Dictionary
-    @param map: The dictionary to be used.
-    @type key: String
-    @param key: The key to the value to be retrieved.
-    @type cast_type: Type
-    @param cast_type: The type to be used to cast the retrieved
+    :type map: Dictionary
+    :param map: The dictionary to be used.
+    :type key: String
+    :param key: The key to the value to be retrieved.
+    :type cast_type: Type
+    :param cast_type: The type to be used to cast the retrieved
     value (this should be a valid type, with constructor).
-    @type default_value: Object
-    @param default_value: The default value to be used
+    :type default_value: Object
+    :param default_value: The default value to be used
     when something wrong (exception raised) occurs.
-    @rtype: Object
-    @return: The retrieved value casted to the defined type.
+    :rtype: Object
+    :return: The retrieved value casted to the defined type.
     """
 
     try:
@@ -396,12 +396,12 @@ def map_get_values(map, key):
     This way the method return value is always a list
     independently from the type of the original value.
 
-    @type map: Dictionary
-    @param map: The dictionary to be used.
-    @type key: String
-    @param key: The key to the value(s) to be retrieved.
-    @rtype: List
-    @return: The values(s) for the key.
+    :type map: Dictionary
+    :param map: The dictionary to be used.
+    :type key: String
+    :param key: The key to the value(s) to be retrieved.
+    :rtype: List
+    :return: The values(s) for the key.
     """
 
     # retrieves the values from the map
@@ -427,13 +427,13 @@ def map_output(map, output_method = sys.stdout.write, indentation = ""):
     The map is printed with the given indentation as a start
     point from the line.
 
-    @type map: Dictionary
-    @param map: The map to be outputted (pretty print).
-    @type output_method: Function
-    @param output_method: The output function (method) to be
+    :type map: Dictionary
+    :param map: The map to be outputted (pretty print).
+    :type output_method: Function
+    :param output_method: The output function (method) to be
     used for outputting the value.
-    @type indentation: String
-    @param indentation: The indentation level to be used.
+    :type indentation: String
+    :param indentation: The indentation level to be used.
     """
 
     # iterates over all the keys in the map in order to render
@@ -475,13 +475,13 @@ def map_normalize(item, operation = None):
     This operation may be used to convert "complex" type
     based maps into simplified type based maps.
 
-    @type item: Object
-    @param item: The map/item to be normalized.
-    @type operation: Method
-    @param operation: The operation used for normalization
+    :type item: Object
+    :param item: The map/item to be normalized.
+    :type operation: Method
+    :param operation: The operation used for normalization
     (reduce operation).
-    @rtype: Object
-    @return: The normalized map, resulting from the normalization
+    :rtype: Object
+    :return: The normalized map, resulting from the normalization
     of each of its items.
     """
 
@@ -525,11 +525,11 @@ def _map_flatten_pairs(map):
     Any dictionary based value of the provided map will be
     linearized using an extra recursion step.
 
-    @type map: Dictionary
-    @param map: The map that is the basis of the recursion
+    :type map: Dictionary
+    :param map: The map that is the basis of the recursion
     step for the retrieval of the key value pairs.
-    @rtype: Generator
-    @return: A generator that yields the various key to value
+    :rtype: Generator
+    :return: A generator that yields the various key to value
     linear relations, using a recursive approach.
     """
 
@@ -549,10 +549,10 @@ def _map_reduce(value):
     Reduces the provided value, converting it into the appropriate
     value considered to be "raw".
 
-    @type value: Object
-    @param value: The value to be reduced.
-    @rtype: Object
-    @return: The reduced value affected by the transformed function.
+    :type value: Object
+    :param value: The value to be reduced.
+    :rtype: Object
+    :return: The reduced value affected by the transformed function.
     """
 
     # retrieves the type for the item

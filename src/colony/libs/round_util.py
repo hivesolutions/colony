@@ -75,21 +75,21 @@ def roundi(value, places = 0, precise = False):
     and should only be used for interpreters that use the
     "new" rounding method.
 
-    @type value: float
-    @param value: The floating point value to be rounded
-    @type places: int
-    @param places: The number of decimal places to be used
+    :type value: float
+    :param value: The floating point value to be rounded
+    :type places: int
+    :param places: The number of decimal places to be used
     in the rounding operation.
-    @type precise: bool
-    @param precise: If the precise mode should be used where
+    :type precise: bool
+    :param precise: If the precise mode should be used where
     the delta value is calculated taking into account the
     number of places of the provided float, otherwise the
     "safe" delta is used, which should be good for most of
     the float number to be used.
-    @rtype: float
-    @return: The resulting rounded value according to the
+    :rtype: float
+    :return: The resulting rounded value according to the
     round half up strategy.
-    @see: http://docs.python.org/2/tutorial/floatingpoint.html
+    :see: http://docs.python.org/2/tutorial/floatingpoint.html
     """
 
     delta = _delta(value) if precise else DELTA
@@ -107,13 +107,13 @@ def rounds(value, places = 0):
     Note that this is an expensive operation and proper care should
     be taken to avoid extra processor usage.
 
-    @type value: float
-    @param value: The floating point value to be rounded
-    @type places: int
-    @param places: The number of decimal places to be used
+    :type value: float
+    :param value: The floating point value to be rounded
+    :type places: int
+    :param places: The number of decimal places to be used
     in the rounding operation.
-    @rtype: float
-    @return: The resulting rounded value according to the
+    :rtype: float
+    :return: The resulting rounded value according to the
     current (most precise) way of rounding.
     """
 
@@ -128,13 +128,13 @@ def roundt(value, places = 0):
     This function is relevant/useful for situation where the base
     value inherits indirectly from the float class.
 
-    @type value: float
-    @param value: The value that is meant to be rounded and then
+    :type value: float
+    :param value: The value that is meant to be rounded and then
     "casted" back to the original data type.
-    @param places: The number of decimal places to be used
+    :param places: The number of decimal places to be used
     in the rounding operation.
-    @rtype: float
-    @return: The resulting rounded value according to the
+    :rtype: float
+    :return: The resulting rounded value according to the
     default rounding strategy defined.
     """
 
@@ -152,8 +152,8 @@ def round_apply(force = False):
     avoiding the apply of the calculus for old rounding
     method interpreters (provides performance).
 
-    @type force: bool
-    @param force: If the apply operation should be performed
+    :type force: bool
+    :param force: If the apply operation should be performed
     for environments where it's not required (old rounding).
     """
 
@@ -179,8 +179,8 @@ def round_unapply(force = False):
     This method should be used carefully as it may produce
     some unexpected results.
 
-    @type force: bool
-    @param force: If the unapply operation should be performed
+    :type force: bool
+    :param force: If the unapply operation should be performed
     for environments where it's not required (old rounding).
     """
 
@@ -207,10 +207,10 @@ def round_is_new():
     This method infers the strategy that is currently in use for
     rounding based on the version of the interpreted.
 
-    @rtype: bool
-    @return: If the current (python) interpreter is running the
+    :rtype: bool
+    :return: If the current (python) interpreter is running the
     new rounding strategy (half way undefined).
-    @see: http://docs.python.org/2/tutorial/floatingpoint.html
+    :see: http://docs.python.org/2/tutorial/floatingpoint.html
     """
 
     # unpacks the system's version information tuple
@@ -236,13 +236,13 @@ def _round_t(value, places = 0):
     versions and not for the new python 3+ versions where the
     proper overriding of the __round__ method is preferred.
 
-    @type value: float
-    @param value: The value that is meant to be rounded and then
+    :type value: float
+    :param value: The value that is meant to be rounded and then
     "casted" back to the original data type.
-    @param places: The number of decimal places to be used
+    :param places: The number of decimal places to be used
     in the rounding operation.
-    @rtype: float
-    @return: The resulting rounded value according to the
+    :rtype: float
+    :return: The resulting rounded value according to the
     default rounding strategy defined.
     """
 
@@ -259,11 +259,11 @@ def _delta(value):
     This is an expensive operation operation and should be
     used carefully to avoid extra computation.
 
-    @type value: float
-    @param value: The value for which the proper (minimum)
+    :type value: float
+    :param value: The value for which the proper (minimum)
     delta value is going to be calculated.
-    @rtype: float
-    @param float: The (minimum) delta value calculated for
+    :rtype: float
+    :param float: The (minimum) delta value calculated for
     the provided float value, this value may be used for
     proper "old" rounding strategy.
     """

@@ -47,20 +47,20 @@ def load_plugin(lazy_loading = False, metadata_enabled = True):
     """
     Decorator for the initial load of the plugin.
 
-    @type lazy_loading: bool
-    @param lazy_loading: The boolean flag to set the type of loading for the plugin.
-    @type metadata_enabled: bool
-    @param metadata_enabled: The boolean flag to set the metadata availability.
-    @rtype: Function
-    @return: The created decorator.
+    :type lazy_loading: bool
+    :param lazy_loading: The boolean flag to set the type of loading for the plugin.
+    :type metadata_enabled: bool
+    :param metadata_enabled: The boolean flag to set the metadata availability.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def create_decorator_interceptor(function):
         """
         Creates a decorator interceptor, that intercepts the normal function call.
 
-        @type function: Function
-        @param function: The callback function.
+        :type function: Function
+        :param function: The callback function.
         """
 
         def decorator_interceptor(*args, **kwargs):
@@ -87,10 +87,10 @@ def load_plugin(lazy_loading = False, metadata_enabled = True):
         """
         The decorator function for the load allowed decorator.
 
-        @type function: Function
-        @param function: The function to be decorated.
-        @rtype: Function
-        @return: The decorator interceptor function.
+        :type function: Function
+        :param function: The function to be decorated.
+        :rtype: Function
+        :return: The decorator interceptor function.
         """
 
         # starts the matadata map for
@@ -114,22 +114,22 @@ def plugin_meta_information(metadata_key, metadata_values = {}):
     """
     Decorator that sets a defined metadata value in a plugin.
 
-    @type metadata_key: String
-    @param metadata_key: The metadata key to process the metadata.
-    @type metadata_values: Dictionary
-    @param metadata_values: The dictionary containing the metadata values.
-    @rtype: Function
-    @return: The created decorator.
+    :type metadata_key: String
+    :param metadata_key: The metadata key to process the metadata.
+    :type metadata_values: Dictionary
+    :param metadata_values: The dictionary containing the metadata values.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator(function, *args, **kwargs):
         """
         The decorator function for the plugin meta information decorator.
 
-        @type function: Function
-        @param function: The function to be decorated.
-        @rtype: Function
-        @return: The decorator interceptor function.
+        :type function: Function
+        :param function: The function to be decorated.
+        :rtype: Function
+        :return: The decorator interceptor function.
         """
 
         # retrieves the current load plugin function
@@ -162,10 +162,10 @@ def load_allowed(function):
     """
     Decorator that loads the allowed plugins into the defined methods.
 
-    @type function: Function
-    @param function: The function to be decorated.
-    @rtype: Function
-    @return: The created decorator.
+    :type function: Function
+    :param function: The function to be decorated.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator_interceptor(*args, **kwargs):
@@ -219,22 +219,22 @@ def load_allowed_capability(capability, load_plugin = False):
     """
     Decorator that marks a method for loading of allowed plugins.
 
-    @type capability: String
-    @param capability: The name of the capability to be loaded.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
-    @rtype: Function
-    @return: The created decorator.
+    :type capability: String
+    :param capability: The name of the capability to be loaded.
+    :type load_plugin: bool
+    :param load_plugin: The load plugin flag to set the test for plugin loading.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator(function, *args, **kwargs):
         """
         The decorator function for the load allowed capability decorator.
 
-        @type function: Function
-        @param function: The function to be decorated.
-        @rtype: Function
-        @return: The function to be decorated.
+        :type function: Function
+        :param function: The function to be decorated.
+        :rtype: Function
+        :return: The function to be decorated.
         """
 
         # retrieves the current load allowed function
@@ -264,10 +264,10 @@ def unload_allowed(function):
     """
     Decorator that unloads the allowed plugins into the defined methods.
 
-    @type function: Function
-    @param function: The function to be decorated.
-    @rtype: Function
-    @return: The created decorator.
+    :type function: Function
+    :param function: The function to be decorated.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator_interceptor(*args, **kwargs):
@@ -321,22 +321,22 @@ def unload_allowed_capability(capability, load_plugin = False):
     """
     Decorator that marks a method for unloading of allowed plugins.
 
-    @type capability: String
-    @param capability: The name of the capability to be unloaded.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
-    @rtype: Function
-    @return: The created decorator.
+    :type capability: String
+    :param capability: The name of the capability to be unloaded.
+    :type load_plugin: bool
+    :param load_plugin: The load plugin flag to set the test for plugin loading.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator(function, *args, **kwargs):
         """
         The decorator function for the unload allowed capability decorator.
 
-        @type function: Function
-        @param function: The function to be decorated.
-        @rtype: Function
-        @return: The function to be decorated.
+        :type function: Function
+        :param function: The function to be decorated.
+        :rtype: Function
+        :return: The function to be decorated.
         """
 
         # retrieves the current unload allowed function
@@ -366,10 +366,10 @@ def inject_dependencies(function):
     """
     Decorator that injects the dependencies into the defined methods.
 
-    @type function: Function
-    @param function: The function to be decorated.
-    @rtype: Function
-    @return: The created decorator.
+    :type function: Function
+    :param function: The function to be decorated.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator_interceptor(*args, **kwargs):
@@ -435,24 +435,24 @@ def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
     """
     Decorator that marks a method for injection of a dependency.
 
-    @type plugin_id: String
-    @param plugin_id: The id of the plugin dependency to be injected.
-    @type plugin_version: String
-    @param plugin_version: The version of the plugin dependency to be injected.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
-    @rtype: Function
-    @return: The created decorator.
+    :type plugin_id: String
+    :param plugin_id: The id of the plugin dependency to be injected.
+    :type plugin_version: String
+    :param plugin_version: The version of the plugin dependency to be injected.
+    :type load_plugin: bool
+    :param load_plugin: The load plugin flag to set the test for plugin loading.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator(function, *args, **kwargs):
         """
         The decorator function for the plugin inject decorator.
 
-        @type function: Function
-        @param function: The function to be decorated.
-        @rtype: Function
-        @return: The function to be decorated.
+        :type function: Function
+        :param function: The function to be decorated.
+        :rtype: Function
+        :return: The function to be decorated.
         """
 
         # creates the dependency plugin tuple
@@ -488,10 +488,10 @@ def event_handler(function):
     """
     Decorator that redirects the event handling into the defined methods.
 
-    @type function: Function
-    @param function: The function to be decorated.
-    @rtype: Function
-    @return: The created decorator.
+    :type function: Function
+    :param function: The function to be decorated.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator_interceptor(*args, **kwargs):
@@ -560,22 +560,22 @@ def event_handler_method(event_name, load_plugin = False):
     """
     Decorator that marks a method for event handling.
 
-    @type event_name: String
-    @param event_name: The name of the event to be handled by the marked method.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
-    @rtype: Function
-    @return: The created decorator.
+    :type event_name: String
+    :param event_name: The name of the event to be handled by the marked method.
+    :type load_plugin: bool
+    :param load_plugin: The load plugin flag to set the test for plugin loading.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator(function, *args, **kwargs):
         """
         The decorator function for the event handler method decorator.
 
-        @type function: Function
-        @param function: The function to be decorated.
-        @rtype: Function
-        @return: The function to be decorated.
+        :type function: Function
+        :param function: The function to be decorated.
+        :rtype: Function
+        :return: The function to be decorated.
         """
 
         # retrieves the current event handler function
@@ -605,10 +605,10 @@ def set_configuration_property(function):
     """
     Decorator that redirects the setting of configuration properties into the defined methods.
 
-    @type function: Function
-    @param function: The function to be decorated.
-    @rtype: Function
-    @return: The created decorator.
+    :type function: Function
+    :param function: The function to be decorated.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator_interceptor(*args, **kwargs):
@@ -660,22 +660,22 @@ def set_configuration_property_method(property_name, load_plugin = False):
     """
     Decorator that marks a method for set configuration property.
 
-    @type property_name: String
-    @param property_name: The name of the property to be set by the marked method.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
-    @rtype: Function
-    @return: The created decorator.
+    :type property_name: String
+    :param property_name: The name of the property to be set by the marked method.
+    :type load_plugin: bool
+    :param load_plugin: The load plugin flag to set the test for plugin loading.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator(function, *args, **kwargs):
         """
         The decorator function for the set configuration property decorator.
 
-        @type function: Function
-        @param function: The function to be decorated.
-        @rtype: Function
-        @return: The function to be decorated.
+        :type function: Function
+        :param function: The function to be decorated.
+        :rtype: Function
+        :return: The function to be decorated.
         """
 
         # retrieves the current set configuration property function
@@ -706,10 +706,10 @@ def unset_configuration_property(function):
     Decorator that redirects the unsetting of configuration
     properties into the defined methods.
 
-    @type function: Function
-    @param function: The function to be decorated.
-    @rtype: Function
-    @return: The created decorator.
+    :type function: Function
+    :param function: The function to be decorated.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator_interceptor(*args, **kwargs):
@@ -760,22 +760,22 @@ def unset_configuration_property_method(property_name, load_plugin = False):
     """
     Decorator that marks a method for unset configuration property.
 
-    @type property_name: String
-    @param property_name: The name of the property to be unset by the marked method.
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to unset the test for plugin loading.
-    @rtype: Function
-    @return: The created decorator.
+    :type property_name: String
+    :param property_name: The name of the property to be unset by the marked method.
+    :type load_plugin: bool
+    :param load_plugin: The load plugin flag to unset the test for plugin loading.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator(function, *args, **kwargs):
         """
         The decorator function for the unset configuration property decorator.
 
-        @type function: Function
-        @param function: The function to be decorated.
-        @rtype: Function
-        @return: The function to be decorated.
+        :type function: Function
+        :param function: The function to be decorated.
+        :rtype: Function
+        :return: The function to be decorated.
         """
 
         # retrieves the current unset configuration property function
@@ -805,20 +805,20 @@ def plugin_call(load_plugin = True):
     """
     Decorator that intercepts a plugin front-end call method.
 
-    @type load_plugin: bool
-    @param load_plugin: The load plugin flag to set the test for plugin loading.
-    @rtype: Function
-    @return: The created decorator.
+    :type load_plugin: bool
+    :param load_plugin: The load plugin flag to set the test for plugin loading.
+    :rtype: Function
+    :return: The created decorator.
     """
 
     def decorator(function, *args, **kwargs):
         """
         The decorator function for the plugin call decorator.
 
-        @type function: Function
-        @param function: The function to be decorated.
-        @rtype: Function
-        @return: The decorator interceptor function.
+        :type function: Function
+        :param function: The function to be decorated.
+        :rtype: Function
+        :return: The decorator interceptor function.
         """
 
         if load_plugin:
@@ -836,8 +836,8 @@ def create_load_plugin_interceptor(function):
     """
     Creates a load plugin interceptor, that loads a lazy plugin on the fly.
 
-    @type function: Function
-    @param function: The callback function.
+    :type function: Function
+    :param function: The callback function.
     """
 
     def decorator_interceptor(*args, **kwargs):

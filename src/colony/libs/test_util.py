@@ -78,11 +78,11 @@ class ColonyTestCase(unittest.TestCase):
         """
         Tests that the provided value is of the specified type.
 
-        @type value: Object
-        @param value: The value whose type will be compared
+        :type value: Object
+        :param value: The value whose type will be compared
         against the expected type.
-        @type expected_type: Type
-        @param expected_type: The type that is expected for
+        :type expected_type: Type
+        :param expected_type: The type that is expected for
         the provided value.
         """
 
@@ -107,11 +107,11 @@ class ColonyTestCase(unittest.TestCase):
         The expected exception parameter may contain the type of the
         expected exception or the name of it.
 
-        @type expected_exception: Exception/String
-        @param expected_exception: The type or name of the exception
+        :type expected_exception: Exception/String
+        :param expected_exception: The type or name of the exception
         that should be raised by the function.
-        @type function: Function
-        @param function: The function to be invoked.
+        :type function: Function
+        :param function: The function to be invoked.
         """
 
         try:
@@ -149,8 +149,8 @@ class ColonyTestCase(unittest.TestCase):
         """
         Tests that the provided xml data is valid.
 
-        @type xml_data: String
-        @param xml_data: The string with the xml data.
+        :type xml_data: String
+        :param xml_data: The string with the xml data.
         """
 
         # attempts to parse the xml data

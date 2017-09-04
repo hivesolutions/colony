@@ -45,14 +45,14 @@ def version_cmp(version, version_compare):
     This way it's possible to compare it against version ranges
     defined in the form of wildcard values.
 
-    @type version: String
-    @param version: The base version string to be verified
+    :type version: String
+    :param version: The base version string to be verified
     by the comparison.
-    @type version_compare: String
-    @param version_compare: The compare version string to be used
+    :type version_compare: String
+    :param version_compare: The compare version string to be used
     as reference in the comparison (may contain wildcard values).
-    @rtype: bool
-    @return: The result of the version string comparison (includes
+    :rtype: bool
+    :return: The result of the version string comparison (includes
     wildcard comparison).
     """
 
@@ -80,11 +80,11 @@ def version_is_concrete(version):
     string contains wildcard values that match an open range
     of version values.
 
-    @param version: String
-    @param version: The string containing the version to be verified
+    :param version: String
+    :param version: The string containing the version to be verified
     to be of type concrete.
-    @rtype: bool
-    @return: The result of the version concrete testing.
+    :rtype: bool
+    :return: The result of the version concrete testing.
     """
 
     # checks if the wildcard character is present in the version

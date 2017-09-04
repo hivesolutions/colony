@@ -142,57 +142,57 @@ def run(
     primary start point of the plugin system when starting it as
     a stand alone process (eg: not using wsgi).
 
-    @type manager_path: String
-    @param manager_path: The manager base path for execution.
-    @type logger_path: String
-    @param logger_path: The manager base path for logger.
-    @type library_path: String
-    @param library_path: The set of paths to the various library
+    :type manager_path: String
+    :param manager_path: The manager base path for execution.
+    :type logger_path: String
+    :param logger_path: The manager base path for logger.
+    :type library_path: String
+    :param library_path: The set of paths to the various library
     locations separated by a semi-column.
-    @type meta_path: String
-    @param meta_path: The set of paths to the various meta
+    :type meta_path: String
+    :param meta_path: The set of paths to the various meta
     locations separated by a semi-column.
-    @type plugin_path: String
-    @param plugin_path: The set of paths to the various plugin
+    :type plugin_path: String
+    :param plugin_path: The set of paths to the various plugin
     locations separated by a semi-column.
-    @type mode: String
-    @param mode: The mode that is going to be used for non
+    :type mode: String
+    :param mode: The mode that is going to be used for non
     standard execution of the plugin manager (eg: testing). This
     value is not set by default (for default execution).
-    @type margs: List
-    @param margs: The arguments (coming from command line) that
+    :type margs: List
+    :param margs: The arguments (coming from command line) that
     are going to be provided at execution time to the function
     responsible for the mode execution, these arguments should
     consist on a series of string based values.
-    @type level: String
-    @param level: The logging level described as a string that is
+    :type level: String
+    :param level: The logging level described as a string that is
     going to be used by the underlying colony logging infra-structure.
-    @type layout_mode: String
-    @param layout_mode: The layout mode to be used by the plugin system.
-    @type run_mode: String
-    @param run_mode: The run mode to be used by the plugin
+    :type layout_mode: String
+    :param layout_mode: The layout mode to be used by the plugin system.
+    :type run_mode: String
+    :param run_mode: The run mode to be used by the plugin
     system, this value is critical for the type of execution
     of the colony system (eg: development, runtime, etc.)
-    @type stop_on_cycle_error: bool
-    @param stop_on_cycle_error: If the plugin system should stop
+    :type stop_on_cycle_error: bool
+    :param stop_on_cycle_error: If the plugin system should stop
     on cycle error, a cycle error is an error that occurs during
     the startup process of the colony infra-structure.
-    @type loop: bool
-    @param loop: If the plugin manager is going to run in a loop.
-    @type threads: bool
-    @param threads: If the plugin manager is going to allow threads.
-    @type signals: bool
-    @param signals: If the plugin manager is going to register signals.
-    @type container: String
-    @param container: The name of the plugin manager container.
-    @type prefix_paths: List
-    @param prefix_paths: The list of manager path relative paths to be used as reference for sub-projects.
-    @type daemon_pid: int
-    @param daemon_pid: The pid of the daemon process running the instance of plugin manager.
-    @type daemon_file_path: String
-    @param daemon_file_path: The file path to the daemon file, for information control.
-    @rtype: int
-    @return: The return code.
+    :type loop: bool
+    :param loop: If the plugin manager is going to run in a loop.
+    :type threads: bool
+    :param threads: If the plugin manager is going to allow threads.
+    :type signals: bool
+    :param signals: If the plugin manager is going to register signals.
+    :type container: String
+    :param container: The name of the plugin manager container.
+    :type prefix_paths: List
+    :param prefix_paths: The list of manager path relative paths to be used as reference for sub-projects.
+    :type daemon_pid: int
+    :param daemon_pid: The pid of the daemon process running the instance of plugin manager.
+    :type daemon_file_path: String
+    :param daemon_file_path: The file path to the daemon file, for information control.
+    :rtype: int
+    :return: The return code.
     """
 
     # sets the plugin manager as a global variable, this value
@@ -274,8 +274,8 @@ def execute(cwd = None):
     the provided command line arguments and then start the
     execution of the colony plugin system.
 
-    @type cwd: String
-    @param cwd: The "original" current working directory to
+    :type cwd: String
+    :param cwd: The "original" current working directory to
     be used for situations where the "cwd" has been changed
     so that files generated are put on the colony path. This
     is created as a legacy operation.
@@ -463,40 +463,40 @@ def parse_configuration(
     Parses the configuration using the given values as default values.
     The configuration file used is given as a parameter to the function.
 
-    @type cwd: String
-    @param cwd: The (original) current working directory to be used
+    :type cwd: String
+    :param cwd: The (original) current working directory to be used
     in the resolution of the relative import values.
-    @type mode: String
-    @param mode: The mode that is going to be used for non
+    :type mode: String
+    :param mode: The mode that is going to be used for non
     standard execution of the plugin manager (eg: testing). This
     value is not set by default (for default execution).
-    @type config_file_path: Sting
-    @param config_file_path: The path to the configuration file.
-    @type level: String
-    @param level: The logging level value described as a string
+    :type config_file_path: Sting
+    :param config_file_path: The path to the configuration file.
+    :type level: String
+    :param level: The logging level value described as a string
     that is going to be used in the plugin system.
-    @type layout_mode: String
-    @param layout_mode: The layout mode to be used by the plugin system.
-    @type run_mode: String
-    @param run_mode: The run mode to be used by the plugin system.
-    @type daemon_file_path: String
-    @param daemon_file_path: The file path to the daemon file,
+    :type layout_mode: String
+    :param layout_mode: The layout mode to be used by the plugin system.
+    :type run_mode: String
+    :param run_mode: The run mode to be used by the plugin system.
+    :type daemon_file_path: String
+    :param daemon_file_path: The file path to the daemon file,
     for information control.
-    @type logger_path: String
-    @param logger_path: The path to the logger.
-    @type library_path: String
-    @param library_path: The set of paths to the various library
+    :type logger_path: String
+    :param logger_path: The path to the logger.
+    :type library_path: String
+    :param library_path: The set of paths to the various library
     locations separated by a semi-column.
-    @type meta_path: String
-    @param meta_path: The set of paths to the various meta locations
+    :type meta_path: String
+    :param meta_path: The set of paths to the various meta locations
     separated by a semi-column.
-    @type plugin_path: String
-    @param plugin_path: The set of paths to the various plugin
+    :type plugin_path: String
+    :param plugin_path: The set of paths to the various plugin
     locations separated by a semi-column.
-    @type manager_path: String
-    @param manager_path: The path to the plugin system.
-    @rtype: Tuple
-    @return: The tuple with the values parsed value.
+    :type manager_path: String
+    :param manager_path: The path to the plugin system.
+    :rtype: Tuple
+    :return: The tuple with the values parsed value.
     """
 
     # retrieves the configuration directory from the configuration
@@ -641,17 +641,17 @@ def convert_reference_path_list(cwd, manager_path, current_prefix_paths, referen
     base paths that are dereferenced at runtime based in the current
     layout configuration or other variables.
 
-    @type cwd: String
-    @param cwd: The (original) current working directory to be used
+    :type cwd: String
+    :param cwd: The (original) current working directory to be used
     in the resolution of the relative import values.
-    @type manager_path: String
-    @param manager_path: The path to the manager.
-    @type current_prefix_paths: List
-    @param current_prefix_paths: The prefix paths currently in use.
-    @type reference_path_list: List
-    @param reference_path_list: The list of reference paths.
-    @rtype: String
-    @return: A string converted reference path containing all
+    :type manager_path: String
+    :param manager_path: The path to the manager.
+    :type current_prefix_paths: List
+    :param current_prefix_paths: The prefix paths currently in use.
+    :type reference_path_list: List
+    :param reference_path_list: The list of reference paths.
+    :rtype: String
+    :return: A string converted reference path containing all
     the dereferenced paths.
     """
 
@@ -704,10 +704,10 @@ def load_plugin_paths_file(manager_path):
     Loads the plugin paths file, creating the base plugin
     paths contained in the file.
 
-    @type manager_path: String
-    @param manager_path: The path to the manager.
-    @rtype: String
-    @return: A string with the paths loaded from the file.
+    :type manager_path: String
+    :param manager_path: The path to the manager.
+    :rtype: String
+    :return: A string with the paths loaded from the file.
     """
 
     # creates the config general path from the manager path
@@ -753,12 +753,12 @@ def configure_system(layout_mode, run_mode, manager_path):
     """
     Configures the system for the given attributes.
 
-    @type layout_mode: String
-    @param layout_mode: The layout mode to configure the system.
-    @type run_mode: String
-    @param run_mode: The run mode to configure the system.
-    @type manager_path: String
-    @param manager_path: The manager path to configure the system.
+    :type layout_mode: String
+    :param layout_mode: The layout mode to configure the system.
+    :type run_mode: String
+    :param run_mode: The run mode to configure the system.
+    :type manager_path: String
+    :param manager_path: The manager path to configure the system.
     """
 
     # sets the various colony related environment variables

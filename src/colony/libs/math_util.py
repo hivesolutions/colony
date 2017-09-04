@@ -48,10 +48,10 @@ def ceil_integer(value):
     The conversion to integer ensures that the ceil
     is compatible with certain operations.
 
-    @type value: int
-    @param value: The value to apply the ceil.
-    @rtype: int
-    @return: The ceil of the given value "casted" as an
+    :type value: int
+    :param value: The value to apply the ceil.
+    :rtype: int
+    :return: The ceil of the given value "casted" as an
     integer.
     """
 
@@ -69,14 +69,14 @@ def greatest_common_divisor(p_value, q_value):
     Calculates the greatest common divisor of p value and q value.
     This method uses the classic euclidean algorithm.
 
-    @type p_value: int
-    @param p_value: The first prime number to obtain
+    :type p_value: int
+    :param p_value: The first prime number to obtain
     the greatest common divisor.
-    @type q_value: int
-    @param q_value: The second prime number to obtain
+    :type q_value: int
+    :param q_value: The second prime number to obtain
     the greatest common divisor.
-    @rtype: int
-    @return: The greatest common divisor between both values.
+    :rtype: int
+    :return: The greatest common divisor between both values.
     """
 
     # in case the p value is smaller than
@@ -105,14 +105,14 @@ def fast_exponentiation(base, exponent, modulus):
     given value retrieving the exponentiation result.
     The calculus may be defined by: base ^ exponent % modulus.
 
-    @type base: int
-    @param base: The base value for the exponentiation.
-    @type exponent: int
-    @param exponent: The exponent value for the exponentiation.
-    @type modulus: int
-    @param modulus: The modulus value for the exponentiation.
-    @rtype: int
-    @return: The result of the exponentiation.
+    :type base: int
+    :param base: The base value for the exponentiation.
+    :type exponent: int
+    :param exponent: The exponent value for the exponentiation.
+    :type modulus: int
+    :param modulus: The modulus value for the exponentiation.
+    :rtype: int
+    :return: The result of the exponentiation.
     """
 
     # calculates the (initial) result
@@ -149,11 +149,11 @@ def item_set_total(item_set):
     The total is calculated summing the value
     parts of the map.
 
-    @type item_set: Dictionary
-    @param item_set: The item set (map) to calculate
+    :type item_set: Dictionary
+    :param item_set: The item set (map) to calculate
     the total from its values.
-    @rtype: float
-    @return: The total value from the item set.
+    :rtype: float
+    :return: The total value from the item set.
     """
 
     # retrieves the item set values
@@ -171,14 +171,14 @@ def item_set_percentage(item_name, item_set):
     the value of the item with the given name,
     in relation to the total value of the item set.
 
-    @type item_name: String
-    @param item_name: The name of the item to retrieve
+    :type item_name: String
+    :param item_name: The name of the item to retrieve
     the relative percentage value.
-    @type item_set: Dictionary
-    @param item_set: The item set (map) to be used
+    :type item_set: Dictionary
+    :param item_set: The item set (map) to be used
     as base (total) for relative calculation.
-    @rtype: float
-    @return: The relative percentage value of the item
+    :rtype: float
+    :return: The relative percentage value of the item
     in relation to the total value of the item set.
     """
 

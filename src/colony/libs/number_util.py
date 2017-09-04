@@ -45,11 +45,11 @@ def get_number_length(number):
     Retrieves the length (in digits) of the
     given number.
 
-    @type number: int
-    @param number: The number to retrieve the length
+    :type number: int
+    :param number: The number to retrieve the length
     in number of digits.
-    @rtype: int
-    @return: The length of the given number in number
+    :rtype: int
+    :return: The length of the given number in number
     of digits.
     """
 
@@ -61,13 +61,13 @@ def get_digit(number, index):
     The index values start with the least
     significant value.
 
-    @type number: int
-    @param number: The base number to retrieve
+    :type number: int
+    :param number: The base number to retrieve
     the digit.
-    @type index: int
-    @param index: The index to retrieve the digit.
-    @rtype: int
-    @return: The digit in the given index.
+    :type index: int
+    :param index: The index to retrieve the digit.
+    :rtype: int
+    :return: The digit in the given index.
     """
 
     return number // (10 ** index) % 10
@@ -84,14 +84,14 @@ def to_fixed(number, places = 2):
     Use this method carefully as it may provide unrealistic
     comparisons.
 
-    @type number: float
-    @param number: The float number to be converted in to
+    :type number: float
+    :param number: The float number to be converted in to
     a fixed point decimal number.
-    @type places: int
-    @param places: The number of decimal places to be used
+    :type places: int
+    :param places: The number of decimal places to be used
     in the conversion into fixed point.
-    @rtype: Decimal
-    @return: The decimal representation of the number (fixed
+    :rtype: Decimal
+    :return: The decimal representation of the number (fixed
     point arithmetic) with the correct number of decimal places.
     """
 

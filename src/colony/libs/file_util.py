@@ -86,12 +86,12 @@ class FileRotator(object):
         """
         Constructor of the class.
 
-        @type base_file_path: String
-        @param base_file_path: The base file path to be used.
-        @type maximum_file_size: int
-        @param maximum_file_size: The maximum file size.
-        @type file_count: int
-        @param file_count: The number of files to be used.
+        :type base_file_path: String
+        :param base_file_path: The base file path to be used.
+        :type maximum_file_size: int
+        :param maximum_file_size: The maximum file size.
+        :type file_count: int
+        :param file_count: The number of files to be used.
         """
 
         self.base_file_path = base_file_path
@@ -125,11 +125,11 @@ class FileRotator(object):
         Writes the given string value using
         the current file rotator.
 
-        @type string_value: String
-        @param string_value: The string value to be
+        :type string_value: String
+        :param string_value: The string value to be
         written.
-        @type flush: bool
-        @param flush: If the current file rotator should
+        :type flush: bool
+        :param flush: If the current file rotator should
         be flushed.
         """
 
@@ -163,8 +163,8 @@ class FileRotator(object):
         Returns the current closed status
         for the internal file reference.
 
-        @rtype: bool
-        @return: The current closed status
+        :rtype: bool
+        :return: The current closed status
         for the internal file reference.
         """
 
@@ -206,8 +206,8 @@ class FileRotator(object):
         In case the renaming flag is set the file is
         renamed to the first file in the rotator.
 
-        @type rename: bool
-        @param rename: If the renaming on the
+        :type rename: bool
+        :param rename: If the renaming on the
         file should be done.
         """
 
@@ -289,10 +289,10 @@ class FileContext(object):
         Resolves the given file path, for the current
         environment it is the same value.
 
-        @type file_path: String
-        @param file_path: The file path to be resolved.
-        @rtype: String
-        @return: The resolved (real) file path.
+        :type file_path: String
+        :param file_path: The file path to be resolved.
+        :rtype: String
+        :return: The resolved (real) file path.
         """
 
         # returns the file path (same value)
@@ -303,11 +303,11 @@ class FileContext(object):
         Tests if the given file path exists in
         the current environment.
 
-        @type file_path: String
-        @param file_path: The file path to be tested
+        :type file_path: String
+        :param file_path: The file path to be tested
         for existence.
-        @rtype: bool
-        @return: The result of the test for
+        :rtype: bool
+        :return: The result of the test for
         file existence.
         """
 
@@ -322,11 +322,11 @@ class FileContext(object):
         Tests if the given file path refers a directory path in
         the current environment.
 
-        @type file_path: String
-        @param file_path: The file path to be tested
+        :type file_path: String
+        :param file_path: The file path to be tested
         for directory referral.
-        @rtype: bool
-        @return: The result of the test for
+        :rtype: bool
+        :return: The result of the test for
         directory referral.
         """
 
@@ -341,11 +341,11 @@ class FileContext(object):
         Reads the contents from the given
         file path.
 
-        @type file_path: String
-        @param file_path: The path to the file
+        :type file_path: String
+        :param file_path: The path to the file
         to read from.
-        @rtype: String
-        @return: The (read) contents from the file.
+        :rtype: String
+        :return: The (read) contents from the file.
         """
 
         # open the file
@@ -366,11 +366,11 @@ class FileContext(object):
         Writes the contents to the file in the
         given file path.
 
-        @type file_path: String
-        @param file_path: The path to the file to
+        :type file_path: String
+        :param file_path: The path to the file to
         be written.
-        @type file_contents: String
-        @param file_contents: The contents to be
+        :type file_contents: String
+        :param file_contents: The contents to be
         written to the file.
         """
 
@@ -391,11 +391,11 @@ class FileContext(object):
         """
         Removes the directory in the given path.
 
-        @type directory_path: String
-        @param directory_path: The path to the directory
+        :type directory_path: String
+        :param directory_path: The path to the directory
         to be removed.
-        @type handle_exception: bool
-        @param handle_exception: If an eventual raised exception shall
+        :type handle_exception: bool
+        :param handle_exception: If an eventual raised exception shall
         be handled gracefully.
         """
 
@@ -418,11 +418,11 @@ class FileContext(object):
         """
         Removes the file in the given path.
 
-        @type directory_path: String
-        @param directory_path: The path to the file
+        :type directory_path: String
+        :param directory_path: The path to the file
         to be removed.
-        @type handle_exception: bool
-        @param handle_exception: If an eventual raised exception shall
+        :type handle_exception: bool
+        :param handle_exception: If an eventual raised exception shall
         be handled gracefully.
         """
 
@@ -441,11 +441,11 @@ class FileContext(object):
         """
         Removes the directory in the given directory path.
 
-        @type directory_path: String
-        @param directory_path: The path to the directory
+        :type directory_path: String
+        :param directory_path: The path to the directory
         to be removed.
-        @type handle_exception: bool
-        @param handle_exception: If an eventual raised exception shall
+        :type handle_exception: bool
+        :param handle_exception: If an eventual raised exception shall
         be handled gracefully.
         """
 
@@ -459,10 +459,10 @@ class FileContext(object):
         The returned file path is used in
         the current file context.
 
-        @type file_path: String
-        @param file_path: The file path to be used as base.
-        @rtype: String
-        @return: The file path to be used for writing.
+        :type file_path: String
+        :param file_path: The file path to be used as base.
+        :rtype: String
+        :return: The file path to be used for writing.
         """
 
         # returns the file path
@@ -472,8 +472,8 @@ class FileContext(object):
         """
         Creates a directory from the given file path.
 
-        @type file_path: String
-        @param file_path: The path to the directory
+        :type file_path: String
+        :param file_path: The path to the directory
         to be created.
         """
 
@@ -523,8 +523,8 @@ class TransactionContext(object):
         This callback will be called upon the final
         commit is passed.
 
-        @type callback: Function
-        @param callback: The callback function to be called
+        :type callback: Function
+        :param callback: The callback function to be called
         upon the final commit.
         """
 
@@ -535,8 +535,8 @@ class TransactionContext(object):
         """
         Removes an existing commit callback.
 
-        @type callback: Function
-        @param callback: The callback function to be called
+        :type callback: Function
+        :param callback: The callback function to be called
         upon the final commit.
         """
 
@@ -549,8 +549,8 @@ class TransactionContext(object):
         This callback will be called upon the final
         commit is started.
 
-        @type callback: Function
-        @param callback: The callback function to be called
+        :type callback: Function
+        :param callback: The callback function to be called
         upon the final commit.
         """
 
@@ -561,8 +561,8 @@ class TransactionContext(object):
         """
         Removes an existing pre commit callback.
 
-        @type callback: Function
-        @param callback: The callback function to be called
+        :type callback: Function
+        :param callback: The callback function to be called
         upon the final commit.
         """
 
@@ -575,8 +575,8 @@ class TransactionContext(object):
         This callback will be called upon the final
         rollback is passed.
 
-        @type callback: Function
-        @param callback: The callback function to be called
+        :type callback: Function
+        :param callback: The callback function to be called
         upon the final rollback.
         """
 
@@ -587,8 +587,8 @@ class TransactionContext(object):
         """
         Removes an existing rollback callback.
 
-        @type callback: Function
-        @param callback: The callback function to be called
+        :type callback: Function
+        :param callback: The callback function to be called
         upon the final rollback.
         """
 
@@ -601,8 +601,8 @@ class TransactionContext(object):
         This callback will be called upon the final
         rollback is started.
 
-        @type callback: Function
-        @param callback: The callback function to be called
+        :type callback: Function
+        :param callback: The callback function to be called
         upon the final rollback.
         """
 
@@ -613,8 +613,8 @@ class TransactionContext(object):
         """
         Removes an existing pre rollback callback.
 
-        @type callback: Function
-        @param callback: The callback function to be called
+        :type callback: Function
+        :param callback: The callback function to be called
         upon the final rollback.
         """
 
@@ -716,8 +716,8 @@ class FileImmediateContext(FileContext, TransactionContext):
         the duplicate operation are not meant
         to be removed.
 
-        @type remove_duplicates: bool
-        @param remove_duplicats: If duplicate operations
+        :type remove_duplicates: bool
+        :param remove_duplicats: If duplicate operations
         are meant to be removed so that no duplicate
         operation are performed (performance impact).
         """
@@ -764,8 +764,8 @@ class FileTransactionContext(FileContext, TransactionContext):
         """
         Constructor of the class.
 
-        @type temporary_path: String
-        @param temporary_path: The temporary path to be used
+        :type temporary_path: String
+        :param temporary_path: The temporary path to be used
         for the transaction temporary files.
         """
 
@@ -781,10 +781,10 @@ class FileTransactionContext(FileContext, TransactionContext):
         Resolves the given file path, checking if it
         exists and if it is valid.
 
-        @type file_path: String
-        @param file_path: The file path to be resolved.
-        @rtype: String
-        @return: The resolved (real) file path.
+        :type file_path: String
+        :param file_path: The file path to be resolved.
+        :rtype: String
+        :return: The resolved (real) file path.
         """
 
         # retrieves the virtual file path for the file path
@@ -805,11 +805,11 @@ class FileTransactionContext(FileContext, TransactionContext):
         Tests if the given file path exists in
         the current virtual environment.
 
-        @type file_path: String
-        @param file_path: The file path to be tested
+        :type file_path: String
+        :param file_path: The file path to be tested
         for existence.
-        @rtype: bool
-        @return: The result of the test for
+        :rtype: bool
+        :return: The result of the test for
         file existence.
         """
 
@@ -838,11 +838,11 @@ class FileTransactionContext(FileContext, TransactionContext):
         Tests if the given file path refers a directory path in
         the current virtual environment.
 
-        @type file_path: String
-        @param file_path: The file path to be tested
+        :type file_path: String
+        :param file_path: The file path to be tested
         for directory referral.
-        @rtype: bool
-        @return: The result of the test for
+        :rtype: bool
+        :return: The result of the test for
         directory referral.
         """
 
@@ -861,11 +861,11 @@ class FileTransactionContext(FileContext, TransactionContext):
         In case a transaction exists the contents read
         are the virtual ones.
 
-        @type file_path: String
-        @param file_path: The path to the file to be
+        :type file_path: String
+        :param file_path: The path to the file to be
         read.
-        @rtype: String
-        @return: The read file contents.
+        :rtype: String
+        :return: The read file contents.
         """
 
         # resolves the file path (real file path)
@@ -884,14 +884,14 @@ class FileTransactionContext(FileContext, TransactionContext):
         This write is not persisted immediately and
         pushed to a transaction.
 
-        @type file_path: String
-        @param file_path: The path to the file to be
+        :type file_path: String
+        :param file_path: The path to the file to be
         written.
-        @type file_contents: String
-        @param file_contents: The contents to be written
+        :type file_contents: String
+        :param file_contents: The contents to be written
         to the file.
-        @type replace_file: bool
-        @param replace_file: If the file should be replaced
+        :type replace_file: bool
+        :param replace_file: If the file should be replaced
         in case existent file is found.
         """
 
@@ -921,11 +921,11 @@ class FileTransactionContext(FileContext, TransactionContext):
         This removal is not persisted immediately and
         pushed to a transaction.
 
-        @type directory_path: String
-        @param directory_path: The path to the directory
+        :type directory_path: String
+        :param directory_path: The path to the directory
         to be removed.
-        @type handle_exception: bool
-        @param handle_exception: If an eventual raised exception shall
+        :type handle_exception: bool
+        :param handle_exception: If an eventual raised exception shall
         be handled gracefully.
         """
 
@@ -962,11 +962,11 @@ class FileTransactionContext(FileContext, TransactionContext):
         This removal is not persisted immediately and
         pushed to a transaction.
 
-        @type directory_path: String
-        @param directory_path: The path to the file
+        :type directory_path: String
+        :param directory_path: The path to the file
         to be removed.
-        @type handle_exception: bool
-        @param handle_exception: If an eventual raised exception shall
+        :type handle_exception: bool
+        :param handle_exception: If an eventual raised exception shall
         be handled gracefully.
         """
 
@@ -999,11 +999,11 @@ class FileTransactionContext(FileContext, TransactionContext):
         In case a transaction exists the directory to be
         removed is the virtual one.
 
-        @type directory_path: String
-        @param directory_path: The path to the directory
+        :type directory_path: String
+        :param directory_path: The path to the directory
         to be removed.
-        @type handle_exception: bool
-        @param handle_exception: If an eventual raised exception shall
+        :type handle_exception: bool
+        :param handle_exception: If an eventual raised exception shall
         be handled gracefully.
         """
 
@@ -1022,13 +1022,13 @@ class FileTransactionContext(FileContext, TransactionContext):
         The file path to be used will be used in a
         transaction environment and context.
 
-        @type file_path: String
-        @param file_path: The file path to be used as base.
-        @type replace_files: bool
-        @param replace_files: If the files should be replaced
+        :type file_path: String
+        :param file_path: The file path to be used as base.
+        :type replace_files: bool
+        :param replace_files: If the files should be replaced
         in case duplicate files are found.
-        @rtype: String
-        @return: The file path to be used for writing.
+        :rtype: String
+        :return: The file path to be used for writing.
         """
 
         # retrieves the virtual file path for the file path
@@ -1076,8 +1076,8 @@ class FileTransactionContext(FileContext, TransactionContext):
         the duplicate operation are not meant
         to be removed.
 
-        @type remove_duplicates: bool
-        @param remove_duplicats: If duplicate operations
+        :type remove_duplicates: bool
+        :param remove_duplicats: If duplicate operations
         are meant to be removed so that no duplicate
         operation are performed (performance impact).
         """
@@ -1221,8 +1221,8 @@ class FileTransactionContext(FileContext, TransactionContext):
         Adds a path tuple to the current path
         tuples list.
 
-        @type path_tuple: Tuple
-        @param path_tuple: The path tuple to
+        :type path_tuple: Tuple
+        :param path_tuple: The path tuple to
         be added to the tuples list.
         """
 
@@ -1234,11 +1234,11 @@ class FileTransactionContext(FileContext, TransactionContext):
         Retrieves the "virtual" file path for the given
         file path.
 
-        @type file_path: String
-        @param file_path: The file path to retrieve
+        :type file_path: String
+        :param file_path: The file path to retrieve
         the "virtual" file path.
-        @rtype: String
-        @return: The virtual file path.
+        :rtype: String
+        :return: The virtual file path.
         """
 
         # splits the file path into drive and
@@ -1271,11 +1271,11 @@ class FileTransactionContext(FileContext, TransactionContext):
         This is a very slow operation and should be used carefully
         otherwise the operation may become clogged.
 
-        @type file_path: String
-        @param file_path: The path to the file to be checked
+        :type file_path: String
+        :param file_path: The path to the file to be checked
         for removal.
-        @rtype: bool
-        @return: The result of the file removal check.
+        :rtype: bool
+        :return: The result of the file removal check.
         """
 
         # iterates over all the path tuples in
@@ -1318,8 +1318,8 @@ class FileTransactionContext(FileContext, TransactionContext):
         The remote tuple refers paths to be added
         in persistence.
 
-        @type path_tuple: String
-        @param path_tuple: The tuple with the path contents.
+        :type path_tuple: String
+        :param path_tuple: The tuple with the path contents.
         """
 
         # unpacks the path tuple
@@ -1349,8 +1349,8 @@ class FileTransactionContext(FileContext, TransactionContext):
         In this mode no files are replaced in case of name
         collision.
 
-        @type path_tuple: String
-        @param path_tuple: The tuple with the path contents.
+        :type path_tuple: String
+        :param path_tuple: The tuple with the path contents.
         """
 
         # unpacks the path tuple
@@ -1381,8 +1381,8 @@ class FileTransactionContext(FileContext, TransactionContext):
         The remote tuple refers paths to be removed
         in persistence.
 
-        @type path_tuple: String
-        @param path_tuple: The tuple with the path contents.
+        :type path_tuple: String
+        :param path_tuple: The tuple with the path contents.
         """
 
         # unpacks the path tuple

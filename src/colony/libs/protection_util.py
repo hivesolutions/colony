@@ -44,10 +44,10 @@ def public(function):
     """
     Decorator used to assign the public attribute to methods.
 
-    @type function: Function
-    @param function: The function to sets the public visibility.
-    @rtype: Function
-    @return: The sent function (returned as a normal decorator).
+    :type function: Function
+    :param function: The function to sets the public visibility.
+    :rtype: Function
+    :return: The sent function (returned as a normal decorator).
     """
 
     # sets the (decorated) function as public and then returns
@@ -104,12 +104,12 @@ class Protected(object):
             Checks if the given name is a magic attribute
             in the class.
 
-            @type name: String
-            @param name: The name to be tested for "magic".
-            @type without: List
-            @param without: The list of attributes to exclude magic.
-            @rtype: bool
-            @return: The result of the "magic" test.
+            :type name: String
+            :param name: The name to be tested for "magic".
+            :type without: List
+            :param without: The list of attributes to exclude magic.
+            :rtype: bool
+            :return: The result of the "magic" test.
             """
 
             # in case the name is magic and is not in the without list
