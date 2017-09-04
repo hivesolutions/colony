@@ -63,3 +63,20 @@ class ControlTest(colony.ColonyTestCase):
 
         control_value = colony.calculate_tax_number_control_value(98046859)
         self.assertEqual(control_value, 0)
+
+    def test_calculate_id_number_control_value(self):
+        """
+        Tests the calculate id number control value function.
+        """
+
+        control_value = colony.calculate_id_number_control_value(12576330)
+        self.assertEqual(control_value, 1)
+
+        control_value = colony.calculate_tax_number_control_value(11873402)
+        self.assertEqual(control_value, 4)
+
+        control_value = colony.calculate_tax_number_control_value(52843401)
+        self.assertEqual(control_value, 2)
+
+        control_value = colony.calculate_tax_number_control_value(82523486)
+        self.assertEqual(control_value, 7)

@@ -42,15 +42,16 @@ import decimal
 
 def get_number_length(number):
     """
-    Retrieves the length (in digits) of the
-    given number.
+    Retrieves the length (in digits) of the given number.
+    This method does not allow any kind of padding zeros
+    as they are not going to be handled.
 
     :type number: int
     :param number: The number to retrieve the length
     in number of digits.
     :rtype: int
     :return: The length of the given number in number
-    of digits.
+    of digits, according to logarithmic calculus.
     """
 
     return int(math.ceil(math.log(number, 10)))

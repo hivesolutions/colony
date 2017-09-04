@@ -99,11 +99,14 @@ def calculate_id_number_control_value(id_number):
 
 def _calculate_control_value(number):
     """
-    Calculates the control value for the given
-    number.
+    Calculates the control value for the given number, this
+    control value is related with the calculus of a tax
+    number number or id number.
 
     :type number: int
-    :param number: The number to calculate the control value.
+    :param number: The number to calculate the control value,
+    the length of this number is not verifies and may assume
+    any size, as that's not part of the control value calculus.
     :rtype: int
     :return: The control value for the given number.
     """
