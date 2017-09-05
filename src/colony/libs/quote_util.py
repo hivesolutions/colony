@@ -112,7 +112,7 @@ def quote(string_value, safe = "/"):
 def quote_plus(string_value, safe = ""):
     """
     Quotes the given string value according to
-    the url encoding specification. This kind of quote
+    the URL encoding specification. This kind of quote
     takes into account the plus and the space relation.
     The implementation is based on the python base library.
 
@@ -141,7 +141,7 @@ def quote_plus(string_value, safe = ""):
 
 def unquote(string_value, strict = True):
     """
-    Unquotes the given string value according to the url
+    Unquotes the given string value according to the URL
     encoding specification.
     The implementation is based on the python base library.
 
@@ -193,7 +193,7 @@ def unquote(string_value, strict = True):
 def unquote_plus(string_value, strict = True):
     """
     Unquotes the given string value according to
-    the url encoding specification. This kind of unquote
+    the URL encoding specification. This kind of unquote
     takes into account the plus and the space relation.
     The implementation is based on the python base library.
 
@@ -222,13 +222,13 @@ def unquote_plus(string_value, strict = True):
 
 def url_encode(attributes_map = None, attributes_list = None, plus_encoding = False):
     """
-    Encodes the given attributes into url encoding. The
+    Encodes the given attributes into URL encoding. The
     attributes may be either provided as a map or alternatively
     as a sequence of key value tuples.
 
     :type attributes_map: Dictionary
     :param attributes_map: The map of attributes to be encoded
-    using url encoding, if this value is defined the attributes
+    using URL encoding, if this value is defined the attributes
     list is not going to be used.
     :type attributes_list: List
     :param attributes_list: The list of key and value tuples

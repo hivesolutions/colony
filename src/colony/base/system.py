@@ -6430,7 +6430,7 @@ class PackageDependency(Dependency):
     of packaged existence (not required) """
 
     url = None
-    """ The url where from which the package may be retrieved
+    """ The URL where from which the package may be retrieved
     this may be the product page for the package """
 
     def __init__(
@@ -6452,7 +6452,7 @@ class PackageDependency(Dependency):
         :type version: String
         :param version: The package version.
         :type url: String
-        :param url: The package url.
+        :param url: The package URL.
         :type mandatory: bool
         :param mandatory: The mandatory value.
         :type conditions_list: List

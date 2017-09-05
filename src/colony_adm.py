@@ -86,7 +86,7 @@ this is always going to be used together with the current
 user wide configuration values """
 
 STAGE_URL = "https://colony.stage.hive.pt/"
-""" The test url version of the colony repository, used
+""" The test URL version of the colony repository, used
 for the downloading of staging ready only packages """
 
 def resolve_manager(path, ensure = True):
@@ -788,9 +788,9 @@ def _install(name = None, id = None, version = None, upgrade = False):
     if name: params["name"] = name
     if id: params["identifier"] = id
 
-    # retrieves the proper repository url that is currently defined
+    # retrieves the proper repository URL that is currently defined
     # then enforces the value to be a valid sequence, so that the
-    # logic is defined as cycle of url based package detection
+    # logic is defined as cycle of URL based package detection
     repo_url = colony.conf("REPO_URL", REPO_URL)
     if not type(repo_url) in (list, tuple): repo_url = (("colony", repo_url),)
 
@@ -800,7 +800,7 @@ def _install(name = None, id = None, version = None, upgrade = False):
     package = None
 
     # iterates over the complete set of repositories defined in the
-    # repository url value trying to find the proper package, note
+    # repository URL value trying to find the proper package, note
     # that the package is found when at least one result is returned
     # matching the provided criteria (as defined in specification)
     for name, _repo_url in repo_url:
@@ -815,7 +815,7 @@ def _install(name = None, id = None, version = None, upgrade = False):
     # an exception must be raised indicating the problem to the user
     if not package: raise RuntimeError("Package not found")
 
-    # constructs the proper url for package information retrieval and
+    # constructs the proper URL for package information retrieval and
     # runs it so that the complete set of information (including dependencies)
     # is gathered providing the system with the complete set of options
     url = repo_url + "packages/%s/info" % package["name"]
@@ -838,7 +838,7 @@ def _install(name = None, id = None, version = None, upgrade = False):
     # is required for the user to be notified about such action
     output("Downloading %s" % description)
 
-    # creates the proper package retrieval url and runs the remote get request
+    # creates the proper package retrieval URL and runs the remote get request
     # to try to retrieve the package contents of so that they are installed
     url = repo_url + "packages/%s" % info["short_name"]
     data = appier.get(url, params = dict(version = info["version"]))
@@ -953,9 +953,9 @@ def _upload(path, repo = "colony", generate = True, delete = True):
     repo_username = colony.conf("REPO_USERNAME", "root")
     repo_password = colony.conf("REPO_PASSWORD", "root")
 
-    # enforces the repository url to be defined as a sequence for better
+    # enforces the repository URL to be defined as a sequence for better
     # handling of the logic and then retrieves the requested target
-    # repository base url value, raising an exception in case it's not found
+    # repository base URL value, raising an exception in case it's not found
     if not type(repo_url) in (list, tuple): repo_url = (("colony", repo_url),)
     repo_url = dict(repo_url)
     repo_url = repo_url.get(repo)
@@ -966,7 +966,7 @@ def _upload(path, repo = "colony", generate = True, delete = True):
     # so that the end user knows where the upload is going
     output("Uploading %s into %s repo (%s)" % (descriptor["short_name"], repo, repo_url))
 
-    # creates the url format, taking into account the defined url and the
+    # creates the URL format, taking into account the defined URL and the
     # current descriptor and then runs the upload, using a post operation
     url = repo_url + "packages"
     login_url = repo_url + "api/admin/login"

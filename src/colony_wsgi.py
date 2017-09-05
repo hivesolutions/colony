@@ -109,7 +109,7 @@ alias_path = alias_path and os.path.normpath(alias_path)
 
 # gathers the path to the rewrite file that contains json information
 # about the rewrite meta information to be used at runtime to shorten
-# the provided url path values (useful under proxy redirection)
+# the provided URL path values (useful under proxy redirection)
 rewrite_path = colony.conf("REWRITE_PATH", None)
 rewrite_path = rewrite_path and os.path.expanduser(rewrite_path)
 rewrite_path = rewrite_path and os.path.normpath(rewrite_path)
