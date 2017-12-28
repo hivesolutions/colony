@@ -784,9 +784,9 @@ def _install(name = None, id = None, version = None, upgrade = False):
     # creates the map containing the various parameters that are
     # going to be sent as part of the filtering process for the
     # remote request of package retrieval
-    params = dict()
-    if name: params["name"] = name
-    if id: params["identifier"] = id
+    params = dict(filters = [])
+    if name: params["filters"].append("name:equals:%s" % name)
+    if id: params["filters"].append("identifier:equals:%s" % id)
 
     # retrieves the proper repository URL that is currently defined
     # then enforces the value to be a valid sequence, so that the
@@ -803,10 +803,14 @@ def _install(name = None, id = None, version = None, upgrade = False):
     # repository URL value trying to find the proper package, note
     # that the package is found when at least one result is returned
     # matching the provided criteria (as defined in specification)
-    for name, _repo_url in repo_url:
+    for _name, _repo_url in repo_url:
         url = _repo_url + "packages"
         result = appier.get(url, params = params)
         package = result[0] if result else dict()
+        is_valid = True if package else False
+        is_valid &= package["name"] == name if package and name else True
+        is_valid &= package["identifier"] == id if package and id else True
+        if not is_valid: package = None
         if not package: continue
         repo_url = _repo_url
         break
