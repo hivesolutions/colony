@@ -1,4 +1,5 @@
 {
+    "1.3.27": ["Improved compatibility with repos"],
     "1.3.26": ["Small set of code fixes"],
     "1.3.26": ["Handles REPO_URL_* for specific repo url setting"],
     "1.3.24": ["Support for EXEC_DELAY for sleep before exec mode"],
