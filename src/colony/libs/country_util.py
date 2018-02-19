@@ -445,7 +445,7 @@ code, three character code and the number code) """
 
 def country_get(name, relaxed = True):
     """
-    Retrieves a tuple containing the complete set of iso 3166
+    Retrieves a tuple containing the complete set of ISO 3166
     information for the country with the provided name.
 
     The returned tuple contains a two character code a three

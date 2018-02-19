@@ -209,7 +209,7 @@ def application(environ, start_response):
 
         # retrieves the wsgi plugin and uses it to handle
         # the wsgi request (request redirection) any inner
-        # exception should be handled and an error http
+        # exception should be handled and an error HTTP
         # message should be returned to the end user
         wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
         if not wsgi_plugin: raise colony.PluginSystemException("no wsgi plugin found")
