@@ -78,3 +78,13 @@ class ConfigTest(unittest.TestCase):
         result = colony.conf("HEIGHT")
 
         self.assertEqual(result, None)
+
+    def test_none(self):
+        colony.conf_s("AGE", None)
+        result = colony.conf("AGE", cast = int)
+
+        self.assertEqual(result, None)
+
+        result = colony.conf("HEIGHT", cast = int)
+
+        self.assertEqual(result, None)
