@@ -1052,17 +1052,20 @@ class Plugin(object):
 
         return not self.id == self.original_id
 
-    def get_attribute(self, attribute_name):
+    def get_attribute(self, attribute_name, default = None):
         """
         Retrieves the attribute for the given attribute name.
 
         :type attribute_name: String
         :param attribute_name: The name of the attribute name to retrieve.
+        :type default: Object
+        :param default: The default value to be returned in case an
+        attribute with the given name is not found.
         :rtype: Object
         :return: The attribute for the given attribute name.
         """
 
-        return self.attributes.get(attribute_name, None)
+        return self.attributes.get(attribute_name, default)
 
     def has_capability(self, capability):
         """
