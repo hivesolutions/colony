@@ -401,7 +401,12 @@ def _pack(path):
 
     # opens the archive path as a zip file for writing and
     # then writes the current "instance" directory into the zip
-    file = zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED)
+    file = zipfile.ZipFile(
+        archive_path,
+        mode = "w",
+        compression = zipfile.ZIP_DEFLATED,
+        allowZip64 = True
+    )
     try: _zip_directory(path, "/", file)
     finally: file.close()
 
@@ -634,7 +639,12 @@ def _build(path, short_name = True):
 
     # opens the target zip file to be used in write
     # mode (it's going to receive the data)
-    file = zipfile.ZipFile(name, "w", zipfile.ZIP_DEFLATED)
+    file = zipfile.ZipFile(
+        name,
+        mode = "w",
+        compression = zipfile.ZIP_DEFLATED,
+        allowZip64 = True
+    )
 
     try:
         # iterates over all the resources to be written
@@ -674,7 +684,7 @@ def _deploy(path, timestamp = None):
     # reads the package (zip file) and then extracts the complete
     # set of it's contents into the temporary directory so that they
     # may be manipulated and then properly used
-    file = zipfile.ZipFile(path, "r", zipfile.ZIP_DEFLATED)
+    file = zipfile.ZipFile(path, mode = "r")
     try: file.extractall(temp_path)
     finally: file.close()
 
@@ -1002,7 +1012,7 @@ def _read(path):
     # reads the package (zip file) and then extracts the complete
     # set of it's contents into the temporary directory so that they
     # may be manipulated and then properly used
-    file = zipfile.ZipFile(path, "r", zipfile.ZIP_DEFLATED)
+    file = zipfile.ZipFile(path, mode = "r")
     try: file.extractall(temp_path)
     finally: file.close()
 
