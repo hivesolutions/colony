@@ -113,7 +113,7 @@ class Protected(object):
             """
 
             # in case the name is magic and is not in the without list
-            return name not in without and name.startswith("__") and name.endswith("__")
+            return not name in without and name.startswith("__") and name.endswith("__")
 
         # creates a new proxy instance with the protected name
         Proxy = type("Protected(%s)" % cls.__name__, (), {})
