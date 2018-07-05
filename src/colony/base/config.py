@@ -102,10 +102,8 @@ used only as part of the inner (private) configuration
 of the colony infra-structure and should only be changed
 with complete knowledge of the inner workings of the system """
 
-__builtins__ = __builtins__ if isinstance(__builtins__, dict) else\
-    __builtins__.__dict__
-""" The global builtins reference created by the proper redefinition
-of the variable if that's required by python implementation """
+if not isinstance(__builtins__, dict):
+    __builtins__ = __builtins__.__dict__
 
 def conf(name, default = None, cast = None):
     """
