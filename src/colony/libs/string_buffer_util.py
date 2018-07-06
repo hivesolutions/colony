@@ -157,7 +157,7 @@ class StringBuffer(object):
         if whence == os.SEEK_SET:
             self.current_position = offset
         elif whence == os.SEEK_END:
-            self.current_position = self.current_size - offset
+            self.current_position = self.current_size + offset
         elif whence == os.SEEK_CUR:
             if self.current_position + offset < self.current_size:
                 self.current_position += offset
