@@ -37,12 +37,18 @@ __copyright__ = "Copyright (c) 2008-2018 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+import uuid
+
 class ColonyException(Exception):
     """
     The top level colony exception, this is the main exception
     for the complete colony infra-structure and all the other
     exceptions should inherit from this one.
     """
+
+    def __init__(self):
+        Exception.__init__(self)
+        self._uid = None
 
     def __unicode__(self):
         """
@@ -53,6 +59,21 @@ class ColonyException(Exception):
         """
 
         return self.__str__()
+
+    @property
+    def uid(self):
+        """
+        The unique identifier of the current exception may
+        be used safely from a global/universal point of view.
+
+        :rtype: String
+        :return: The global unique identifier of the current
+        exception entity.
+        """
+
+        if self._uid: return self._uid
+        self._uid = uuid.uuid4()
+        return self._uid
 
 class PluginSystemException(ColonyException):
     """
