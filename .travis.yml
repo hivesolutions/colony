@@ -26,7 +26,6 @@ install:
   - pip install -r requirements.txt
   - pip install -r extra.txt
   - pip install "pycparser<2.19" coveralls
-  - pip install twine
 script: if [[ $TRAVIS_PYTHON_VERSION != "3.2" ]]; then coverage run --source=colony setup.py test; else python setup.py test; fi
 after_success: if [[ $TRAVIS_PYTHON_VERSION != "3.2" ]]; then coveralls; fi
 git:
