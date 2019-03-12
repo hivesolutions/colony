@@ -50,7 +50,7 @@ class ColonyException(Exception):
     """ The exception's message, to be used latter for runtime
     based diagnostics """
 
-    def __init__(self, message):
+    def __init__(self, message = None):
         Exception.__init__(self)
         self.message = message
         self._uid = None
@@ -63,6 +63,7 @@ class ColonyException(Exception):
         :return: The string representation of the class.
         """
 
+        if self.message == None: return Exception.__str__(self)
         return "Colony exception - %s" % self.message
 
     def __unicode__(self):
@@ -94,6 +95,9 @@ class PluginSystemException(ColonyException):
     """
     The plugin system exception class.
     """
+
+    def __init__(self, message):
+        ColonyException.__init__(self, message = message)
 
     def __str__(self):
         """
