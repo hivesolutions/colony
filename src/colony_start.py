@@ -785,6 +785,7 @@ def main():
     """
 
     path = os.path.dirname(__file__)
+    path = os.path.normpath((os.path.abspath(path)))
     _path = os.getcwd()
     try:
         os.chdir(path)

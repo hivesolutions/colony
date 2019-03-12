@@ -46,9 +46,24 @@ class ColonyException(Exception):
     exceptions should inherit from this one.
     """
 
-    def __init__(self):
+    message = None
+    """ The exception's message, to be used latter for runtime
+    based diagnostics """
+
+    def __init__(self, message):
         Exception.__init__(self)
+        self.message = message
         self._uid = None
+
+    def __str__(self):
+        """
+        Returns the string representation of the class.
+
+        :rtype: String
+        :return: The string representation of the class.
+        """
+
+        return "Colony exception - %s" % self.message
 
     def __unicode__(self):
         """
@@ -79,20 +94,6 @@ class PluginSystemException(ColonyException):
     """
     The plugin system exception class.
     """
-
-    message = None
-    """ The exception's message """
-
-    def __init__(self, message):
-        """
-        Constructor of the class.
-
-        :type message: String
-        :param message: The message to be printed.
-        """
-
-        ColonyException.__init__(self)
-        self.message = message
 
     def __str__(self):
         """
