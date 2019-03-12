@@ -6164,7 +6164,7 @@ class PluginManager(object):
                 "Unloaded system due to exception: '%s' of type '%s'" %
                 (exception_message, exception_type)
             )
-        except (KeyboardInterrupt, SystemExit)as exception:
+        except (KeyboardInterrupt, SystemExit) as exception:
             # retrieves the message that is going to be used for the
             # representation of the exception in the logging
             exception_message = legacy.UNICODE(exception) or "Unknown error"
