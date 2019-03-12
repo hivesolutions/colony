@@ -97,6 +97,13 @@ class PluginSystemException(ColonyException):
     """
 
     def __init__(self, message):
+        """
+        Constructor of the class.
+
+        :type message: String
+        :param message: The message to be printed.
+        """
+
         ColonyException.__init__(self, message = message)
 
     def __str__(self):
