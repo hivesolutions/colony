@@ -119,7 +119,7 @@ def generate(information = None, encoding = DEFAULT_ENCODING):
         # tries to import the json module in case of failure
         # a silent return must occur to avoid problems
         try: import os, json, datetime
-        except: return
+        except ImportError: return
 
         # retrieves the current directory path and uses it to
         # infer the location of the information file to the

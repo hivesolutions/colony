@@ -212,9 +212,9 @@ def application(environ, start_response):
         # exception should be handled and an error HTTP
         # message should be returned to the end user
         wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
-        if not wsgi_plugin: raise colony.PluginSystemException("no wsgi plugin found")
+        if not wsgi_plugin: raise colony.PluginSystemException("no WSGI plugin found")
         sequence = wsgi_plugin.handle(environ, start_response, prefix, alias, rewrite)
-    except:
+    except Exception:
         # in case the run mode is development the exception should
         # be processed and a description sent to the output
         if run_mode == "development":
@@ -249,7 +249,7 @@ def get_alias(encoding = "utf-8"):
         finally: file.close()
         data = data.decode(encoding)
         alias = json.loads(data)
-    except:
+    except Exception:
         # unsets the alias path to avoid any further file reading
         # avoiding any duplicated reading
         alias_path = None
@@ -277,7 +277,7 @@ def get_rewrite(encoding = "utf-8"):
         finally: file.close()
         data = data.decode(encoding)
         rewrite = json.loads(data)
-    except:
+    except Exception:
         # unsets the rewrite path to avoid any further file reading
         # avoiding any duplicated reading
         rewrite_path = None
@@ -339,7 +339,7 @@ class ServerThread(threading.Thread):
                 cer_file = self.cer_file,
                 kwargs = self.kwargs
             )
-        except:
+        except Exception:
             sys.stderr.write("Problem in '%s'" % str(self) + "\n")
             raise
 

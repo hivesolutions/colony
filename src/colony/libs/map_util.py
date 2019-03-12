@@ -384,7 +384,7 @@ def map_get_value_cast(map, key, cast_type = str, default_value = None):
 
         # returns the value casted
         return value_casted
-    except:
+    except Exception:
         # returns the default value
         return default_value
 

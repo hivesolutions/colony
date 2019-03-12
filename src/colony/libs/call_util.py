@@ -38,7 +38,6 @@ __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import time
-import inspect
 
 from colony.base import legacy
 
@@ -80,7 +79,7 @@ def execute_retries(
             # breaks the loop, because there is
             # no exception raised (successful call)
             break
-        except:
+        except Exception:
             # in case it's the last index position
             # the exception should be re-raised
             if index == number_retries: raise

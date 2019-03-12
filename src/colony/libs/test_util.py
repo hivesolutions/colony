@@ -139,7 +139,6 @@ class ColonyTestCase(unittest.TestCase):
             # not the expected one (so that the test may fail correctly) uses
             # the class type verification as no string mode is enabled
             if not string_mode and not exception_class == expected_exception: raise
-
         else:
             # raises a failure exception in case no exception was raised, this is
             # the expected behavior as an exception was expected in situation
@@ -158,7 +157,7 @@ class ColonyTestCase(unittest.TestCase):
         try:
             # parses the xml data
             xml.dom.minidom.parseString(xml_data)
-        except:
+        except Exception:
             # raises a failure exception
             # in case the parse was unsuccessful
-            raise self.failureException("xml data is invalid")
+            raise self.failureException("XML data is invalid")

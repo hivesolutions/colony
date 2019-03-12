@@ -2601,7 +2601,7 @@ class PluginManager(object):
             # an error in case an exception occurs in the importing
             if plugin in sys.modules: continue
             try: __import__(plugin)
-            except BaseException as exception:
+            except Exception as exception:
                 self.error("Problem importing module %s: %s" % (plugin, legacy.UNICODE(exception)))
 
         # prints an info message
@@ -2882,7 +2882,7 @@ class PluginManager(object):
         try:
             # writes the plugin path and a new line separator
             plugin_paths_file.write(plugin_path + "\n")
-        except:
+        finally:
             # closes the plugin paths file
             plugin_paths_file.close()
 
@@ -3411,7 +3411,7 @@ class PluginManager(object):
                     elif plugin.loading_type == LAZY_LOADING_TYPE:
                         # calls the lazy load plugin method in the plugin (plugin bootup process)
                         plugin.lazy_load_plugin()
-                except BaseException as exception:
+                except Exception as exception:
                     # sets the exception in the plugin and then sets the error
                     # state flag in it, properly identifying the issue
                     plugin.exception = exception
@@ -3458,7 +3458,7 @@ class PluginManager(object):
                 try:
                     # calls the end load plugin method in the plugin (plugin bootup process)
                     plugin.end_load_plugin()
-                except BaseException as exception:
+                except Exception as exception:
                     # sets the exception and the error state flag in
                     # the plugin so that the loading process is properly
                     # handled at the "front" of the operation
@@ -3572,14 +3572,11 @@ class PluginManager(object):
             try:
                 # calls the unload plugin method in the plugin (plugin shutdown process)
                 plugin.unload_plugin()
-            except BaseException as exception:
-                # prints the error message
+            except Exception as exception:
+                # prints the error message then sets the exception on the
+                # plugin and sets its error state
                 self.error("There was an exception: %s" % legacy.UNICODE(exception))
-
-                # sets the exception in the plugin
                 plugin.exception = exception
-
-                # sets the plugin error state flag
                 plugin.error_state = True
 
         # in case the plugin is in an error state
@@ -3612,7 +3609,7 @@ class PluginManager(object):
             try:
                 # calls the end unload plugin method in the plugin (plugin shutdown process)
                 plugin.end_unload_plugin()
-            except BaseException as exception:
+            except Exception as exception:
                 # sets the exception in the plugin and then sets the
                 # plugin error state flag, indicating that a problem occurred
                 plugin.exception = exception
@@ -7338,7 +7335,7 @@ class PluginEventThread(threading.Thread):
 
                 # calls the event thread method
                 self.method()
-            except BaseException as exception:
+            except Exception as exception:
                 # prints an error message to the current logging infra-structure
                 # then sets the exception in the plugin instance and signals the
                 # error state in the plugin (to be used latter)

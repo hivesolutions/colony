@@ -42,7 +42,7 @@ import os
 from colony.base import legacy
 
 try: import Crypto.Cipher.AES
-except: Crypto = None
+except ImportError: Crypto = None
 
 BLOCK_SIZE = 16
 """ The block size to be used for the post operation

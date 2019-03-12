@@ -46,7 +46,7 @@ from . import legacy
 try:
     import zmq
     boradcast = True
-except:
+except ImportError:
     boradcast = False
 
 MAX_LENGTH = 10000
@@ -132,7 +132,7 @@ class BroadcastHandler(logging.Handler):
 
             # flushes the current stream
             self.flush()
-        except:
+        except Exception:
             # handles the error in the proper manner
             self.handleError(record)
 
@@ -153,7 +153,7 @@ class MemoryHandler(logging.Handler):
         # in case the level is not found in the list of levels
         # it's not considered valid and so an empty list is returned
         try: index = LEVELS.index(level)
-        except BaseException: return collections.deque()
+        except Exception: return collections.deque()
 
         # retrieves the complete set of levels that are considered
         # equal or less sever than the requested one
