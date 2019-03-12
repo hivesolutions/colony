@@ -146,16 +146,16 @@ class ColonyTestCase(unittest.TestCase):
 
     def assert_valid_xml(self, xml_data):
         """
-        Tests that the provided xml data is valid.
+        Tests that the provided XML data is valid.
 
         :type xml_data: String
-        :param xml_data: The string with the xml data.
+        :param xml_data: The string with the XML data.
         """
 
-        # attempts to parse the xml data
+        # attempts to parse the XML data
         # to check if its valid
         try:
-            # parses the xml data
+            # parses the XML data
             xml.dom.minidom.parseString(xml_data)
         except Exception:
             # raises a failure exception
