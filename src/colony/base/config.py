@@ -45,7 +45,7 @@ from . import legacy
 
 FILE_NAME = "colony.json"
 """ The default name of the file that is going to be
-used for the loading of configuration values from json """
+used for the loading of configuration values from JSON """
 
 FILE_TEMPLATE = "colony.%s.json"
 """ The template to be used in the construction of the
