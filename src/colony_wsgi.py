@@ -100,14 +100,14 @@ run_mode = colony.conf("RUN_MODE", "development")
 # resolution in the request handling
 prefix = colony.conf("PREFIX", None)
 
-# gathers the path to the alias file that contains json information
+# gathers the path to the alias file that contains JSON information
 # about the mapping prefixes for the http server, the file should
 # contain a set of prefix to resolution prefix values
 alias_path = colony.conf("ALIAS_PATH", None)
 alias_path = alias_path and os.path.expanduser(alias_path)
 alias_path = alias_path and os.path.normpath(alias_path)
 
-# gathers the path to the rewrite file that contains json information
+# gathers the path to the rewrite file that contains JSON information
 # about the rewrite meta information to be used at runtime to shorten
 # the provided URL path values (useful under proxy redirection)
 rewrite_path = colony.conf("REWRITE_PATH", None)
@@ -240,8 +240,8 @@ def get_alias(encoding = "utf-8"):
     if alias or not alias_path: return alias
 
     try:
-        # tries to load the json file using the default python
-        # based json module (may not exist) the closes the file
+        # tries to load the JSON file using the default python
+        # based JSON module (may not exist) the closes the file
         # to avoid any memory reference leak
         import json
         file = open(alias_path, "rb")
@@ -268,8 +268,8 @@ def get_rewrite(encoding = "utf-8"):
     if rewrite or not rewrite_path: return rewrite
 
     try:
-        # tries to load the json file using the default python
-        # based json module (may not exist) the closes the file
+        # tries to load the JSON file using the default python
+        # based JSON module (may not exist) the closes the file
         # to avoid any memory reference leak
         import json
         file = open(rewrite_path, "rb")
