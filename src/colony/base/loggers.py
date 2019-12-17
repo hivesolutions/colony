@@ -82,7 +82,7 @@ class BroadcastHandler(logging.Handler):
     ZeroMQ technology. It's useful for distributed logging
     situations where one wants to gather logging from a
     colony instance spread over a network space.
-    
+
     :see: https://zeromq.org
     """
 
