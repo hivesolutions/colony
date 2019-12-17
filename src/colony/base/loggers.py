@@ -79,13 +79,15 @@ for proper debug level resolution, standard compliant """
 class BroadcastHandler(logging.Handler):
     """
     Logging handler that broadcasts the messages using the
-    zero mq technology. It's useful for distributed logging
+    ZeroMQ technology. It's useful for distributed logging
     situations where one wants to gather logging from a
     colony instance spread over a network space.
+    
+    :see: https://zeromq.org
     """
 
     socket = None
-    """ The current zero mq socket in used, this is
+    """ The current ZeroMQ socket in used, this is
     the object to be used to broadcast the messages """
 
     def __init__(self, host = None, port = None):
