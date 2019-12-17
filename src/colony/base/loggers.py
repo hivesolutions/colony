@@ -128,7 +128,7 @@ class BroadcastHandler(logging.Handler):
             # default encoding for the transmission, then sends the message
             # through the socket
             if type(message) == legacy.UNICODE: message = message.encode("utf-8")
-            self.socket.send("colony %s" % message)
+            self.socket.send(b"colony %s" % message)
 
             # flushes the current stream
             self.flush()
