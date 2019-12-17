@@ -2650,7 +2650,7 @@ class PluginManager(object):
             # case the plugin is not currently loaded
             if not plugin in self.loaded_plugins: self.start_plugin(plugin)
 
-    def start_plugin(self, plugin):
+    def start_plugin(self, plugin, use_path = True):
         """
         Starts the given plugin, creating a singleton instance.
         This method should also manipulate the created singleton
@@ -2658,6 +2658,9 @@ class PluginManager(object):
 
         :type plugin: Class
         :param plugin: The plugin to start.
+        :type use_path: bool
+        :param use_path: If the file path of the main plugin file
+        should be used to infer the short name of the plugin.
         """
 
         # retrieves the plugin id and description for the plugin
@@ -2683,11 +2686,21 @@ class PluginManager(object):
         # retrieves the path to the directory containing the plugin file
         plugin_dir = os.path.dirname(absolute_plugin_path)
 
+        # in case the (file) path mode is enabled uses the name of the file
+        # where the plugin class is defined to name the plugin, this is considered
+        # to be the "safest" approach as it allows more flexibility in plugin name
+        if use_path:
+            plugin_name = os.path.splitext(os.path.basename(inspect.getfile(plugin)))[0][:-7]
+
         # retrieves the name of the plugin as the name of the class converted
         # to the underscore version of it and then removes the last part of
         # the string that contains the plugin suffix (this plugin name value
         # will be used for rapid retrieval of the plugin)
-        plugin_name = colony.libs.to_underscore(plugin.__name__)[:-7]
+        else:
+            plugin_name = colony.libs.to_underscore(plugin.__name__)[:-7]
+
+        # updates the "private" name reference in the plugin with the one that
+        # has just been computed using the target strategy
         plugin._name = plugin_name
 
         # sets the plugin instance reference in the plugins object, this will
