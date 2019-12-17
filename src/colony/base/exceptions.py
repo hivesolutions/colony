@@ -170,7 +170,9 @@ class InvalidCommand(PluginSystemException):
 
 class InvalidArgument(PluginSystemException):
     """
-    The invalid argument class.
+    The invalid argument class, meaning that some passed
+    parameter/argument is not valid under the context of
+    the current execution.
     """
 
     def __init__(self, message):
@@ -196,7 +198,8 @@ class InvalidArgument(PluginSystemException):
 
 class OperationNotComplete(PluginSystemException):
     """
-    The operation not complete class.
+    The operation not complete class, meaning that the
+    some operation has been blocked in the middle of execution.
     """
 
     def __init__(self, message):
@@ -219,3 +222,31 @@ class OperationNotComplete(PluginSystemException):
         """
 
         return "Operation not complete - %s" % self.message
+
+class OperationRestart(PluginSystemException):
+    """
+    The operation restart class, meaning that the current
+    executing operation should be restart by its owner (up
+    in the call stack).
+    """
+
+    def __init__(self, message):
+        """
+        Constructor of the class.
+
+        :type message: String
+        :param message: The message to be printed.
+        """
+
+        PluginSystemException.__init__(self, message)
+        self.message = message
+
+    def __str__(self):
+        """
+        Returns the string representation of the class.
+
+        :rtype: String
+        :return: The string representation of the class.
+        """
+
+        return "Operation restart - %s" % self.message

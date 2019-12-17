@@ -50,7 +50,7 @@ from .decorators import load_plugin, plugin_meta_information, load_allowed, load
     event_handler_method, set_configuration_property, set_configuration_property_method,\
     unset_configuration_property, unset_configuration_property_method, plugin_call, create_load_plugin_interceptor
 from .exceptions import ColonyException, PluginSystemException, PluginClassNotAvailable, InvalidCommand,\
-    InvalidArgument, OperationNotComplete
+    InvalidArgument, OperationNotComplete, OperationRestart
 from .information import VERSION, RELEASE, BUILD, RELEASE_DATE, RELEASE_DATE_TIME, ENVIRONMENT_VERSION,\
     ENVIRONMENT, DEFAULT_ENCODING, DATE_FORMAT, DATE_TIME_FORMAT, INFORMATION_PATH
 from .loggers import BroadcastHandler, MemoryHandler
