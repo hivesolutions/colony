@@ -449,7 +449,7 @@ def _generate(path, build = True, delete = True):
     # have been called for the current master operation
     return result
 
-def _generate_plugin(path):
+def _generate_plugin(path, use_path = True):
     # imports the json module so that it's possible
     # to generate the colony descriptor file
     import json
@@ -480,10 +480,17 @@ def _generate_plugin(path):
     # indicating that no plugin has been found (problem situation)
     if not plugin: raise RuntimeError("No plugin found")
 
+    # in case the (file) path mode is enabled uses the name of the file
+    # where the plugin class is defined to name the plugin, this is considered
+    # to be the "safest" approach as it allows more flexibility in plugin name
+    if use_path:
+        short_name = os.path.basename(path)[:-10]
+
     # uses the typical approach to the generation of the plugin short name
     # this strategy is defined as the standard one and should be respected
     # by any plugin considered to be compliant with colony
-    short_name = colony.to_underscore(plugin.__name__)[:-7]
+    else:
+        short_name = colony.to_underscore(plugin.__name__)[:-7]
 
     # initializes the loop that is going to discover the type of directory
     # structure for the current plugin (either inexistent, direct or indirect)
