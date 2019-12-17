@@ -484,7 +484,7 @@ def _generate_plugin(path, use_path = True):
     # where the plugin class is defined to name the plugin, this is considered
     # to be the "safest" approach as it allows more flexibility in plugin name
     if use_path:
-        short_name = os.path.basename(path)[:-10]
+        short_name = os.path.splitext(os.path.basename(path))[0][:-7]
 
     # uses the typical approach to the generation of the plugin short name
     # this strategy is defined as the standard one and should be respected
