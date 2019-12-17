@@ -230,16 +230,20 @@ class OperationRestart(PluginSystemException):
     in the call stack).
     """
 
-    def __init__(self, message):
+    def __init__(self, message, delay = 0):
         """
         Constructor of the class.
 
         :type message: String
         :param message: The message to be printed.
+        :type delay: float
+        :param delay: The delay (in seconds) to be used in
+        the waiting before the restart of the operation.
         """
 
         PluginSystemException.__init__(self, message)
         self.message = message
+        self.delay = delay
 
     def __str__(self):
         """
@@ -249,4 +253,5 @@ class OperationRestart(PluginSystemException):
         :return: The string representation of the class.
         """
 
-        return "Operation restart - %s" % self.message
+        delay_s = " (%0.1f seconds delay)" % self.delay if self.delay else ""
+        return "Operation restart%s - %s" % (delay_s, self.message)
