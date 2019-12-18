@@ -1,0 +1,16 @@
+name: Main Workflow
+on: [push]
+jobs:
+  build:
+    name: Build
+    strategy:
+      matrix:
+        python-version: [2.7, 3.5, 3.6, 3.7, 3.8, rc]
+    runs-on: ubuntu-latest
+    container: python:${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v1
+      - run: python --version
+      - run: pip install -r requirements.txt
+      - run: pip install -r extra.txt
+      - run: python setup.py test
