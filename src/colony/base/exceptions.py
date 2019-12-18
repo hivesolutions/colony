@@ -50,9 +50,25 @@ class ColonyException(Exception):
     """ The exception's message, to be used latter for runtime
     based diagnostics """
 
-    def __init__(self, message = None):
+    code = None
+    """ The internal error code to be used in objective
+    serialization of the error (eg: HTTP) """
+
+    headers = None
+    """ Optional list of MIME compliant headers to be sent
+    in a client/server paradigm """
+
+    meta = None
+    """ The meta information associated with the error
+    that should be considered private in context, this
+    should be structured data ready to be serializable """
+
+    def __init__(self, message = None, **kwargs):
         Exception.__init__(self)
         self.message = message
+        self.code = kwargs.get("code", 500)
+        self.headers = kwargs.get("headers", None)
+        self.meta = kwargs.get("meta", None)
         self._uid = None
 
     def __str__(self):
@@ -121,17 +137,6 @@ class PluginClassNotAvailable(PluginSystemException):
     The plugin class not available class.
     """
 
-    def __init__(self, message):
-        """
-        Constructor of the class.
-
-        :type message: String
-        :param message: The message to be printed.
-        """
-
-        PluginSystemException.__init__(self, message)
-        self.message = message
-
     def __str__(self):
         """
         Returns the string representation of the class.
@@ -146,17 +151,6 @@ class InvalidCommand(PluginSystemException):
     """
     The invalid command class.
     """
-
-    def __init__(self, message):
-        """
-        Constructor of the class.
-
-        :type message: String
-        :param message: The message to be printed.
-        """
-
-        PluginSystemException.__init__(self, message)
-        self.message = message
 
     def __str__(self):
         """
@@ -175,17 +169,6 @@ class InvalidArgument(PluginSystemException):
     the current execution.
     """
 
-    def __init__(self, message):
-        """
-        Constructor of the class.
-
-        :type message: String
-        :param message: The message to be printed.
-        """
-
-        PluginSystemException.__init__(self, message)
-        self.message = message
-
     def __str__(self):
         """
         Returns the string representation of the class.
@@ -203,17 +186,6 @@ class SecurityError(PluginSystemException):
     the security of the system.
     """
 
-    def __init__(self, message):
-        """
-        Constructor of the class.
-
-        :type message: String
-        :param message: The message to be printed.
-        """
-
-        PluginSystemException.__init__(self, message)
-        self.message = message
-
     def __str__(self):
         """
         Returns the string representation of the class.
@@ -229,17 +201,6 @@ class OperationNotComplete(PluginSystemException):
     The operation not complete class, meaning that the
     some operation has been blocked in the middle of execution.
     """
-
-    def __init__(self, message):
-        """
-        Constructor of the class.
-
-        :type message: String
-        :param message: The message to be printed.
-        """
-
-        PluginSystemException.__init__(self, message)
-        self.message = message
 
     def __str__(self):
         """
@@ -258,7 +219,15 @@ class OperationRestart(PluginSystemException):
     in the call stack).
     """
 
-    def __init__(self, message, delay = 0):
+    delay = 0
+    """ The delay (in seconds) to be used in the waiting
+    before the restart of the operation """
+
+    exception = None
+    """ The original exception that has triggered the need
+    for an operation restart """
+
+    def __init__(self, message, delay = 0, exception = None, **kwargs):
         """
         Constructor of the class.
 
@@ -267,11 +236,14 @@ class OperationRestart(PluginSystemException):
         :type delay: float
         :param delay: The delay (in seconds) to be used in
         the waiting before the restart of the operation.
+        :type exception: Exception
+        :param exception: The original exception that has triggered
+        the need for an operation restart.
         """
 
-        PluginSystemException.__init__(self, message)
-        self.message = message
+        PluginSystemException.__init__(self, message, **kwargs)
         self.delay = delay
+        self.exception = exception
 
     def __str__(self):
         """
