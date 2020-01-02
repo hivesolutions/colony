@@ -268,17 +268,24 @@ def run(
     )
     return return_code
 
-def execute(cwd = None):
+def execute(cwd = None, force_exit = False):
     """
     The main entry point of the application, should parse
     the provided command line arguments and then start the
     execution of the colony plugin system.
+
+    An optional force exit flag controls if the exit function
+    should always be used in exit.
 
     :type cwd: String
     :param cwd: The "original" current working directory to
     be used for situations where the "cwd" has been changed
     so that files generated are put on the colony path. This
     is created as a legacy operation.
+    :type force_exit: bool
+    :param force_exit: If in case the return code is a valid
+    one, the exit function should "still" be used to return
+    the control flow immediately to the caller process.
     """
 
     # verifies if the cwd value is defined an in case it's not
@@ -443,7 +450,10 @@ def execute(cwd = None):
         daemon_pid = daemon_pid,
         daemon_file_path = daemon_file_path
     )
-    exit(return_code)
+
+    # in case the return code is not success or the force
+    # exit flag is set then calls the exit function
+    if not return_code == 0 or force_exit: exit(return_code)
 
 def parse_configuration(
     cwd,
