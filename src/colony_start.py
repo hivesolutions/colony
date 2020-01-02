@@ -420,7 +420,7 @@ def execute(cwd = None):
     meta_path_striped = meta_path.strip(";")
     plugin_path_striped = plugin_path.strip(";")
 
-    # starts the running process, this should lunch the manager
+    # starts the running process, this should launch the manager
     # and then start the main loop of execution returning the
     # return code (result of execution) to the caller process
     return_code = run(
