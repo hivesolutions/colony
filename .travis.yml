@@ -22,6 +22,12 @@ matrix:
   - python: 3.8
     dist: xenial
     sudo: true
+  - python: pypy
+    dist: xenial
+    sudo: true
+  - python: pypy3
+    dist: xenial
+    sudo: true
 before_install:
   - pip install --upgrade pip setuptools
 install:
