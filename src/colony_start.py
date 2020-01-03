@@ -268,7 +268,7 @@ def run(
     )
     return return_code
 
-def execute(cwd = None, force_exit = False):
+def execute(cwd = None, force_exit = True):
     """
     The main entry point of the application, should parse
     the provided command line arguments and then start the
