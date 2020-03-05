@@ -131,7 +131,7 @@ class LoggersTest(colony.ColonyTestCase):
         file.seek(0)
         contents = file.read()
 
-        self.assertEqual(contents, "hello world\nhello world 2\n")
+        self.assertEqual(contents, b"hello world\nhello world 2\n")
 
         file = colony.legacy.BytesIO()
 
@@ -140,7 +140,7 @@ class LoggersTest(colony.ColonyTestCase):
         file.seek(0)
         contents = file.read()
 
-        self.assertEqual(contents, "hello world 2\nhello world\n")
+        self.assertEqual(contents, b"hello world 2\nhello world\n")
 
         latest = memory_handler.get_latest(count = 1)
         self.assertEqual(len(latest), 0)
