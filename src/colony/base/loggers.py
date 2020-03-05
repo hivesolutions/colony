@@ -228,7 +228,8 @@ class MemoryHandler(logging.Handler):
         file = open(path, "wb")
         try:
             for message in messages:
-                file.write(message + "\n")
+                message = legacy.bytes(message, "utf-8", force = True)
+                file.write(message + b"\n")
         finally:
             file.close()
         if clear: self.clear()
