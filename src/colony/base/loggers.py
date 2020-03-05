@@ -158,7 +158,7 @@ class MemoryHandler(logging.Handler):
         except Exception: return collections.deque()
 
         # retrieves the complete set of levels that are considered
-        # equal or less sever than the requested one
+        # equal or more severe than the requested one
         levels = LEVELS[:index + 1]
 
         # creates the list that will hold the various message
@@ -208,6 +208,10 @@ class MemoryHandler(logging.Handler):
             messages_s = len(_messages_l)
             if messages_s > self.max_length: _messages_l.pop()
 
+    def clear(self):
+        self.messages = collections.deque()
+        self.messages_l = dict()
+
     def get_latest(self, count = None, level = None):
         count = count or 100
         is_level = level and not legacy.is_string(level)
@@ -217,3 +221,14 @@ class MemoryHandler(logging.Handler):
         messages = self.messages_l.get(level, []) if level else self.messages
         slice = itertools.islice(messages, 0, count)
         return list(slice)
+
+    def flush_to_file(self, path, count = None, level = None, clear = True):
+        messages = self.get_latest(level = level, count = count or 65536)
+        if not messages: return
+        file = open(path, "wb")
+        try:
+            for message in messages:
+                file.write(message + "\n")
+        finally:
+            file.close()
+        if clear: self.clear()
