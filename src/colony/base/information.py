@@ -112,11 +112,11 @@ def generate(information = None, encoding = DEFAULT_ENCODING):
 
     # in case no information is provided the configuration
     # file must be uses to retrieve the proper information
-    # for the global values, this approach has inpact in
+    # for the global values, this approach has impact in
     # the performance of the generation and also requires
-    # the usage of the json module (may not exist)
+    # the usage of the JSON module (may not exist)
     if information == None:
-        # tries to import the json module in case of failure
+        # tries to import the JSON module in case of failure
         # a silent return must occur to avoid problems
         try: import os, json, datetime
         except ImportError: return
@@ -124,7 +124,7 @@ def generate(information = None, encoding = DEFAULT_ENCODING):
         # retrieves the current directory path and uses it to
         # infer the location of the information file to the
         # current colony instance, then uses that path to load
-        # the associated json information
+        # the associated JSON information
         directory = os.path.dirname(__file__)
         file_path = os.path.join(directory, INFORMATION_PATH)
         file_path = os.path.normpath(file_path)

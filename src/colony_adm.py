@@ -450,7 +450,7 @@ def _generate(path, build = True, delete = True):
     return result
 
 def _generate_plugin(path, use_path = True):
-    # imports the json module so that it's possible
+    # imports the JSON module so that it's possible
     # to generate the colony descriptor file
     import json
 
@@ -520,7 +520,7 @@ def _generate_plugin(path, use_path = True):
     dependencies = [dependency.get_map() for dependency in plugin.dependencies]
 
     # creates the "final" plugin definition structure with the complete set of
-    # attributes of the plugin and then dumps the structure using the json serializer
+    # attributes of the plugin and then dumps the structure using the JSON serializer
     # as this is the default serialization model of the descriptor files
     structure = dict(
         type = "plugin",
@@ -541,7 +541,7 @@ def _generate_plugin(path, use_path = True):
 
     # verifies if the data type of the provided structure string
     # is unicode based if that's the case encodes the structure
-    # using the default encoding associated with json
+    # using the default encoding associated with JSON
     if colony.legacy.is_unicode(structure_s):
         structure_s = structure_s.encode("utf-8")
 
@@ -613,8 +613,8 @@ def _build(path, short_name = True):
     try: data = file.read()
     finally: file.close()
 
-    # decodes the "raw" data using the default json encoding
-    # and then runs the proper json decoding/loading
+    # decodes the "raw" data using the default JSON encoding
+    # and then runs the proper JSON decoding/loading
     data = data.decode("utf-8")
     descriptor = json.loads(data)
 
@@ -639,7 +639,7 @@ def _build(path, short_name = True):
     else: base_name = colony.to_underscore(base_name)[:-5]
 
     # retrieves the resources directory for the resources
-    # from the base directory of the json descriptor and
+    # from the base directory of the JSON descriptor and
     # then creates the name of the file from the id
     resources_directory = os.path.dirname(path)
     name = base_name + extension if short_name else id + extension
@@ -695,7 +695,7 @@ def _deploy(path, timestamp = None):
     try: file.extractall(temp_path)
     finally: file.close()
 
-    # retrieves the path of the specification file and reads it's json
+    # retrieves the path of the specification file and reads it's JSON
     # contents so that it's possible to retrieve more information about
     # the package that is currently being deployed
     spec_path = os.path.join(temp_path, "spec.json")
@@ -704,8 +704,8 @@ def _deploy(path, timestamp = None):
     finally: file.close()
     os.remove(spec_path)
 
-    # decodes the "raw" data using the default json encoding
-    # and then runs the proper json decoding/loading
+    # decodes the "raw" data using the default JSON encoding
+    # and then runs the proper JSON decoding/loading
     data = data.decode("utf-8")
     descriptor = json.loads(data)
 
@@ -1023,7 +1023,7 @@ def _read(path):
     try: file.extractall(temp_path)
     finally: file.close()
 
-    # retrieves the path of the specification file and reads it's json
+    # retrieves the path of the specification file and reads it's JSON
     # contents so that it's possible to retrieve more information about
     # the package that is going to have information printed
     spec_path = os.path.join(temp_path, "spec.json")
@@ -1032,8 +1032,8 @@ def _read(path):
     finally: file.close()
     shutil.rmtree(temp_path)
 
-    # decodes the "raw" data using the default json encoding
-    # and then runs the proper json decoding/loading
+    # decodes the "raw" data using the default JSON encoding
+    # and then runs the proper JSON decoding/loading
     data = data.decode("utf-8")
     descriptor = json.loads(data)
 
