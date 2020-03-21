@@ -52,19 +52,19 @@ PLAIN_VALUE = "plain"
 """ The plain value """
 
 MD5_VALUE = "md5"
-""" The md5 value """
+""" The MD5 value """
 
 SHA1_VALUE = "sha1"
-""" The sha1 value """
+""" The SHA1 value """
 
 SHA256_VALUE = "sha256"
-""" The sha256 value """
+""" The SHA256 value """
 
 MD5_CRPYT_SEPARATOR = "$"
-""" The md5 crypt separator """
+""" The MD5 crypt separator """
 
 DEFAULT_MD5_CRYPT_MAGIC = "$1$"
-""" The default md5 crypt magic value """
+""" The default MD5 crypt magic value """
 
 DEFAULT_HASH_SET = (MD5_VALUE, SHA1_VALUE, SHA256_VALUE)
 """ The default hash set """
@@ -289,7 +289,7 @@ def password_strength(password):
 
 def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     """
-    Runs the md5 crypt algorithm for the given password,
+    Runs the MD5 crypt algorithm for the given password,
     salt and magic value.
     The magic value is set by default and should be changed
     carefully.
@@ -301,7 +301,7 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     :type magic: String
     :param magic: The magic value to be used in encryption.
     :rtype: String
-    :return: The resulting md5 crypt value.
+    :return: The resulting MD5 crypt value.
     """
 
     # creates the first hash value
@@ -427,12 +427,12 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     # rearranged buffer
     rearranged = "".join(rearranged_buffer)
 
-    # creates the md5 crypt value appending
-    # the magic with the salt, the md5 crypt separator
+    # creates the MD5 crypt value appending
+    # the magic with the salt, the MD5 crypt separator
     # and the rearranged value
     md5_crypt_value = magic + salt + MD5_CRPYT_SEPARATOR + rearranged
 
-    # returns the md5 crypt value
+    # returns the MD5 crypt value
     return md5_crypt_value
 
 def generate_hash_digest_map(file_path, hash_set = DEFAULT_HASH_SET):
