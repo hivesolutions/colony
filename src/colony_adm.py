@@ -603,12 +603,12 @@ def _generate_config(path):
     return descriptor_path
 
 def _build(path, short_name = True):
-    # imports the json module so that it's possible
+    # imports the JSON module so that it's possible
     # to parse the colony descriptor file
     import json
 
     # opens the descriptor file to be read in the binary
-    # format and loads its json contents to be used
+    # format and loads its JSON contents to be used
     file = open(path, "rb")
     try: data = file.read()
     finally: file.close()
