@@ -101,7 +101,7 @@ run_mode = colony.conf("RUN_MODE", "development")
 prefix = colony.conf("PREFIX", None)
 
 # gathers the path to the alias file that contains JSON information
-# about the mapping prefixes for the http server, the file should
+# about the mapping prefixes for the HTTP server, the file should
 # contain a set of prefix to resolution prefix values
 alias_path = colony.conf("ALIAS_PATH", None)
 alias_path = alias_path and os.path.expanduser(alias_path)

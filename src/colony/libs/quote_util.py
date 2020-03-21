@@ -57,7 +57,7 @@ HEX_TO_CHAR_MAP.update((legacy.bytes("%02X" % i), legacy.bytes(chr(i))) for i in
 def quote(string_value, safe = "/"):
     """
     Quotes the given string value according to
-    the url encoding specification.
+    the URL encoding specification.
     The implementation is based on the python base library.
 
     :type string_value: String

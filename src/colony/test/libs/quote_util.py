@@ -161,8 +161,8 @@ class QuoteTest(colony.ColonyTestCase):
 
     def test_url_encode(self):
         """
-        Test for the url encode operation that encodes the key to value
-        attributes that is present in the query string for urls.
+        Test for the URL encode operation that encodes the key to value
+        attributes that is present in the query string for URLs.
         """
 
         items = (("message", "Hello World"), ("mensagem", "Olá Mundo"))
