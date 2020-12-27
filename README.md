@@ -31,7 +31,7 @@ To actually do something useful look into [How to Establish your Colony in 3 Eas
 
 ### For development
 
-* Set `PYTHONPATH` to the `colony/src` path so that the python source files may be included
+* Set `PYTHONPATH` to the `colony/src` path so that the Python source files may be included
 * Set `PATH` to the `colony/scripts/pypi` to used the provided base scripts
 
 ### For production
@@ -43,7 +43,7 @@ Most of the colony operation are run through the `cpm` command:
 * `cpm clone <target>` - clones the base colony instance into the target directory (new project)
 * `cpm cleanup <target>` - cleans the current instance removing extra files
 * `cpm pack <target>` - packs the current instance into a .zip file
-* `cpm generate [target] <...>` - generates a .json descriptor file for the provided python file and then runs
+* `cpm generate [target] <...>` - generates a .json descriptor file for the provided Python file and then runs
 the build operation for the generated .json file, effectively build the package item
 * `cpm build [descriptor] <...>` - builds the target .json descriptor file into a package file
 * `cpm deploy [package]` - deploys the target .cbx file into the current instance
@@ -82,9 +82,9 @@ The best ways to get involved:
 
 ## Extensions
 
-To find python native extension required for some of the plugins used the following sites:
+To find Python native extension required for some of the plugins used the following sites:
 
-* Python Imaging Library (PIL) [link](http://www.pythonware.com/products/pil/).
+* Python Imaging Library (PIL) [link](https://pillow.readthedocs.io/).
 * Reportlab PDF Generator [link](http://www.reportlab.com/).
 * Unofficial Windows Binaries for Python Extension Packages [link](http://www.lfd.uci.edu/~gohlke/pythonlibs/).
 * MySQL driver for Python [link](http://sourceforge.net/projects/mysql-python/).
