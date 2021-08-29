@@ -1791,6 +1791,7 @@ class PluginManager(object):
 
         self.blacklist = config.conf("BLACKLIST", [], cast = list)
         self.blacktest = config.conf("BLACKTEST", [], cast = list)
+        self.whitetest = config.conf("WHITETEST", [], cast = list)
         self.exec_delay = config.conf("EXEC_DELAY", 0.0, cast = float)
 
         self.plugins = util.Plugins()
@@ -3211,6 +3212,13 @@ class PluginManager(object):
             if not plugin: raise exceptions.ColonyException(
                 "problem loading a plugin for unit test execution"
             )
+
+            # in case there's a valid while list defined then verifies that
+            # the current plugin in iteration is valid by checking that either
+            # the plugin's ID or name is present in the list
+            if self.whitetest and not plugin.id in self.whitetest and\
+                not plugin.name in self.whitetest:
+                continue
 
             # verifies if the identifier or the short name of the plugin
             # are present in the black list for testing, if that's the case
@@ -7253,13 +7261,17 @@ class PluginThread(threading.Thread):
         """
 
         if event.event_name == "exit":
-            if self.load_plugin_thread and self.load_plugin_thread.isAlive():
+            if self.load_plugin_thread and self.load_plugin_thread.isAlive() if\
+                hasattr(self.load_plugin_thread, "isAlive") else self.load_plugin_thread.is_alive():
                 self.load_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
-            if self.end_load_plugin_thread and self.end_load_plugin_thread.isAlive():
+            if self.end_load_plugin_thread and self.end_load_plugin_thread.isAlive() if\
+                hasattr(self.end_load_plugin_thread, "isAlive") else self.end_load_plugin_thread.is_alive():
                 self.end_load_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
-            if self.unload_plugin_thread and self.unload_plugin_thread.isAlive():
+            if self.unload_plugin_thread and self.unload_plugin_thread.isAlive() if\
+                hasattr(self.unload_plugin_thread, "isAlive") else self.unload_plugin_thread.is_alive():
                 self.unload_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
-            if self.end_unload_plugin_thread and self.end_unload_plugin_thread.isAlive():
+            if self.end_unload_plugin_thread and self.end_unload_plugin_thread.isAlive() if\
+                hasattr(self.end_unload_plugin_thread, "isAlive") else self.end_unload_plugin_thread.is_alive():
                 self.end_unload_plugin_thread.join(DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
             return True
         elif event.event_name == "load":
