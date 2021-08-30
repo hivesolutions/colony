@@ -2605,7 +2605,8 @@ class PluginManager(object):
             except Exception as exception:
                 self.error("Problem importing module %s: %s" % (plugin, legacy.UNICODE(exception)))
 
-        # prints an info message
+        # prints an info message about the fact that the loading
+        # operation for all of the requested plugin has finished
         self.info("Finished loading plugins")
 
     def start_plugin_manager_plugins(self):
