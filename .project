@@ -11,4 +11,7 @@
 			</arguments>
 		</buildCommand>
 	</buildSpec>
+	<natures>
+		<nature>org.python.pydev.pythonNature</nature>
+    </natures>
 </projectDescription>
