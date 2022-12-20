@@ -65,7 +65,7 @@ class SchedulerTest(colony.ColonyTestCase):
         self.assertNotEqual(values, dict(a = 1))
 
         scheduler.add_callable(update_values)
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.assertEqual(values, dict(a = 1))
 
     def test_stopped(self):
@@ -91,7 +91,39 @@ class SchedulerTest(colony.ColonyTestCase):
         self.assertNotEqual(values, dict(a = 1))
 
         scheduler.add_callable(update_values, verify = False)
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.assertNotEqual(values, dict(a = 1))
 
         self.assert_raises(RuntimeError, scheduler.start_scheduler)
+
+    def test_exception_handler(self):
+        """
+        Tests that the exception handler is properly handling
+        exceptions raised in the callable execution.
+        """
+
+        scheduler = colony.Scheduler()
+        scheduler.start_scheduler()
+        self.assertEqual(scheduler.is_running(), True)
+        self.assertEqual(scheduler.exception_handler, None)
+
+        values = dict()
+
+        def update_values_raise():
+            values["a"] = 1
+            raise Exception()
+
+        scheduler.add_callable(update_values_raise)
+        time.sleep(0.25)
+        self.assertEqual(values, dict(a = 1))
+        self.assertEqual(scheduler.is_running(pedantic = True), True)
+
+        def exception_handler(callable, exception):
+            values["exception"] = exception.__class__
+
+        scheduler.set_exception_handler(exception_handler)
+
+        scheduler.add_callable(update_values_raise)
+        time.sleep(0.25)
+        self.assertEqual(values, dict(a = 1, exception = Exception))
+        self.assertEqual(scheduler.is_running(pedantic = True), True)
