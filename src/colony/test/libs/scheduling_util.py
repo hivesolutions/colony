@@ -87,13 +87,13 @@ class SchedulerTest(colony.ColonyTestCase):
         self.assertEqual(values, dict())
 
         initial = time.time()
-        identifier = scheduler.add_callable(update_values, time.time() + 0.5)
+        identifier = scheduler.add_callable(update_values, time.time() + 0.3)
         self.assertEqual(identifier, 1)
-        time.sleep(0.25)
+        time.sleep(0.1)
         self.assertEqual(values, dict())
 
         scheduler.wait_callable(identifier)
-        self.assertEqual(time.time() - initial >= 0.5, True)
+        self.assertEqual(time.time() - initial >= 0.3, True)
         self.assertEqual(values, dict(a = 1))
 
     def test_stopped(self):
