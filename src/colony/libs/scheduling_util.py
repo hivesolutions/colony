@@ -76,13 +76,29 @@ class Scheduler(threading.Thread):
     timestamp_map = {}
     """ The map associating the timestamp with a list of callables """
 
+    tasks = set()
+    """ The complete set of tasks that are currently under pending
+    execution, this should be a set of unique identifiers """
+
+    waits = set()
+    """ The sequence that contains the complete set of callables that
+    are waiting to be notified """
+
     condition = None
     """ The condition that will control the access to the data structures
     and trigger events on the production of new items """
 
+    waits_condition = None
+    """ Condition that is going to be used in the waits operation and control
+    the access to the waits set """
+
     exception_handler = None
     """ If set defined an handler (callable) that is going to be called
     whenever an exception is raised in the execution of the callable units """
+
+    _counter = 1
+    """ The unique identifier counter that is going to be incremented
+    per each callable to be added """
 
     def __init__(self, sleep_step = DEFAULT_SLEEP_STEP):
         """
@@ -102,20 +118,34 @@ class Scheduler(threading.Thread):
         self.daemon = True
         self.timestamp_queue = []
         self.timestamp_map = {}
+        self.tasks = set()
+        self.waits = set()
         self.condition = threading.Condition()
+        self.waits_condition = threading.Condition()
 
     def run(self):
-        self.running_flag = True
-
+        # sets the initial value of the timeout, which is an unset
+        # one, this value is only going to be set in case of deferred
+        # first item in queue exists
         timeout = None
+
+        # sets the running flag, effectively indicating that the scheduler
+        # is running its main loop
+        self.running_flag = True
 
         try:
             # iterates while the continue flag is set, this means
             # that this is a continuous loop operation
             while self.continue_flag:
 
+                # acquires the condition so that we can safely wait for
+                # new "events" and access the underlying data structures
+                # for proper and safe consuming of them
                 with self.condition:
-                    while not self.timestamp_queue or timeout:
+                    # waits for the condition while the system is running and
+                    # either the queue is empty or there's a timeout defined
+                    # (meaning a pending final value has been reached)
+                    while self.continue_flag and (not self.timestamp_queue or timeout):
                         self.condition.wait(timeout = timeout)
                         timeout = None
 
@@ -144,6 +174,11 @@ class Scheduler(threading.Thread):
                         # to be processed for now)
                         continue
 
+                    # pops (removes first element) the timestamp
+                    # from the timestamp queue, proper timestamp
+                    # consuming operation
+                    self.timestamp_queue.pop(0)
+
                     # retrieves the callable (elements) list
                     # for the timestamp
                     callable_list = self.timestamp_map[timestamp]
@@ -151,11 +186,6 @@ class Scheduler(threading.Thread):
                     # removes the callable list for the timestamp
                     # (done before the calling to avoid race condition)
                     del self.timestamp_map[timestamp]
-
-                    # pops (removes first element) the timestamp
-                    # from the timestamp queue (done before the
-                    # calling to avoid race condition)
-                    self.timestamp_queue.pop(0)
 
                 # runs the callable calling operation (consuming)
                 # which should properly handle exceptions avoiding
@@ -217,7 +247,10 @@ class Scheduler(threading.Thread):
         self.busy_flag = False
         self.timestamp_queue = []
         self.timestamp_map = {}
+        self.tasks = set()
+        self.waits = set()
         self.condition = threading.Condition()
+        self.wait_execution = threading.Condition()
         exception_handler = None
 
     def add_callable(self, callable, timestamp = None, verify = True):
@@ -250,6 +283,11 @@ class Scheduler(threading.Thread):
         # acquires the condition to be able to safely
         # manipulate the structure and produce item
         with self.condition:
+            # obtains the identifier for the current
+            # callable operation schedule
+            identifier = self._counter
+            self._counter += 1
+
             # starts the index value
             index = 0
 
@@ -279,12 +317,34 @@ class Scheduler(threading.Thread):
             # retrieves the list of callable for the given timestamp
             # and then updates it with the given callable object
             callable_list = self.timestamp_map.get(timestamp, [])
-            callable_list.append(callable)
+            callable_list.append((callable, identifier))
             self.timestamp_map[timestamp] = callable_list
+
+            # adds the identifier to the sequence that controls the
+            # tasks that are considered active
+            self.tasks.add(identifier)
 
             # notifies the condition effectively indicating that a
             # new item or set of items is available for consumption
             self.condition.notify()
+
+            # returns the final identifier for the callable task
+            # that has just been scheduled
+            return identifier
+
+    def wait_callable(self, identifier):
+        verify_util.verify(isinstance(identifier, int))
+
+        with self.waits_condition:
+            self.waits.add(identifier)
+
+        with self.condition:
+            if not identifier in self.tasks:
+                return
+
+        with self.waits_condition:
+            while self.continue_flag and identifier in self.waits:
+                self.waits_condition.wait()
 
     def set_exception_handler(self, exception_handler):
         """
@@ -333,7 +393,7 @@ class Scheduler(threading.Thread):
         try:
             # iterates over all the callables to call
             # them (calls the proper function)
-            for callable in callable_list:
+            for callable, _identifier in callable_list:
                 try:
                     # calls the callable (element)
                     # this can be of long duration
@@ -345,3 +405,20 @@ class Scheduler(threading.Thread):
                         print(exception)
         finally:
             self.busy_flag = False
+
+        # runs a final waits condition operation that will
+        # make sure that the pending waits values are notified
+        # in case they are in a waiting state, it will also
+        # remove the multiple callable tasks from the sequence
+        # that controls the pending tasks
+        with self.waits_condition:
+            notify = False
+
+            for callable, identifier in callable_list:
+                if identifier in self.waits:
+                    self.waits.remove(identifier)
+                    notify = True
+                self.tasks.remove(identifier)
+
+            if notify:
+                self.waits_condition.notify_all()

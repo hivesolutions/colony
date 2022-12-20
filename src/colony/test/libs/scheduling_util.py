@@ -62,10 +62,38 @@ class SchedulerTest(colony.ColonyTestCase):
         def update_values():
             values["a"] = 1
 
-        self.assertNotEqual(values, dict(a = 1))
+        self.assertEqual(values, dict())
 
-        scheduler.add_callable(update_values)
+        identifier = scheduler.add_callable(update_values)
+        scheduler.wait_callable(identifier)
+        self.assertEqual(identifier, 1)
+        self.assertEqual(values, dict(a = 1))
+
+    def test_delayed(self):
+        """
+        Tests that a delayed work can be scheduled and executed
+        in the proper time.
+        """
+
+        scheduler = colony.Scheduler()
+        scheduler.start_scheduler()
+        self.assertEqual(scheduler.is_running(), True)
+
+        values = dict()
+
+        def update_values():
+            values["a"] = 1
+
+        self.assertEqual(values, dict())
+
+        initial = time.time()
+        identifier = scheduler.add_callable(update_values, time.time() + 0.5)
+        self.assertEqual(identifier, 1)
         time.sleep(0.25)
+        self.assertEqual(values, dict())
+
+        scheduler.wait_callable(identifier)
+        self.assertEqual(time.time() - initial >= 0.5, True)
         self.assertEqual(values, dict(a = 1))
 
     def test_stopped(self):
@@ -88,11 +116,11 @@ class SchedulerTest(colony.ColonyTestCase):
         def update_values():
             values["a"] = 1
 
-        self.assertNotEqual(values, dict(a = 1))
+        self.assertEqual(values, dict())
 
-        scheduler.add_callable(update_values, verify = False)
-        time.sleep(0.25)
-        self.assertNotEqual(values, dict(a = 1))
+        identifier = scheduler.add_callable(update_values, verify = False)
+        scheduler.wait_callable(identifier)
+        self.assertEqual(values, dict())
 
         self.assert_raises(RuntimeError, scheduler.start_scheduler)
 
@@ -113,8 +141,8 @@ class SchedulerTest(colony.ColonyTestCase):
             values["a"] = 1
             raise Exception()
 
-        scheduler.add_callable(update_values_raise)
-        time.sleep(0.25)
+        identifier = scheduler.add_callable(update_values_raise)
+        scheduler.wait_callable(identifier)
         self.assertEqual(values, dict(a = 1))
         self.assertEqual(scheduler.is_running(pedantic = True), True)
 
@@ -124,8 +152,8 @@ class SchedulerTest(colony.ColonyTestCase):
 
         scheduler.set_exception_handler(exception_handler)
 
-        scheduler.add_callable(update_values_raise)
-        time.sleep(0.25)
+        identifier = scheduler.add_callable(update_values_raise)
+        scheduler.wait_callable(identifier)
         self.assertEqual(
             values,
             dict(
