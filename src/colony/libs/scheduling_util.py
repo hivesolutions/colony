@@ -92,8 +92,8 @@ class Scheduler(threading.Thread):
         self.action_lock = threading.RLock()
 
     def run(self):
-        # iterates while the continue
-        # flag is set
+        # iterates while the continue flag is set, this means
+        # that this is a continuous loop operation
         while self.continue_flag:
             # acquires the timestamp lock
             self.timestamp_lock.acquire()
@@ -126,7 +126,7 @@ class Scheduler(threading.Thread):
                     # for the timestamp
                     callable_list = self.timestamp_map[timestamp]
 
-                    # removes the callable list for the timestmap
+                    # removes the callable list for the timestamp
                     # (done before the calling to avoid race condition)
                     del self.timestamp_map[timestamp]
 
@@ -207,15 +207,15 @@ class Scheduler(threading.Thread):
         self.timestamp_map = {}
         self.timestamp_lock = threading.RLock()
 
-    def add_callable(self, callbable, timestamp):
+    def add_callable(self, callable, timestamp):
         """
         Adds a callable object to the scheduler
         for calling upon the given timestamp value.
         The sent callable is called without any arguments
         and the real time for calling may not be assured.
 
-        :type callbable: Callable
-        :param callbable: The callable object to be called
+        :type callable: Callable
+        :param callable: The callable object to be called
         upon in time described in the given timestamp.
         :type timestamp: float
         :param timestamp: The timestamp describing the
@@ -233,7 +233,7 @@ class Scheduler(threading.Thread):
             # timestamp queue (to find position for insertion)
             for _timestamp in self.timestamp_queue:
                 # in case the the current iteration
-                # tiemstamp contains a value smaller than
+                # timestamp contains a value smaller than
                 # the timestamp to be inserted
                 if timestamp < _timestamp:
                     # breaks the loop (position for
@@ -252,10 +252,10 @@ class Scheduler(threading.Thread):
             # in case it does not exist already
             not timestamp_exists and self.timestamp_queue.insert(index, timestamp)
 
-            # retrieves the list of callabled for the given timestamp
+            # retrieves the list of callable for the given timestamp
             # and then updates it with the given callable object
             callable_list = self.timestamp_map.get(timestamp, [])
-            callable_list.append(callbable)
+            callable_list.append(callable)
             self.timestamp_map[timestamp] = callable_list
         finally:
             # releases the timestamp lock
