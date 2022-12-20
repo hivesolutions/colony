@@ -188,6 +188,7 @@ class Scheduler(threading.Thread):
                 time.sleep(self.sleep_step)
         finally:
             self.running_flag = False
+            self.continue_flag = False
 
     def start_scheduler(self):
         """
@@ -291,7 +292,7 @@ class Scheduler(threading.Thread):
             # inserts the timestamp in the timestamp queue
             # for the correct index (in order to maintain order)
             # in case it does not exist already
-            not timestamp_exists and self.timestamp_queue.insert(index, timestamp)
+            if not timestamp_exists: self.timestamp_queue.insert(index, timestamp)
 
             # retrieves the list of callable for the given timestamp
             # and then updates it with the given callable object
@@ -325,13 +326,18 @@ class Scheduler(threading.Thread):
 
         return self.busy_flag
 
-    def is_running(self):
+    def is_running(self, pedantic = False):
         """
         Checks if the scheduler is currently running, the scheduler
         is considered to be running if the continue flag is set.
+
+        In case the pedantic flag is set the scheduler is only
+        considered to be running in case the running flag (which
+        is set when thread is running) is also set.
 
         :rtype: bool
         :return: If the scheduler is currently running.
         """
 
-        return self.running_flag and self.continue_flag
+        if pedantic: return self.running_flag and self.continue_flag
+        return self.continue_flag

@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Small race condition in scheduling for the `is_running()`, now supports the `pedantic` flag
 
 ## [1.4.0] - 2022-12-20
 
