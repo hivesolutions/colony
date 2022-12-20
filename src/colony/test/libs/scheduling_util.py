@@ -169,3 +169,37 @@ class SchedulerTest(colony.ColonyTestCase):
             )
         )
         self.assertEqual(scheduler.is_running(pedantic = True), True)
+
+    def test_waiting(self):
+        """
+        Tests the waiting operation, specially for edge cases.
+        """
+
+        scheduler = colony.Scheduler()
+        scheduler.start_scheduler()
+        self.assertEqual(scheduler.is_running(), True)
+
+        values = dict()
+
+        def update_values():
+            values["a"] = 1
+
+        self.assertEqual(values, dict())
+
+        identifier = scheduler.add_callable(update_values)
+        scheduler.wait_callable(identifier)
+        self.assertEqual(identifier, 1)
+        self.assertEqual(values, dict(a = 1))
+
+        values = dict()
+
+        def update_values():
+            values["a"] = 2
+
+        self.assertEqual(values, dict())
+
+        identifier = scheduler.add_callable(update_values)
+        time.sleep(0.1)
+        scheduler.wait_callable(identifier)
+        self.assertEqual(identifier, 2)
+        self.assertEqual(values, dict(a = 2))
