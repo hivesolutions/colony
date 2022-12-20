@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-*
+* Greatly improved scheduling solution - [#6](https://github.com/hivesolutions/colony/issues/6)
 
 ### Fixed
 
