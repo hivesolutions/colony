@@ -251,7 +251,8 @@ class Scheduler(threading.Thread):
         self.waits = set()
         self.condition = threading.Condition()
         self.wait_execution = threading.Condition()
-        exception_handler = None
+        self.exception_handler = None
+        self._counter = 1
 
     def add_callable(self, callable, timestamp = None, verify = True):
         """

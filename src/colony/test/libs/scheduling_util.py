@@ -68,6 +68,12 @@ class SchedulerTest(colony.ColonyTestCase):
         scheduler.wait_callable(identifier)
         self.assertEqual(identifier, 1)
         self.assertEqual(values, dict(a = 1))
+        self.assertEqual(scheduler.is_running(), True)
+        self.assertEqual(scheduler.is_busy(), False)
+
+        scheduler.reset_scheduler()
+        self.assertEqual(scheduler.is_running(), False)
+        self.assertEqual(scheduler.is_busy(), False)
 
     def test_delayed(self):
         """
