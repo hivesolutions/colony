@@ -119,11 +119,19 @@ class SchedulerTest(colony.ColonyTestCase):
         self.assertEqual(scheduler.is_running(pedantic = True), True)
 
         def exception_handler(callable, exception):
+            values["callable"] = callable
             values["exception"] = exception.__class__
 
         scheduler.set_exception_handler(exception_handler)
 
         scheduler.add_callable(update_values_raise)
         time.sleep(0.25)
-        self.assertEqual(values, dict(a = 1, exception = Exception))
+        self.assertEqual(
+            values,
+            dict(
+                a = 1,
+                callable = update_values_raise,
+                exception = Exception
+            )
+        )
         self.assertEqual(scheduler.is_running(pedantic = True), True)
