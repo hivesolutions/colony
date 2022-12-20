@@ -44,7 +44,8 @@ import colony
 class SchedulerTest(colony.ColonyTestCase):
     """
     Class that tests the scheduler up to the expected
-    values.
+    values, making sure that race and other weird conditions
+    are properly handled.
     """
 
     def test_basic(self):
