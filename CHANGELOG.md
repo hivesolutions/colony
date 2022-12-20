@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-*
+* Support for the `verify()` family of methods for assertions
 
 ### Changed
 
-*
+* Improved stability of the scheduling infrastructure, should prevent dead pools - [#4](https://github.com/hivesolutions/colony/issues/4)
 
 ### Fixed
 
