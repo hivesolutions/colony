@@ -69,6 +69,7 @@ from . import structures_util
 from . import test_util
 from . import time_util
 from . import update_thread_util
+from . import verify_util
 from . import version_util
 from . import visitor_util
 
@@ -120,6 +121,7 @@ from .test_util import ColonyTestCase
 from .time_util import SIMPLE_VALUE, BASIC_VALUE, EXTENDED_VALUE, EXTENDED_SIMPLE_VALUE,\
     MINIMIZE_MULTIPLE, MINIMIZE_UNIQUE, format_seconds_smart, format_seconds, timestamp_datetime
 from .update_thread_util import UpdateThread
+from .verify_util import verify, verify_equal, verify_not_equal, verify_type, verify_many
 from .version_util import version_cmp, version_is_concrete
 from .visitor_util import visit, dispatch_visit
 

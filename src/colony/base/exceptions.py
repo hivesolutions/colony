@@ -107,9 +107,32 @@ class ColonyException(Exception):
         self._uid = uuid.uuid4()
         return self._uid
 
+class OperationalError(ColonyException):
+    """
+    Error raised for a runtime error and as a result
+    of an operational routine that failed.
+    This should not be used for coherent development
+    bugs, that are raised continuously.
+    """
+
+    pass
+
+class AssertionError(OperationalError):
+    """
+    Error raised for failure to meet any pre-condition or
+    assertion for a certain data set.
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs["message"] = kwargs.get("message", "Assertion of data failed")
+        kwargs["code"] = kwargs.get("code", None)
+        OperationalError.__init__(self, *args, **kwargs)
+
 class PluginSystemException(ColonyException):
     """
-    The plugin system exception class.
+    The abstract plugin system exception class, that
+    should represent all the exception that are associated
+    with the plugin system environment.
     """
 
     def __init__(self, message):
