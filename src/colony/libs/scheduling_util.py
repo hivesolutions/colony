@@ -338,9 +338,11 @@ class Scheduler(threading.Thread):
         with self.waits_condition:
             self.waits.add(identifier)
 
-        with self.condition:
-            if not identifier in self.tasks:
-                return
+        if not identifier in self.tasks:
+            with self.waits_condition:
+                if identifier in self.waits:
+                    self.waits.remove(identifier)
+            return
 
         with self.waits_condition:
             while self.continue_flag and identifier in self.waits:
