@@ -307,7 +307,7 @@ class Scheduler(threading.Thread):
                     # breaks the loop (position as
                     # insertion has been reached)
                     break
-                
+
                 # increments the index, offsetting the value
                 index += 1
 

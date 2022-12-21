@@ -138,6 +138,26 @@ class SchedulerTest(colony.ColonyTestCase):
             values["a"] = 1
 
         def update_values_2():
+            values["b"] = values["a"] + 1
+
+        self.assertEqual(values, dict())
+
+        identifier_1 = scheduler.add_callable(update_values_1, timestamp = time.time() + 0.1)
+        identifier_2 = scheduler.add_callable(update_values_2, timestamp = time.time() + 0.2)
+        scheduler.wait_callable(identifier_1)
+        scheduler.wait_callable(identifier_2)
+        self.assertEqual(identifier_1, 3)
+        self.assertEqual(identifier_2, 4)
+        self.assertEqual(values, dict(a = 1, b = 2))
+        self.assertEqual(scheduler.is_running(), True)
+        self.assertEqual(scheduler.is_busy(), False)
+
+        values = dict()
+
+        def update_values_1():
+            values["a"] = values["b"] + 1
+
+        def update_values_2():
             values["b"] = 2
 
         self.assertEqual(values, dict())
@@ -146,9 +166,9 @@ class SchedulerTest(colony.ColonyTestCase):
         identifier_2 = scheduler.add_callable(update_values_2, timestamp = time.time() + 0.1)
         scheduler.wait_callable(identifier_1)
         scheduler.wait_callable(identifier_2)
-        self.assertEqual(identifier_1, 3)
-        self.assertEqual(identifier_2, 4)
-        self.assertEqual(values, dict(a = 1, b = 2))
+        self.assertEqual(identifier_1, 5)
+        self.assertEqual(identifier_2, 6)
+        self.assertEqual(values, dict(a = 3, b = 2))
         self.assertEqual(scheduler.is_running(), True)
         self.assertEqual(scheduler.is_busy(), False)
 
