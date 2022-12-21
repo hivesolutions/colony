@@ -261,6 +261,8 @@ class Scheduler(threading.Thread):
         The sent callable is called without any arguments
         and the real time for calling may not be assured.
 
+        An unique callable identifier is returned.
+
         :type callable: Callable
         :param callable: The callable object to be called
         upon in time described in the given timestamp.
@@ -271,6 +273,9 @@ class Scheduler(threading.Thread):
         :type ensure: bool
         :param ensure: If set makes sure that the scheduler
         is running, raising an exception otherwise.
+        :rtype: int
+        :return: The identifier of the callable task that has just
+        been created, can be used for waiting for task completion.
         """
 
         # in case the verify flag is set then we need to make
