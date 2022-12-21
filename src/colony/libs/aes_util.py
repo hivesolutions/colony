@@ -39,7 +39,7 @@ __license__ = "Apache License, Version 2.0"
 
 import os
 
-from colony.base import legacy
+from colony.base import legacy, exceptions
 
 try: import Crypto.Cipher.AES
 except ImportError: Crypto = None
@@ -54,7 +54,7 @@ class AesCipher(object):
     and decryption system for the aes system.
 
     The aes include the padding infra-structure for
-    according to pkcs5.
+    according to PKCS #5.
 
     :see: http://tools.ietf.org/html/rfc2898
     """
@@ -87,7 +87,7 @@ class AesCipher(object):
     def encrypt(self, raw):
         """
         Encrypts the provided raw string value according
-        to the aes and pkcs5 specifications.
+        to the aes and PKCS #5 specifications.
 
         :type raw: String
         :param raw: The raw string value to be used in
@@ -96,6 +96,9 @@ class AesCipher(object):
         :return: The encrypted string according to the aes
         cryptographic system in ecb mode.
         """
+
+        if not Crypto:
+            raise exceptions.OperationalError(message = "PyCrypto is not installed")
 
         raw = self.pad(raw)
         cipher = Crypto.Cipher.AES.new(self.key, Crypto.Cipher.AES.MODE_ECB)
@@ -109,11 +112,14 @@ class AesCipher(object):
         :type encoded: String
         :param encoded: The encrypted string to be used
         in the decryption process, should be padded according
-        to the pkcs5 schema.
+        to the PKCS #5 schema.
         :rtype String
         :return: The decrypted string according to the aes
         cryptographic system in ecb mode.
         """
+
+        if not Crypto:
+            raise exceptions.OperationalError(message = "PyCrypto is not installed")
 
         cipher = Crypto.Cipher.AES.new(self.key, Crypto.Cipher.AES.MODE_ECB)
         decoded = cipher.decrypt(encoded)
@@ -121,14 +127,14 @@ class AesCipher(object):
 
     def pad(self, value):
         """
-        Adds the pkcs5 padding to the provided value
+        Adds the PKCS #5 padding to the provided value
         it should add all the extra padding values to it.
 
         :type value: String
         :param value: The base value for which the padded
         characters will be added.
         :rtype: String
-        :return: The pkcs5 padded string with the padding
+        :return: The PKCS #5 padded string with the padding
         characters added to it.
         """
 
@@ -138,7 +144,7 @@ class AesCipher(object):
 
     def unpad(self, value):
         """
-        Removes the pkcs5 padding from the provided value
+        Removes the PKCS #5 padding from the provided value
         it should remove all the extra padding values from it.
 
         :type value: String
