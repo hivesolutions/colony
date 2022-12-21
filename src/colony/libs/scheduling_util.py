@@ -297,18 +297,18 @@ class Scheduler(threading.Thread):
             # starts the index value
             index = 0
 
-            # iterates over all the timestamps in the
-            # timestamp queue (to find position for insertion)
+            # iterates over all the timestamps in the timestamp
+            # queue (to find position for insertion)
             for _timestamp in self.timestamp_queue:
-                # in case the the current iteration
-                # timestamp contains a value smaller than
-                # the timestamp to be inserted
+                # in case the the current iteration timestamp
+                # contains a value smaller than the timestamp
+                # to be inserted
                 if timestamp < _timestamp:
                     # breaks the loop (position as
                     # insertion has been reached)
                     break
-
-                # increments the index
+                
+                # increments the index, offsetting the value
                 index += 1
 
             # checks if the timestamp already exists in the
