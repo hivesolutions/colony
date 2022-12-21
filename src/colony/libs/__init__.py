@@ -109,7 +109,7 @@ from .path_util import SEPARATOR, normalize_path, align_path, copy_directory, co
 from .protection_util import public, Protected
 from .quote_util import quote, quote_plus, unquote, unquote_plus, url_encode
 from .round_util import roundi, rounds, roundt, round_apply, round_unapply, round_is_new
-from .scheduling_util import Scheduler
+from .scheduling_util import SCHEDULING_MAX, Scheduler
 from .size_util import size_round_unit
 from .stack_util import get_instance_module_directory, get_call_module_directory
 from .string_buffer_util import StringBuffer

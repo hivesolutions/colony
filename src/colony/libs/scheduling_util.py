@@ -42,21 +42,16 @@ import threading
 
 from . import verify_util
 
-DEFAULT_SLEEP_STEP = 0.1
-""" The default sleep step to be used in the scheduler
-this value should not be too big that prevent immediate
-scheduling operation nor to low that spends to many resources """
+SCHEDULING_MAX = getattr(threading, "TIMEOUT_MAX", 3600)
+""" The value for the maximum timeout value allowed
+for the threading await operations (defaults to an hour
+in case no base value is obtainable) """
 
 class Scheduler(threading.Thread):
     """
     Class that implements a scheduler to be used
     to "call" callable objects for a provided timestamp.
     """
-
-    sleep_step = None
-    """ The amount of time to be used during a sleep iteration
-    this is required as not `Condition` objects are used to
-    control the producer/consumer dynamics """
 
     running_flag = False
     """ Flag that controls if the scheduler event loop is currently
@@ -100,20 +95,15 @@ class Scheduler(threading.Thread):
     """ The unique identifier counter that is going to be incremented
     per each callable to be added """
 
-    def __init__(self, sleep_step = DEFAULT_SLEEP_STEP):
+    def __init__(self):
         """
         Constructor of the class.
 
         :type plugin: Plugin
         :param plugin: The plugin to be used.
-        :type sleep_step: float
-        :param sleep_step: The amount of time to be used
-        during a sleep iteration.
         """
 
         threading.Thread.__init__(self)
-
-        self.sleep_step = sleep_step
 
         self.daemon = True
         self.timestamp_queue = []
@@ -146,8 +136,24 @@ class Scheduler(threading.Thread):
                     # either the queue is empty or there's a timeout defined
                     # (meaning a pending final value has been reached)
                     while self.continue_flag and (not self.timestamp_queue or timeout):
-                        self.condition.wait(timeout = timeout)
-                        timeout = None
+                        # in case there's a timeout value defined must split
+                        # it into parts to avoid waiting overflow
+                        if timeout: partial = min(SCHEDULING_MAX, timeout)
+                        else: partial = None
+
+                        # waits for the condition and timeouts according to the
+                        # provided partial value (if any)
+                        self.condition.wait(timeout = partial)
+
+                        # in case a timeout is defined we need to update
+                        # the value according to the partial timeout "consumed"
+                        if timeout:
+                            timeout -= partial
+                            if timeout <= 0: timeout = None
+
+                    # resets the timeout value as we've stepped outside the
+                    # wait loop and this value is no longer relevant
+                    timeout = None
 
                     # in case the continue flag has been unset
                     # (by triggering condition), then breaks loop
@@ -232,7 +238,7 @@ class Scheduler(threading.Thread):
         with self.condition:
             self.condition.notify()
 
-    def reset_scheduler(self):
+    def reset_scheduler(self, notify = True):
         """
         Resets the scheduler to the original state.
         This method may be used to avoid the allocation
@@ -240,7 +246,13 @@ class Scheduler(threading.Thread):
         This operation is dangerous an is not thread safe.
         A typical usage of this method involves first the
         stopping of the scheduler.
+
+        :type notify: bool
+        :param notify: If a notification in the condition should
+        be sent so that the thread is unblocked if needed.
         """
+
+        _condition = self.condition
 
         self.running_flag = False
         self.continue_flag = False
@@ -253,6 +265,9 @@ class Scheduler(threading.Thread):
         self.wait_execution = threading.Condition()
         self.exception_handler = None
         self._counter = 1
+
+        if notify:
+            with _condition: _condition.notify()
 
     def add_callable(self, callable, timestamp = None, verify = True):
         """
