@@ -136,24 +136,20 @@ class Scheduler(threading.Thread):
                     # either the queue is empty or there's a timeout defined
                     # (meaning a pending final value has been reached)
                     while self.continue_flag and (not self.timestamp_queue or timeout):
-                        # in case there's a timeout value defined must split
-                        # it into parts to avoid waiting overflow
-                        if timeout: partial = min(SCHEDULING_MAX, timeout)
-                        else: partial = None
+                        # makes sure that the timeout value does not overflow
+                        # maximum timeout value for scheduling, this would
+                        # raise an overflow exception, making this verification
+                        # will imply running more wait operations for large values
+                        # which is OK as no significant resources will be used
+                        if timeout: timeout = min(SCHEDULING_MAX, timeout)
 
                         # waits for the condition and timeouts according to the
                         # provided partial value (if any)
-                        self.condition.wait(timeout = partial)
+                        self.condition.wait(timeout = timeout)
 
-                        # in case a timeout is defined we need to update
-                        # the value according to the partial timeout "consumed"
-                        if timeout:
-                            timeout -= partial
-                            if timeout <= 0: timeout = None
-
-                    # resets the timeout value as we've stepped outside the
-                    # wait loop and this value is no longer relevant
-                    timeout = None
+                        # resets the timeout value as we've stepped outside the
+                        # wait operation and this value is no longer relevant
+                        timeout = None
 
                     # in case the continue flag has been unset
                     # (by triggering condition), then breaks loop
