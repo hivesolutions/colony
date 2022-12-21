@@ -102,6 +102,36 @@ class SchedulerTest(colony.ColonyTestCase):
         self.assertEqual(time.time() - initial >= 0.3, True)
         self.assertEqual(values, dict(a = 1))
 
+    def test_multiple(self):
+        """
+        Tests that multiple parallel callable tasks can be
+        scheduled and executed.
+        """
+
+        scheduler = colony.Scheduler()
+        scheduler.start_scheduler()
+        self.assertEqual(scheduler.is_running(), True)
+
+        values = dict()
+
+        def update_values_1():
+            values["a"] = 1
+
+        def update_values_2():
+            values["b"] = 2
+
+        self.assertEqual(values, dict())
+
+        identifier_1 = scheduler.add_callable(update_values_1)
+        identifier_2 = scheduler.add_callable(update_values_2)
+        scheduler.wait_callable(identifier_1)
+        scheduler.wait_callable(identifier_2)
+        self.assertEqual(identifier_1, 1)
+        self.assertEqual(identifier_2, 2)
+        self.assertEqual(values, dict(a = 1, b = 2))
+        self.assertEqual(scheduler.is_running(), True)
+        self.assertEqual(scheduler.is_busy(), False)
+
     def test_stopped(self):
         """
         Tests that if the scheduler is currently stopped then
