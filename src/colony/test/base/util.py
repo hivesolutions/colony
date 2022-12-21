@@ -45,7 +45,7 @@ class UtilTest(colony.ColonyTestCase):
     methods and functions of colony.
     """
 
-    def timestamp_test(self):
+    def test_timestamp(self):
         """
         Tests and verifies the timestamp related functions
         of the colony infra-structure.
