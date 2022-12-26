@@ -46,6 +46,9 @@ def xml_to_dict(data):
     Converts the provided linear XML string value into
     a dictionary that represents the same hierarchy.
 
+    The conversion strategy is only applicable to simple
+    hierarchical XML structures.
+
     :type data: String
     :param data: The XML string to be used in the conversion.
     :rtype: Dictionary
