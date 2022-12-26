@@ -105,6 +105,20 @@ class XmlTest(colony.ColonyTestCase):
             )
         )
 
+        result = colony.xml_to_dict("""<person>
+            <name>你好世界</name>
+            <age>32</age>
+        </person>""")
+        self.assertEqual(
+            result,
+            dict(
+                person = dict(
+                    name = colony.legacy.u("你好世界"),
+                    age = "32"
+                )
+            )
+        )
+
     def test_dict_to_xml(self):
         """
         Verifies a series of conditions associated with dictionary
@@ -140,3 +154,11 @@ class XmlTest(colony.ColonyTestCase):
             )
         ))
         self.assertEqual(result, "<person><address></address><age>32</age><name>Hello World</name></person>")
+
+        result = colony.dict_to_xml(dict(
+            person = dict(
+                name = "你好世界",
+                age = "32"
+            )
+        ))
+        self.assertEqual(result, colony.legacy.u("<person><age>32</age><name>你好世界</name></person>"))
