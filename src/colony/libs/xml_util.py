@@ -42,13 +42,13 @@ import xml.dom.minidom
 def xml_to_dict(data):
     node = xml.dom.minidom.parseString(data)
     return _node_to_dict(node)
-    
+
 def _node_to_dict(node):
     contents = None
     for _node in node.childNodes:
         if _node.nodeType == xml.dom.Node.ELEMENT_NODE:
             if not contents: contents = dict()
-            contents[_node.nodeName] = _node_to_dict(_node) 
+            contents[_node.nodeName] = _node_to_dict(_node)
         if _node.nodeType == xml.dom.Node.TEXT_NODE and _node.data.strip():
             contents = _node.data.strip()
     return contents
