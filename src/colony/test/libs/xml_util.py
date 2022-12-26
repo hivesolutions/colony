@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+import xml.dom.minidom
+
 import colony
 
 class XmlTest(colony.ColonyTestCase):
@@ -114,6 +116,22 @@ class XmlTest(colony.ColonyTestCase):
             dict(
                 person = dict(
                     name = colony.legacy.u("你好世界"),
+                    age = "32"
+                )
+            )
+        )
+
+        result = colony.xml_to_dict(
+            xml.dom.minidom.parseString("""<person>
+                <name>Hello World</name>
+                <age>32</age>
+            </person>""")
+        )
+        self.assertEqual(
+            result,
+            dict(
+                person = dict(
+                    name = "Hello World",
                     age = "32"
                 )
             )

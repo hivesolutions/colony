@@ -49,13 +49,15 @@ def xml_to_dict(data):
     The conversion strategy is only applicable to simple
     hierarchical XML structures.
 
-    :type data: String
-    :param data: The XML string to be used in the conversion.
+    :type data: String/Node
+    :param data: The XML string (or XML node) to be used in
+    the (to dictionary) conversion.
     :rtype: Dictionary
     :return: The dictionary representation of the XML data.
     """
 
-    node = xml.dom.minidom.parseString(data)
+    if isinstance(data, xml.dom.Node): node = data
+    else: node = xml.dom.minidom.parseString(data)
     return _node_to_dict(node)
 
 def dict_to_xml(contents, encoding = "utf-8"):
