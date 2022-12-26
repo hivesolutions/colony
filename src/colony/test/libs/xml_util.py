@@ -104,3 +104,39 @@ class XmlTest(colony.ColonyTestCase):
                 )
             )
         )
+
+    def test_dict_to_xml(self):
+        """
+        Verifies a series of conditions associated with dictionary
+        to XML conversion
+        """
+
+        result = colony.dict_to_xml(dict(
+            person = dict(
+                name = "Hello World",
+                age = "32"
+            )
+        ))
+        self.assertEqual(result, "<person><age>32</age><name>Hello World</name></person>")
+
+        result = colony.dict_to_xml(dict(
+            person = dict(
+                name = "Hello World",
+                age = "32",
+                address = dict(
+                    street = "Wood Street",
+                    city = "London",
+                    country = "United Kingdom"
+                )
+            )
+        ))
+        self.assertEqual(result, "<person><address><city>London</city><country>United Kingdom</country><street>Wood Street</street></address><age>32</age><name>Hello World</name></person>")
+
+        result = colony.dict_to_xml(dict(
+            person = dict(
+                name = "Hello World",
+                age = "32",
+                address = None
+            )
+        ))
+        self.assertEqual(result, "<person><address></address><age>32</age><name>Hello World</name></person>")

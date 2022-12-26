@@ -125,7 +125,7 @@ from .update_thread_util import UpdateThread
 from .verify_util import verify, verify_equal, verify_not_equal, verify_type, verify_many
 from .version_util import version_cmp, version_is_concrete
 from .visitor_util import visit, dispatch_visit
-from .xml_util import xml_to_dict
+from .xml_util import xml_to_dict, dict_to_xml
 
 from .bank_util import calculate_control_value as calculate_control_value_bank
 from .gtin_util import calculate_control_value as calculate_control_value_gtin

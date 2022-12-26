@@ -39,6 +39,8 @@ __license__ = "Apache License, Version 2.0"
 
 import xml.dom.minidom
 
+from colony.base import legacy
+
 def xml_to_dict(data):
     node = xml.dom.minidom.parseString(data)
     return _node_to_dict(node)
@@ -52,3 +54,16 @@ def _node_to_dict(node):
         if _node.nodeType == xml.dom.Node.TEXT_NODE and _node.data.strip():
             contents = _node.data.strip()
     return contents
+
+def dict_to_xml(contents, encoding = "utf-8"):
+    buffer = []
+    for key in sorted(legacy.keys(contents)):
+        value = contents[key]
+        if isinstance(value, dict):
+            value = dict_to_xml(value, encoding = encoding)
+        elif legacy.is_bytes(value):
+            value = value.decode(encoding)
+        elif value == None:
+            value = legacy.u("")
+        buffer.append(legacy.u("<%s>%s</%s>") % (key, value, key))
+    return legacy.u("").join(buffer)
