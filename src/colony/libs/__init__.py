@@ -72,6 +72,7 @@ from . import update_thread_util
 from . import verify_util
 from . import version_util
 from . import visitor_util
+from . import xml_util
 
 from .aes_util import AesCipher
 from .barcode_util import encode_2_of_5, encode_code_128, encode_code_39
@@ -124,6 +125,7 @@ from .update_thread_util import UpdateThread
 from .verify_util import verify, verify_equal, verify_not_equal, verify_type, verify_many
 from .version_util import version_cmp, version_is_concrete
 from .visitor_util import visit, dispatch_visit
+from .xml_util import xml_to_dict
 
 from .bank_util import calculate_control_value as calculate_control_value_bank
 from .gtin_util import calculate_control_value as calculate_control_value_gtin

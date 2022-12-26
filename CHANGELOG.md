@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-*
+* Conversion of XML to Dictionary using `xml_to_dict()`
 
 ### Changed
 
