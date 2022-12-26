@@ -88,3 +88,19 @@ class XmlTest(colony.ColonyTestCase):
                 )
             )
         )
+
+        result = colony.xml_to_dict("""<person>
+            <name>Hello World</name>
+            <age>32</age>
+            <address></address>
+        </person>""")
+        self.assertEqual(
+            result,
+            dict(
+                person = dict(
+                    name = "Hello World",
+                    age = "32",
+                    address = None
+                )
+            )
+        )
