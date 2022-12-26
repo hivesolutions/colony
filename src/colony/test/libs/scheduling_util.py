@@ -194,7 +194,11 @@ class SchedulerTest(colony.ColonyTestCase):
             timestamp = time.time() + colony.SCHEDULING_MAX + 1
         )
         self.assertEqual(identifier, 1)
+        self.assertEqual(values, dict())
         self.assertEqual(self.scheduler.is_running(), True)
+
+        update_values()
+        self.assertEqual(values, dict(a = 1))
 
     def test_stopped(self):
         """
@@ -221,6 +225,9 @@ class SchedulerTest(colony.ColonyTestCase):
         self.assertEqual(values, dict())
 
         self.assert_raises(RuntimeError, self.scheduler.start_scheduler)
+
+        update_values()
+        self.assertEqual(values, dict(a = 1))
 
     def test_exception_handler(self):
         """

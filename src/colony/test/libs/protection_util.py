@@ -52,10 +52,14 @@ class ProtectionTest(colony.ColonyTestCase):
         """
 
         mock = ProtectionMock()
+
         result = mock.public()
         self.assertEqual(result, "public")
         self.assert_raises(AttributeError, getattr, mock, "private")
         self.assert_raises(AttributeError, getattr, mock, "protected")
+
+        result = mock.private_hack()
+        self.assertEqual(result, "private")
 
 class ProtectionMock(colony.Protected):
     """
@@ -74,3 +78,7 @@ class ProtectionMock(colony.Protected):
 
     def private(self):
         return "private"
+
+    @colony.public
+    def private_hack(self):
+        return self.private()
