@@ -62,3 +62,18 @@ class VersionTest(colony.ColonyTestCase):
 
         result = colony.version_cmp("1.0.0", "2.x.x")
         self.assertEqual(result, False)
+
+    def test_version_is_concrete(self):
+        """
+        Verifies a series of conditions associated with the
+        version being concrete verification.
+        """
+
+        result = colony.version_is_concrete("1.2.3")
+        self.assertEqual(result, True)
+
+        result = colony.version_is_concrete("1.2.x")
+        self.assertEqual(result, False)
+
+        result = colony.version_is_concrete("x.x.x")
+        self.assertEqual(result, False)
