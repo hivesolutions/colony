@@ -101,6 +101,10 @@ class BarcodeTest(colony.ColonyTestCase):
             colony.legacy.u("\xcd,BXL\xce", encoding = "unicode_escape")
         )
 
+        # encodes using an invalid code set, should raise a runtime error
+        # indicating the issue associated with the invalid code set
+        self.assert_raises(RuntimeError, lambda: colony.encode_code_128("123456", "D"))
+
     def test_code_39(self):
         """
         Tests the code 39 barcode generation algorithm.
