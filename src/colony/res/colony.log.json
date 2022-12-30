@@ -1,4 +1,5 @@
 {
+    "1.4.3": ["XML utility functions added"],
     "1.4.2": ["Vastly improved scheduling solution"],
     "1.4.1": ["Fixed issue related to race condition in scheduling"],
     "1.4.0": ["Major release with verify() and exceptions support"],

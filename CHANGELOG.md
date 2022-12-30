@@ -9,8 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Conversion of XML to Dictionary using `xml_to_dict()`
-* Conversion of Dictionary to XML using `dict_to_xml()`
+*
 
 ### Changed
 
@@ -19,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [1.4.3] - 2022-12-30
+
+### Added
+
+* Conversion of XML to Dictionary using `xml_to_dict()`
+* Conversion of Dictionary to XML using `dict_to_xml()`
 
 ## [1.4.2] - 2022-12-21
 
