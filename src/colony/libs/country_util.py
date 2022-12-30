@@ -440,7 +440,7 @@ COUNTRIES_ISO = {
     "zimbabwe" : ("ZW", "ZWE", "716")
 }
 """ The map associating the various countries with the
-tuple containing the iso 3166 information (two character
+tuple containing the ISO 3166 information (two character
 code, three character code and the number code) """
 
 def country_get(name, relaxed = True):
@@ -462,7 +462,7 @@ def country_get(name, relaxed = True):
     relaxed approach meaning that it will be first converted into
     a lower cased version to avoid collisions.
     :rtype: Tuple
-    :return: A tuple containing the iso 3166 information for the
+    :return: A tuple containing the ISO 3166 information for the
     request country.
     :see: http://en.wikipedia.org/wiki/ISO_3166
     """
