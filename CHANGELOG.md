@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Behaviour of the `is_production()` method to be aligned with developers' expectations
+*
 
 ### Fixed
 
 *
+
+## [1.4.4] - 2022-12-31
+
+### Changed
+
+* Behaviour of the `is_production()` method to be aligned with developers' expectations
 
 ## [1.4.3] - 2022-12-30
 
