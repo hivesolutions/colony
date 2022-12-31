@@ -5991,7 +5991,7 @@ class PluginManager(object):
         type production (for strict purposes).
         """
 
-        return self.run_mode == "production"
+        return not self.is_development()
 
     def echo(self, value = "echo"):
         """
