@@ -56,6 +56,7 @@ class ObjectTest(colony.ColonyTestCase):
                 c = set()
             )
         )
+        result.sort()
         self.assertEqual(result, ["a", "b"])
 
         result = colony.object_attribute_names(
@@ -65,4 +66,5 @@ class ObjectTest(colony.ColonyTestCase):
                 c = colony.Decimal(2.0)
             )
         )
+        result.sort()
         self.assertEqual(result, ["a", "b", "c"])
