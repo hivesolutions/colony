@@ -81,7 +81,8 @@ def object_attribute_names(instance):
 
     # filters the attribute names based on the type and value
     # of them (non printable attributes are filtered out)
-    valid_attribute_names = [key for key, value in __object_items(instance) if type(value) in VALID_ATTRIBUTE_TYPES]
+    valid_attribute_names = [key for key, value in __object_items(instance) if\
+        isinstance(value, VALID_ATTRIBUTE_TYPES)]
 
     # returns the valid attribute names (ready for print)
     return valid_attribute_names

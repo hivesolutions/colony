@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Issue with the `object_attribute_names()` method that prevented proper serialization
 
 ## [1.4.4] - 2022-12-31
 
