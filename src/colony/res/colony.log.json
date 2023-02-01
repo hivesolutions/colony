@@ -1,4 +1,5 @@
 {
+    "1.4.5": ["Fixed object_attribute_names()"],
     "1.4.4": ["Changed is_production() behavior"],
     "1.4.3": ["XML utility functions added"],
     "1.4.2": ["Vastly improved scheduling solution"],
