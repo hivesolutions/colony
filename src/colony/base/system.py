@@ -3169,6 +3169,19 @@ class PluginManager(object):
         method = getattr(self, "run_" + mode)
         method(args = args)
 
+    def run_dry(self, args = []):
+        """
+        Runs a dry run of colony good to test loading and unloading
+        of the system.
+
+        :type args: List
+        :param args: Sequence containing a series of string based arguments
+        coming from the command line, these should be used to condition the
+        way the method is going to perform its execution.
+        """
+
+        pass
+
     def run_test(self, verbosity = 2, raise_e = True, args = []):
         """
         Runs the test mode for the current plugin manager, this should
