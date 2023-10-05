@@ -3171,7 +3171,7 @@ class PluginManager(object):
 
     def run_dry(self, args = []):
         """
-        Runs a dry run of colony good to test loading and unloading
+        Runs a dry run of colony, good to test loading and unloading
         of the system.
 
         :type args: List
