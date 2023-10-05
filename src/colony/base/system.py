@@ -3180,7 +3180,9 @@ class PluginManager(object):
         way the method is going to perform its execution.
         """
 
-        pass
+        # unsets the main loop as active so that the current execution workflow
+        # is stopped and the system unloaded
+        self.main_loop_active = False
 
     def run_test(self, verbosity = 2, raise_e = True, args = []):
         """
