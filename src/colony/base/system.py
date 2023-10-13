@@ -2297,37 +2297,39 @@ class PluginManager(object):
             # may be accessed in a safe fashion
             self.condition.acquire()
 
-            # iterates while the event queue has no items waiting
-            # for new items to arrive and be processed
-            while not len(self.event_queue):
-                try:
-                    # waits for the condition to be notified
-                    # this wait releases after the defined timeout
-                    # in order to provide a away to process external interrupts
-                    self.condition.wait(timeout)
-                except RuntimeError: pass
+            try:
+                # iterates while the event queue has no items waiting
+                # for new items to arrive and be processed
+                while not len(self.event_queue):
+                    try:
+                        # waits for the condition to be notified
+                        # this wait releases after the defined timeout
+                        # in order to provide a away to process external interrupts
+                        self.condition.wait(timeout)
+                    except RuntimeError: pass
 
-            # pops the top item from the event queue and "redirect"
-            # it for the processing phase of the workflow
-            event = self.event_queue.pop(0)
+                # pops the top item from the event queue and "redirect"
+                # it for the processing phase of the workflow
+                event = self.event_queue.pop(0)
 
-            # in case the event is of type execute a method should
-            # be executed with the argument that are part of the event
-            if event.event_name == "execute":
-                method = event.event_args[0]
-                args = event.event_args[1:]
-                method(*args)
+                # in case the event is of type execute a method should
+                # be executed with the argument that are part of the event
+                if event.event_name == "execute":
+                    method = event.event_args[0]
+                    args = event.event_args[1:]
+                    method(*args)
 
-            # in case the event is of type exit, the unloading
-            # of the plugin system should be triggered
-            elif event.event_name == "exit":
-                # unloads the thread based plugins and then
-                # returns the current control flow to caller
-                self._unload_thread_plugins()
-                return
-
-            # releases the condition
-            self.condition.release()
+                # in case the event is of type exit, the unloading
+                # of the plugin system should be triggered
+                elif event.event_name == "exit":
+                    # unloads the thread based plugins and then
+                    # returns the current control flow to caller
+                    self._unload_thread_plugins()
+                    return
+            finally:
+                # releases the condition, so that other threads
+                # can access the event queue
+                self.condition.release()
 
     def add_event(self, event):
         """
