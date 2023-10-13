@@ -1520,6 +1520,11 @@ class PluginManager(object):
     if this value in unset the manager's loop will stop
     and the plugins will be unloaded gracefully """
 
+    auto_unload = False
+    """ The boolean value that controls if the plugin
+    manager should be automatically unloaded after the
+    initial manager loading process is finished """
+
     allow_threads = True
     """ The boolean value indicating if threads are allowed
     to be created for the context of the plugin manager """
@@ -2194,6 +2199,11 @@ class PluginManager(object):
             # the call to an error value (notifies caller process)
             self._handle_system_exception(exception)
             self.return_code = 1
+
+        # in case the auto-unload flag is set the system should be unloaded
+        # in a graceful manner (avoiding any possible memory and thread leaks)
+        if self.auto_unload:
+            self.unload_system()
 
         # returns the return code, this value should be zero in case no
         # error has occurred or any other value otherwise
@@ -3182,8 +3192,10 @@ class PluginManager(object):
         """
 
         # unsets the main loop as active so that the current execution workflow
-        # is stopped and the system unloaded
+        # is stopped and the system unloaded and then sets the auto unload flag
+        # so that the plugin system is properly unloaded afterwards
         self.main_loop_active = False
+        self.auto_unload = True
 
     def run_test(self, verbosity = 2, raise_e = True, args = []):
         """
@@ -3274,7 +3286,9 @@ class PluginManager(object):
 
         # unsets the main loop as active so that the current execution workflow
         # is avoided and the process workflow returned to the caller process
+        # and then sets the auto unload flag so that the plugin system is unloaded
         self.main_loop_active = False
+        self.auto_unload = True
 
         # in case the raise (exception) flag is set and the result is invalid
         # and exception must be raised indicating the execution problem
