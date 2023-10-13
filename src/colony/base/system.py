@@ -2831,10 +2831,9 @@ class PluginManager(object):
             # retrieves the available thread for the plugin
             plugin_thread = self.plugin_threads_map[plugin_id]
 
-            # creates the plugin exit event
+            # creates the plugin exit event and then
+            # adds it to the thread queue
             event = util.QueueEvent("exit")
-
-            # adds the load event to the thread queue
             plugin_thread.add_event(event)
 
             # joins the plugin thread
