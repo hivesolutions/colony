@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *
 
+## [1.4.9] - 2023-10-13
+
+### Fixed
+
+* Unloading of plugins for run modes using `auto_unload`
+
 ## [1.4.8] - 2023-10-06
 
 ### Fixed
