@@ -2199,6 +2199,7 @@ class PluginManager(object):
             # the call to an error value (notifies caller process)
             self._handle_system_exception(exception)
             self.return_code = 1
+            self.auto_unload = False
 
         # in case the auto-unload flag is set the system should be unloaded
         # in a graceful manner (avoiding any possible memory and thread leaks)
