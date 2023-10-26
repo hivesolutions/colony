@@ -103,7 +103,7 @@ from .number_util import get_number_length, get_digit, to_fixed
 from .object_util import object_attribute_names, object_attribute_values, object_flatten,\
     object_print_list, object_print
 from .observer_util import unique, notify, message, action, progress, register_g,\
-    unregister_g, notify_g
+    unregister_g, notify_g, notify_b, notify_kafka
 from .os_util import kill_process
 from .path_util import SEPARATOR, normalize_path, align_path, copy_directory, copy_link, copy_file,\
     remove_directory, link, link_copy, ensure_file_path, is_parent_path, relative_path

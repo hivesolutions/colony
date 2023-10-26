@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+from colony.base import config, legacy
+
 COUNTER = 0
 """ The global counter value that will be used in the
 pseudo unique number generation by incrementing the
@@ -229,3 +231,34 @@ def notify_g(operation_name, *arguments, **named_arguments):
     """
 
     return notify(operation_name, None, *arguments, **named_arguments)
+
+def notify_b(operation_name, *arguments, **named_arguments):
+    notify_g(operation_name, *arguments, **named_arguments)
+    notify_kafka(operation_name, *arguments, **named_arguments)
+
+def notify_kafka(operation_name, *arguments, **named_arguments):
+    kafka_topic = config.conf("KAFKA_TOPIC", "colony")
+
+    import json
+    message = dict(
+        name = operation_name,
+        args = arguments,
+        kwargs = named_arguments
+    )
+    data = json.dumps(message)
+    data_b = legacy.bytes(data, encoding = "utf-8", force = True)
+
+    producer.send(kafka_topic, data_b)
+
+def _get_kafka_producer():
+    try: import kafka
+    except Exception: return None
+
+    kafka_host = config.conf("KAFKA_HOST", "localhost:19092")
+    
+
+    producer = kafka.KafkaProducer(
+        bootstrap_servers = kafka_host
+    )
+
+    return producer
