@@ -198,8 +198,8 @@ def unregister_g(operation_name, handler = None):
     In case the handler argument is present only the provided
     handler is removed from handling for the operation.
 
-    :type operation_mame: String
-    :param operation_mame: The name of the operation for which
+    :type operation_name: String
+    :param operation_name: The name of the operation for which
     the "unregistration" is being done.
     :type handler: Function
     :param handler: The handler used in the handling operation
