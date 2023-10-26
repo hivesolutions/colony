@@ -173,22 +173,22 @@ def progress(handlers_map = None, *arguments, **named_arguments):
 
     return notify(PROGRESS_VALUE, handlers_map, *arguments, **named_arguments)
 
-def register_g(operation_mame, handler):
+def register_g(operation_name, handler):
     """
     Registers for operations occurring for the provided name
     in the global system scope.
 
-    :type operation_mame: String
-    :param operation_mame: The name of the operation for which
+    :type operation_name: String
+    :param operation_name: The name of the operation for which
     the registration is being done.
     :type handler: Function
     :param handler: The handler to be used in the handling operation
     for the operation with the provided name.
     """
 
-    handlers = GLOBAL_HANDLERS_MAP.get(operation_mame, [])
+    handlers = GLOBAL_HANDLERS_MAP.get(operation_name, [])
     handlers.append(handler)
-    GLOBAL_HANDLERS_MAP[operation_mame] = handlers
+    GLOBAL_HANDLERS_MAP[operation_name] = handlers
 
 def unregister_g(operation_name, handler = None):
     """
