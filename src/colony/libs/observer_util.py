@@ -37,6 +37,10 @@ __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+import json
+
+from colony.base import config, legacy
+
 COUNTER = 0
 """ The global counter value that will be used in the
 pseudo unique number generation by incrementing the
@@ -57,6 +61,10 @@ for "activities" for which the progress is monitored """
 GLOBAL_HANDLERS_MAP = {}
 """ The global handlers map to be used by default if
 no specific handlers map is defined """
+
+KAFKA_PRODUCERS = {}
+""" Global map that associates hosts with producers,
+to be used to power singleton based retrieval """
 
 def unique():
     """
@@ -229,3 +237,44 @@ def notify_g(operation_name, *arguments, **named_arguments):
     """
 
     return notify(operation_name, None, *arguments, **named_arguments)
+
+def notify_b(operation_name, *arguments, **named_arguments):
+    notify_kafka(operation_name, *arguments, **named_arguments)
+
+def notify_kafka(operation_name, *arguments, **named_arguments):
+    kafka_host = config.conf("KAFKA_HOST", None)
+    kafka_topic = config.conf("KAFKA_TOPIC", "colony")
+
+    # in case no Kafka host is defined we act as if no need
+    # for the Kafka notification has been requested
+    if not kafka_host: return None
+
+    message = dict(
+        name = operation_name,
+        args = arguments,
+        kwargs = named_arguments
+    )
+    data = json.dumps(message)
+    data_b = legacy.bytes(data, encoding = "utf-8", force = True)
+
+    producer = _get_kafka_producer()
+    if not producer: return
+
+    producer.send(kafka_topic, data_b)
+
+def _get_kafka_producer():
+    try: import kafka
+    except Exception: return None
+
+    kafka_host = config.conf("KAFKA_HOST", None)
+    if not kafka_host: return None
+
+    if kafka_host in KAFKA_PRODUCERS:
+        return KAFKA_PRODUCERS[kafka_host]
+
+    producer = kafka.KafkaProducer(
+        bootstrap_servers = kafka_host
+    )
+    KAFKA_PRODUCERS[kafka_host] = producer
+
+    return producer
