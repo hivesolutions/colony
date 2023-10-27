@@ -258,11 +258,11 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
     producer.send(kafka_topic, data_b)
 
 def _get_kafka_producer():
-    try: import kafka
-    except Exception: return None
-
     kafka_host = config.conf("KAFKA_HOST", None)
     if not kafka_host: return None
+
+    try: import kafka
+    except Exception: return None
 
     if kafka_host in KAFKA_PRODUCERS:
         return KAFKA_PRODUCERS[kafka_host]
