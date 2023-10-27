@@ -248,6 +248,9 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
     data = json.dumps(message)
     data_b = legacy.bytes(data, encoding = "utf-8", force = True)
 
+    producer = _get_kafka_producer()
+    if not producer: return
+
     producer.send(kafka_topic, data_b)
 
 def _get_kafka_producer():
@@ -255,7 +258,6 @@ def _get_kafka_producer():
     except Exception: return None
 
     kafka_host = config.conf("KAFKA_HOST", "localhost:19092")
-    
 
     producer = kafka.KafkaProducer(
         bootstrap_servers = kafka_host
