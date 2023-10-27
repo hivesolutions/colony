@@ -242,7 +242,12 @@ def notify_b(operation_name, *arguments, **named_arguments):
     notify_kafka(operation_name, *arguments, **named_arguments)
 
 def notify_kafka(operation_name, *arguments, **named_arguments):
+    kafka_host = config.conf("KAFKA_HOST", None)
     kafka_topic = config.conf("KAFKA_TOPIC", "colony")
+
+    # in case no Kafka host is defined we act as if no need
+    # for the Kafka notification has been requested
+    if not kafka_host: return None
 
     message = dict(
         name = operation_name,
@@ -258,11 +263,11 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
     producer.send(kafka_topic, data_b)
 
 def _get_kafka_producer():
-    kafka_host = config.conf("KAFKA_HOST", None)
-    if not kafka_host: return None
-
     try: import kafka
     except Exception: return None
+
+    kafka_host = config.conf("KAFKA_HOST", None)
+    if not kafka_host: return None
 
     if kafka_host in KAFKA_PRODUCERS:
         return KAFKA_PRODUCERS[kafka_host]
