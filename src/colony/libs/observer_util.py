@@ -60,6 +60,10 @@ GLOBAL_HANDLERS_MAP = {}
 """ The global handlers map to be used by default if
 no specific handlers map is defined """
 
+KAFKA_PRODUCERS = {}
+""" Global map that associates hosts with producers,
+to be used to power singleton based retrieval """
+
 def unique():
     """
     Generates a new pseudo unique identifier generated in the
@@ -233,7 +237,6 @@ def notify_g(operation_name, *arguments, **named_arguments):
     return notify(operation_name, None, *arguments, **named_arguments)
 
 def notify_b(operation_name, *arguments, **named_arguments):
-    notify_g(operation_name, *arguments, **named_arguments)
     notify_kafka(operation_name, *arguments, **named_arguments)
 
 def notify_kafka(operation_name, *arguments, **named_arguments):
@@ -258,9 +261,12 @@ def _get_kafka_producer():
     except Exception: return None
 
     kafka_host = config.conf("KAFKA_HOST", "localhost:19092")
+    if kafka_host in KAFKA_PRODUCERS:
+        return KAFKA_PRODUCERS[kafka_host]
 
     producer = kafka.KafkaProducer(
         bootstrap_servers = kafka_host
     )
+    KAFKA_PRODUCERS[kafka_host] = producer
 
     return producer
