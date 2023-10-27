@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+import json
+
 from colony.base import config, legacy
 
 COUNTER = 0
@@ -242,7 +244,6 @@ def notify_b(operation_name, *arguments, **named_arguments):
 def notify_kafka(operation_name, *arguments, **named_arguments):
     kafka_topic = config.conf("KAFKA_TOPIC", "colony")
 
-    import json
     message = dict(
         name = operation_name,
         args = arguments,
@@ -260,7 +261,9 @@ def _get_kafka_producer():
     try: import kafka
     except Exception: return None
 
-    kafka_host = config.conf("KAFKA_HOST", "localhost:19092")
+    kafka_host = config.conf("KAFKA_HOST", None)
+    if not kafka_host: return None
+
     if kafka_host in KAFKA_PRODUCERS:
         return KAFKA_PRODUCERS[kafka_host]
 
