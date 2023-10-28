@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *
 
+## [1.4.12] - 2023-10-28
+
+### Added
+
+* Support for broadcast notification using `notify_b()`
+
 ## [1.4.11] - 2023-10-15
 
 ### Fixed
