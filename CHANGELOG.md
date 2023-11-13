@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Support for SASL in Kaka client
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [1.4.13] - 2023-11-13
+
+### Added
+
+* Support for SASL in Kaka client
 
 ## [1.4.12] - 2023-10-28
 
