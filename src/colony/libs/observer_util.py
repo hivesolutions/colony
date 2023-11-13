@@ -252,7 +252,7 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
 
     # in case no Kafka server is defined we act as if no need
     # for the Kafka notification has been requested
-    if not kafka_server: return None
+    if not kafka_server: return
 
     message = dict(
         name = operation_name,
@@ -298,17 +298,17 @@ def _kafka_producer():
     try: import kafka
     except Exception: return None
 
-    config = kafka_config()
-    if not config: return None
+    _kafka_config = kafka_config()
+    if not _kafka_config: return None
 
-    kafka_server = config["kafka_server"]
+    kafka_server = _kafka_config["kafka_server"]
     if kafka_server in KAFKA_PRODUCERS:
         return KAFKA_PRODUCERS[kafka_server]
 
-    security_protocol = config["security_protocol"]
-    sasl_mechanism = config["sasl_mechanism"]
-    sasl_plain_username = config["sasl_plain_username"]
-    sasl_plain_password = config["sasl_plain_password"]
+    security_protocol = _kafka_config["security_protocol"]
+    sasl_mechanism = _kafka_config["sasl_mechanism"]
+    sasl_plain_username = _kafka_config["sasl_plain_username"]
+    sasl_plain_password = _kafka_config["sasl_plain_password"]
 
     producer = kafka.KafkaProducer(
         bootstrap_servers = kafka_server,
