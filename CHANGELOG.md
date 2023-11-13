@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Support for the `kafka_config()` method
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [1.4.14] - 2023-11-13
+
+### Added
+
+* Support for the `kafka_config()` method
 
 ## [1.4.13] - 2023-11-13
 
