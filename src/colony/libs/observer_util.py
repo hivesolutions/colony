@@ -63,7 +63,7 @@ GLOBAL_HANDLERS_MAP = {}
 no specific handlers map is defined """
 
 KAFKA_PRODUCERS = {}
-""" Global map that associates hosts with producers,
+""" Global map that associates hosts (servers) with producers,
 to be used to power singleton based retrieval """
 
 def unique():
@@ -242,12 +242,13 @@ def notify_b(operation_name, *arguments, **named_arguments):
     notify_kafka(operation_name, *arguments, **named_arguments)
 
 def notify_kafka(operation_name, *arguments, **named_arguments):
-    kafka_host = config.conf("KAFKA_HOST", None)
+    kafka_server = config.conf("KAFKA_HOST", None)
+    kafka_server = config.conf("KAFKA_SERVER", kafka_server)
     kafka_topic = config.conf("KAFKA_TOPIC", "colony")
 
-    # in case no Kafka host is defined we act as if no need
+    # in case no Kafka server is defined we act as if no need
     # for the Kafka notification has been requested
-    if not kafka_host: return None
+    if not kafka_server: return None
 
     message = dict(
         name = operation_name,
@@ -266,15 +267,25 @@ def _get_kafka_producer():
     try: import kafka
     except Exception: return None
 
-    kafka_host = config.conf("KAFKA_HOST", None)
-    if not kafka_host: return None
+    kafka_server = config.conf("KAFKA_HOST", None)
+    kafka_server = config.conf("KAFKA_SERVER", kafka_server)
+    if not kafka_server: return None
 
-    if kafka_host in KAFKA_PRODUCERS:
-        return KAFKA_PRODUCERS[kafka_host]
+    if kafka_server in KAFKA_PRODUCERS:
+        return KAFKA_PRODUCERS[kafka_server]
+
+    security_protocol = config.conf("KAFKA_SECURITY_PROTOCOL", "PLAINTEXT")
+    sasl_mechanism = config.conf("KAFKA_SASL_MECHANISM", None)
+    sasl_plain_username = config.conf("KAFKA_SASL_USERNAME", None)
+    sasl_plain_password = config.conf("KAFKA_SASL_PASSWORD", None)
 
     producer = kafka.KafkaProducer(
-        bootstrap_servers = kafka_host
+        bootstrap_servers = kafka_server,
+        security_protocol = security_protocol,
+        sasl_mechanism = sasl_mechanism,
+        sasl_plain_username = sasl_plain_username,
+        sasl_plain_password = sasl_plain_password
     )
-    KAFKA_PRODUCERS[kafka_host] = producer
+    KAFKA_PRODUCERS[kafka_server] = producer
 
     return producer
