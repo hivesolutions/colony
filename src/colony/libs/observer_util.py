@@ -66,6 +66,10 @@ KAFKA_PRODUCERS = {}
 """ Global map that associates hosts (servers) with producers,
 to be used to power singleton based retrieval """
 
+_KAFKA_CONFIG = None
+""" Cache configuration value, to avoid the constant 
+building of the Kafka configuration map """
+
 def unique():
     """
     Generates a new pseudo unique identifier generated in the
@@ -258,12 +262,16 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
     data = json.dumps(message)
     data_b = legacy.bytes(data, encoding = "utf-8", force = True)
 
-    producer = _get_kafka_producer()
+    producer = _kafka_producer()
     if not producer: return
 
     producer.send(kafka_topic, data_b)
 
-def _get_kafka_producer():
+def kafka_config():
+    global _KAFKA_CONFIG
+
+    if _KAFKA_CONFIG: return _KAFKA_CONFIG
+
     try: import kafka
     except Exception: return None
 
@@ -271,13 +279,36 @@ def _get_kafka_producer():
     kafka_server = config.conf("KAFKA_SERVER", kafka_server)
     if not kafka_server: return None
 
-    if kafka_server in KAFKA_PRODUCERS:
-        return KAFKA_PRODUCERS[kafka_server]
-
     security_protocol = config.conf("KAFKA_SECURITY_PROTOCOL", "PLAINTEXT")
     sasl_mechanism = config.conf("KAFKA_SASL_MECHANISM", None)
     sasl_plain_username = config.conf("KAFKA_SASL_USERNAME", None)
     sasl_plain_password = config.conf("KAFKA_SASL_PASSWORD", None)
+
+    _KAFKA_CONFIG = dict(
+        kafka_server = kafka_server,
+        security_protocol = security_protocol,
+        sasl_mechanism = sasl_mechanism,
+        sasl_plain_username = sasl_plain_username,
+        sasl_plain_password = sasl_plain_password,
+        client_version = kafka.__version__
+    )
+    return _KAFKA_CONFIG
+
+def _kafka_producer():
+    try: import kafka
+    except Exception: return None
+
+    config = kafka_config()
+    if not config: return None
+
+    kafka_server = config["kafka_server"]
+    if kafka_server in KAFKA_PRODUCERS:
+        return KAFKA_PRODUCERS[kafka_server]
+
+    security_protocol = config["security_protocol"]
+    sasl_mechanism = config["sasl_mechanism"]
+    sasl_plain_username = config["sasl_plain_username"]
+    sasl_plain_password = config["sasl_plain_password"]
 
     producer = kafka.KafkaProducer(
         bootstrap_servers = kafka_server,
