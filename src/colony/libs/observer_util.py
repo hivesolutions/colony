@@ -67,7 +67,7 @@ KAFKA_PRODUCERS = {}
 to be used to power singleton based retrieval """
 
 _KAFKA_CONFIG = None
-""" Cache configuration value, to avoid the constant 
+""" Cache configuration value, to avoid the constant
 building of the Kafka configuration map """
 
 def unique():
@@ -246,13 +246,15 @@ def notify_b(operation_name, *arguments, **named_arguments):
     notify_kafka(operation_name, *arguments, **named_arguments)
 
 def notify_kafka(operation_name, *arguments, **named_arguments):
-    kafka_server = config.conf("KAFKA_HOST", None)
-    kafka_server = config.conf("KAFKA_SERVER", kafka_server)
-    kafka_topic = config.conf("KAFKA_TOPIC", "colony")
+    _kafka_config = kafka_config()
 
     # in case no Kafka server is defined we act as if no need
     # for the Kafka notification has been requested
-    if not kafka_server: return
+    kafka_server = _kafka_config["kafka_server"]
+    if kafka_server in KAFKA_PRODUCERS:
+        return KAFKA_PRODUCERS[kafka_server]
+
+    default_topic = _kafka_config["default_topic"]
 
     message = dict(
         name = operation_name,
@@ -265,7 +267,7 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
     producer = _kafka_producer()
     if not producer: return
 
-    producer.send(kafka_topic, data_b)
+    producer.send(default_topic, data_b)
 
 def kafka_config():
     global _KAFKA_CONFIG
@@ -283,6 +285,7 @@ def kafka_config():
     sasl_mechanism = config.conf("KAFKA_SASL_MECHANISM", None)
     sasl_plain_username = config.conf("KAFKA_SASL_USERNAME", None)
     sasl_plain_password = config.conf("KAFKA_SASL_PASSWORD", None)
+    default_topic = config.conf("KAFKA_TOPIC", "colony")
 
     _KAFKA_CONFIG = dict(
         kafka_server = kafka_server,
@@ -290,6 +293,7 @@ def kafka_config():
         sasl_mechanism = sasl_mechanism,
         sasl_plain_username = sasl_plain_username,
         sasl_plain_password = sasl_plain_password,
+        default_topic = default_topic,
         client_version = kafka.__version__
     )
     return _KAFKA_CONFIG
