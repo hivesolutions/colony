@@ -251,8 +251,7 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
     # in case no Kafka server is defined we act as if no need
     # for the Kafka notification has been requested
     kafka_server = _kafka_config["kafka_server"]
-    if kafka_server in KAFKA_PRODUCERS:
-        return KAFKA_PRODUCERS[kafka_server]
+    if not kafka_server: return
 
     default_topic = _kafka_config["default_topic"]
 
