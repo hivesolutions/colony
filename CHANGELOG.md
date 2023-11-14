@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+*
+
+## [1.4.16] - 2023-11-14
+
+### Fixed
+
 * Early return in Kafka method
 
 ## [1.4.15] - 2023-11-13

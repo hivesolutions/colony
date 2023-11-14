@@ -1,4 +1,5 @@
 {
+    "1.4.16": ["Fixed early exit issue in Kafka method"],
     "1.4.15": ["Default topic support in Kafka config"],
     "1.4.14": ["Support for the `kafka_config()` method"],
     "1.4.13": ["Support for SASL in Kaka client"],
