@@ -1,6 +1,6 @@
 # [![Colony Framework](res/logo.png)](http://getcolony.com)
 
-The Colony Framework is an open source plugin framework specification. Implementations of the specification offer a runtime component model, that allows for plugins to be installed, started, stopped, updated and uninstalled without requiring the application container to be stopped. The specification relies heavily on the Inversion of control principle, in order to make it easier for application components to discover and interact with each other.
+The Colony Framework is an open-source plugin framework specification. Implementations of the specification offer a runtime component model, that allows for plugins to be installed, started, stopped, updated, and uninstalled without requiring the application container to be stopped. The specification relies heavily on the Inversion of control principle, in order to make it easier for application components to discover and interact with each other.
 
 Colony aims to eliminate the complexity typically associated with the creation of modular applications, through a simplified unified model for component development. Practical applications can range from modular enterprise software to application mashing.
 
@@ -20,7 +20,7 @@ Colony aims to eliminate the complexity typically associated with the creation o
 
 ### Docker
 
-* Create a new directory to serve as base for the build `mkdir colony && cd colony`
+* Create a new directory to serve as the base for the build `mkdir colony && cd colony`
 * Retrieve the `Dockerfile` from the repo using `wget https://github.com/hivesolutions/colony/raw/master/assets/docker/Dockerfile`
 * Create the new docker image using `docker build --tag self/colony .`
 * Execute colony with `docker run -e RUN_MODE=devel -i -t self/colony`
@@ -32,19 +32,19 @@ To actually do something useful look into [How to Establish your Colony in 3 Eas
 ### For development
 
 * Set `PYTHONPATH` to the `colony/src` path so that the Python source files may be included
-* Set `PATH` to the `colony/scripts/pypi` to used the provided base scripts
+* Set `PATH` to the `colony/scripts/pypi` to use the provided base scripts
 
 ### For production
 
 ## Usage
 
-Most of the colony operation are run through the `cpm` command:
+Most of the colony operations are run through the `cpm` command:
 
 * `cpm clone <target>` - clones the base colony instance into the target directory (new project)
 * `cpm cleanup <target>` - cleans the current instance removing extra files
 * `cpm pack <target>` - packs the current instance into a .zip file
 * `cpm generate [target] <...>` - generates a .json descriptor file for the provided Python file and then runs
-the build operation for the generated .json file, effectively build the package item
+the build operation for the generated .json file, effectively building the package item
 * `cpm build [descriptor] <...>` - builds the target .json descriptor file into a package file
 * `cpm deploy [package]` - deploys the target .cbx file into the current instance
 * `cpm info [package]` - prints information about the package to the standard output
@@ -63,9 +63,9 @@ case at least one test fails.
 ## Features
 
 * Runtime modularity.
-* No restart required for deploying new plugins, updating or reconfiguring existing ones.
+* No restart is required for deploying new plugins, updating, or reconfiguring existing ones.
 * Simplified component model (easy to create a plugin, even easier to combine existing ones).
-* Capabilities: simple extension points which allow your plugins to take advantage of future plugins which adhere to the capability API.
+* Capabilities: simple extension points that allow your plugins to take advantage of future plugins that adhere to the capability API.
 * Dependencies: simplified dependency management, just declare the id of the plugin your plugin needs in order to function and the plugin manager will ensure your plugin only gets loaded when the conditions are met.
 * Most importantly, runs [Colony Plugins](https://github.com/hivesolutions/colony_plugins).
 
@@ -82,7 +82,7 @@ The best ways to get involved:
 
 ## Extensions
 
-To find Python native extension required for some of the plugins used the following sites:
+To find Python native extension required for some of the plugins use the following sites:
 
 * Python Imaging Library (PIL) [link](https://pillow.readthedocs.io/).
 * Reportlab PDF Generator [link](http://www.reportlab.com/).
