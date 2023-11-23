@@ -41,7 +41,6 @@ import unittest
 import unittest.mock
 
 import colony
-import colony.config
 
 class ConfigTest(unittest.TestCase):
 
