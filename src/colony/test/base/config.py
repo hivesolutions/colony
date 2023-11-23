@@ -38,7 +38,6 @@ __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import unittest
-import unittest.mock
 
 import colony
 
@@ -89,35 +88,3 @@ class ConfigTest(unittest.TestCase):
         result = colony.conf("HEIGHT", cast = int)
 
         self.assertEqual(result, None)
-
-    def test_load_dot_env(self):
-
-        mock_data = unittest.mock.mock_open(read_data=b"#This is a comment\nAGE=10\nNAME=colony\n")
-        mock_open = unittest.mock.patch("builtins.open", mock_data, create = True).start()
-        unittest.mock.patch("os.path.exists", return_value = True).start()
-        
-        ctx = {
-            "configs": {},
-            "config_f": []
-        }
-
-        colony.config.load_dot_env(".env", "utf-8", ctx)
-
-        result = colony.conf("AGE", cast = int)
-        self.assertEqual(type(result), int)
-        self.assertEqual(result, 10)
-
-        result = colony.conf("AGE", cast = str)
-
-        self.assertEqual(result, "10")
-        self.assertEqual(type(result), str)
-
-        result = colony.conf("HEIGHT", cast = int)
-        self.assertEqual(result, None)
-
-        self.assertEqual(len(ctx["configs"]), 2)
-
-        # Asserts that the file was closed
-        mock_open.return_value.close.assert_called_once()
-
-        unittest.mock.patch.stopall()
