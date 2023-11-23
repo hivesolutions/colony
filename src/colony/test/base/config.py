@@ -102,7 +102,7 @@ class ConfigTest(unittest.TestCase):
             mock.patch("builtins.open", mock_data, create = True) as mock_open:
 
             ctx = dict(
-                config = {},
+                configs = {},
                 config_f = []
             )
 
