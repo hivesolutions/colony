@@ -90,7 +90,7 @@ class ConfigTest(unittest.TestCase):
 
         self.assertEqual(result, None)
 
-    def test_load_dot_env(self):
+    def test_loaddotenv(self):
         unittest.mock.patch("os.path.exists", return_value = True).start()
         mock_data = unittest.mock.mock_open(read_data=b"#This is a comment\nAGE=10\nNAME=colony\n")
         mock_open = unittest.mock.patch("builtins.open", mock_data, create = True).start()
