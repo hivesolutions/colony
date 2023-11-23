@@ -117,6 +117,6 @@ class ConfigTest(unittest.TestCase):
         self.assertEqual(len(ctx["configs"]), 2)
 
         # Asserts that the file was closed
-        mock_open.return_value.close.assert_called_once()
+        self.assertEqual(mock_open.return_value.close.call_count, 1)
 
         unittest.mock.patch.stopall()
