@@ -37,8 +37,8 @@ __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+import sys
 import unittest
-import unittest.mock
 
 import colony
 
@@ -91,6 +91,11 @@ class ConfigTest(unittest.TestCase):
         self.assertEqual(result, None)
 
     def test_load_dot_env(self):
+        if sys.version_info[0] == 2:
+            self.skipTest("Skipping this test in Python 2")
+
+        import unittest.mock
+
         unittest.mock.patch("os.path.exists", return_value = True).start()
         mock_data = unittest.mock.mock_open(read_data=b"#This is a comment\nAGE=10\nNAME=colony\n")
         mock_open = unittest.mock.patch("builtins.open", mock_data, create = True).start()
