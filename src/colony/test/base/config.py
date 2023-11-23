@@ -41,6 +41,9 @@ import unittest
 
 import colony
 
+try: import unittest.mock as mock
+except ImportError: mock = None
+
 class ConfigTest(unittest.TestCase):
 
     def test_basic(self):
@@ -88,3 +91,35 @@ class ConfigTest(unittest.TestCase):
         result = colony.conf("HEIGHT", cast = int)
 
         self.assertEqual(result, None)
+
+    def test_load_dot_env(self):
+        if mock == None:
+            self.skipTest("Skipping test: mock unavailable")
+
+        mock_data = mock.mock_open(read_data = b"#This is a comment\nAGE=10\nNAME=colony\n")
+
+        with mock.patch("os.path.exists", return_value = True),\
+            mock.patch("builtins.open", mock_data, create = True) as mock_open:
+
+            ctx = dict(
+                configs = {},
+                config_f = []
+            )
+
+            colony.base.config.load_dot_env(".env", "utf-8", ctx)
+
+            result = colony.conf("AGE", cast = int)
+            self.assertEqual(type(result), int)
+            self.assertEqual(result, 10)
+
+            result = colony.conf("AGE", cast = str)
+
+            self.assertEqual(result, "10")
+            self.assertEqual(type(result), str)
+
+            result = colony.conf("HEIGHT", cast = int)
+            self.assertEqual(result, None)
+
+            self.assertEqual(len(ctx["configs"]), 2)
+
+            self.assertEqual(mock_open.return_value.close.call_count, 1)
