@@ -100,7 +100,7 @@ class ConfigTest(unittest.TestCase):
             "config_f": []
         }
 
-        colony.config.load_dot_env(".env", "utf-8", ctx)
+        colony.base.config.load_dot_env(".env", "utf-8", ctx)
 
         result = colony.conf("AGE", cast = int)
         self.assertEqual(type(result), int)
