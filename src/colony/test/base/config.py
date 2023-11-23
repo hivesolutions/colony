@@ -39,10 +39,10 @@ __license__ = "Apache License, Version 2.0"
 
 import unittest
 
+import colony
+
 try: import unittest.mock as mock
 except ImportError: mock = None
-
-import colony
 
 class ConfigTest(unittest.TestCase):
 
@@ -96,32 +96,30 @@ class ConfigTest(unittest.TestCase):
         if mock == None:
             self.skipTest("Skipping test: mock unavailable")
 
-        mock.patch("os.path.exists", return_value = True).start()
-        mock_data = mock.mock_open(read_data=b"#This is a comment\nAGE=10\nNAME=colony\n")
-        mock_open = mock.patch("builtins.open", mock_data, create = True).start()
+        mock_data = mock.mock_open(read_data = b"#This is a comment\nAGE=10\nNAME=colony\n")
 
-        ctx = {
-            "configs": {},
-            "config_f": []
-        }
+        with mock.patch("os.path.exists", return_value = True),\
+            mock.patch("builtins.open", mock_data, create = True) as mock_open:
 
-        colony.base.config.load_dot_env(".env", "utf-8", ctx)
+            ctx = dict(
+                config = {},
+                config_f = []
+            )
 
-        result = colony.conf("AGE", cast = int)
-        self.assertEqual(type(result), int)
-        self.assertEqual(result, 10)
+            colony.base.config.load_dot_env(".env", "utf-8", ctx)
 
-        result = colony.conf("AGE", cast = str)
+            result = colony.conf("AGE", cast = int)
+            self.assertEqual(type(result), int)
+            self.assertEqual(result, 10)
 
-        self.assertEqual(result, "10")
-        self.assertEqual(type(result), str)
+            result = colony.conf("AGE", cast = str)
 
-        result = colony.conf("HEIGHT", cast = int)
-        self.assertEqual(result, None)
+            self.assertEqual(result, "10")
+            self.assertEqual(type(result), str)
 
-        self.assertEqual(len(ctx["configs"]), 2)
+            result = colony.conf("HEIGHT", cast = int)
+            self.assertEqual(result, None)
 
-        # Asserts that the file was closed
-        self.assertEqual(mock_open.return_value.close.call_count, 1)
+            self.assertEqual(len(ctx["configs"]), 2)
 
-        mock.patch.stopall()
+            self.assertEqual(mock_open.return_value.close.call_count, 1)
