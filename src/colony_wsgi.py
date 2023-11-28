@@ -90,15 +90,18 @@ warnings.filterwarnings("ignore", category = DeprecationWarning)
 # retrieves the layout mode that is going to be used for the
 # resolution of resources in the colony infra-structure
 layout_mode = colony.conf("LAYOUT_MODE", "default")
+layout_mode = colony.conf("COLONY_LAYOUT_MODE", layout_mode)
 
 # tries to retrieve the run mode from the currently set
 # environment variables, in case of failure defaults to
 # the default value (as expected by the specification)
 run_mode = colony.conf("RUN_MODE", "development")
+run_mode = colony.conf("COLONY_RUN_MODE", run_mode)
 
 # tries to retrieve the prefix to be used to shorten the path
 # resolution in the request handling
 prefix = colony.conf("PREFIX", None)
+prefix = colony.conf("COLONY_PREFIX", prefix)
 
 # gathers the path to the alias file that contains JSON information
 # about the mapping prefixes for the HTTP server, the file should
