@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Made some alias to the more general `colony` config variables
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [1.4.17] - 2023-11-28
+
+### Added
+
+* Made some alias to the more general `colony` config variables (`COLONY_PREFIX`, `COLONY_RUN_MODE`, and `COLONY_LAYOUT_MODE`)
 
 ## [1.4.16] - 2023-11-14
 
