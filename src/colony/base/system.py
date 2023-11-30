@@ -6166,7 +6166,7 @@ class PluginManager(object):
         # to be canceled (nothing to be done)
         if not self.kill_system_timer: return
 
-        # cancels the kill system timer, this shold avoid
+        # cancels the kill system timer, this should avoid
         # any possible locking problems with the system
         self.kill_system_timer.cancel()
 
@@ -6175,10 +6175,9 @@ class PluginManager(object):
         Kills the system, due to unload timeout occurrence.
         """
 
-        # prints an error message
+        # prints an error message about the timeout on exiting the system
+        # and then exits with an error code
         self.error("Unloading timeout (%.2f seconds) reached, killing the system..." % DEFAULT_UNLOAD_SYSTEM_TIMEOUT)
-
-        # exits in error
         exit(2)
 
     def _handle_system_exception(self, exception):

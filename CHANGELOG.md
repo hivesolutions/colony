@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Multiple signals at exit, which could cause duplicate unloads
 
 ## [1.4.17] - 2023-11-28
 

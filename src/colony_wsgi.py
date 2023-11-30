@@ -291,6 +291,13 @@ def get_rewrite(encoding = "utf-8"):
 
 @atexit.register
 def unload_system():
+    # registers a dummy signal handler for the SIGINT and SIGTERM signals
+    # so that no actions are performed on the signals (avoids duplicate
+    # signal issues), this prevents a user from sending multiple requests
+    # to unload the system (eg: multiple CTRL + C presses)
+    signal.signal(signal.SIGINT, lambda _s, _f: ())
+    signal.signal(signal.SIGTERM, lambda _s, _f: ())
+
     # unloads the plugin manager system releasing all
     # the used resources and killing all the threads
     # this should be enough to return the control to
