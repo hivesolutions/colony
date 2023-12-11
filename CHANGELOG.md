@@ -9,12 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Support for new `config/python/singleton.py` python configuration mode
-* New `getLevelInt()` method to the `logging` module
+*
 
 ### Changed
 
 *
+
+### Fixed
+
+*
+
+## [1.4.18] - 2023-12-11
+
+### Added
+
+* Support for new `config/python/singleton.py` python configuration mode
+* New `getLevelInt()` method to the `logging` module
 
 ### Fixed
 
