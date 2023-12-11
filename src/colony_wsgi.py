@@ -127,7 +127,8 @@ level = colony.getLevelName(level)
 # with the various paths to be used by colony, these are going to
 # be used as the initial values for the various path lists
 meta_paths = colony.conf("META_PATH", [], cast = list)
-plugin_paths = colony.conf("PLUGIN_PATH", [], cast = list)
+plugin_paths = colony.conf("PLUGINS_PATH", [], cast = list)
+plugin_paths = colony.conf("PLUGIN_PATH", plugin_paths, cast = list)
 
 # tries to retrieve the configuration file from the environment
 # variable associated in case it fails uses the default configuration
