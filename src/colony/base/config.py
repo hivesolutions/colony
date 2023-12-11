@@ -250,6 +250,9 @@ def load_dot_env(name = ".env", encoding = "utf-8", ctx = None):
         key, value = line.split("=", 1)
         key = key.strip()
         value = value.strip()
+        if value.startswith("\"") and value.endswith("\"") or\
+            value.startswith("'") and value.endswith("'"):
+            value = value[1:-1].replace("\\\"", "\"")
         configs[key] = value
 
 def load_env(ctx = None):

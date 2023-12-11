@@ -71,9 +71,22 @@ _levelNames = {
     "WARNING" : WARNING,
     "INFO" : INFO,
     "DEBUG" : DEBUG,
-    "NOTSET" : NOTSET,
+    "NOTSET" : NOTSET
 }
-""" The map relating the log levels with the textual representation and vice-versa """
+""" The map relating the log levels with the textual
+representation and vice-versa """
+
+_levelValues = {
+    "CRITICAL" : CRITICAL,
+    "ERROR" : ERROR,
+    "WARN" : WARNING,
+    "WARNING" : WARNING,
+    "INFO" : INFO,
+    "DEBUG" : DEBUG,
+    "NOTSET" : NOTSET
+}
+""" Map tha associated the textual representation of the
+log level with the integer value """
 
 def getLogger(name):
     """
@@ -82,14 +95,15 @@ def getLogger(name):
     :type name: String
     :param name: The name of the logger to retrieve.
     :rtype: DummyLogger
-    :return: The dummy logger for the gtiven name.
+    :return: The dummy logger for the fiven name.
     """
 
     return DummyLogger("dummy")
 
 def getLevelName(level):
     """
-    Returns the textual representation of logging level.
+    Returns the textual representation of logging level integer
+    value provided as argument.
 
     :type level: int
     :param level: The logging level to retrieve the textual representation.
@@ -98,6 +112,19 @@ def getLevelName(level):
     """
 
     return _levelNames.get(level, ("Level %s" % level))
+
+def getLevelInt(levelName):
+    """
+    Converts the textual representation of the logging level into
+    the integer value.
+
+    :type levelName: String
+    :param levelName: The textual representation of the logging level.
+    :rtype: int
+    :return: The integer value of the logging level.
+    """
+
+    return _levelValues.get(levelName, NOTSET)
 
 class DummyLogger(object):
     """

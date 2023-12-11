@@ -563,7 +563,8 @@ def parse_configuration(
     # these list are properly started with the initial values
     library_path_list = colony.conf("LIBRARY_PATH", [], cast = list)
     meta_path_list = colony.conf("META_PATH", [], cast = list)
-    plugin_path_list = colony.conf("PLUGIN_PATH", [], cast = list)
+    plugin_path_list = colony.conf("PLUGINS_PATH", [], cast = list)
+    plugin_path_list = colony.conf("PLUGIN_PATH", plugin_path_list, cast = list)
     library_path_list = library_path_list + config.library_path_list
     meta_path_list = meta_path_list + config.meta_path_list
     plugin_path_list = plugin_path_list + config.plugin_path_list
