@@ -110,7 +110,7 @@ class BroadcastHandler(logging.Handler):
     def emit(self, record):
         """
         Emit a record, to the output stream the record will
-        be formated and then sent to the socket for broadcast.
+        be formatted and then sent to the socket for broadcast.
 
         :type record: Record
         :param record: The log record to be sent through the
