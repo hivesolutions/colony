@@ -38,6 +38,7 @@ __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import logging
+import unittest.mock
 
 import colony
 
@@ -144,3 +145,38 @@ class LoggersTest(colony.ColonyTestCase):
 
         latest = memory_handler.get_latest(count = 1)
         self.assertEqual(len(latest), 0)
+    
+    def test_logstash_handler(self):
+        mock_api_client = unittest.mock.Mock()
+        mock_api_client.log_bulk.return_value = None
+
+        logstash_handler = colony.LogstashHandler(api = mock_api_client)
+        formatter = logging.Formatter("%(message)s")
+        logstash_handler.setFormatter(formatter)
+
+        self.assertEqual(len(logstash_handler.messages), 0)
+
+        record = logging.makeLogRecord(
+            dict(
+                msg = "hello world",
+                levelname = logging.getLevelName(logging.INFO)
+            )
+        )
+        logstash_handler.emit(record)
+        self.assertEqual(len(logstash_handler.messages), 1)
+        self.assertEqual(logstash_handler.messages[0]["message"], "hello world")
+        self.assertEqual(logstash_handler.messages[0]["level"], "INFO")
+
+        logstash_handler.flush()
+        self.assertEqual(len(logstash_handler.messages), 0)
+
+        record = logging.makeLogRecord(
+            dict(
+                msg = "hello world 2",
+                levelname = logging.getLevelName(logging.INFO)
+            )
+        )
+        logstash_handler.emit(record)
+        self.assertEqual(len(logstash_handler.messages), 1)
+        self.assertEqual(logstash_handler.messages[0]["message"], "hello world 2")
+        self.assertEqual(logstash_handler.messages[0]["level"], "INFO")
