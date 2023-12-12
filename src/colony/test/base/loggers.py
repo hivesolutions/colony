@@ -38,9 +38,11 @@ __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import logging
-import unittest.mock
 
 import colony
+
+try: import unittest.mock as mock
+except ImportError: mock = None
 
 class LoggersTest(colony.ColonyTestCase):
     """
@@ -147,7 +149,10 @@ class LoggersTest(colony.ColonyTestCase):
         self.assertEqual(len(latest), 0)
     
     def test_logstash_handler(self):
-        mock_api_client = unittest.mock.Mock()
+        if mock == None:
+            self.skipTest("Skipping test: mock unavailable")
+    
+        mock_api_client = mock.Mock()
         mock_api_client.log_bulk.return_value = None
 
         logstash_handler = colony.LogstashHandler(api = mock_api_client)
