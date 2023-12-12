@@ -45,9 +45,9 @@ from . import legacy
 
 try:
     import zmq
-    boradcast = True
+    broadcast = True
 except ImportError:
-    boradcast = False
+    broadcast = False
 
 MAX_LENGTH = 10000
 """ The maximum amount of messages that are kept in
@@ -93,7 +93,7 @@ class BroadcastHandler(logging.Handler):
     def __init__(self, host = None, port = None):
         logging.Handler.__init__(self)
 
-        if not boradcast: return
+        if not broadcast: return
 
         context = zmq.Context()
         self.socket = context.socket(zmq.PUB)
@@ -119,7 +119,7 @@ class BroadcastHandler(logging.Handler):
 
         # in case the broadcast flag is unset returns
         # immediately can't be used
-        if not boradcast: return
+        if not broadcast: return
 
         try:
             # formats the record, retrieving the resulting
