@@ -156,7 +156,7 @@ class LoggersTest(colony.ColonyTestCase):
         mock_api_client.log_bulk.return_value = None
 
         logstash_handler = colony.LogstashHandler(api = mock_api_client)
-        formatter = logging.Formatter("%(message)s")
+        formatter = logging.Formatter("%(levelname)s - %(message)s")
         logstash_handler.setFormatter(formatter)
 
         self.assertEqual(len(logstash_handler.messages), 0)
@@ -169,8 +169,11 @@ class LoggersTest(colony.ColonyTestCase):
         )
         logstash_handler.emit(record)
         self.assertEqual(len(logstash_handler.messages), 1)
+        self.assertEqual(logstash_handler.messages[0]["message_fmt"], "INFO - hello world")
         self.assertEqual(logstash_handler.messages[0]["message"], "hello world")
         self.assertEqual(logstash_handler.messages[0]["level"], "INFO")
+        self.assertEqual(logstash_handler.messages[0]["logger"], None)
+        self.assertEqual(logstash_handler.messages[0]["path"], "")
 
         logstash_handler.flush()
         self.assertEqual(len(logstash_handler.messages), 0)
@@ -183,5 +186,8 @@ class LoggersTest(colony.ColonyTestCase):
         )
         logstash_handler.emit(record)
         self.assertEqual(len(logstash_handler.messages), 1)
+        self.assertEqual(logstash_handler.messages[0]["message_fmt"], "INFO - hello world 2")
         self.assertEqual(logstash_handler.messages[0]["message"], "hello world 2")
         self.assertEqual(logstash_handler.messages[0]["level"], "INFO")
+        self.assertEqual(logstash_handler.messages[0]["logger"], None)
+        self.assertEqual(logstash_handler.messages[0]["path"], "")
