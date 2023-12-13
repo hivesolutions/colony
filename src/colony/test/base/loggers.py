@@ -147,11 +147,11 @@ class LoggersTest(colony.ColonyTestCase):
 
         latest = memory_handler.get_latest(count = 1)
         self.assertEqual(len(latest), 0)
-    
+
     def test_logstash_handler(self):
         if mock == None:
             self.skipTest("Skipping test: mock unavailable")
-    
+
         mock_api_client = mock.Mock()
         mock_api_client.log_bulk.return_value = None
 

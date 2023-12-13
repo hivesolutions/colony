@@ -45,6 +45,7 @@ import datetime
 import threading
 import collections
 
+from . import config
 from . import legacy
 
 try:
@@ -249,19 +250,12 @@ class MemoryHandler(logging.Handler):
 
 class LogstashHandler(logging.Handler):
 
-    def __init__(self, level = logging.NOTSET, max_length = MAX_LENGTH,  api = None):
+    def __init__(self, level = logging.NOTSET, max_length = MAX_LENGTH, api = None):
         logging.Handler.__init__(self, level = level)
+        if not api: api = self._build_api()
         self.messages = collections.deque()
         self.max_length = max_length
-        if not api:
-            try:
-                import appier
-                logstash = appier.import_pip("logstash", package = "logstash_api")
-                self.api = logstash.API()
-            except Exception:
-                self.api = None
-        else: 
-            self.api = api
+        self.api = api
 
     def emit(self, record):
         # verifies if the API structure is defined and set and if
@@ -280,6 +274,7 @@ class LogstashHandler(logging.Handler):
 
         log = {
             "@timestamp" : now_s,
+            "message_fmt" : message,
             "logger" : record.name,
             "message" : record.message,
             "level" : record.levelname,
@@ -310,3 +305,12 @@ class LogstashHandler(logging.Handler):
         # posts the complete set of messages to logstash and then clears the messages
         self.api.log_bulk(messages, tag = "default")
         self.messages = []
+
+    def _build_api():
+        try: import logstash
+        except ImportError: return None
+
+        if not config.conf("LOGGING_LOGSTASH", False, cast = bool):
+            return None
+
+        return logstash.API()
