@@ -153,7 +153,8 @@ class LoggersTest(colony.ColonyTestCase):
             self.skipTest("Skipping test: mock unavailable")
 
         mock_api_client = mock.Mock()
-        mock_api_client.log_bulk.return_value = None
+        mock_api_client_messages = []
+        mock_api_client.log_bulk = lambda messages, tag = "default": mock_api_client_messages.extend(messages)
 
         logstash_handler = colony.LogstashHandler(api = mock_api_client)
         formatter = logging.Formatter("%(levelname)s - %(message)s")
@@ -177,6 +178,12 @@ class LoggersTest(colony.ColonyTestCase):
 
         logstash_handler.flush()
         self.assertEqual(len(logstash_handler.messages), 0)
+        self.assertEqual(len(mock_api_client_messages), 1)
+        self.assertEqual(mock_api_client_messages[0]["message_fmt"], "INFO - hello world")
+        self.assertEqual(mock_api_client_messages[0]["message"], "hello world")
+        self.assertEqual(mock_api_client_messages[0]["level"], "INFO")
+        self.assertEqual(mock_api_client_messages[0]["logger"], None)
+        self.assertEqual(mock_api_client_messages[0]["path"], "")
 
         record = logging.makeLogRecord(
             dict(
