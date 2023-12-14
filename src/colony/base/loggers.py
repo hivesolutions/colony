@@ -37,10 +37,15 @@ __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+import os
+import socket
 import logging
 import itertools
+import datetime
+import threading
 import collections
 
+from . import config
 from . import legacy
 
 try:
@@ -242,3 +247,70 @@ class MemoryHandler(logging.Handler):
         finally:
             if is_path: file.close()
         if clear: self.clear()
+
+class LogstashHandler(logging.Handler):
+
+    def __init__(self, level = logging.NOTSET, max_length = MAX_LENGTH, api = None):
+        logging.Handler.__init__(self, level = level)
+        if not api: api = self._build_api()
+        self.messages = collections.deque()
+        self.max_length = max_length
+        self.api = api
+
+    def emit(self, record):
+        # verifies if the API structure is defined and set and if
+        # that's not the case returns immediately
+        if not self.api: return
+
+        # retrieves the current date time value as an utc value
+        # and then formats it according to the provided format string
+        message = self.format(record)
+
+        # creates the log record structure that is going to be sent
+        # to the logstash infra-structure, this should represent a
+        # proper structure ready to be debugged
+        now = datetime.datetime.utcnow()
+        now_s = now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+        log = {
+            "@timestamp" : now_s,
+            "message_fmt" : message,
+            "logger" : record.name,
+            "message" : record.message,
+            "level" : record.levelname,
+            "path" : record.pathname,
+            "lineno" : record.lineno,
+            "host" : socket.gethostname(),
+            "hostname" : socket.gethostname(),
+            "tid" : threading.current_thread().ident,
+            "pid" : os.getpid() if hasattr(os, "getpid") else -1,
+        }
+
+        self.messages.append(log)
+        should_flush = len(self.messages) >= self.max_length
+        if should_flush: self.flush()
+
+    def flush(self, force = False):
+        logging.Handler.flush(self)
+
+        # verifies if the API structure is defined and set and if
+        # that's not the case returns immediately
+        if not self.api: return
+
+        # in case the force flag is not set and there are no messages
+        # to be flushed returns immediately (nothing to be done)
+        messages = self.messages
+        if not messages and not force: return
+
+        # posts the complete set of messages to logstash and then clears the messages
+        self.api.log_bulk(messages, tag = "default")
+        self.messages = []
+
+    def _build_api():
+        try: import logstash
+        except ImportError: return None
+
+        if not config.conf("LOGGING_LOGSTASH", False, cast = bool):
+            return None
+
+        return logstash.API()

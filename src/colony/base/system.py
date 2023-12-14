@@ -2048,6 +2048,12 @@ class PluginManager(object):
         memory_handler = loggers.MemoryHandler()
         memory_handler.setLevel(minimal_log_level)
 
+        # creates the logstash handler object and then sets the
+        # minimal log level in it so that it may have the maximum
+        # amount of information available for handling
+        logstash_handler = loggers.LogstashHandler()
+        logstash_handler.setLevel(minimal_log_level)
+
         # retrieves the logging format and uses it
         # to create the proper logging formatter
         logging_format = GLOBAL_CONFIG.get(
@@ -2063,6 +2069,7 @@ class PluginManager(object):
         rotating_err_file_handler.setFormatter(formatter)
         broadcast_handler.setFormatter(formatter)
         memory_handler.setFormatter(formatter)
+        logstash_handler.setFormatter(formatter)
 
         # adds the complete set of logging handler to the
         # current logger, so that they get notified once
@@ -2072,6 +2079,7 @@ class PluginManager(object):
         logger.addHandler(rotating_err_file_handler)
         logger.addHandler(broadcast_handler)
         logger.addHandler(memory_handler)
+        logger.addHandler(logstash_handler)
 
         # sets the logger in the current context, so that
         # it may be used latter for reference
@@ -2085,6 +2093,7 @@ class PluginManager(object):
         self.logger_handlers["rotating_err_file"] = rotating_err_file_handler
         self.logger_handlers["broadcast"] = broadcast_handler
         self.logger_handlers["memory"] = memory_handler
+        self.logger_handlers["logstash"] = logstash_handler
 
     def load_system(self, mode = None, args = None, callback = None):
         """

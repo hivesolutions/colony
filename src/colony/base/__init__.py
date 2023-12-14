@@ -53,7 +53,7 @@ from .exceptions import ColonyException, OperationalError, AssertionError, Plugi
     PluginClassNotAvailable, InvalidCommand, InvalidArgument, SecurityError, OperationNotComplete, OperationRestart
 from .information import VERSION, RELEASE, BUILD, RELEASE_DATE, RELEASE_DATE_TIME, ENVIRONMENT_VERSION,\
     ENVIRONMENT, DEFAULT_ENCODING, DATE_FORMAT, DATE_TIME_FORMAT, INFORMATION_PATH
-from .loggers import BroadcastHandler, MemoryHandler
+from .loggers import BroadcastHandler, MemoryHandler, LogstashHandler
 from .system import System, Plugin, PluginManagerPlugin, PluginManager, Dependency, PluginDependency,\
     PackageDependency, Condition, OperativeSystemCondition, Capability, Event, PluginThread,\
     PluginEventThread

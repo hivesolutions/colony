@@ -98,6 +98,13 @@ To find Python native extension required for some of the plugins use the followi
 * Mailing list: http://groups.google.com/group/colony-users
 * Twitter: http://twitter.com/colonyframework
 
+## Configuration
+
+| Name                 | Type   | Default       | Description                                                                           |
+| -------------------- | ------ | ------------- | ------------------------------------------------------------------------------------- |
+| **RUN_MODE**         | `str`  | `development` | The mode in which the Colony is going to be running.                                  |
+| **LOGGING_LOGSTASH** | `bool` | `False`       | If the [Logstash](https://www.elastic.co/logstash) logging adapter should be enabled. |
+
 ## License
 
 Colony is an open-source project currently licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/).
