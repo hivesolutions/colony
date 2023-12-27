@@ -216,7 +216,7 @@ def _interleave_digits(first_digit, second_digit):
 
     # creates the list that will hold the
     # various interleaved letters
-    interleaved_leetters = []
+    interleaved_letters = []
 
     # iterates over the default range
     # of a digit encoding in 2 of 5
@@ -232,12 +232,12 @@ def _interleave_digits(first_digit, second_digit):
         # version of the second letter and then appends
         # it to the interleaved letter list
         second_letter_lower = second_letter.lower()
-        interleaved_letters = first_letter + second_letter_lower
-        interleaved_leetters.append(interleaved_letters)
+        joined_letters = first_letter + second_letter_lower
+        interleaved_letters.append(joined_letters)
 
     # joins the set of interleaved letters to obtain the
     # "final" interleaved digits string, then returns it
-    interleaved_digits_string = "".join(interleaved_leetters)
+    interleaved_digits_string = "".join(interleaved_letters)
     return interleaved_digits_string
 
 def _calculate_check_digit(character_values):
