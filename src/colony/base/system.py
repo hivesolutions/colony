@@ -224,21 +224,33 @@ class System(object):
         the current execution context.
         """
 
+        if self.plugin == None:
+            raise exceptions.PluginSystemException("No plugin available")
         return self.plugin.manager
 
     def debug(self, *args, **kwargs):
+        if self.plugin == None:
+            raise exceptions.PluginSystemException("No plugin available")
         return self.plugin.debug(*args, **kwargs)
 
     def info(self, *args, **kwargs):
+        if self.plugin == None:
+            raise exceptions.PluginSystemException("No plugin available")
         return self.plugin.info(*args, **kwargs)
 
     def warning(self, *args, **kwargs):
+        if self.plugin == None:
+            raise exceptions.PluginSystemException("No plugin available")
         return self.plugin.warning(*args, **kwargs)
 
     def error(self, *args, **kwargs):
+        if self.plugin == None:
+            raise exceptions.PluginSystemException("No plugin available")
         return self.plugin.error(*args, **kwargs)
 
     def critical(self, *args, **kwargs):
+        if self.plugin == None:
+            raise exceptions.PluginSystemException("No plugin available")
         return self.plugin.critical(*args, **kwargs)
 
 class Plugin(object):
