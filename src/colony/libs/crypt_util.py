@@ -60,7 +60,7 @@ SHA1_VALUE = "sha1"
 SHA256_VALUE = "sha256"
 """ The SHA256 value """
 
-MD5_CRPYT_SEPARATOR = "$"
+MD5_CRYPT_SEPARATOR = "$"
 """ The MD5 crypt separator """
 
 DEFAULT_MD5_CRYPT_MAGIC = "$1$"
@@ -430,7 +430,7 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     # creates the MD5 crypt value appending
     # the magic with the salt, the MD5 crypt separator
     # and the rearranged value
-    md5_crypt_value = magic + salt + MD5_CRPYT_SEPARATOR + rearranged
+    md5_crypt_value = magic + salt + MD5_CRYPT_SEPARATOR + rearranged
 
     # returns the MD5 crypt value
     return md5_crypt_value
