@@ -1,11 +1,11 @@
-from typing import Literal, Sequence
+from typing import Literal, Mapping, Sequence
 
 CodeSet = Literal["A", "B", "C"]
 
-DIGIT_ENCODING_MAP: dict[str, str]
+DIGIT_ENCODING_MAP: Mapping[str, str]
 START_CODE_2_OF_5: str
 END_CODE_2_OF_5: str
-START_CODES_CODE_128: dict[str, int]
+START_CODES_CODE_128: Mapping[str, int]
 END_CODE_CODE_128: int
 
 def encode_2_of_5(string_value: str) -> str: ...

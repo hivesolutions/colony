@@ -41,9 +41,6 @@ import copy
 
 from colony.base import legacy
 
-NOT_SET_VALUE = None
-""" The value to be set when the value is not set (defined) """
-
 TOPPER_VALUE = "_topper"
 """ The value of the attribute to hold the top values """
 

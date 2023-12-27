@@ -1,7 +1,8 @@
-from typing import Any
+from typing import Any, Mapping
 
 class DataCacheMap:
-    data_map: dict[str, tuple[Any, float]]
+    data_map: Mapping[str, tuple[Any, float]]
+
     def __init__(self): ...
     def get(self, name: str, timestamp: float | None = None) -> Any: ...
     def add(self, name: str, data: Any, timestamp: float): ...

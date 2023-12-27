@@ -1,7 +1,7 @@
-from typing import Sequence
+from typing import Mapping, Sequence
 
 COUNTRIES: Sequence[str]
-COUNTRIES_ISO: dict[str, tuple[str, str, str]]
+COUNTRIES_ISO: Mapping[str, tuple[str, str, str]]
 
 def country_get(
     name: str, relaxed: bool = ...
