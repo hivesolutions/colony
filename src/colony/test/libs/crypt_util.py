@@ -41,8 +41,8 @@ import colony
 
 class CryptTest(colony.ColonyTestCase):
     """
-    Class that tests the various functions/methods related
-    with the cryptography in Colony.
+    Class that tests the various functions related
+    with the cryptography utilities in Colony.
     """
 
     def test_md5_crypt(self):
