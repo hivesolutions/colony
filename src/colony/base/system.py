@@ -4516,7 +4516,8 @@ class PluginManager(object):
         :return: The list of plugins for the given capability and sub capabilities.
         """
 
-        # the results list
+        # the results list that is going to hold the multiple plugins that
+        # have the given capability pr sub capabilities
         result = []
 
         # the capability converted to internal capability structure
@@ -5661,6 +5662,8 @@ class PluginManager(object):
         :return: The current configuration path.
         """
 
+        if not self.manager_path:
+            raise exceptions.ColonyException("No manager path defined")
         return os.path.join(self.manager_path, self.configuration_path)
 
     def get_meta_paths(self):
