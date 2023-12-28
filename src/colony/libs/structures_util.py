@@ -60,14 +60,14 @@ class Decimal(float):
     task that are considered performance intensive.
     """
 
-    def __new__(self, value = 0.0):
+    def __new__(cls, value = 0.0):
         value = float(value)
         integer = abs(int(value // 1))
         count = 1 if integer == 0 else int(math.log10(integer)) + 1
         places = FLOAT_PRECISION - count
-        self.places = places
+        cls.places = places
         value = round(value, places)
-        return super(Decimal, self).__new__(self, value)
+        return super(Decimal, cls).__new__(cls, value)
 
     def __hash__(self):
         return float.__hash__(self)
@@ -221,7 +221,7 @@ class Decimal(float):
 class JournaledList(list):
     """
     List structure that keeps track of the append and
-    remove operation in a jounalized format.
+    remove operation in a journalized format.
     This structures is relevant for use cases where
     "diffs" around a base list must be kept.
     """
@@ -236,7 +236,7 @@ class JournaledList(list):
         """
         Constructor of the class, this constructor
         may be used together with a previously "simple" list
-        to start the jounalized list with initial (non logged)
+        to start the journalized list with initial (non logged)
         values.
         """
 
@@ -298,11 +298,11 @@ class JournaledList(list):
             # (for logging)
             self._removes.append(object)
 
-    def clear_jounal(self):
+    def clear_journal(self):
         """
         Clears the journal, reseting it to the original
         state (internal structures state).
-        This method should be called whenever a new jounalized
+        This method should be called whenever a new journalized
         unit is required for a new phase
         """
 

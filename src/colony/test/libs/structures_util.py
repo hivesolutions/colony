@@ -318,7 +318,7 @@ class JournaledListTest(colony.ColonyTestCase):
         self.assertEqual(appends, [1])
         self.assertEqual(removes, [])
 
-    def test_clear_jounal(self):
+    def test_clear_journal(self):
         """
         Tests the clear journal method of the journaled list.
         """
@@ -347,7 +347,7 @@ class JournaledListTest(colony.ColonyTestCase):
 
         # clears the journal and verifies that both
         # the appends and removes lists are now empty
-        journaled_list.clear_jounal()
+        journaled_list.clear_journal()
         self.assertEqual(appends, [])
         self.assertEqual(removes, [])
 
@@ -361,14 +361,14 @@ class JournaledListTest(colony.ColonyTestCase):
 
         # creates a journaled list with elements from an existent
         # list and then adds some extra elements (that are not going to
-        # be journalized) to test the (not jounalized) appending of them
+        # be journalized) to test the (not journalized) appending of them
         journaled_list = colony.JournaledList([1, 2, 3])
         journaled_list._append(4)
         journaled_list._append(5)
         journaled_list._append(6)
 
         # retrieves the list of appends and tests it
-        # against the empty list (not jounalized)
+        # against the empty list (not journalized)
         appends = journaled_list.get_appends()
         self.assertEqual(appends, [])
 
@@ -393,14 +393,14 @@ class JournaledListTest(colony.ColonyTestCase):
 
         # creates a journaled list with elements from an existent
         # list and then adds some extra elements (that are not going to
-        # be journalized) to test the (not jounalized) removal of them
+        # be journalized) to test the (not journalized) removal of them
         journaled_list = colony.JournaledList([1, 2, 3])
         journaled_list._remove(1)
         journaled_list._remove(2)
         journaled_list._remove(3)
 
         # retrieves the list of removes and tests it
-        # against the empty list (not jounalized)
+        # against the empty list (not journalized)
         removes = journaled_list.get_removes()
         self.assertEqual(removes, [])
 
