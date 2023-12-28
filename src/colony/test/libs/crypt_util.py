@@ -47,7 +47,7 @@ class CryptTest(colony.ColonyTestCase):
 
     def test_md5_crypt(self):
         """
-        Tests the MD5 crypt function.
+        Tests the MD5 crypt function using some simple values.
         """
 
         result = colony.md5_crypt("password", "salt")
@@ -57,3 +57,21 @@ class CryptTest(colony.ColonyTestCase):
         result = colony.md5_crypt("password", "01234567")
         self.assertEqual(type(result), str)
         self.assertEqual(result, "$1$01234567$b5lh2mHyD2PdJjFfALlEz1")
+
+    def test_md5_crypt_unicode(self):
+        """
+        Tests the MD5 crypt function using some simple values
+        encoded in unicode.
+        """
+
+        result = colony.md5_crypt(colony.legacy.u("password"), colony.legacy.u("salt"))
+        self.assertEqual(type(result), colony.legacy.UNICODE)
+        self.assertEqual(result, "$1$salt$qJH7.N4xYta3aEG/dfqo/0")
+
+        result = colony.md5_crypt(colony.legacy.u("password"), colony.legacy.u("01234567"))
+        self.assertEqual(type(result), colony.legacy.UNICODE)
+        self.assertEqual(result, "$1$01234567$b5lh2mHyD2PdJjFfALlEz1")
+
+        result = colony.md5_crypt(colony.legacy.u("密码"), colony.legacy.u("01234567"))
+        self.assertEqual(type(result), colony.legacy.UNICODE)
+        self.assertEqual(result, "$1$01234567$MUE6EDF7dbbvoFo3c.Oj1.")
