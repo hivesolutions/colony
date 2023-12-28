@@ -30,3 +30,17 @@ jobs:
       - run: pip install -r requirements.txt
       - run: pip install -r extra.txt
       - run: python setup.py test
+  build-pypy:
+    name: Build PyPy
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: [2.7, 3.6, 3.9, "3.10"]
+    runs-on: ubuntu-latest
+    container: pypy:${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: pypy --version
+      - run: pip install -r requirements.txt
+      - run: pip install -r extra.txt
+      - run: pypy setup.py test
