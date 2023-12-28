@@ -413,7 +413,7 @@ class OrderedMap(object):
     def __contains__(self, item):
         return self._map.__contains__(item)
 
-    def get(self, key, default_value):
+    def get(self, key, default_value = None):
         return self._map.get(key, default_value)
 
     def values(self):
@@ -636,7 +636,7 @@ class MultipleValueMap(object):
     def __contains__(self, item):
         return self._map.__contains__(item)
 
-    def get(self, key, default_value):
+    def get(self, key, default_value = None):
         return self._map.get(key, default_value)
 
     def values(self):
