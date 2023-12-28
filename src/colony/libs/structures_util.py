@@ -586,8 +586,7 @@ class OrderedMapIterator(object):
 
 class MultipleValueMap(object):
     """
-    Map that holds multiple values for
-    each key, and considers
+    Map that holds multiple values for each key, and considers
     the first value to the key's value.
     """
 
@@ -609,15 +608,13 @@ class MultipleValueMap(object):
         # returns the value
         values = self._map.get(key)
 
-        # returns in case no
-        # value was found
+        # returns in case no value was found
         if not values:
             return
 
-        # retrieves the first value
+        # retrieves the first value as the most
+        # relevant value for the key
         value = values[0]
-
-        # returns the value
         return value
 
     def __setitem__(self, key, value):
@@ -670,16 +667,15 @@ class MultipleValueMap(object):
         :param value: The value to unset.
         """
 
-        # retrieves the values
+        # retrieves the values sequence and then removes
+        # the requested value from it
         values = self._map[key]
-
-        # removes the value
         values.remove(value)
 
 class FormatTuple(object):
     """
     Tuple based structure that may be used to represent
-    a string to be formated with a series of values.
+    a string to be formatted with a series of values.
     This structure provides a portable way of passing
     the base format string and a series of arguments.
     """
