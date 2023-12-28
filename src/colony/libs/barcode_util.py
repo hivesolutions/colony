@@ -147,9 +147,13 @@ def encode_code_128(value, code_set = "A"):
     barcode encoding to be used with the most prominent
     true type fonts for display.
 
-    :type string_value: String
-    :param string_value: The string value to be encoded into
+    :type value: String
+    :param value: The string value to be encoded into
     the code 128 barcode string representation.
+    :type code_set: String
+    :param code_set: The code set to be used for the encoding
+    in code 128, this value should be one of the following:
+    "A", "B" or "C".
     :rtype: String
     :return: The generated code 128 barcode string representation.
     :see: http://en.wikipedia.org/wiki/Code_128
@@ -184,8 +188,8 @@ def encode_code_39(value):
     barcode encoding to be used with the most prominent
     true type fonts for display.
 
-    :type string_value: String
-    :param string_value: The string value to be encoded into
+    :type value: String
+    :param value: The string value to be encoded into
     the code 39 barcode string representation.
     :rtype: String
     :return: The generated code 39 barcode string representation.

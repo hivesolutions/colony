@@ -319,11 +319,11 @@ class StringBuffer(object):
 
     def rollback_last(self, item_count = 1):
         """
-        Rollsback the last write.
+        Rollbacks the last write.
 
         :type item_count: int
         :param item_count: The number of items
-        to be "rollbacked".
+        to be rollback.
         """
 
         # iterates over the range of item count

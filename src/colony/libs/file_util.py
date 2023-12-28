@@ -104,7 +104,7 @@ class FileRotator(object):
         """
 
         # starts the rotator
-        self._sart_rotator()
+        self._start_rotator()
 
         # updates the closed status
         self.closed = False
@@ -170,7 +170,7 @@ class FileRotator(object):
 
         return self.closed
 
-    def _sart_rotator(self):
+    def _start_rotator(self):
         """
         Starts the file rotator.
         """
@@ -1182,7 +1182,8 @@ class FileTransactionContext(FileContext, TransactionContext):
 
         # in case the temporary path is a directory removes
         # the temporary path
-        os.path.isdir(self.temporary_path) and path_util.remove_directory(self.temporary_path)
+        if os.path.isdir(self.temporary_path):
+            path_util.remove_directory(self.temporary_path)
 
     def _cleanup(self):
         """

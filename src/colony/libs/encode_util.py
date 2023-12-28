@@ -61,25 +61,25 @@ def encode_two_complement_string(long_value):
     # than zero
     elif long_value > 0:
         # converts the long value to the hexadecimal string value
-        long_value_hexadecial = hex(long_value)
+        long_value_hexadecimal = hex(long_value)
 
         # counts the number of nibbles in the given value
-        number_nibbles = _count_nibbles(long_value_hexadecial)
+        number_nibbles = _count_nibbles(long_value_hexadecimal)
 
         # in case the number of nibbles is odd
         if number_nibbles & 1:
             # need an even # of nibbles for unhexlify
-            long_value_hexadecial = "0x0" + long_value_hexadecial[2:]
+            long_value_hexadecimal = "0x0" + long_value_hexadecimal[2:]
         # in case the number i
-        elif int(long_value_hexadecial[2], 16) >= 8:
+        elif int(long_value_hexadecimal[2], 16) >= 8:
             # looks negative so need a byte of sign bits
-            long_value_hexadecial = "0x00" + long_value_hexadecial[2:]
+            long_value_hexadecimal = "0x00" + long_value_hexadecimal[2:]
     else:
         # converts the (negative) long value to the hexadecimal string value
-        long_value_hexadecial = hex(-long_value)
+        long_value_hexadecimal = hex(-long_value)
 
         # counts the number of nibbles in the given value
-        number_nibbles = _count_nibbles(long_value_hexadecial)
+        number_nibbles = _count_nibbles(long_value_hexadecimal)
 
         # in case the number of nibbles is odd
         if number_nibbles & 1:
@@ -93,33 +93,33 @@ def encode_two_complement_string(long_value):
         long_value += 1 << number_bits
 
         # converts the long value to the hexadecimal string value
-        long_value_hexadecial = hex(long_value)
+        long_value_hexadecimal = hex(long_value)
 
         # counts the number of nibbles in the given value
-        new_number_nibbles = _count_nibbles(long_value_hexadecial)
+        new_number_nibbles = _count_nibbles(long_value_hexadecimal)
 
         # in case the new number of nibbles is smaller than
         # the previous one
         if new_number_nibbles < number_nibbles:
             # puts the sign bits
-            long_value_hexadecial = "0x" + "0" * (number_nibbles - new_number_nibbles) + long_value_hexadecial[2:]
+            long_value_hexadecimal = "0x" + "0" * (number_nibbles - new_number_nibbles) + long_value_hexadecimal[2:]
         # in case it's a positive number
-        if int(long_value_hexadecial[2], 16) < 8:
+        if int(long_value_hexadecimal[2], 16) < 8:
             # no need a byte of sign bits
-            long_value_hexadecial = "0xff" + long_value_hexadecial[2:]
+            long_value_hexadecimal = "0xff" + long_value_hexadecimal[2:]
 
     # in case the long value hexadecimal ends with the long
     # indication value
-    if long_value_hexadecial.endswith("L"):
+    if long_value_hexadecimal.endswith("L"):
         # removes the last character to avoid the extra long indication
-        long_value_hexadecial = long_value_hexadecial[2:-1]
+        long_value_hexadecimal = long_value_hexadecimal[2:-1]
     # otherwise
     else:
         # sets the normal value without the "0x" initialization
-        long_value_hexadecial = long_value_hexadecial[2:]
+        long_value_hexadecimal = long_value_hexadecimal[2:]
 
     # unhexflies the value retrieving the binary value
-    binary = binascii.unhexlify(long_value_hexadecial)
+    binary = binascii.unhexlify(long_value_hexadecimal)
 
     # reverses the binary value
     reversed_binary = binary[::-1]
@@ -146,11 +146,11 @@ def decode_two_complement_string(data):
         return legacy.LONG(0)
 
     # converts the (inverted) data to hexadecimal string
-    long_value_hexadecial = binascii.hexlify(data[::-1])
+    long_value_hexadecimal = binascii.hexlify(data[::-1])
 
     # converts the long value hexadecimal to integer
     # using base 16
-    long_value = legacy.LONG(long_value_hexadecial, 16)
+    long_value = legacy.LONG(long_value_hexadecimal, 16)
 
     # in case the last digit is 0x80 (negative)
     if data[-1] >= "\x80":
@@ -160,24 +160,24 @@ def decode_two_complement_string(data):
     # returns the long value
     return long_value
 
-def _count_nibbles(long_value_hexadecial):
+def _count_nibbles(long_value_hexadecimal):
     """
     Calculates the number of nibbles (4 bit group) from the given
     long value encoded in hexadecimal string.
 
-    :type long_value_hexadecial: String
-    :param long_value_hexadecial: The long value encoded in
+    :type long_value_hexadecimal: String
+    :param long_value_hexadecimal: The long value encoded in
     hexadecimal string to count the nibbles.
     :rtype: int
     :return: The number of nibbles in the given value.
     """
 
     # calculates the number of "junk" characters
-    number_junk_characters = 2 + long_value_hexadecial.endswith("L")
+    number_junk_characters = 2 + long_value_hexadecimal.endswith("L")
 
     # calculates the number of nibbles from the length of the
     # long value string without the junk characters
-    number_nibbles = len(long_value_hexadecial) - number_junk_characters
+    number_nibbles = len(long_value_hexadecimal) - number_junk_characters
 
     # returns the number of nibbles
     return number_nibbles

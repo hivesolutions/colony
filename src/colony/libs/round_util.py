@@ -50,10 +50,6 @@ the round operation representing the old strategy of
 rounding, this is required so that a proper half way
 up strategy is applied in the rounding """
 
-QUANTIFIERS = {}
-""" The map of quantifier strings indexed by
-the number of decimal places for their round """
-
 _round = round
 
 def roundi(value, places = 0, precise = False):

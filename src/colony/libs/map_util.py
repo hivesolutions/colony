@@ -549,6 +549,9 @@ def _map_reduce(value):
     Reduces the provided value, converting it into the appropriate
     value considered to be "raw".
 
+    Part of the conversion functions includes the conversion from
+    the datetime based values into the timestamp based values.
+
     :type value: Object
     :param value: The value to be reduced.
     :rtype: Object

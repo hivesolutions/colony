@@ -1,0 +1,9 @@
+from typing import Any, Callable
+
+DEFAULT_NUMBER_RETRIES: int
+DEFAULT_RETRY_SLEEP: int
+
+def execute_retries(
+    callable: Callable[[], Any], number_retries: int = ..., retry_sleep: float = ...
+) -> Any: ...
+def call_safe(callable: Callable, *args, **kwargs) -> Any: ...

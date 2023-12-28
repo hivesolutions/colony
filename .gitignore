@@ -9,6 +9,9 @@ session.shelve*
 
 /.vscode/settings.json
 
+/.venv
+
+/out
 /dist
 /build
 /src/colony.egg-info

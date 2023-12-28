@@ -60,7 +60,7 @@ SHA1_VALUE = "sha1"
 SHA256_VALUE = "sha256"
 """ The SHA256 value """
 
-MD5_CRPYT_SEPARATOR = "$"
+MD5_CRYPT_SEPARATOR = "$"
 """ The MD5 crypt separator """
 
 DEFAULT_MD5_CRYPT_MAGIC = "$1$"
@@ -177,6 +177,7 @@ def password_match(password_hash, password, salt = ""):
 
     # tries to match the base password hash
     base_password_match = PASSWORD_VALUE_REGEX.match(password_hash)
+    if base_password_match == None: return False
 
     # retrieves the base password hash and value
     base_password_hash = base_password_match.group(HASH_VALUE)
@@ -430,7 +431,7 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     # creates the MD5 crypt value appending
     # the magic with the salt, the MD5 crypt separator
     # and the rearranged value
-    md5_crypt_value = magic + salt + MD5_CRPYT_SEPARATOR + rearranged
+    md5_crypt_value = magic + salt + MD5_CRYPT_SEPARATOR + rearranged
 
     # returns the MD5 crypt value
     return md5_crypt_value
