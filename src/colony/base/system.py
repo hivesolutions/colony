@@ -4234,7 +4234,7 @@ class PluginManager(object):
         # retrieves the plugin using the id and raises an
         # exception in case no plugin is not found
         plugin = self._get_plugin_by_id(plugin_id)
-        if not plugin:
+        if plugin == None:
             raise exceptions.ColonyException("no plugin found for '%s'" % plugin_id)
 
         # in case the plugin is loaded
@@ -5662,8 +5662,8 @@ class PluginManager(object):
         :return: The current configuration path.
         """
 
-        if not self.manager_path:
-            raise exceptions.ColonyException("No manager path defined")
+        if self.manager_path == None:
+            raise exceptions.ColonyException("no manager path defined")
         return os.path.join(self.manager_path, self.configuration_path)
 
     def get_meta_paths(self):
