@@ -311,21 +311,23 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
 
     # appends the password with the magic value and the salt
     # creating the "appended" value
-    appended_value = password + magic + salt
+    appended_value = legacy.bytes(password + magic + salt)
 
     # updates the hash with the appended value
     hash.update(appended_value)
 
     # appends the password with the salt and the magic value
     # creating the "new appended" value
-    appended_value = password + salt + password
+    appended_value = legacy.bytes(password + salt + password)
 
     # retrieves the mixin hash from the appended value
     mixin_hash = hashlib.md5(appended_value)
 
-    # retrieves the mixin digest from the
-    # mixin hash
+    # retrieves the mixin digest from the mixin hash and forces
+    # a string representation of it so that it can be accessed
+    # properly going forward
     mixin_digest = mixin_hash.digest()
+    mixin_digest = legacy.str(mixin_digest)
 
     # retrieves the password length
     password_length = len(password)
@@ -333,7 +335,7 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     # iterates over the range of the password
     # length
     for index in range(password_length):
-        hash.update(mixin_digest[index % 16])
+        hash.update(legacy.bytes(mixin_digest[index % 16]))
 
     # retrieves the password length
     password_length = len(password)
@@ -348,13 +350,13 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
         # is of type odd
         if password_length & 1:
             # updates the hash with the null value
-            hash.update("\0")
+            hash.update(b"\0")
         # otherwise the password length (index)
         # is of type even
         else:
             # updates the hash with the
             # password (first) character
-            hash.update(password_character)
+            hash.update(legacy.bytes(password_character))
 
         # shifts the password length one
         # bit to the right
@@ -369,25 +371,25 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
 
         # in case the index is odd
         if index & 1:
-            extra_hash.update(password)
+            extra_hash.update(legacy.bytes(password))
         # in case the index is even
         else:
-            extra_hash.update(hash_digest)
+            extra_hash.update(legacy.bytes(hash_digest))
 
         # checks index for modulus three
         if index % 3:
-            extra_hash.update(salt)
+            extra_hash.update(legacy.bytes(salt))
 
         # checks index for modulus seven
         if index % 7:
-            extra_hash.update(password)
+            extra_hash.update(legacy.bytes(password))
 
         # in case the index is odd
         if index & 1:
-            extra_hash.update(hash_digest)
+            extra_hash.update(legacy.bytes(hash_digest))
         # otherwise it must be even
         else:
-            extra_hash.update(password)
+            extra_hash.update(legacy.bytes(password))
 
         # retrieves the hash digest from
         # the extra hash
@@ -395,6 +397,10 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
 
     # creates the rearranged buffer
     rearranged_buffer = []
+
+    # forces string representation of the hash digest to allow
+    # index based access
+    hash_digest = legacy.str(hash_digest)
 
     # retrieves the various values from a pre-defined set of position
     for a, b, c in ((0, 6, 12), (1, 7, 13), (2, 8, 14), (3, 9, 15), (4, 10, 5)):
