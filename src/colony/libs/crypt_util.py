@@ -177,6 +177,7 @@ def password_match(password_hash, password, salt = ""):
 
     # tries to match the base password hash
     base_password_match = PASSWORD_VALUE_REGEX.match(password_hash)
+    if base_password_match == None: return False
 
     # retrieves the base password hash and value
     base_password_hash = base_password_match.group(HASH_VALUE)
