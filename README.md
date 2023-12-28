@@ -11,9 +11,9 @@ Colony's goal is to simplify the process of creating modular applications by off
 * Install Colony using `pip install colony`
 * Run the command `RUN_MODE=devel colony`
 
-### Virtualenv
+### [Virtualenv](https://virtualenv.pypa.io/)
 
-* Start and activate the environment using `virtualenv venv && source venv/bin/activate`
+* Start and activate the environment using `virtualenv .venv && source .venv/bin/activate`
 * Install Colony in the system using `pip install colony`
 * Deploy the console package using `cpm install console_interface`
 * Run your new colony using the command `RUN_MODE=devel colony`

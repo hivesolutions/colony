@@ -76,8 +76,8 @@ class Scheduler(threading.Thread):
     execution, this should be a set of unique identifiers """
 
     waits = set()
-    """ The sequence that contains the complete set of callables that
-    are waiting to be notified """
+    """ The sequence that contains the complete set of callables (identifiers)
+    that are waiting to be notified """
 
     condition = None
     """ The condition that will control the access to the data structures
@@ -258,7 +258,7 @@ class Scheduler(threading.Thread):
         self.tasks = set()
         self.waits = set()
         self.condition = threading.Condition()
-        self.wait_execution = threading.Condition()
+        self.waits_condition = threading.Condition()
         self.exception_handler = None
         self._counter = 1
 
