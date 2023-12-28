@@ -303,6 +303,7 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     :param magic: The magic value to be used in encryption.
     :rtype: String
     :return: The resulting MD5 crypt value.
+    :see: https://man.freebsd.org/cgi/man.cgi?query=md5crypt
     """
 
     # creates the first hash value
