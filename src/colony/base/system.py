@@ -225,32 +225,32 @@ class System(object):
         """
 
         if self.plugin == None:
-            raise exceptions.PluginSystemException("No plugin available")
+            raise exceptions.PluginSystemException("no plugin available")
         return self.plugin.manager
 
     def debug(self, *args, **kwargs):
         if self.plugin == None:
-            raise exceptions.PluginSystemException("No plugin available")
+            raise exceptions.PluginSystemException("no plugin available")
         return self.plugin.debug(*args, **kwargs)
 
     def info(self, *args, **kwargs):
         if self.plugin == None:
-            raise exceptions.PluginSystemException("No plugin available")
+            raise exceptions.PluginSystemException("no plugin available")
         return self.plugin.info(*args, **kwargs)
 
     def warning(self, *args, **kwargs):
         if self.plugin == None:
-            raise exceptions.PluginSystemException("No plugin available")
+            raise exceptions.PluginSystemException("no plugin available")
         return self.plugin.warning(*args, **kwargs)
 
     def error(self, *args, **kwargs):
         if self.plugin == None:
-            raise exceptions.PluginSystemException("No plugin available")
+            raise exceptions.PluginSystemException("no plugin available")
         return self.plugin.error(*args, **kwargs)
 
     def critical(self, *args, **kwargs):
         if self.plugin == None:
-            raise exceptions.PluginSystemException("No plugin available")
+            raise exceptions.PluginSystemException("no plugin available")
         return self.plugin.critical(*args, **kwargs)
 
 class Plugin(object):
@@ -4231,8 +4231,11 @@ class PluginManager(object):
         :return: The result of the load.
         """
 
-        # retrieves the plugin using the id
+        # retrieves the plugin using the id and raises an
+        # exception in case no plugin is not found
         plugin = self._get_plugin_by_id(plugin_id)
+        if not plugin:
+            raise exceptions.ColonyException("no plugin found for '%s'" % plugin_id)
 
         # in case the plugin is loaded
         if plugin.is_loaded():
@@ -4451,9 +4454,9 @@ class PluginManager(object):
         :return: The plugin with the given id.
         """
 
-        if plugin_id in self.plugin_instances_map:
-            plugin = self.plugin_instances_map[plugin_id]
-            return self.assert_plugin(plugin)
+        if not plugin_id in self.plugin_instances_map: return None
+        plugin = self.plugin_instances_map[plugin_id]
+        return self.assert_plugin(plugin)
 
     def _get_plugin_by_id(self, plugin_id):
         """
@@ -4465,9 +4468,9 @@ class PluginManager(object):
         :return: The plugin with the given id.
         """
 
-        if plugin_id in self.plugin_instances_map:
-            plugin = self.plugin_instances_map[plugin_id]
-            return plugin
+        if not plugin_id in self.plugin_instances_map: return None
+        plugin = self.plugin_instances_map[plugin_id]
+        return plugin
 
     def get_plugin_by_id_and_version(self, plugin_id, plugin_version):
         """
@@ -4481,10 +4484,10 @@ class PluginManager(object):
         :return: The plugin with the given id and version.
         """
 
-        if plugin_id in self.plugin_instances_map:
-            plugin = self.plugin_instances_map[plugin_id]
-            if colony.libs.version_cmp(plugin.version, plugin_version):
-                return self.assert_plugin(plugin)
+        if not plugin_id in self.plugin_instances_map: return None
+        plugin = self.plugin_instances_map[plugin_id]
+        if not colony.libs.version_cmp(plugin.version, plugin_version): return None
+        return self.assert_plugin(plugin)
 
     def _get_plugin_by_id_and_version(self, plugin_id, plugin_version):
         """
@@ -4498,10 +4501,10 @@ class PluginManager(object):
         :return: The plugin with the given id and version.
         """
 
-        if plugin_id in self.plugin_instances_map:
-            plugin = self.plugin_instances_map[plugin_id]
-            if colony.libs.version_cmp(plugin.version, plugin_version):
-                return plugin
+        if not plugin_id in self.plugin_instances_map: return None
+        plugin = self.plugin_instances_map[plugin_id]
+        if not colony.libs.version_cmp(plugin.version, plugin_version): return None
+        return plugin
 
     def get_plugins_by_capability(self, capability):
         """
