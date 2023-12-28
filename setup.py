@@ -69,7 +69,7 @@ setuptools.setup(
         "" : os.path.normpath("src")
     },
     package_data = {
-        "colony" : ["res/*"]
+        "colony" : ["res/*", "**/*.pyi", "**/*.typed"]
     },
     entry_points = {
         "console_scripts" : [
