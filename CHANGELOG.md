@@ -9,8 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Add new `LogstashHandler` to the logging system
-* Initial support for types
+*
 
 ### Changed
 
@@ -19,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [1.4.19] - 2023-12-28
+
+### Added
+
+* Add new `LogstashHandler` to the logging system
+* Initial support for types
 
 ## [1.4.18] - 2023-12-11
 
