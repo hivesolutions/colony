@@ -29,6 +29,10 @@ jobs:
       - run: python --version
       - run: pip install -r requirements.txt
       - run: pip install -r extra.txt
+      - run: |
+          pip install black
+          black . --check
+        if: matrix.python-version == '3.12'
       - run: python setup.py test
   build-pypy:
     name: Build PyPy
@@ -43,4 +47,8 @@ jobs:
       - run: pypy --version
       - run: pip install -r requirements.txt
       - run: pip install -r extra.txt
+      - run: |
+          pip install black
+          black . --check
+        if: matrix.python-version == '3.12'
       - run: pypy setup.py test
