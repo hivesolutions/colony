@@ -306,7 +306,7 @@ class LogstashHandler(logging.Handler):
         self.api.log_bulk(messages, tag = "default")
         self.messages = []
 
-    def _build_api():
+    def _build_api(self):
         try: import logstash
         except ImportError: return None
 
