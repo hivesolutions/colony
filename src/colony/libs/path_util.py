@@ -120,7 +120,8 @@ def align_path(path):
     """
     Aligns the given path, converting all the system specific
     characters into the defined virtual separators.
-    The retrieved path is system independent.
+    The retrieved path is system independent, meaning that Unix
+    Windows and other OS family paths will be normalized.
 
     :type path: String
     :param path: The path to the aligned (become system independent).
