@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -72,19 +63,19 @@ DEFAULT_HASH_SET = (MD5_VALUE, SHA1_VALUE, SHA256_VALUE)
 INTEGER_TO_ASCII_64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 """ The array of conversion from integer to ascii """
 
-PASSWORD_VALUE_REGEX_VALUE = "^\{(?P<hash>\w+)\}(?P<value>.+)$"
+PASSWORD_VALUE_REGEX_VALUE = r"^\{(?P<hash>\w+)\}(?P<value>.+)$"
 """ The password value regex value """
 
-NUMBER_REGEX_VALUE = "\d+"
+NUMBER_REGEX_VALUE = r"\d+"
 """ The number regex value """
 
-LETTER_LOWER_REGEX_VALUE = "[a-z]"
+LETTER_LOWER_REGEX_VALUE = r"[a-z]"
 """ The letter lower regex value """
 
-LETTER_UPPER_REGEX_VALUE = "[A-Z]"
+LETTER_UPPER_REGEX_VALUE = r"[A-Z]"
 """ The letter upper regex value """
 
-SPECIAL_CHARACTER_REGEX_VALUE = ".[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]"
+SPECIAL_CHARACTER_REGEX_VALUE = r".[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]"
 """ The special character regex value """
 
 PASSWORD_VALUE_REGEX = re.compile(PASSWORD_VALUE_REGEX_VALUE)
@@ -102,7 +93,8 @@ LETTER_UPPER_REGEX = re.compile(LETTER_UPPER_REGEX_VALUE)
 SPECIAL_CHARACTER_REGEX = re.compile(SPECIAL_CHARACTER_REGEX_VALUE)
 """ The special character regex """
 
-def password_crypt(password, salt = "", hash_method = MD5_VALUE):
+
+def password_crypt(password, salt="", hash_method=MD5_VALUE):
     """
     Encrypts the given password using the provided hash method.
     An optional salt may be provided for extra security.
@@ -143,7 +135,7 @@ def password_crypt(password, salt = "", hash_method = MD5_VALUE):
         # converts the password word into a bytes
         # based string (if required) and updates
         # the hash value with the password word
-        password_word = legacy.bytes(password_word, "utf-8", force = True)
+        password_word = legacy.bytes(password_word, "utf-8", force=True)
         hash.update(password_word)
 
         # retrieves the hash value from the
@@ -158,7 +150,8 @@ def password_crypt(password, salt = "", hash_method = MD5_VALUE):
     # value (with the hash method prefix)
     return password_hash
 
-def password_match(password_hash, password, salt = ""):
+
+def password_match(password_hash, password, salt=""):
     """
     Checks if the given password hash value matched
     the given password using the given (optional) salt.
@@ -177,7 +170,8 @@ def password_match(password_hash, password, salt = ""):
 
     # tries to match the base password hash
     base_password_match = PASSWORD_VALUE_REGEX.match(password_hash)
-    if base_password_match == None: return False
+    if base_password_match == None:
+        return False
 
     # retrieves the base password hash and value
     base_password_hash = base_password_match.group(HASH_VALUE)
@@ -204,7 +198,7 @@ def password_match(password_hash, password, salt = ""):
         # updates the hash value with the
         # password word, note that the value
         # is ensured to be a valid byte value
-        password_word = legacy.bytes(password_word, "utf-8", force = True)
+        password_word = legacy.bytes(password_word, "utf-8", force=True)
         hash.update(password_word)
 
         # retrieves the hash value from the
@@ -216,6 +210,7 @@ def password_match(password_hash, password, salt = ""):
 
     # returns if both password match
     return passwords_match
+
 
 def password_strength(password):
     """
@@ -288,7 +283,8 @@ def password_strength(password):
     # returns the strength value
     return strength_value
 
-def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
+
+def md5_crypt(password, salt, magic=DEFAULT_MD5_CRYPT_MAGIC):
     """
     Runs the MD5 crypt algorithm for the given password,
     salt and magic value.
@@ -311,14 +307,14 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
 
     # appends the password with the magic value and the salt
     # creating the "appended" value
-    appended_value = legacy.bytes(password + magic + salt, "utf-8", force = True)
+    appended_value = legacy.bytes(password + magic + salt, "utf-8", force=True)
 
     # updates the hash with the appended value
     hash.update(appended_value)
 
     # appends the password with the salt and the magic value
     # creating the "new appended" value
-    appended_value = legacy.bytes(password + salt + password, "utf-8", force = True)
+    appended_value = legacy.bytes(password + salt + password, "utf-8", force=True)
 
     # retrieves the mixin hash from the appended value
     mixin_hash = hashlib.md5(appended_value)
@@ -353,7 +349,7 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
         else:
             # updates the hash with the
             # password (first) character
-            hash.update(legacy.bytes(password_character, "utf-8", force = True))
+            hash.update(legacy.bytes(password_character, "utf-8", force=True))
 
         # shifts the password length one
         # bit to the right
@@ -368,25 +364,25 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
 
         # in case the index is odd
         if index & 1:
-            extra_hash.update(legacy.bytes(password, "utf-8", force = True))
+            extra_hash.update(legacy.bytes(password, "utf-8", force=True))
         # in case the index is even
         else:
-            extra_hash.update(legacy.bytes(hash_digest, "utf-8", force = True))
+            extra_hash.update(legacy.bytes(hash_digest, "utf-8", force=True))
 
         # checks index for modulus three
         if index % 3:
-            extra_hash.update(legacy.bytes(salt, "utf-8", force = True))
+            extra_hash.update(legacy.bytes(salt, "utf-8", force=True))
 
         # checks index for modulus seven
         if index % 7:
-            extra_hash.update(legacy.bytes(password, "utf-8", force = True))
+            extra_hash.update(legacy.bytes(password, "utf-8", force=True))
 
         # in case the index is odd
         if index & 1:
-            extra_hash.update(legacy.bytes(hash_digest, "utf-8", force = True))
+            extra_hash.update(legacy.bytes(hash_digest, "utf-8", force=True))
         # otherwise it must be even
         else:
-            extra_hash.update(legacy.bytes(password, "utf-8", force = True))
+            extra_hash.update(legacy.bytes(password, "utf-8", force=True))
 
         # retrieves the hash digest from
         # the extra hash
@@ -397,12 +393,16 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
 
     # retrieves the various values from a pre-defined set of position
     for a, b, c in ((0, 6, 12), (1, 7, 13), (2, 8, 14), (3, 9, 15), (4, 10, 5)):
-        value = legacy.ord(hash_digest[a]) << 16 | legacy.ord(hash_digest[b]) << 8 | legacy.ord(hash_digest[c])
+        value = (
+            legacy.ord(hash_digest[a]) << 16
+            | legacy.ord(hash_digest[b]) << 8
+            | legacy.ord(hash_digest[c])
+        )
 
         # iterates over the range of four
         for _index in range(4):
             # converts the value to ascii
-            value_ascii = INTEGER_TO_ASCII_64[value & 0x3f]
+            value_ascii = INTEGER_TO_ASCII_64[value & 0x3F]
 
             # adds the ascii value to the rearranged buffer
             rearranged_buffer.append(value_ascii)
@@ -416,7 +416,7 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     # iterates over a two size range
     for _index in range(2):
         # converts the value to ascii
-        value_ascii = INTEGER_TO_ASCII_64[value & 0x3f]
+        value_ascii = INTEGER_TO_ASCII_64[value & 0x3F]
 
         # adds the ascii value to the rearranged buffer
         rearranged_buffer.append(value_ascii)
@@ -436,7 +436,8 @@ def md5_crypt(password, salt, magic = DEFAULT_MD5_CRYPT_MAGIC):
     # returns the MD5 crypt value
     return md5_crypt_value
 
-def generate_hash_digest_map(file_path, hash_set = DEFAULT_HASH_SET):
+
+def generate_hash_digest_map(file_path, hash_set=DEFAULT_HASH_SET):
     """
     Generates a map containing a set of hash digests generate
     from the file contained in the given file path.

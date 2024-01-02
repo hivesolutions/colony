@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -50,13 +41,11 @@ NT_PLATFORM_VALUE = "nt"
 DOS_PLATFORM_VALUE = "dos"
 """ The dos platform value """
 
-WINDOWS_PLATFORMS_VALUE = (
-    NT_PLATFORM_VALUE,
-    DOS_PLATFORM_VALUE
-)
+WINDOWS_PLATFORMS_VALUE = (NT_PLATFORM_VALUE, DOS_PLATFORM_VALUE)
 """ The windows platform value """
 
-def kill_process(pid, signal = None):
+
+def kill_process(pid, signal=None):
     """
     Kills the process with the given pid (process identifier)
     and "using" the given signal.
@@ -79,6 +68,7 @@ def kill_process(pid, signal = None):
         # kills the process using unix methods
         _kill_process_unix(pid)
 
+
 def _kill_process_windows(pid):
     """
     Kills the process with the given pid (process identifier).
@@ -95,9 +85,10 @@ def _kill_process_windows(pid):
         os.kill(pid, signal.SIGTERM)
     else:
         # crates a process to kill the process with the given pid
-        subprocess.Popen(WINDOWS_KILL_COMMAND % pid, shell = True)
+        subprocess.Popen(WINDOWS_KILL_COMMAND % pid, shell=True)
 
-def _kill_process_unix(pid, _signal = None):
+
+def _kill_process_unix(pid, _signal=None):
     """
     Kills the process with the given pid (process identifier).
     This class focus in the strategy used in unix platforms.
@@ -107,8 +98,8 @@ def _kill_process_unix(pid, _signal = None):
     """
 
     # sets the signal value
-    _signal = _signal or signal.SIGKILL #@UndefinedVariable
+    _signal = _signal or signal.SIGKILL  # @UndefinedVariable
 
     # kills the process with the given pid
     # and with the given signal
-    os.kill(pid, _signal) #@UndefinedVariable
+    os.kill(pid, _signal)  # @UndefinedVariable

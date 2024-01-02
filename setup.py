@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -41,47 +32,37 @@ import os
 import setuptools
 
 setuptools.setup(
-    name = "colony",
-    version = "1.4.21",
-    author = "Hive Solutions Lda.",
-    author_email = "development@hive.pt",
-    description = "Colony Framework",
-    license = "Apache License, Version 2.0",
-    keywords = "colony plugin framework web",
-    url = "http://getcolony.com",
-    zip_safe = False,
-    py_modules = [
-        "colony_adm",
-        "colony_start",
-        "colony_wsgi"
-    ],
-    packages = [
+    name="colony",
+    version="1.4.21",
+    author="Hive Solutions Lda.",
+    author_email="development@hive.pt",
+    description="Colony Framework",
+    license="Apache License, Version 2.0",
+    keywords="colony plugin framework web",
+    url="http://getcolony.com",
+    zip_safe=False,
+    py_modules=["colony_adm", "colony_start", "colony_wsgi"],
+    packages=[
         "colony",
         "colony.base",
         "colony.config",
         "colony.libs",
         "colony.test",
         "colony.test.base",
-        "colony.test.libs"
+        "colony.test.libs",
     ],
-    test_suite = "colony.test",
-    package_dir = {
-        "" : os.path.normpath("src")
-    },
-    package_data = {
-        "colony" : ["res/*", "**/*.pyi", "**/*.typed"]
-    },
-    entry_points = {
-        "console_scripts" : [
+    test_suite="colony.test",
+    package_dir={"": os.path.normpath("src")},
+    package_data={"colony": ["res/*", "**/*.pyi", "**/*.typed"]},
+    entry_points={
+        "console_scripts": [
             "cpm = colony_adm:main",
             "colony = colony_start:main",
-            "colony_wsgi = colony_wsgi:main"
+            "colony_wsgi = colony_wsgi:main",
         ]
     },
-    install_requires = [
-        "appier"
-    ],
-    classifiers = [
+    install_requires=["appier"],
+    classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Topic :: Utilities",
         "Topic :: Internet :: WWW/HTTP",
@@ -104,8 +85,10 @@ setuptools.setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12"
+        "Programming Language :: Python :: 3.12",
     ],
-    long_description = open(os.path.join(os.path.dirname(__file__), "README.md"), "rb").read().decode("utf-8"),
-    long_description_content_type = "text/markdown"
+    long_description=open(os.path.join(os.path.dirname(__file__), "README.md"), "rb")
+    .read()
+    .decode("utf-8"),
+    long_description_content_type="text/markdown",
 )

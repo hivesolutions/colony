@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -41,7 +32,8 @@ import sys
 
 from colony.base import legacy
 
-def __import__(module_name, persist_value = True):
+
+def __import__(module_name, persist_value=True):
     """
     Importer function to be used in the process of importing
     a module referred in inverted way.
@@ -97,11 +89,16 @@ def __import__(module_name, persist_value = True):
     except ValueError:
         # raises a runtime error because it could
         # not retrieve the module
-        raise ImportError("No module named '%s' found in global or local references" % module_name)
+        raise ImportError(
+            "No module named '%s' found in global or local references" % module_name
+        )
 
     # raise a runtime error in case the module
     # is not found (problem in the import)
-    if not module: raise ImportError("No module named '%s' found in global or local references" % module_name)
+    if not module:
+        raise ImportError(
+            "No module named '%s' found in global or local references" % module_name
+        )
 
     # in case the module value was retrieved from an upper
     # calling layer and the persist value flag is set (cache)
@@ -118,7 +115,8 @@ def __import__(module_name, persist_value = True):
     # the importing of the module (as expected)
     return module
 
-def reload_import(path, hard = True):
+
+def reload_import(path, hard=True):
     """
     Reloads the import (module) referred in the system modules
     by the given path.
@@ -143,7 +141,8 @@ def reload_import(path, hard = True):
 
     # in case the path is not present in the
     # system modules no need to reload
-    if not path in sys.modules: return
+    if not path in sys.modules:
+        return
 
     # in case the hard approach for reloading is
     # taken the system modules should be changed

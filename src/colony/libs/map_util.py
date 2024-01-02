@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -43,6 +34,7 @@ import calendar
 import datetime
 
 from colony.base import legacy
+
 
 def map_clean(map):
     """
@@ -59,9 +51,11 @@ def map_clean(map):
 
     # iterates over all the map keys deleting
     # the complete set of item present in it
-    for map_key in map_keys: del map[map_key]
+    for map_key in map_keys:
+        del map[map_key]
 
-def map_get(map, keys = []):
+
+def map_get(map, keys=[]):
     """
     Recursively retrieves values from the provided map using
     the sequence of keys provided.
@@ -79,8 +73,10 @@ def map_get(map, keys = []):
     :return: The final value retrieved through recursion
     """
 
-    if not keys: return map
+    if not keys:
+        return map
     return map_get(map[keys[0]], keys[1:])
+
 
 def map_copy(source_map, destiny_map):
     """
@@ -104,10 +100,13 @@ def map_copy(source_map, destiny_map):
 
         # in case the key is not present in the destiny map
         # must add it into the destiny map (ensures existence)
-        if not source_map_key in destiny_map or\
-            destiny_map[source_map_key] == None or\
-            destiny_map[source_map_key] == "none":
+        if (
+            not source_map_key in destiny_map
+            or destiny_map[source_map_key] == None
+            or destiny_map[source_map_key] == "none"
+        ):
             destiny_map[source_map_key] = source_map_value
+
 
 def map_copy_deep(source_map, destiny_map):
     """
@@ -131,7 +130,8 @@ def map_copy_deep(source_map, destiny_map):
         # in case the source value type is not a dictionary
         # continues the loop, nothing to be done in the
         # current iteration
-        if not source_value_type == dict: continue
+        if not source_value_type == dict:
+            continue
 
         # creates the destiny value map and sets the
         # destiny value in the destiny map
@@ -140,6 +140,7 @@ def map_copy_deep(source_map, destiny_map):
 
         # copies the source value (map) to the destiny value
         map_copy_deep(source_value, destiny_value)
+
 
 def map_duplicate(item):
     """
@@ -186,6 +187,7 @@ def map_duplicate(item):
     else:
         return item
 
+
 def map_remove(removal_map, destiny_map):
     """
     Removes all the values with keys present in the
@@ -203,17 +205,15 @@ def map_remove(removal_map, destiny_map):
     for key in removal_map:
         # in case the key does not exists in
         # destiny map, continues the loop
-        if not key in destiny_map: continue
+        if not key in destiny_map:
+            continue
 
         # removes the key item from the destiny map
         del destiny_map[key]
 
+
 def map_extend(
-    base_map,
-    extension_map,
-    override = True,
-    recursive = False,
-    copy_base_map = True
+    base_map, extension_map, override=True, recursive=False, copy_base_map=True
 ):
     """
     Extends the given map with the extension map,
@@ -284,9 +284,9 @@ def map_extend(
             value = map_extend(
                 result_map_value,
                 value,
-                override = override,
-                recursive = recursive,
-                copy_base_map = copy_base_map
+                override=override,
+                recursive=recursive,
+                copy_base_map=copy_base_map,
             )
 
         # sets the (extension) value in the result map
@@ -294,6 +294,7 @@ def map_extend(
 
     # returns the result map
     return result_map
+
 
 def map_flatten(map):
     """
@@ -315,10 +316,12 @@ def map_flatten(map):
     # in the resulting map and returns the map to caller method
     result = dict()
     pairs = _map_flatten_pairs(map)
-    for key, value in pairs: result[key] = value
+    for key, value in pairs:
+        result[key] = value
     return result
 
-def map_check_parameters(map, parameters_list, exception = Exception):
+
+def map_check_parameters(map, parameters_list, exception=Exception):
     """
     Checks if the parameters in the parameters list are defined
     in the given map.
@@ -337,13 +340,15 @@ def map_check_parameters(map, parameters_list, exception = Exception):
     for parameter in parameters_list:
         # in case the parameter is in the map must continue
         # the current loop, no exception raised this time
-        if parameter in map: continue
+        if parameter in map:
+            continue
 
         # raises the provided exception as the parameter does
         # not exist in the provided map
         raise exception(parameter)
 
-def map_get_value_cast(map, key, cast_type = str, default_value = None):
+
+def map_get_value_cast(map, key, cast_type=str, default_value=None):
     """
     Retrieves the value of the map for the given key.
     The value is casted to the given type.
@@ -388,6 +393,7 @@ def map_get_value_cast(map, key, cast_type = str, default_value = None):
         # returns the default value
         return default_value
 
+
 def map_get_values(map, key):
     """
     Retrieves the value of the map for the given key.
@@ -415,12 +421,14 @@ def map_get_values(map, key):
     # a list with the original values in it,
     # ensuring that the returned value is always
     # a valid sequence value, ready to be iterated
-    if not values_type == list: values = [values]
+    if not values_type == list:
+        values = [values]
 
     # returns the values
     return values
 
-def map_output(map, output_method = sys.stdout.write, indentation = ""):
+
+def map_output(map, output_method=sys.stdout.write, indentation=""):
     """
     Outputs (pretty print) the given map, using the
     defined output method.
@@ -460,11 +468,13 @@ def map_output(map, output_method = sys.stdout.write, indentation = ""):
         else:
             # creates a string representation of the map value and
             # then "runs" it to the output method
-            map_value_string = indentation + legacy.UNICODE(key) +\
-                " = " + legacy.UNICODE(map_value)
+            map_value_string = (
+                indentation + legacy.UNICODE(key) + " = " + legacy.UNICODE(map_value)
+            )
             output_method(map_value_string)
 
-def map_normalize(item, operation = None):
+
+def map_normalize(item, operation=None):
     """
     Normalizes the provided map/item, applying the reduce
     operation to each of the items.
@@ -517,6 +527,7 @@ def map_normalize(item, operation = None):
     else:
         return operation(item)
 
+
 def _map_flatten_pairs(map):
     """
     Retrieves the complete set of linear key to value pairs
@@ -540,9 +551,13 @@ def _map_flatten_pairs(map):
     for key, value in legacy.iteritems(map):
         is_class = hasattr(value, "__class__")
         is_map = is_class and issubclass(value.__class__, dict)
-        if not is_map: yield key, value; continue
+        if not is_map:
+            yield key, value
+            continue
         pairs = _map_flatten_pairs(value)
-        for _key, _value in pairs: yield key + "." + _key, _value
+        for _key, _value in pairs:
+            yield key + "." + _key, _value
+
 
 def _map_reduce(value):
     """

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,22 +22,14 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import colony
+
 
 class DecimalTest(colony.ColonyTestCase):
     """
@@ -204,6 +196,7 @@ class DecimalTest(colony.ColonyTestCase):
         result = colony.Decimal("12.99")
         self.assertEqual(result, 12.99)
         self.assertEqual(type(result), colony.Decimal)
+
 
 class JournaledListTest(colony.ColonyTestCase):
     """
@@ -419,6 +412,7 @@ class JournaledListTest(colony.ColonyTestCase):
         appends = journaled_list.get_appends()
         self.assertEqual(appends, [])
 
+
 class OrderedMapTest(colony.ColonyTestCase):
     """
     Class that tests the ordered map structure.
@@ -449,9 +443,12 @@ class OrderedMapTest(colony.ColonyTestCase):
             # verifies that the correct values are found
             # for each of the iteration cycles according
             # to the previously defined map order
-            if index == 0: self.assertEqual(key, "1")
-            elif index == 1: self.assertEqual(key, "2")
-            elif index == 1: self.assertEqual(key, "3")
+            if index == 0:
+                self.assertEqual(key, "1")
+            elif index == 1:
+                self.assertEqual(key, "2")
+            elif index == 1:
+                self.assertEqual(key, "3")
 
             # increments the index counter
             # (new iteration)

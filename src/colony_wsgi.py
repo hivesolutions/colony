@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -57,14 +48,7 @@ DEFAULT_CONFIG_PATH = "config/python/devel.py"
 used in case no path is specified using the environment
 variable bases strategy """
 
-EXCLUDED_NAMES = (
-    "server",
-    "host",
-    "port",
-    "ssl",
-    "key_file",
-    "cer_file"
-)
+EXCLUDED_NAMES = ("server", "host", "port", "ssl", "key_file", "cer_file")
 """ The sequence that contains the names that are considered
 excluded from the auto parsing of parameters """
 
@@ -72,7 +56,8 @@ excluded from the auto parsing of parameters """
 # it to insert it in the current system path in case it's
 # not already present (required for module importing)
 base_path = os.path.dirname(__file__)
-if not base_path in sys.path: sys.path.insert(0, base_path)
+if not base_path in sys.path:
+    sys.path.insert(0, base_path)
 
 import colony
 
@@ -85,7 +70,7 @@ colony.ensure_tree(manager_path)
 
 # registers the ignore flag in the deprecation warnings so that
 # no message with this kind of warning is printed (clean console)
-warnings.filterwarnings("ignore", category = DeprecationWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # retrieves the layout mode that is going to be used for the
 # resolution of resources in the colony infra-structure
@@ -126,15 +111,15 @@ level = colony.getLevelInt(level)
 # retrieves the complete set of configuration variables associated
 # with the various paths to be used by colony, these are going to
 # be used as the initial values for the various path lists
-meta_paths = colony.conf("META_PATH", [], cast = list)
-plugin_paths = colony.conf("PLUGINS_PATH", [], cast = list)
-plugin_paths = colony.conf("PLUGIN_PATH", plugin_paths, cast = list)
+meta_paths = colony.conf("META_PATH", [], cast=list)
+plugin_paths = colony.conf("PLUGINS_PATH", [], cast=list)
+plugin_paths = colony.conf("PLUGIN_PATH", plugin_paths, cast=list)
 
 # checks if the default meta and plugins included in the colony folder
 # should be loaded or not, not loading this paths is considered non
 # standard and should only be used for special situations
-default_meta = colony.conf("DEFAULT_META", True, cast = bool)
-default_plugins = colony.conf("DEFAULT_PLUGINS", True, cast = bool)
+default_meta = colony.conf("DEFAULT_META", True, cast=bool)
+default_plugins = colony.conf("DEFAULT_PLUGINS", True, cast=bool)
 
 # tries to retrieve the configuration file from the environment
 # variable associated in case it fails uses the default configuration
@@ -159,9 +144,15 @@ config_file_base_path = os.path.basename(config_file_path)
 # retrieves the configuration module name and the configuration
 # module extension by splitting the configuration base path into
 # base name and extension and then imports the referring module
-configuration_module_name, _configuration_module_extension = os.path.splitext(config_file_base_path)
-try: colony_configuration = __import__(configuration_module_name)
-except ImportError: import colony.config.base as module; colony_configuration = module
+configuration_module_name, _configuration_module_extension = os.path.splitext(
+    config_file_base_path
+)
+try:
+    colony_configuration = __import__(configuration_module_name)
+except ImportError:
+    import colony.config.base as module
+
+    colony_configuration = module
 
 # initializes the lists that will contain both the path to the
 # plugins and the paths to the configuration (meta) files, these
@@ -174,7 +165,8 @@ _plugin_paths = []
 # final step of absolute path normalization
 for plugin_path in colony_configuration.plugin_path_list if default_plugins else []:
     plugin_paths.append(os.path.join(manager_path, plugin_path))
-for plugin_path in plugin_paths: _plugin_paths += glob.glob(plugin_path)
+for plugin_path in plugin_paths:
+    _plugin_paths += glob.glob(plugin_path)
 plugin_paths = [os.path.abspath(plugin_path) for plugin_path in _plugin_paths]
 
 # iterates over each of the meta paths to resolve them using
@@ -182,7 +174,8 @@ plugin_paths = [os.path.abspath(plugin_path) for plugin_path in _plugin_paths]
 # final step of absolute path normalization
 for meta_path in colony_configuration.meta_path_list if default_meta else []:
     meta_paths.append(os.path.join(manager_path, meta_path))
-for meta_path in meta_paths: _meta_paths += glob.glob(meta_path)
+for meta_path in meta_paths:
+    _meta_paths += glob.glob(meta_path)
 meta_paths = [os.path.abspath(meta_path) for meta_path in _meta_paths]
 
 # creates the plugin manager instance with the current file path
@@ -192,21 +185,22 @@ meta_paths = [os.path.abspath(meta_path) for meta_path in _meta_paths]
 # threads are disallowed to avoid creation of extra threads, the
 # signal handlers are disabled to avoid collisions
 plugin_manager = colony.PluginManager(
-    manager_path = manager_path,
-    logger_path = os.path.join(manager_path, "log"),
-    plugin_paths = plugin_paths,
-    meta_paths = meta_paths,
-    loop = False,
-    threads = False,
-    signals = False,
-    layout_mode = layout_mode,
-    run_mode = run_mode,
-    container = "wsgi"
+    manager_path=manager_path,
+    logger_path=os.path.join(manager_path, "log"),
+    plugin_paths=plugin_paths,
+    meta_paths=meta_paths,
+    loop=False,
+    threads=False,
+    signals=False,
+    layout_mode=layout_mode,
+    run_mode=run_mode,
+    container="wsgi",
 )
 plugin_manager.start_logger(level)
 return_code = plugin_manager.load_system()
 alias = None
 rewrite = None
+
 
 def application(environ, start_response):
     try:
@@ -222,7 +216,8 @@ def application(environ, start_response):
         # exception should be handled and an error HTTP
         # message should be returned to the end user
         wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
-        if not wsgi_plugin: raise colony.PluginSystemException("no WSGI plugin found")
+        if not wsgi_plugin:
+            raise colony.PluginSystemException("no WSGI plugin found")
         sequence = wsgi_plugin.handle(environ, start_response, prefix, alias, rewrite)
     except Exception:
         # in case the run mode is development the exception should
@@ -230,7 +225,7 @@ def application(environ, start_response):
         if run_mode == "development":
             # prints a description of the exception and then
             # sends the traceback of it to the output
-            traceback.print_exc(file = sys.stdout)
+            traceback.print_exc(file=sys.stdout)
 
         # raises the exception back to the stack to be handled
         # by the upper levels
@@ -240,23 +235,28 @@ def application(environ, start_response):
     # method to retrieve the contents of the message to be sent
     return sequence
 
-def get_alias(encoding = "utf-8"):
+
+def get_alias(encoding="utf-8"):
     global alias
     global alias_path
 
     # in case either the alias is defined (file already loaded)
     # or there's no alias file to be loaded the currently set
     # alias variable is retrieved (cached value)
-    if alias or not alias_path: return alias
+    if alias or not alias_path:
+        return alias
 
     try:
         # tries to load the JSON file using the default python
         # based JSON module (may not exist) the closes the file
         # to avoid any memory reference leak
         import json
+
         file = open(alias_path, "rb")
-        try: data = file.read()
-        finally: file.close()
+        try:
+            data = file.read()
+        finally:
+            file.close()
         data = data.decode(encoding)
         alias = json.loads(data)
     except Exception:
@@ -268,23 +268,28 @@ def get_alias(encoding = "utf-8"):
     # file, this value may be unsets in case there was an error
     return alias
 
-def get_rewrite(encoding = "utf-8"):
+
+def get_rewrite(encoding="utf-8"):
     global rewrite
     global rewrite_path
 
     # in case either the rewrite is defined (file already loaded)
     # or there's no rewrite file to be loaded the currently set
     # rewrite variable is retrieved (cached value)
-    if rewrite or not rewrite_path: return rewrite
+    if rewrite or not rewrite_path:
+        return rewrite
 
     try:
         # tries to load the JSON file using the default python
         # based JSON module (may not exist) the closes the file
         # to avoid any memory reference leak
         import json
+
         file = open(rewrite_path, "rb")
-        try: data = file.read()
-        finally: file.close()
+        try:
+            data = file.read()
+        finally:
+            file.close()
         data = data.decode(encoding)
         rewrite = json.loads(data)
     except Exception:
@@ -295,6 +300,7 @@ def get_rewrite(encoding = "utf-8"):
     # returns the map containing the rewrite that were loaded from the
     # file, this value may be unsets in case there was an error
     return rewrite
+
 
 @atexit.register
 def unload_system():
@@ -311,6 +317,7 @@ def unload_system():
     # the embedding process
     plugin_manager.unload_system()
 
+
 class ServerThread(threading.Thread):
     """
     Thread class responsible for the handling and management
@@ -322,13 +329,13 @@ class ServerThread(threading.Thread):
 
     def __init__(
         self,
-        server = "netius",
-        host = "127.0.0.1",
-        port = 8080,
-        ssl = False,
-        key_file = None,
-        cer_file = None,
-        kwargs = dict(),
+        server="netius",
+        host="127.0.0.1",
+        port=8080,
+        ssl=False,
+        key_file=None,
+        cer_file=None,
+        kwargs=dict(),
         *args,
         **_kwargs
     ):
@@ -348,26 +355,27 @@ class ServerThread(threading.Thread):
     def run(self):
         try:
             serve(
-                server = self.server,
-                host = self.host,
-                port = self.port,
-                ssl = self.ssl,
-                key_file = self.key_file,
-                cer_file = self.cer_file,
-                kwargs = self.kwargs
+                server=self.server,
+                host=self.host,
+                port=self.port,
+                ssl=self.ssl,
+                key_file=self.key_file,
+                cer_file=self.cer_file,
+                kwargs=self.kwargs,
             )
         except Exception:
             sys.stderr.write("Problem in '%s'" % str(self) + "\n")
             raise
 
+
 def serve_multiple(
-    server = "netius",
-    hosts = ("127.0.0.1",),
-    ports = (8080,),
-    ssl = False,
-    key_file = None,
-    cer_file = None,
-    kwargs = dict()
+    server="netius",
+    hosts=("127.0.0.1",),
+    ports=(8080,),
+    ssl=False,
+    key_file=None,
+    cer_file=None,
+    kwargs=dict(),
 ):
     threads = []
     count = len(hosts)
@@ -377,114 +385,97 @@ def serve_multiple(
         port = ports[index]
 
         thread = ServerThread(
-            server = server,
-            host = host,
-            port = port,
-            ssl = ssl,
-            key_file = key_file,
-            cer_file = cer_file,
-            kwargs = kwargs
+            server=server,
+            host=host,
+            port=port,
+            ssl=ssl,
+            key_file=key_file,
+            cer_file=cer_file,
+            kwargs=kwargs,
         )
         thread.start()
         threads.append(thread)
 
     return threads
 
+
 def serve(
-    server = "netius",
-    host = "127.0.0.1",
-    port = 8080,
-    ssl = False,
-    key_file = None,
-    cer_file = None,
-    kwargs = dict()
+    server="netius",
+    host="127.0.0.1",
+    port=8080,
+    ssl=False,
+    key_file=None,
+    cer_file=None,
+    kwargs=dict(),
 ):
     _globals = globals()
     sys.stderr.write("Starting with '%s' ..." % server + "\n")
     method = _globals.get("serve_" + server, serve_legacy)
     return_value = method(
-        host = host,
-        port = port,
-        ssl = ssl,
-        key_file = key_file,
-        cer_file = cer_file,
-        **kwargs
+        host=host, port=port, ssl=ssl, key_file=key_file, cer_file=cer_file, **kwargs
     )
     sys.stderr.write("Stopped in '%s' ..." % server + "\n")
     return return_value
 
+
 def serve_waitress(host, port, **kwargs):
     import waitress
-    waitress.serve(application, host = host, port = port)
 
-def serve_netius(
-    host,
-    port,
-    ssl = False,
-    key_file = None,
-    cer_file = None,
-    **kwargs
-):
+    waitress.serve(application, host=host, port=port)
+
+
+def serve_netius(host, port, ssl=False, key_file=None, cer_file=None, **kwargs):
     import netius.servers
-    server = netius.servers.WSGIServer(application, **kwargs)
-    server.serve(
-        host = host,
-        port = port,
-        ssl = ssl,
-        key_file = key_file,
-        cer_file = cer_file
-    )
 
-def serve_tornado(
-    host,
-    port,
-    ssl = False,
-    key_file = None,
-    cer_file = None,
-    **kwargs
-):
+    server = netius.servers.WSGIServer(application, **kwargs)
+    server.serve(host=host, port=port, ssl=ssl, key_file=key_file, cer_file=cer_file)
+
+
+def serve_tornado(host, port, ssl=False, key_file=None, cer_file=None, **kwargs):
     import tornado.wsgi
     import tornado.httpserver
 
-    ssl_options = ssl and dict(
-        keyfile = key_file,
-        certfile = cer_file
-    ) or None
+    ssl_options = ssl and dict(keyfile=key_file, certfile=cer_file) or None
 
     container = tornado.wsgi.WSGIContainer(application)
-    server = tornado.httpserver.HTTPServer(container, ssl_options = ssl_options)
-    server.listen(port, address = host)
+    server = tornado.httpserver.HTTPServer(container, ssl_options=ssl_options)
+    server.listen(port, address=host)
     instance = tornado.ioloop.IOLoop.instance()
     instance.start()
+
 
 def serve_cherry(host, port, **kwargs):
     import cherrypy.wsgiserver
 
-    server = cherrypy.wsgiserver.CherryPyWSGIServer(
-        (host, port),
-        application
-    )
-    try: server.start()
-    except (KeyboardInterrupt, SystemExit): server.stop()
+    server = cherrypy.wsgiserver.CherryPyWSGIServer((host, port), application)
+    try:
+        server.start()
+    except (KeyboardInterrupt, SystemExit):
+        server.stop()
+
 
 def serve_legacy(host, port, **kwargs):
     import wsgiref.simple_server
+
     httpd = wsgiref.simple_server.make_server(host, port, application)
     sys.stderr.write("Running on http://%s:%d/" % (host, port) + "\n")
     httpd.serve_forever()
+
 
 def main():
     kwargs = dict()
     server = colony.conf("SERVER", "legacy")
     host = colony.conf("HOST", "127.0.0.1")
     port = colony.conf("PORT", "8080")
-    ssl = colony.conf("SSL", False, cast = bool)
+    ssl = colony.conf("SSL", False, cast=bool)
     key_file = colony.conf("KEY_FILE", None)
     cer_file = colony.conf("CER_FILE", None)
     for name, value in os.environ.items():
-        if not name.startswith("SERVER_"): continue
+        if not name.startswith("SERVER_"):
+            continue
         name_s = name.lower()[7:]
-        if name_s in EXCLUDED_NAMES: continue
+        if name_s in EXCLUDED_NAMES:
+            continue
         kwargs[name_s] = value
 
     host = str(host)
@@ -494,22 +485,27 @@ def main():
     ports = [int(value.strip()) for value in port.split(",")]
 
     serve_multiple(
-        server = server,
-        hosts = hosts,
-        ports = ports,
-        ssl = ssl,
-        key_file = key_file,
-        cer_file = cer_file,
-        kwargs = kwargs
+        server=server,
+        hosts=hosts,
+        ports=ports,
+        ssl=ssl,
+        key_file=key_file,
+        cer_file=cer_file,
+        kwargs=kwargs,
     )
 
-    def handler(signum = None, frame = None): raise SystemExit()
+    def handler(signum=None, frame=None):
+        raise SystemExit()
+
     signal.signal(signal.SIGTERM, handler)
 
     run = True
     while run:
-        try: time.sleep(86400)
-        except (KeyboardInterrupt, SystemExit): run = False
+        try:
+            time.sleep(86400)
+        except (KeyboardInterrupt, SystemExit):
+            run = False
+
 
 if __name__ == "__main__":
     main()

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,22 +22,14 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import colony
+
 
 class RoundTest(colony.ColonyTestCase):
     """
@@ -100,14 +92,18 @@ class RoundTest(colony.ColonyTestCase):
         self.assertEqual(result, 100000000.0)
 
         result = colony.roundi(999999999999999999999999999.9944444444444444444444, 2)
-        if is_new: self.assertEqual(result, 999999999999999999999999999.99)
+        if is_new:
+            self.assertEqual(result, 999999999999999999999999999.99)
 
         result = colony.roundi(999999999999999999999999999.995, 2)
-        if is_new: self.assertEqual(result, 1000000000000000000000000000.0)
+        if is_new:
+            self.assertEqual(result, 1000000000000000000000000000.0)
 
         result = colony.roundi(770.155, 2)
-        if is_new: self.assertEqual(result, 770.15)
-        else: self.assertEqual(result, 770.16)
+        if is_new:
+            self.assertEqual(result, 770.15)
+        else:
+            self.assertEqual(result, 770.16)
 
     def test_rounds(self):
         is_new = colony.round_is_new()
@@ -155,10 +151,12 @@ class RoundTest(colony.ColonyTestCase):
         self.assertEqual(result, 100000000.0)
 
         result = colony.rounds(999999999999999999999999999.9944444444444444444444, 2)
-        if is_new: self.assertEqual(result, 999999999999999999999999999.99)
+        if is_new:
+            self.assertEqual(result, 999999999999999999999999999.99)
 
         result = colony.rounds(999999999999999999999999999.995, 2)
-        if is_new: self.assertEqual(result, 1000000000000000000000000000.0)
+        if is_new:
+            self.assertEqual(result, 1000000000000000000000000000.0)
 
         result = colony.rounds(770.155, 2)
         self.assertEqual(result, 770.16)
@@ -174,7 +172,7 @@ class RoundTest(colony.ColonyTestCase):
         self.assertEqual(type(result), int)
 
     def test_apply(self):
-        colony.round_apply(force = True)
+        colony.round_apply(force=True)
         try:
             self.assertEqual(round, colony.roundi)
             result = round(2.675, 2)
@@ -184,7 +182,9 @@ class RoundTest(colony.ColonyTestCase):
 
     def test_unapply(self):
         _round = round
-        colony.round_apply(force = True)
-        try: self.assertEqual(round, colony.roundi)
-        finally: colony.round_unapply()
+        colony.round_apply(force=True)
+        try:
+            self.assertEqual(round, colony.roundi)
+        finally:
+            colony.round_unapply()
         self.assertEqual(round, _round)

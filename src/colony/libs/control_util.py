@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -39,10 +30,9 @@ __license__ = "Apache License, Version 2.0"
 
 from . import number_util
 
-COEFFICIENT_VALUES = (
-    2, 3, 4, 5, 6, 7, 8, 9
-)
+COEFFICIENT_VALUES = (2, 3, 4, 5, 6, 7, 8, 9)
 """ The tuple containing the coefficient values """
+
 
 def calculate_tax_number_control_value(tax_number):
     """
@@ -70,6 +60,7 @@ def calculate_tax_number_control_value(tax_number):
     control_value = _calculate_control_value(tax_number)
     return control_value
 
+
 def calculate_id_number_control_value(id_number):
     """
     Calculates the control value for the id number.
@@ -96,6 +87,7 @@ def calculate_id_number_control_value(id_number):
     # returns it to the caller method
     control_value = _calculate_control_value(id_number)
     return control_value
+
 
 def _calculate_control_value(number):
     """
@@ -133,11 +125,13 @@ def _calculate_control_value(number):
 
     # in case the partial value is zero
     # or one sets the control value as zero
-    if partial_value in (0, 1): control_value = 0
+    if partial_value in (0, 1):
+        control_value = 0
 
     # otherwise calculates the control value based
     # on the partial value
-    else: control_value = 11 - partial_value
+    else:
+        control_value = 11 - partial_value
 
     # returns the control value
     return control_value

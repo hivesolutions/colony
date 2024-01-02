@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -39,6 +30,7 @@ __license__ = "Apache License, Version 2.0"
 
 import math
 import decimal
+
 
 def get_number_length(number):
     """
@@ -56,6 +48,7 @@ def get_number_length(number):
 
     return int(math.ceil(math.log(number, 10)))
 
+
 def get_digit(number, index):
     """
     Retrieves the digit in the given index.
@@ -71,9 +64,10 @@ def get_digit(number, index):
     :return: The digit in the given index.
     """
 
-    return number // (10 ** index) % 10
+    return number // (10**index) % 10
 
-def to_fixed(number, places = 2):
+
+def to_fixed(number, places=2):
     """
     Converts a (possible) float number into a decimal
     representation of fixed point real.

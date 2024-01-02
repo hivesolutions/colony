@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -40,26 +31,15 @@ __license__ = "Apache License, Version 2.0"
 import colony
 
 MAP_STRUCTURE = dict(
-    name = "name",
-    age = 41,
-    sons = [
-        dict(
-            name = "name_son_1",
-            age = 12
-        ),
-        dict(
-            name = "name_son_2",
-            age = 16
-        )
-    ],
-    father = dict(
-        name = "name_father",
-        age = 81
-    )
+    name="name",
+    age=41,
+    sons=[dict(name="name_son_1", age=12), dict(name="name_son_2", age=16)],
+    father=dict(name="name_father", age=81),
 )
 """ The structure that is going to be the basis for some
 of the tests in the map utilities, should be simple enough
 to be able to be verified with simplicity """
+
 
 class MapTest(colony.ColonyTestCase):
     """

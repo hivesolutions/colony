@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,20 +22,12 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
+
 
 def version_cmp(version, version_compare):
     """
@@ -65,13 +57,17 @@ def version_cmp(version, version_compare):
     # compares all the three parts of the version string so that
     # if there is a mismatch in the version number or in case there
     # is no wildcard present in the compare string the comparison fails
-    if not major_compare == "x" and not major == major_compare: return False
-    if not medium_compare == "x" and not medium == medium_compare: return False
-    if not minor_compare == "x" and not minor == minor_compare: return False
+    if not major_compare == "x" and not major == major_compare:
+        return False
+    if not medium_compare == "x" and not medium == medium_compare:
+        return False
+    if not minor_compare == "x" and not minor == minor_compare:
+        return False
 
     # returns valid version, all the version tests have passed successfully
     # the version is considered to be valid (equivalent)
     return True
+
 
 def version_is_concrete(version):
     """

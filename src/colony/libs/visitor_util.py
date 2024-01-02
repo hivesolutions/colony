@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,33 +22,23 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
-def visit(ast_node_class):
 
+def visit(ast_node_class):
     def decorator(function, *args, **kwargs):
         function.ast_node_class = ast_node_class
         return function
 
     return decorator
 
-def dispatch_visit(map_name = "node_method_map"):
 
+def dispatch_visit(map_name="node_method_map"):
     def create_interceptor(function):
-
         def decorator_interceptor(*args, **kwargs):
             # unpacks the first two "unnamed" arguments as the self
             # instance reference and the node element to be visited
@@ -73,7 +63,8 @@ def dispatch_visit(map_name = "node_method_map"):
             for mro_item in mro:
                 # in case the current mro item class level is nor found
                 # skips the current iteration (cannot visit at this level)
-                if not mro_item in node_method_map: continue
+                if not mro_item in node_method_map:
+                    continue
 
                 # the current class level is valid and so the proper method
                 # is retrieved from the map and then called with the provided

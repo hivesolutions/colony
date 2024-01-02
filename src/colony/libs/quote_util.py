@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -47,14 +38,19 @@ QUOTE_SAFE_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678
 QUOTE_SAFE_MAPS = {}
 """ The map of cached (buffered) safe lists to be quoted """
 
-HEX_TO_CHAR_MAP = dict((legacy.bytes("%02x" % i), legacy.bytes(chr(i))) for i in range(256))
+HEX_TO_CHAR_MAP = dict(
+    (legacy.bytes("%02x" % i), legacy.bytes(chr(i))) for i in range(256)
+)
 """ The map associating the hexadecimal byte (256) values
 with the integers, the association is done using byte values """
 
 # updates the map with the upper case values
-HEX_TO_CHAR_MAP.update((legacy.bytes("%02X" % i), legacy.bytes(chr(i))) for i in range(256))
+HEX_TO_CHAR_MAP.update(
+    (legacy.bytes("%02X" % i), legacy.bytes(chr(i))) for i in range(256)
+)
 
-def quote(string_value, safe = "/"):
+
+def quote(string_value, safe="/"):
     """
     Quotes the given string value according to
     the URL encoding specification.
@@ -69,7 +65,8 @@ def quote(string_value, safe = "/"):
     # in case the provided string value is unicode based it
     # must be encoded first using the default encoder
     is_unicode = type(string_value) == legacy.UNICODE
-    if is_unicode: string_value = string_value.encode("utf-8")
+    if is_unicode:
+        string_value = string_value.encode("utf-8")
 
     # creates the cache key tuple, that is going to be used
     # to avoid the re-creation of the safe map in every operation
@@ -96,7 +93,9 @@ def quote(string_value, safe = "/"):
             reference = index if legacy.PYTHON_3 else character
 
             # adds the "valid" character or the safe map entry
-            safe_map[reference] = character if (character in safe) else ("%%%02X" % index)
+            safe_map[reference] = (
+                character if (character in safe) else ("%%%02X" % index)
+            )
 
         # sets the safe map in the cache quote safe maps
         QUOTE_SAFE_MAPS[cache_key] = safe_map
@@ -109,7 +108,8 @@ def quote(string_value, safe = "/"):
     # this will trigger the lazy loaded map operation
     return "".join(resolution_list)
 
-def quote_plus(string_value, safe = ""):
+
+def quote_plus(string_value, safe=""):
     """
     Quotes the given string value according to
     the URL encoding specification. This kind of quote
@@ -139,7 +139,8 @@ def quote_plus(string_value, safe = ""):
     # returns the quoted string value
     return quote(string_value, safe)
 
-def unquote(string_value, strict = True):
+
+def unquote(string_value, strict=True):
     """
     Unquotes the given string value according to the URL
     encoding specification.
@@ -164,8 +165,10 @@ def unquote(string_value, strict = True):
     # so that the various partial encoded values are decoded
     is_unicode = type(string_value) == legacy.UNICODE
     encoding = "ascii" if strict else "utf-8"
-    if is_unicode: string_value = string_value.encode(encoding)
-    if strict: string_value.decode("ascii")
+    if is_unicode:
+        string_value = string_value.encode(encoding)
+    if strict:
+        string_value.decode("ascii")
     string_value_splitted = string_value.split(b"%")
 
     # iterates over all the "percentage values" range to decode
@@ -190,7 +193,8 @@ def unquote(string_value, strict = True):
     unquoted = b"".join(string_value_splitted)
     return unquoted.decode("utf-8") if legacy.PYTHON_3 else unquoted
 
-def unquote_plus(string_value, strict = True):
+
+def unquote_plus(string_value, strict=True):
     """
     Unquotes the given string value according to
     the URL encoding specification. This kind of unquote
@@ -214,13 +218,16 @@ def unquote_plus(string_value, strict = True):
     # the default plus symbol substitution, note that the proper
     # replacement operation is used according to base data type
     is_bytes = legacy.is_bytes(string_value)
-    if is_bytes: string_value = string_value.replace(b"+", b" ")
-    else: string_value = string_value.replace("+", " ")
+    if is_bytes:
+        string_value = string_value.replace(b"+", b" ")
+    else:
+        string_value = string_value.replace("+", " ")
 
     # returns the unquoted string value
-    return unquote(string_value, strict = strict)
+    return unquote(string_value, strict=strict)
 
-def url_encode(attributes_map = None, attributes_list = None, plus_encoding = False):
+
+def url_encode(attributes_map=None, attributes_list=None, plus_encoding=False):
     """
     Encodes the given attributes into URL encoding. The
     attributes may be either provided as a map or alternatively

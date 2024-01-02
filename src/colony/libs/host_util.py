@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -64,8 +55,9 @@ DEFAULT_IP6_HOST = "ipv6.google.com"
 DEFAULT_PORT = 80
 """ The default port to be used for queries """
 
+
 def get_hostname():
-    """"
+    """ "
     Retrieves the current base host name.
 
     :rtype: String
@@ -78,8 +70,9 @@ def get_hostname():
     # returns the hostname
     return hostname
 
+
 def get_hostname_local():
-    """"
+    """ "
     Retrieves the current base host name.
     The host name is returned in local notation.
 
@@ -100,6 +93,7 @@ def get_hostname_local():
     # returns the "local" host name
     return hostname_local
 
+
 def get_address_ip4():
     """
     Retrieves the current "preferred" ip4 address.
@@ -117,7 +111,8 @@ def get_address_ip4():
     # returns the "preferred" ip4 address
     return preferred_address_ip4
 
-def get_address_ip4_force(host = DEFAULT_IP4_HOST, port = DEFAULT_PORT):
+
+def get_address_ip4_force(host=DEFAULT_IP4_HOST, port=DEFAULT_PORT):
     """
     Retrieves the current "preferred" ip4 address.
     This method uses a brute force hack that requires a remote
@@ -155,6 +150,7 @@ def get_address_ip4_force(host = DEFAULT_IP4_HOST, port = DEFAULT_PORT):
     # returns the address
     return address
 
+
 def get_address_ip4_all():
     """
     Retrieves the current "preferred" ip4 address.
@@ -172,10 +168,13 @@ def get_address_ip4_all():
 
     # retrieves the ip4 address using the "force" method in
     # case the previous retrieval was not successful
-    address_ip4 = address_ip4 == ALL_IP4_ADDRESS and get_address_ip4_force() or address_ip4
+    address_ip4 = (
+        address_ip4 == ALL_IP4_ADDRESS and get_address_ip4_force() or address_ip4
+    )
 
     # returns the ip4 address
     return address_ip4
+
 
 def get_address_ip6():
     """
@@ -194,7 +193,8 @@ def get_address_ip6():
     # returns the "preferred" ip6 address
     return preferred_address_ip6
 
-def get_address_ip6_force(host = DEFAULT_IP6_HOST, port = DEFAULT_PORT):
+
+def get_address_ip6_force(host=DEFAULT_IP6_HOST, port=DEFAULT_PORT):
     """
     Retrieves the current "preferred" ip6 address.
     This method uses a brute force hack that requires a remote
@@ -233,6 +233,7 @@ def get_address_ip6_force(host = DEFAULT_IP6_HOST, port = DEFAULT_PORT):
     # returns the address
     return address
 
+
 def get_address_ip6_all():
     """
     Retrieves the current "preferred" ip6 address.
@@ -250,10 +251,13 @@ def get_address_ip6_all():
 
     # retrieves the ip6 address using the "force" method in
     # case the previous retrieval was not successful
-    address_ip6 = address_ip6 == ALL_IP6_ADDRESS and get_address_ip6_force() or address_ip6
+    address_ip6 = (
+        address_ip6 == ALL_IP6_ADDRESS and get_address_ip6_force() or address_ip6
+    )
 
     # returns the ip6 address
     return address_ip6
+
 
 def get_addresses_ip4():
     """
@@ -265,6 +269,7 @@ def get_addresses_ip4():
 
     return get_addresses_family(socket.AF_INET, (LOOPBACK_IP4_ADDRESS,))
 
+
 def get_addresses_ip6():
     """
     Retrieves the list currently available ip6 addresses.
@@ -275,7 +280,8 @@ def get_addresses_ip6():
 
     return get_addresses_family(socket.AF_INET6, (LOOPBACK_IP6_ADDRESS,))
 
-def get_addresses_family(filter_family, filter_addresses = []):
+
+def get_addresses_family(filter_family, filter_addresses=[]):
     """
     Retrieves the list of addresses available in the
     current machine for the given family of protocols.
@@ -321,6 +327,7 @@ def get_addresses_family(filter_family, filter_addresses = []):
     # returns the addresses list
     return addresses_list
 
+
 def get_address_tuples():
     """
     Retrieves the address tuples for the current
@@ -338,6 +345,7 @@ def get_address_tuples():
 
     # returns the address tuples
     return address_tuples
+
 
 def ip4_address_from_network(ip4_address_network):
     """
@@ -361,6 +369,7 @@ def ip4_address_from_network(ip4_address_network):
     # returns the ip4 address
     return ip4_address
 
+
 def ip4_address_to_network(ip4_address):
     """
     Converts the given ip4 address string value into an
@@ -380,10 +389,13 @@ def ip4_address_to_network(ip4_address):
     # packs the series of bytes into a network signed byte stream
     ip4_address_data_bytes_length = len(ip4_address_data_bytes)
     ip4_address_data_bytes_length_string = str(ip4_address_data_bytes_length)
-    ip4_address_network = struct.pack("!" + ip4_address_data_bytes_length_string + "B", *ip4_address_data_bytes)
+    ip4_address_network = struct.pack(
+        "!" + ip4_address_data_bytes_length_string + "B", *ip4_address_data_bytes
+    )
 
     # returns the ip4 address network
     return ip4_address_network
+
 
 def ip6_address_from_network(ip6_address_network):
     """
@@ -401,11 +413,14 @@ def ip6_address_from_network(ip6_address_network):
     ip6_address_data_shorts = struct.unpack("!8H", ip6_address_network)
 
     # creates and joins the data string to create the address
-    ip6_address_data_string = ["%x" % value for value in ip6_address_data_shorts if value > 0]
+    ip6_address_data_string = [
+        "%x" % value for value in ip6_address_data_shorts if value > 0
+    ]
     ip6_address = ":".join(ip6_address_data_string)
 
     # returns the ip6 address
     return ip6_address
+
 
 def ip6_address_to_network(ip6_address):
     """
@@ -421,11 +436,15 @@ def ip6_address_to_network(ip6_address):
 
     # converts the ip6 address to a series of shorts
     ip6_address_data_string = ip6_address.split(":")
-    ip6_address_data_shorts = [int(value or "", 16) for value in ip6_address_data_string]
+    ip6_address_data_shorts = [
+        int(value or "", 16) for value in ip6_address_data_string
+    ]
 
     # packs the series of shorts into a network signed short stream
     ip6_address_data_shorts_length = len(ip6_address_data_shorts)
-    ip6_address_network = struct.pack("!" + ip6_address_data_shorts_length + "H", *ip6_address_data_shorts)
+    ip6_address_network = struct.pack(
+        "!" + ip6_address_data_shorts_length + "H", *ip6_address_data_shorts
+    )
 
     # returns the ip6 address network
     return ip6_address_network

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -25,13 +25,7 @@ __author__ = "João Magalhães <joamag@hive.pt>"
 __version__ = "1.0.3"
 """ The version of the module """
 
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -65,12 +59,9 @@ CE_PLATFORM_VALUE = "ce"
 DOS_PLATFORM_VALUE = "dos"
 """ The dos platform value """
 
-WINDOWS_PLATFORMS_VALUE = (
-    NT_PLATFORM_VALUE,
-    CE_PLATFORM_VALUE,
-    DOS_PLATFORM_VALUE
-)
+WINDOWS_PLATFORMS_VALUE = (NT_PLATFORM_VALUE, CE_PLATFORM_VALUE, DOS_PLATFORM_VALUE)
 """ The windows platform value """
+
 
 def normalize_path(path):
     """
@@ -108,13 +99,16 @@ def normalize_path(path):
 
     # in case the current operative system is windows based and
     # the normalized path does not start with the long path prefix
-    if os_name in WINDOWS_PLATFORMS_VALUE and not normalized_path.startswith(LONG_PATH_PREFIX):
+    if os_name in WINDOWS_PLATFORMS_VALUE and not normalized_path.startswith(
+        LONG_PATH_PREFIX
+    ):
         # creates the path in the windows mode, adds
         # the support for long path names with the prefix token
         normalized_path = LONG_PATH_PREFIX + normalized_path
 
     # returns the normalized path
     return normalized_path
+
 
 def align_path(path):
     """
@@ -136,7 +130,8 @@ def align_path(path):
     # returns the aligned path
     return aligned_path
 
-def copy_directory(source_path, target_path, replace_files = True, copy_hidden = True):
+
+def copy_directory(source_path, target_path, replace_files=True, copy_hidden=True):
     """
     Copies the directory in the given source path to the
     target path.
@@ -209,7 +204,9 @@ def copy_directory(source_path, target_path, replace_files = True, copy_hidden =
         # in case it is a directory
         if stat.S_ISDIR(mode):
             # copies the (sub) directory
-            copy_directory(entry_full_path, target_full_path, replace_files, copy_hidden)
+            copy_directory(
+                entry_full_path, target_full_path, replace_files, copy_hidden
+            )
         # in case it is a symbolic link (special
         # care must be taken in such case)
         elif stat.S_ISLNK(mode):
@@ -220,7 +217,8 @@ def copy_directory(source_path, target_path, replace_files = True, copy_hidden =
             # copies the entry to the target path
             copy_file(entry_full_path, target_full_path, replace_files)
 
-def copy_link(source_path, target_path, replace_file = True):
+
+def copy_link(source_path, target_path, replace_file=True):
     """
     Copies a symbolic link in the given source path to the
     target path.
@@ -249,10 +247,11 @@ def copy_link(source_path, target_path, replace_file = True):
     # reads the link target (path) from the source path
     # and then uses that value to create the link in the
     # target path (link copy)
-    link_target = os.readlink(source_path) #@UndefinedVariable
-    os.symlink(link_target, target_path) #@UndefinedVariable
+    link_target = os.readlink(source_path)  # @UndefinedVariable
+    os.symlink(link_target, target_path)  # @UndefinedVariable
 
-def copy_file(source_path, target_path, replace_file = True):
+
+def copy_file(source_path, target_path, replace_file=True):
     """
     Copies a file in the given source path to the
     target path.
@@ -308,6 +307,7 @@ def copy_file(source_path, target_path, replace_file = True):
         # closes the target file
         target_file.close()
 
+
 def remove_directory(directory_path):
     """
     Removes the given directory path recursively.
@@ -323,7 +323,10 @@ def remove_directory(directory_path):
     directory_path = normalize_path(directory_path)
 
     # creates the list of paths for the directory path
-    paths_list = [os.path.join(directory_path, file_path) for file_path in os.listdir(directory_path)]
+    paths_list = [
+        os.path.join(directory_path, file_path)
+        for file_path in os.listdir(directory_path)
+    ]
 
     # iterates over all the paths in the paths
     # list to remove them
@@ -344,7 +347,8 @@ def remove_directory(directory_path):
     # removes the directory
     os.rmdir(directory_path)
 
-def link(target_path, link_path, link_name = True, replace = False):
+
+def link(target_path, link_path, link_name=True, replace=False):
     """
     Creates a link between the target path and the link
     path given.
@@ -371,8 +375,10 @@ def link(target_path, link_path, link_name = True, replace = False):
     # it must be removed (the link may be a directory), this
     # behavior is only accomplished when the replace flag
     # parameter is set
-    if replace and os.path.islink(link_path): os.remove(link_path)
-    elif replace and os.path.isdir(link_path): remove_directory(link_path)
+    if replace and os.path.islink(link_path):
+        os.remove(link_path)
+    elif replace and os.path.isdir(link_path):
+        remove_directory(link_path)
 
     # in case the current platform is windows
     if os.name == NT_PLATFORM_VALUE:
@@ -391,7 +397,8 @@ def link(target_path, link_path, link_name = True, replace = False):
 
         # creates the symbolic link to the target path
         # using the link path
-        os.symlink(target_path, link_path) #@UndefinedVariable
+        os.symlink(target_path, link_path)  # @UndefinedVariable
+
 
 def link_copy(target_path, link_path):
     """
@@ -419,6 +426,7 @@ def link_copy(target_path, link_path):
     else:
         # copies the file in the target path to the link path
         copy_file(target_path, link_path)
+
 
 def ensure_file_path(file_path, default_file_path):
     """
@@ -479,6 +487,7 @@ def ensure_file_path(file_path, default_file_path):
         # closes the file
         file.close()
 
+
 def is_parent_path(path, parent_path):
     """
     Checks if the given parent path is a parent
@@ -509,7 +518,8 @@ def is_parent_path(path, parent_path):
         # returns false (invalid)
         return True
 
-def _relative_path_windows(path, start_path = CURRENT_DIRECTORY):
+
+def _relative_path_windows(path, start_path=CURRENT_DIRECTORY):
     """
     "Calculates" the relative path between the base path
     and the given "start" path.
@@ -537,15 +547,22 @@ def _relative_path_windows(path, start_path = CURRENT_DIRECTORY):
     # is not (error)
     if path_is_unc ^ start_is_unc:
         # raises a value error
-        raise ValueError("cannot mix unc and non-unc paths %s and %s" % (path, start_path))
+        raise ValueError(
+            "cannot mix unc and non-unc paths %s and %s" % (path, start_path)
+        )
 
     if path_prefix.lower() != start_prefix.lower():
         if path_is_unc:
             # raises a value error
-            raise ValueError("path is on unc root %s, start on unc root %s" % (path_prefix, start_prefix))
+            raise ValueError(
+                "path is on unc root %s, start on unc root %s"
+                % (path_prefix, start_prefix)
+            )
         else:
             # raises a value error
-            raise ValueError("path is on drive %s, start on drive %s" % (path_prefix, start_prefix))
+            raise ValueError(
+                "path is on drive %s, start on drive %s" % (path_prefix, start_prefix)
+            )
 
     # works out how much of the file path
     # is shared by start and path
@@ -575,7 +592,8 @@ def _relative_path_windows(path, start_path = CURRENT_DIRECTORY):
     # the relatives list
     return os.path.join(*relatives_list)
 
-def _relative_path_posix(path, start = CURRENT_DIRECTORY):
+
+def _relative_path_posix(path, start=CURRENT_DIRECTORY):
     """
     "Calculates" the relative path between the base path
     and the given "start" path.
@@ -615,6 +633,7 @@ def _relative_path_posix(path, start = CURRENT_DIRECTORY):
     # the relatives list
     return os.path.join(*relatives_list)
 
+
 def _abspath_split(path):
     """
     Method for util splitting of the path into
@@ -633,7 +652,7 @@ def _abspath_split(path):
     # prefix and rest
     path = os.path.normpath(path)
     absolute_path = os.path.abspath(path)
-    prefix, rest = os.path.splitunc(absolute_path) #@UndefinedVariable
+    prefix, rest = os.path.splitunc(absolute_path)  # @UndefinedVariable
 
     # converts the prefix to boolean for checking
     # if the path is unc based
@@ -648,8 +667,12 @@ def _abspath_split(path):
     # returns the tuple value
     return is_unc, prefix, path_list
 
+
 # checks if the current platform is of type windows
-if NT_PLATFORM_VALUE in sys.builtin_module_names or CE_PLATFORM_VALUE in sys.builtin_module_names:
+if (
+    NT_PLATFORM_VALUE in sys.builtin_module_names
+    or CE_PLATFORM_VALUE in sys.builtin_module_names
+):
     # sets the separator value and the relative
     # path method values (for windows)
     SEPARATOR = "\\"

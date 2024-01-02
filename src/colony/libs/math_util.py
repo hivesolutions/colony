@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -40,6 +31,7 @@ __license__ = "Apache License, Version 2.0"
 import math
 
 from colony.base import legacy
+
 
 def ceil_integer(value):
     """
@@ -63,6 +55,7 @@ def ceil_integer(value):
 
     # returns the ceil value integer
     return ceil_value_integer
+
 
 def greatest_common_divisor(p_value, q_value):
     """
@@ -98,6 +91,7 @@ def greatest_common_divisor(p_value, q_value):
     # return the recalculation of the greatest common
     # divisor
     return greatest_common_divisor(q_value, _q_value)
+
 
 def fast_exponentiation(base, exponent, modulus):
     """
@@ -137,10 +131,11 @@ def fast_exponentiation(base, exponent, modulus):
         remainder = remainders.pop()
 
         # calculates the result value
-        result = ((base ** remainder) * result ** 2) % modulus
+        result = ((base**remainder) * result**2) % modulus
 
     # returns the result
     return result
+
 
 def item_set_total(item_set):
     """
@@ -165,6 +160,7 @@ def item_set_total(item_set):
     # returns the total value
     return total_value
 
+
 def item_set_percentage(item_name, item_set):
     """
     Calculates the relative percentage value of
@@ -188,7 +184,8 @@ def item_set_percentage(item_name, item_set):
 
     # in case the item value is not defined
     # or is zero, avoiding division by zero
-    if not item_value: return 0
+    if not item_value:
+        return 0
 
     # calculates the total value from the
     # item set

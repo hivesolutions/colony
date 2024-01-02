@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -41,6 +32,7 @@ import os
 import copy
 
 from colony.base import legacy
+
 
 class StringBuffer(object):
     """
@@ -57,7 +49,7 @@ class StringBuffer(object):
     closed = False
     """ The closed value """
 
-    def __init__(self, fast = True, btype = None):
+    def __init__(self, fast=True, btype=None):
         """
         Constructor of the class.
 
@@ -83,7 +75,7 @@ class StringBuffer(object):
         else:
             self.write = self._write_slow
 
-    def read(self, size = None):
+    def read(self, size=None):
         """
         Reads a buffer from the string buffer with the
         given maximum size.
@@ -96,10 +88,12 @@ class StringBuffer(object):
         self.regenerate()
 
         if size:
-            return_value = self.current_value[self.current_position:self.current_position + size]
+            return_value = self.current_value[
+                self.current_position : self.current_position + size
+            ]
             self.seek(size, os.SEEK_CUR)
         else:
-            return_value = self.current_value[self.current_position:]
+            return_value = self.current_value[self.current_position :]
             self.seek(self.current_size, os.SEEK_SET)
 
         # returns the return value
@@ -143,7 +137,7 @@ class StringBuffer(object):
         self.current_position = 0
         self.current_size = 0
 
-    def seek(self, offset, whence = os.SEEK_SET):
+    def seek(self, offset, whence=os.SEEK_SET):
         """
         Seeks the string buffer to the given offset with the given jump mode,
         defined with the whence.
@@ -201,7 +195,7 @@ class StringBuffer(object):
 
         pass
 
-    def readline(self, size = None):
+    def readline(self, size=None):
         """
         Retrieves a line from the string buffer,
         with the given maximum size.
@@ -214,7 +208,7 @@ class StringBuffer(object):
 
         return None
 
-    def readlines(self, sizehint = None):
+    def readlines(self, sizehint=None):
         """
         Retrieves a series of lines from the string buffer,
         with the given maximum size.
@@ -288,7 +282,8 @@ class StringBuffer(object):
         # in case both the current buffer is not dirty
         # and the fast mode is not enabled the regeneration
         # operation is ignored, control flow returned
-        if not self.dirty and not self.fast: return
+        if not self.dirty and not self.fast:
+            return
 
         # runs the regenerate operation for the current
         # buffer so that the complete set of partial
@@ -317,7 +312,7 @@ class StringBuffer(object):
         # returns the duplicated string buffer
         return duplicated_string_buffer
 
-    def rollback_last(self, item_count = 1):
+    def rollback_last(self, item_count=1):
         """
         Rollbacks the last write.
 
@@ -331,7 +326,7 @@ class StringBuffer(object):
             # pops an item from the string list
             self.string_list.pop()
 
-    def get_last(self, index = -1):
+    def get_last(self, index=-1):
         """
         Retrieves the last write.
 
@@ -375,8 +370,10 @@ class StringBuffer(object):
         try:
             contents = self.read()
             file = open(path, "wb")
-            try: file.write(contents)
-            finally: file.close()
+            try:
+                file.write(contents)
+            finally:
+                file.close()
         finally:
             self.seek(position)
 
@@ -442,13 +439,18 @@ class StringBuffer(object):
         the joining of the various components of the string list/buffer.
         """
 
-        if not legacy.PYTHON_3: return ""
-        if self.btype == str: return ""
-        if self.btype == legacy.BYTES: return b""
-        if self.btype == legacy.UNICODE: return legacy.u("")
+        if not legacy.PYTHON_3:
+            return ""
+        if self.btype == str:
+            return ""
+        if self.btype == legacy.BYTES:
+            return b""
+        if self.btype == legacy.UNICODE:
+            return legacy.u("")
         is_bytes = True
         for value in self.string_list:
-            if not type(value) == str: continue
+            if not type(value) == str:
+                continue
             is_bytes = False
             break
         return b"" if is_bytes else ""

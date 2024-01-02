@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -50,6 +41,7 @@ from . import legacy
 
 try:
     import zmq
+
     broadcast = True
 except ImportError:
     broadcast = False
@@ -60,26 +52,17 @@ memory until they are discarded, avoid a very large
 number for this value or else a large amount of memory
 may be used for logging purposes """
 
-LEVELS = (
-    "DEBUG",
-    "INFO",
-    "WARNING",
-    "ERROR",
-    "CRITICAL"
-)
+LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
 """ The sequence of levels from the least sever to the
 most sever this sequence may be used to find all the
 levels that are considered more sever that a level """
 
 LEVEL_ALIAS = dict(
-    DEBU = "DEBUG",
-    WARN = "WARNING",
-    INF = "INFO",
-    ERR = "ERROR",
-    CRIT = "CRITICAL"
+    DEBU="DEBUG", WARN="WARNING", INF="INFO", ERR="ERROR", CRIT="CRITICAL"
 )
 """ Map defining a series of alias that may be used latter
 for proper debug level resolution, standard compliant """
+
 
 class BroadcastHandler(logging.Handler):
     """
@@ -95,10 +78,11 @@ class BroadcastHandler(logging.Handler):
     """ The current ZeroMQ socket in used, this is
     the object to be used to broadcast the messages """
 
-    def __init__(self, host = None, port = None):
+    def __init__(self, host=None, port=None):
         logging.Handler.__init__(self)
 
-        if not broadcast: return
+        if not broadcast:
+            return
 
         context = zmq.Context()
         self.socket = context.socket(zmq.PUB)
@@ -124,7 +108,8 @@ class BroadcastHandler(logging.Handler):
 
         # in case the broadcast flag is unset returns
         # immediately can't be used
-        if not broadcast: return
+        if not broadcast:
+            return
 
         try:
             # formats the record, retrieving the resulting
@@ -134,7 +119,8 @@ class BroadcastHandler(logging.Handler):
             # in case the type of the message is unicode encodes it using the
             # default encoding for the transmission, then sends the message
             # through the socket
-            if type(message) == legacy.UNICODE: message = message.encode("utf-8")
+            if type(message) == legacy.UNICODE:
+                message = message.encode("utf-8")
             self.socket.send(b"colony %s" % message)
 
             # flushes the current stream
@@ -143,6 +129,7 @@ class BroadcastHandler(logging.Handler):
             # handles the error in the proper manner
             self.handleError(record)
 
+
 class MemoryHandler(logging.Handler):
     """
     Logging handler that is used to store information in
@@ -150,8 +137,8 @@ class MemoryHandler(logging.Handler):
     long as the execution session is the same.
     """
 
-    def __init__(self, level = logging.NOTSET, max_length = MAX_LENGTH):
-        logging.Handler.__init__(self, level = level)
+    def __init__(self, level=logging.NOTSET, max_length=MAX_LENGTH):
+        logging.Handler.__init__(self, level=level)
         self.max_length = max_length
         self.messages = collections.deque()
         self.messages_l = dict()
@@ -159,12 +146,14 @@ class MemoryHandler(logging.Handler):
     def get_messages_l(self, level):
         # in case the level is not found in the list of levels
         # it's not considered valid and so an empty list is returned
-        try: index = LEVELS.index(level)
-        except Exception: return collections.deque()
+        try:
+            index = LEVELS.index(level)
+        except Exception:
+            return collections.deque()
 
         # retrieves the complete set of levels that are considered
         # equal or more severe than the requested one
-        levels = LEVELS[:index + 1]
+        levels = LEVELS[: index + 1]
 
         # creates the list that will hold the various message
         # lists associated with the current severity level
@@ -175,7 +164,8 @@ class MemoryHandler(logging.Handler):
         # list to the list of message lists
         for level in levels:
             _messages_l = self.messages_l.get(level, None)
-            if _messages_l == None: _messages_l = collections.deque()
+            if _messages_l == None:
+                _messages_l = collections.deque()
             self.messages_l[level] = _messages_l
             messages_l.append(_messages_l)
 
@@ -201,7 +191,8 @@ class MemoryHandler(logging.Handler):
         # the one defined as maximum must pop message from queue
         self.messages.appendleft(message)
         messages_s = len(self.messages)
-        if messages_s > self.max_length: self.messages.pop()
+        if messages_s > self.max_length:
+            self.messages.pop()
 
         # iterates over all the messages list included in the retrieve
         # messages list to add the logging message to each of them
@@ -211,48 +202,48 @@ class MemoryHandler(logging.Handler):
             # specified also for the more general queue
             _messages_l.appendleft(message)
             messages_s = len(_messages_l)
-            if messages_s > self.max_length: _messages_l.pop()
+            if messages_s > self.max_length:
+                _messages_l.pop()
 
     def clear(self):
         self.messages = collections.deque()
         self.messages_l = dict()
 
-    def get_latest(self, count = None, level = None):
+    def get_latest(self, count=None, level=None):
         count = count or 100
         is_level = level and not legacy.is_string(level)
-        if is_level: level = logging.getLevelName(level)
+        if is_level:
+            level = logging.getLevelName(level)
         level = level.upper() if level else level
         level = LEVEL_ALIAS.get(level, level)
         messages = self.messages_l.get(level, []) if level else self.messages
         slice = itertools.islice(messages, 0, count)
         return list(slice)
 
-    def flush_to_file(
-        self,
-        path,
-        count = None,
-        level = None,
-        reverse = True,
-        clear = True
-    ):
-        messages = self.get_latest(level = level, count = count or 65536)
-        if not messages: return
-        if reverse: messages.reverse()
+    def flush_to_file(self, path, count=None, level=None, reverse=True, clear=True):
+        messages = self.get_latest(level=level, count=count or 65536)
+        if not messages:
+            return
+        if reverse:
+            messages.reverse()
         is_path = isinstance(path, legacy.STRINGS)
         file = open(path, "wb") if is_path else path
         try:
             for message in messages:
-                message = legacy.bytes(message, "utf-8", force = True)
+                message = legacy.bytes(message, "utf-8", force=True)
                 file.write(message + b"\n")
         finally:
-            if is_path: file.close()
-        if clear: self.clear()
+            if is_path:
+                file.close()
+        if clear:
+            self.clear()
+
 
 class LogstashHandler(logging.Handler):
-
-    def __init__(self, level = logging.NOTSET, max_length = MAX_LENGTH, api = None):
-        logging.Handler.__init__(self, level = level)
-        if not api: api = self._build_api()
+    def __init__(self, level=logging.NOTSET, max_length=MAX_LENGTH, api=None):
+        logging.Handler.__init__(self, level=level)
+        if not api:
+            api = self._build_api()
         self.messages = collections.deque()
         self.max_length = max_length
         self.api = api
@@ -260,7 +251,8 @@ class LogstashHandler(logging.Handler):
     def emit(self, record):
         # verifies if the API structure is defined and set and if
         # that's not the case returns immediately
-        if not self.api: return
+        if not self.api:
+            return
 
         # retrieves the current date time value as an utc value
         # and then formats it according to the provided format string
@@ -273,44 +265,49 @@ class LogstashHandler(logging.Handler):
         now_s = now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
         log = {
-            "@timestamp" : now_s,
-            "message_fmt" : message,
-            "logger" : record.name,
-            "message" : record.message,
-            "level" : record.levelname,
-            "path" : record.pathname,
-            "lineno" : record.lineno,
-            "host" : socket.gethostname(),
-            "hostname" : socket.gethostname(),
-            "tid" : threading.current_thread().ident,
-            "pid" : os.getpid() if hasattr(os, "getpid") else -1,
+            "@timestamp": now_s,
+            "message_fmt": message,
+            "logger": record.name,
+            "message": record.message,
+            "level": record.levelname,
+            "path": record.pathname,
+            "lineno": record.lineno,
+            "host": socket.gethostname(),
+            "hostname": socket.gethostname(),
+            "tid": threading.current_thread().ident,
+            "pid": os.getpid() if hasattr(os, "getpid") else -1,
         }
 
         self.messages.append(log)
         should_flush = len(self.messages) >= self.max_length
-        if should_flush: self.flush()
+        if should_flush:
+            self.flush()
 
-    def flush(self, force = False):
+    def flush(self, force=False):
         logging.Handler.flush(self)
 
         # verifies if the API structure is defined and set and if
         # that's not the case returns immediately
-        if not self.api: return
+        if not self.api:
+            return
 
         # in case the force flag is not set and there are no messages
         # to be flushed returns immediately (nothing to be done)
         messages = self.messages
-        if not messages and not force: return
+        if not messages and not force:
+            return
 
         # posts the complete set of messages to logstash and then clears the messages
-        self.api.log_bulk(messages, tag = "default")
+        self.api.log_bulk(messages, tag="default")
         self.messages = []
 
     def _build_api(self):
-        try: import logstash
-        except ImportError: return None
+        try:
+            import logstash
+        except ImportError:
+            return None
 
-        if not config.conf("LOGGING_LOGSTASH", False, cast = bool):
+        if not config.conf("LOGGING_LOGSTASH", False, cast=bool):
             return None
 
         return logstash.API()

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -58,7 +49,15 @@ RELEASE_DATE_TIME = "%(date_time)s"
 """ The release date time value that should timestamp the
 current system """
 
-ENVIRONMENT_VERSION = str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "." + str(sys.version_info[2]) + "-" + str(sys.version_info[3])
+ENVIRONMENT_VERSION = (
+    str(sys.version_info[0])
+    + "."
+    + str(sys.version_info[1])
+    + "."
+    + str(sys.version_info[2])
+    + "-"
+    + str(sys.version_info[3])
+)
 """ The environment version, constructed using information
 from the currently running python interpreter """
 
@@ -90,7 +89,8 @@ INFORMATION_PATH = "../res/colony.json"
 complete "release" information about the current
 colony implementation running """
 
-def generate(information = None, encoding = DEFAULT_ENCODING):
+
+def generate(information=None, encoding=DEFAULT_ENCODING):
     # sets the various environment variables as the
     # global reference to their values to avoid
     # confusing local allocation
@@ -104,7 +104,8 @@ def generate(information = None, encoding = DEFAULT_ENCODING):
     # checks if the values in the current module have been
     # already generated in such case there's no need to generate
     # them again (expensive operation)
-    if __GENERATED__ == "1": return
+    if __GENERATED__ == "1":
+        return
 
     # sets the generated flag to indicate that the values
     # in the module have been already processed
@@ -118,8 +119,10 @@ def generate(information = None, encoding = DEFAULT_ENCODING):
     if information == None:
         # tries to import the JSON module in case of failure
         # a silent return must occur to avoid problems
-        try: import os, json, datetime
-        except ImportError: return
+        try:
+            import os, json, datetime
+        except ImportError:
+            return
 
         # retrieves the current directory path and uses it to
         # infer the location of the information file to the
@@ -129,8 +132,10 @@ def generate(information = None, encoding = DEFAULT_ENCODING):
         file_path = os.path.join(directory, INFORMATION_PATH)
         file_path = os.path.normpath(file_path)
         file = open(file_path, "rb")
-        try: data = file.read()
-        finally: file.close()
+        try:
+            data = file.read()
+        finally:
+            file.close()
         data = data.decode(encoding)
         information = json.loads(data)
 
@@ -155,6 +160,7 @@ def generate(information = None, encoding = DEFAULT_ENCODING):
     BUILD = BUILD % information
     RELEASE_DATE = RELEASE_DATE % information
     RELEASE_DATE_TIME = RELEASE_DATE_TIME % information
+
 
 # runs the generate task at import time to provide
 # the most update values to the importer agent

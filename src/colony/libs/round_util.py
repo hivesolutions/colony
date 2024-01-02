@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -21,17 +21,10 @@
 
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
-
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
 __date__ = "$LastChangedDate: 2011-01-15 17:29:58 +0000 (sÃ¡b, 15 Jan 2011) $"
 """ The last change date of the module """
 
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -52,7 +45,8 @@ up strategy is applied in the rounding """
 
 _round = round
 
-def roundi(value, places = 0, precise = False):
+
+def roundi(value, places=0, precise=False):
     """
     Rounds the provided float value to the provided
     number of decimal places returning a floating
@@ -91,7 +85,8 @@ def roundi(value, places = 0, precise = False):
     delta = _delta(value) if precise else DELTA
     return _round_t(value + delta, places)
 
-def rounds(value, places = 0):
+
+def rounds(value, places=0):
     """
     Considered to be the "safest" way of rounding a number either
     a "native" float number or a decimal, this operation should
@@ -113,9 +108,10 @@ def rounds(value, places = 0):
     current (most precise) way of rounding.
     """
 
-    return roundi(value, places, precise = True)
+    return roundi(value, places, precise=True)
 
-def roundt(value, places = 0):
+
+def roundt(value, places=0):
     """
     Simple rounding utility function that performs the currently
     selected rounding operation on the provided value and then
@@ -138,7 +134,8 @@ def roundt(value, places = 0):
     result = round(value, places)
     return result if type(result) == value_t else value_t(result)
 
-def round_apply(force = False):
+
+def round_apply(force=False):
     """
     Applies the "old" rounding strategy to the current
     interpreted in a global fashion (override).
@@ -157,17 +154,21 @@ def round_apply(force = False):
     # the interpreter is using the new rounding methods
     # in case it's not no apply occurs (not required)
     new_round = round_is_new()
-    if not new_round and not force: return
+    if not new_round and not force:
+        return
 
     # updates the built-in round function with the new
     # round function so that the rounds are coherent, note
     # that the builtins reference may be either map based
     # or module based, logic must take care of both cases
     builtins = globals()["__builtins__"]
-    if type(builtins) == dict: builtins["round"] = roundi
-    else: builtins.round = roundi
+    if type(builtins) == dict:
+        builtins["round"] = roundi
+    else:
+        builtins.round = roundi
 
-def round_unapply(force = False):
+
+def round_unapply(force=False):
     """
     Reverts the apply operation of the "old" rounding
     strategy back to the original built-in rounding.
@@ -184,15 +185,19 @@ def round_unapply(force = False):
     # the interpreter is using the new rounding methods
     # in case it's not no unapply occurs (not required)
     new_round = round_is_new()
-    if not new_round and not force: return
+    if not new_round and not force:
+        return
 
     # updates the built-in round function with the old
     # round function so that the rounds are reverted, note
     # that the builtins reference may be either map based
     # or module based, logic must take care of both cases
     builtins = globals()["__builtins__"]
-    if type(builtins) == dict: builtins["round"] = _round_t
-    else: builtins.round = _round_t
+    if type(builtins) == dict:
+        builtins["round"] = _round_t
+    else:
+        builtins.round = _round_t
+
 
 def round_is_new():
     """
@@ -218,11 +223,11 @@ def round_is_new():
     # verifies that the current executing version of
     # the interpreter is using the new rounding methods
     # in case it's not no unapply occurs (not required)
-    new_round = major > 3 or (major == 3 and minor >= 1) or\
-        (major == 2 and minor >= 7)
+    new_round = major > 3 or (major == 3 and minor >= 1) or (major == 2 and minor >= 7)
     return new_round
 
-def _round_t(value, places = 0):
+
+def _round_t(value, places=0):
     """
     Internal function similar to the the type one but uses
     the internal (built-in) version of the rounder to perform
@@ -246,6 +251,7 @@ def _round_t(value, places = 0):
     result = _round(value, places)
     return result if type(result) == value_t else value_t(result)
 
+
 def _delta(value):
     """
     Calculates the proper minimum delta value that may be
@@ -267,18 +273,23 @@ def _delta(value):
     integer = abs(int(value // 1))
     count = 1 if integer == 0 else int(math.log10(integer)) + 1
     places = FLOAT_PRECISION - count
-    if places < 1: places = 1
+    if places < 1:
+        places = 1
     delta = 1 / math.pow(10, places)
     return delta
+
 
 # verifies if the current interpreter version is python 3+ and
 # if that's the case used the builtin round function instead to
 # allow data type casting through the __round__ magic method
-if sys.version_info[0] >= 3: _round_t = _round
+if sys.version_info[0] >= 3:
+    _round_t = _round
 
 # updates the round reference in the builtin dictionary so that
 # the proper type based casting is used instead of the builtin
 # functions (allows proper data type casting for python 2)
 builtins = globals()["__builtins__"]
-if type(builtins) == dict: builtins["round"] = _round_t
-else: builtins.round = _round_t
+if type(builtins) == dict:
+    builtins["round"] = _round_t
+else:
+    builtins.round = _round_t

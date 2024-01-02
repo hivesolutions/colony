@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -40,6 +31,7 @@ __license__ = "Apache License, Version 2.0"
 import binascii
 
 from colony.base import legacy
+
 
 def encode_two_complement_string(long_value):
     """
@@ -102,7 +94,11 @@ def encode_two_complement_string(long_value):
         # the previous one
         if new_number_nibbles < number_nibbles:
             # puts the sign bits
-            long_value_hexadecimal = "0x" + "0" * (number_nibbles - new_number_nibbles) + long_value_hexadecimal[2:]
+            long_value_hexadecimal = (
+                "0x"
+                + "0" * (number_nibbles - new_number_nibbles)
+                + long_value_hexadecimal[2:]
+            )
         # in case it's a positive number
         if int(long_value_hexadecimal[2], 16) < 8:
             # no need a byte of sign bits
@@ -126,6 +122,7 @@ def encode_two_complement_string(long_value):
 
     # returns the reversed binary value
     return reversed_binary
+
 
 def decode_two_complement_string(data):
     """
@@ -159,6 +156,7 @@ def decode_two_complement_string(data):
 
     # returns the long value
     return long_value
+
 
 def _count_nibbles(long_value_hexadecimal):
     """

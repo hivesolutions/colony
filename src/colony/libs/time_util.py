@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -71,58 +62,51 @@ MINIMIZE_MULTIPLE = "minimize_multiple"
 MINIMIZE_UNIQUE = "minimize_unique"
 """ The minimization with unique value support """
 
-DEFAULT_INCLUDES = (
-    DAY_VALUE,
-    HOUR_VALUE,
-    MINUTE_VALUE,
-    SECOND_VALUE
-)
+DEFAULT_INCLUDES = (DAY_VALUE, HOUR_VALUE, MINUTE_VALUE, SECOND_VALUE)
 """ The default includes list (tuple) """
 
 DEFAULT_FORMAT = "%(D)d days, %(H)d hours, %(M)d minutes"
 """ The default format """
 
 FORMATS = {
-    SIMPLE_VALUE : {
-        DAY_VALUE : "%(D)d",
-        HOUR_VALUE : "%(H)d",
-        MINUTE_VALUE : "%(M)d",
-        SECOND_VALUE : "%(S)d"
+    SIMPLE_VALUE: {
+        DAY_VALUE: "%(D)d",
+        HOUR_VALUE: "%(H)d",
+        MINUTE_VALUE: "%(M)d",
+        SECOND_VALUE: "%(S)d",
     },
-    BASIC_VALUE : {
-        DAY_VALUE : "%(D)dd",
-        HOUR_VALUE : "%(H)dh",
-        MINUTE_VALUE : "%(M)dm",
-        SECOND_VALUE : "%(S)ds"
+    BASIC_VALUE: {
+        DAY_VALUE: "%(D)dd",
+        HOUR_VALUE: "%(H)dh",
+        MINUTE_VALUE: "%(M)dm",
+        SECOND_VALUE: "%(S)ds",
     },
-    EXTENDED_VALUE : {
-        DAY_VALUE : "%(D)d days",
-        HOUR_VALUE : "%(H)d hours",
-        MINUTE_VALUE : "%(M)d minutes",
-        SECOND_VALUE : "%(S)d seconds"
+    EXTENDED_VALUE: {
+        DAY_VALUE: "%(D)d days",
+        HOUR_VALUE: "%(H)d hours",
+        MINUTE_VALUE: "%(M)d minutes",
+        SECOND_VALUE: "%(S)d seconds",
     },
-    EXTENDED_SIMPLE_VALUE : {
-        DAY_VALUE : "%(D)d days",
-        HOUR_VALUE : "%(H)d hours",
-        MINUTE_VALUE : "%(M)d minutes",
-        SECOND_VALUE : "%(S)d seconds"
-    }
+    EXTENDED_SIMPLE_VALUE: {
+        DAY_VALUE: "%(D)d days",
+        HOUR_VALUE: "%(H)d hours",
+        MINUTE_VALUE: "%(M)d minutes",
+        SECOND_VALUE: "%(S)d seconds",
+    },
 }
 """ The formats map """
 
 SEPARATORS = {
-    SIMPLE_VALUE : ":",
-    BASIC_VALUE : ", ",
-    EXTENDED_VALUE : ", ",
-    EXTENDED_SIMPLE_VALUE : " "
+    SIMPLE_VALUE: ":",
+    BASIC_VALUE: ", ",
+    EXTENDED_VALUE: ", ",
+    EXTENDED_SIMPLE_VALUE: " ",
 }
 """ The separators map """
 
+
 def format_seconds_smart(
-    seconds,
-    mode = SIMPLE_VALUE,
-    includes = DEFAULT_INCLUDES,
-    minimize = MINIMIZE_MULTIPLE
+    seconds, mode=SIMPLE_VALUE, includes=DEFAULT_INCLUDES, minimize=MINIMIZE_MULTIPLE
 ):
     """
     Formats the given seconds according to the given
@@ -163,9 +147,7 @@ def format_seconds_smart(
         # sets the processed includes with the last
         # element of the original includes, in order to
         # avoid empty strings
-        processed_includes = (
-            includes[-1],
-        )
+        processed_includes = (includes[-1],)
 
     # creates the is first flag
     is_first = True
@@ -208,7 +190,8 @@ def format_seconds_smart(
     # returns the formatted seconds
     return formatted_seconds
 
-def format_seconds(seconds, format_string = DEFAULT_FORMAT):
+
+def format_seconds(seconds, format_string=DEFAULT_FORMAT):
     """
     Formats the given seconds according to the given
     format string.
@@ -225,7 +208,7 @@ def format_seconds(seconds, format_string = DEFAULT_FORMAT):
     days = int(seconds / 86400.0)
 
     # calculates the days modulus from the seconds
-    days_modulus = (seconds % 86400.0)
+    days_modulus = seconds % 86400.0
 
     # calculates the number of hours from the days modulus
     hours = int(days_modulus / 3600.0)
@@ -243,13 +226,14 @@ def format_seconds(seconds, format_string = DEFAULT_FORMAT):
     seconds = int(minutes_modulus)
 
     # creates the attributes map with the various values
-    attributes = {"D" : days, "H" : hours, "M" : minutes, "S" : seconds}
+    attributes = {"D": days, "H": hours, "M": minutes, "S": seconds}
 
     # formats the string with the attributes map
     formatted_string = format_string % attributes
 
     # returns the formatted string
     return formatted_string
+
 
 def timestamp_datetime(timestamp_string):
     """
@@ -278,6 +262,7 @@ def timestamp_datetime(timestamp_string):
     # returns the converted datetime
     return datetime_value
 
+
 def _process_includes(seconds, includes, minimize_mode):
     """
     Processes the includes list, retrieving the minimized
@@ -297,45 +282,37 @@ def _process_includes(seconds, includes, minimize_mode):
     # represented
     if seconds < 60:
         # sets the valid includes as the seconds
-        valid_includes = minimize_mode == MINIMIZE_MULTIPLE and (
-            SECOND_VALUE,
-        ) or (
-            SECOND_VALUE,
+        valid_includes = (
+            minimize_mode == MINIMIZE_MULTIPLE and (SECOND_VALUE,) or (SECOND_VALUE,)
         )
     # in case there are only second and minutes
     # to be represented
     elif seconds < 3600:
         # sets the valid includes as the minutes
         # and the seconds
-        valid_includes = minimize_mode == MINIMIZE_MULTIPLE and (
-            MINUTE_VALUE,
-            SECOND_VALUE
-        ) or (
-            MINUTE_VALUE,
+        valid_includes = (
+            minimize_mode == MINIMIZE_MULTIPLE
+            and (MINUTE_VALUE, SECOND_VALUE)
+            or (MINUTE_VALUE,)
         )
     # in case there are seconds, minutes and
     # hours to be represented
     elif seconds < 86400:
         # sets the valid includes as the hours, the minutes
         # and the seconds
-        valid_includes = minimize_mode == MINIMIZE_MULTIPLE and (
-            HOUR_VALUE,
-            MINUTE_VALUE,
-            SECOND_VALUE
-        ) or (
-            HOUR_VALUE,
+        valid_includes = (
+            minimize_mode == MINIMIZE_MULTIPLE
+            and (HOUR_VALUE, MINUTE_VALUE, SECOND_VALUE)
+            or (HOUR_VALUE,)
         )
     # in case everything should be represented
     else:
         # sets the valid includes as the days, the hours, the minutes
         # and the seconds
-        valid_includes = minimize_mode == MINIMIZE_MULTIPLE and (
-            DAY_VALUE,
-            HOUR_VALUE,
-            MINUTE_VALUE,
-            SECOND_VALUE
-        ) or (
-            DAY_VALUE,
+        valid_includes = (
+            minimize_mode == MINIMIZE_MULTIPLE
+            and (DAY_VALUE, HOUR_VALUE, MINUTE_VALUE, SECOND_VALUE)
+            or (DAY_VALUE,)
         )
 
     # intersects the (original) list of includes and the valid includes

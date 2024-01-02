@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,20 +22,12 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
+
 
 class DataCacheMap(object):
     """
@@ -56,7 +48,7 @@ class DataCacheMap(object):
 
         self.data_map = {}
 
-    def get(self, name, timestamp = None):
+    def get(self, name, timestamp=None):
         """
         Retrieves the data associated with the provided
         name and with a timestamp value equivalent to the
@@ -74,13 +66,15 @@ class DataCacheMap(object):
 
         # in case the name is not present in the data map the
         # control must be returned to the caller function
-        if not name in self.data_map: return None
+        if not name in self.data_map:
+            return None
 
         # retrieves and unpacks the data tuple into the data
         # and the timestamp then if the timestamp value is provided
         # validates it agains the "just" retrieved timestamp
         data, _timestamp = self.data_map[name]
-        if timestamp and timestamp > _timestamp: return None
+        if timestamp and timestamp > _timestamp:
+            return None
 
         # returns the "resolved" cached data
         return data
@@ -118,5 +112,6 @@ class DataCacheMap(object):
 
         # in case the name is not present in the data map, returns
         # immediately otherwise proceed with the removal process
-        if not name in self.data_map: return
+        if not name in self.data_map:
+            return
         del self.data_map[name]

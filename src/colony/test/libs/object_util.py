@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,22 +22,14 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import colony
+
 
 class ObjectTest(colony.ColonyTestCase):
     """
@@ -49,22 +41,10 @@ class ObjectTest(colony.ColonyTestCase):
         Tests the object attribute names selector function.
         """
 
-        result = colony.object_attribute_names(
-            dict(
-                a = 2,
-                b = 1,
-                c = set()
-            )
-        )
+        result = colony.object_attribute_names(dict(a=2, b=1, c=set()))
         result.sort()
         self.assertEqual(result, ["a", "b"])
 
-        result = colony.object_attribute_names(
-            dict(
-                a = 2,
-                b = 1,
-                c = colony.Decimal(2.0)
-            )
-        )
+        result = colony.object_attribute_names(dict(a=2, b=1, c=colony.Decimal(2.0)))
         result.sort()
         self.assertEqual(result, ["a", "b", "c"])

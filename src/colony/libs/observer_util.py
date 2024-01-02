@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -70,6 +61,7 @@ _KAFKA_CONFIG = None
 """ Cache configuration value, to avoid the constant
 building of the Kafka configuration map """
 
+
 def unique():
     """
     Generates a new pseudo unique identifier generated in the
@@ -87,7 +79,8 @@ def unique():
     COUNTER += 1
     return COUNTER
 
-def notify(operation_name, handlers_map = None, *arguments, **named_arguments):
+
+def notify(operation_name, handlers_map=None, *arguments, **named_arguments):
     """
     Notifies an handler defined in the given handlers map about
     the provided operation.
@@ -116,12 +109,14 @@ def notify(operation_name, handlers_map = None, *arguments, **named_arguments):
     # in case the operation method was not found
     # (not possible to execute the handler), returns
     # immediately (as valid)
-    if not operation_method: return True
+    if not operation_method:
+        return True
 
     # checks if the operation method type is "iterable" and
     # in case it's not encapsulates the operation method
     # around a tuple value to make it "iterable"
-    if not hasattr(operation_method, "__iter__"): operation_method = (operation_method,)
+    if not hasattr(operation_method, "__iter__"):
+        operation_method = (operation_method,)
 
     # iterates over all the operation method contained in the
     # operation method sequence, to run their actions
@@ -134,7 +129,8 @@ def notify(operation_name, handlers_map = None, *arguments, **named_arguments):
     # final result for the notification
     return return_value
 
-def message(handlers_map = None, *arguments, **named_arguments):
+
+def message(handlers_map=None, *arguments, **named_arguments):
     """
     Shortcut method to call the handlers for the message
     operation.
@@ -151,7 +147,8 @@ def message(handlers_map = None, *arguments, **named_arguments):
 
     return notify(MESSAGE_VALUE, handlers_map, *arguments, **named_arguments)
 
-def action(handlers_map = None, *arguments, **named_arguments):
+
+def action(handlers_map=None, *arguments, **named_arguments):
     """
     Shortcut method to call the handlers for the action
     operation.
@@ -168,7 +165,8 @@ def action(handlers_map = None, *arguments, **named_arguments):
 
     return notify(ACTION_VALUE, handlers_map, *arguments, **named_arguments)
 
-def progress(handlers_map = None, *arguments, **named_arguments):
+
+def progress(handlers_map=None, *arguments, **named_arguments):
     """
     Shortcut method to call the handlers for the progress
     operation.
@@ -184,6 +182,7 @@ def progress(handlers_map = None, *arguments, **named_arguments):
     """
 
     return notify(PROGRESS_VALUE, handlers_map, *arguments, **named_arguments)
+
 
 def register_g(operation_name, handler):
     """
@@ -202,7 +201,8 @@ def register_g(operation_name, handler):
     handlers.append(handler)
     GLOBAL_HANDLERS_MAP[operation_name] = handlers
 
-def unregister_g(operation_name, handler = None):
+
+def unregister_g(operation_name, handler=None):
     """
     Unregisters from operations occurring for the provided name
     in the global system scope.
@@ -219,8 +219,11 @@ def unregister_g(operation_name, handler = None):
     """
 
     handlers = GLOBAL_HANDLERS_MAP.get(operation_name, [])
-    if handler: handlers.remove(handler)
-    else: del GLOBAL_HANDLERS_MAP[operation_name]
+    if handler:
+        handlers.remove(handler)
+    else:
+        del GLOBAL_HANDLERS_MAP[operation_name]
+
 
 def notify_g(operation_name, *arguments, **named_arguments):
     """
@@ -242,8 +245,10 @@ def notify_g(operation_name, *arguments, **named_arguments):
 
     return notify(operation_name, None, *arguments, **named_arguments)
 
+
 def notify_b(operation_name, *arguments, **named_arguments):
     notify_kafka(operation_name, *arguments, **named_arguments)
+
 
 def notify_kafka(operation_name, *arguments, **named_arguments):
     _kafka_config = kafka_config()
@@ -251,34 +256,37 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
     # in case no Kafka server is defined we act as if no need
     # for the Kafka notification has been requested
     kafka_server = _kafka_config["kafka_server"]
-    if not kafka_server: return
+    if not kafka_server:
+        return
 
     default_topic = _kafka_config["default_topic"]
 
-    message = dict(
-        name = operation_name,
-        args = arguments,
-        kwargs = named_arguments
-    )
+    message = dict(name=operation_name, args=arguments, kwargs=named_arguments)
     data = json.dumps(message)
-    data_b = legacy.bytes(data, encoding = "utf-8", force = True)
+    data_b = legacy.bytes(data, encoding="utf-8", force=True)
 
     producer = _kafka_producer()
-    if not producer: return
+    if not producer:
+        return
 
     producer.send(default_topic, data_b)
+
 
 def kafka_config():
     global _KAFKA_CONFIG
 
-    if _KAFKA_CONFIG: return _KAFKA_CONFIG
+    if _KAFKA_CONFIG:
+        return _KAFKA_CONFIG
 
-    try: import kafka
-    except Exception: return None
+    try:
+        import kafka
+    except Exception:
+        return None
 
     kafka_server = config.conf("KAFKA_HOST", None)
     kafka_server = config.conf("KAFKA_SERVER", kafka_server)
-    if not kafka_server: return None
+    if not kafka_server:
+        return None
 
     security_protocol = config.conf("KAFKA_SECURITY_PROTOCOL", "PLAINTEXT")
     sasl_mechanism = config.conf("KAFKA_SASL_MECHANISM", None)
@@ -287,22 +295,26 @@ def kafka_config():
     default_topic = config.conf("KAFKA_TOPIC", "colony")
 
     _KAFKA_CONFIG = dict(
-        kafka_server = kafka_server,
-        security_protocol = security_protocol,
-        sasl_mechanism = sasl_mechanism,
-        sasl_plain_username = sasl_plain_username,
-        sasl_plain_password = sasl_plain_password,
-        default_topic = default_topic,
-        client_version = kafka.__version__
+        kafka_server=kafka_server,
+        security_protocol=security_protocol,
+        sasl_mechanism=sasl_mechanism,
+        sasl_plain_username=sasl_plain_username,
+        sasl_plain_password=sasl_plain_password,
+        default_topic=default_topic,
+        client_version=kafka.__version__,
     )
     return _KAFKA_CONFIG
 
+
 def _kafka_producer():
-    try: import kafka
-    except Exception: return None
+    try:
+        import kafka
+    except Exception:
+        return None
 
     _kafka_config = kafka_config()
-    if not _kafka_config: return None
+    if not _kafka_config:
+        return None
 
     kafka_server = _kafka_config["kafka_server"]
     if kafka_server in KAFKA_PRODUCERS:
@@ -314,11 +326,11 @@ def _kafka_producer():
     sasl_plain_password = _kafka_config["sasl_plain_password"]
 
     producer = kafka.KafkaProducer(
-        bootstrap_servers = kafka_server,
-        security_protocol = security_protocol,
-        sasl_mechanism = sasl_mechanism,
-        sasl_plain_username = sasl_plain_username,
-        sasl_plain_password = sasl_plain_password
+        bootstrap_servers=kafka_server,
+        security_protocol=security_protocol,
+        sasl_mechanism=sasl_mechanism,
+        sasl_plain_username=sasl_plain_username,
+        sasl_plain_password=sasl_plain_password,
     )
     KAFKA_PRODUCERS[kafka_server] = producer
 

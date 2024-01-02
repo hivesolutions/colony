@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,22 +22,14 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import uuid
+
 
 class ColonyException(Exception):
     """
@@ -63,7 +55,7 @@ class ColonyException(Exception):
     that should be considered private in context, this
     should be structured data ready to be serializable """
 
-    def __init__(self, message = None, **kwargs):
+    def __init__(self, message=None, **kwargs):
         Exception.__init__(self)
         self.message = message
         self.code = kwargs.get("code", 500)
@@ -79,7 +71,8 @@ class ColonyException(Exception):
         :return: The string representation of the class.
         """
 
-        if self.message == None: return Exception.__str__(self)
+        if self.message == None:
+            return Exception.__str__(self)
         return "Colony exception - %s" % self.message
 
     def __unicode__(self):
@@ -103,9 +96,11 @@ class ColonyException(Exception):
         exception entity.
         """
 
-        if self._uid: return self._uid
+        if self._uid:
+            return self._uid
         self._uid = uuid.uuid4()
         return self._uid
+
 
 class OperationalError(ColonyException):
     """
@@ -117,6 +112,7 @@ class OperationalError(ColonyException):
 
     pass
 
+
 class AssertionError(OperationalError):
     """
     Error raised for failure to meet any pre-condition or
@@ -127,6 +123,7 @@ class AssertionError(OperationalError):
         kwargs["message"] = kwargs.get("message", "Assertion of data failed")
         kwargs["code"] = kwargs.get("code", None)
         OperationalError.__init__(self, *args, **kwargs)
+
 
 class PluginSystemException(ColonyException):
     """
@@ -143,7 +140,7 @@ class PluginSystemException(ColonyException):
         :param message: The message to be printed.
         """
 
-        ColonyException.__init__(self, message = message)
+        ColonyException.__init__(self, message=message)
 
     def __str__(self):
         """
@@ -154,6 +151,7 @@ class PluginSystemException(ColonyException):
         """
 
         return "Plugin system exception - %s" % self.message
+
 
 class PluginClassNotAvailable(PluginSystemException):
     """
@@ -170,6 +168,7 @@ class PluginClassNotAvailable(PluginSystemException):
 
         return "Plugin class not available - %s" % self.message
 
+
 class InvalidCommand(PluginSystemException):
     """
     The invalid command class.
@@ -184,6 +183,7 @@ class InvalidCommand(PluginSystemException):
         """
 
         return "Invalid command - %s" % self.message
+
 
 class InvalidArgument(PluginSystemException):
     """
@@ -202,6 +202,7 @@ class InvalidArgument(PluginSystemException):
 
         return "Invalid argument - %s" % self.message
 
+
 class SecurityError(PluginSystemException):
     """
     The security (kind) error, that represents an issue
@@ -219,6 +220,7 @@ class SecurityError(PluginSystemException):
 
         return "Security error - %s" % self.message
 
+
 class OperationNotComplete(PluginSystemException):
     """
     The operation not complete class, meaning that the
@@ -235,6 +237,7 @@ class OperationNotComplete(PluginSystemException):
 
         return "Operation not complete - %s" % self.message
 
+
 class OperationRestart(PluginSystemException):
     """
     The operation restart class, meaning that the current
@@ -250,7 +253,7 @@ class OperationRestart(PluginSystemException):
     """ The original exception that has triggered the need
     for an operation restart """
 
-    def __init__(self, message, delay = 0, exception = None, **kwargs):
+    def __init__(self, message, delay=0, exception=None, **kwargs):
         """
         Constructor of the class.
 

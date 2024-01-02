@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Colony Framework
-# Copyright (c) 2008-2022 Hive Solutions Lda.
+# Copyright (c) 2008-2024 Hive Solutions Lda.
 #
 # This file is part of Hive Colony Framework
 #
@@ -22,22 +22,14 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import colony
+
 
 class QuoteTest(colony.ColonyTestCase):
     """
@@ -95,27 +87,26 @@ class QuoteTest(colony.ColonyTestCase):
         result = colony.unquote("Hello%20World%GG")
         self.assertEqual(result, "Hello World%GG")
 
-        result = colony.unquote("你好世界", strict = False)
+        result = colony.unquote("你好世界", strict=False)
         self.assertEqual(result, "你好世界")
 
-        result = colony.unquote(b"\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c", strict = False)
+        result = colony.unquote(
+            b"\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c", strict=False
+        )
         self.assertEqual(result, "你好世界")
 
-        result = colony.unquote(colony.legacy.u("你好世界"), strict = False)
+        result = colony.unquote(colony.legacy.u("你好世界"), strict=False)
         self.assertEqual(result, "你好世界")
 
         self.assert_raises(
             UnicodeDecodeError,
             colony.unquote,
             b"\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c",
-            strict = True
+            strict=True,
         )
 
         self.assert_raises(
-            UnicodeEncodeError,
-            colony.unquote,
-            colony.legacy.u("你好世界"),
-            strict = True
+            UnicodeEncodeError, colony.unquote, colony.legacy.u("你好世界"), strict=True
         )
 
     def test_unquote_plus(self):
@@ -136,27 +127,29 @@ class QuoteTest(colony.ColonyTestCase):
         result = colony.unquote_plus("Hello+World%GG")
         self.assertEqual(result, "Hello World%GG")
 
-        result = colony.unquote_plus("你好世界", strict = False)
+        result = colony.unquote_plus("你好世界", strict=False)
         self.assertEqual(result, "你好世界")
 
-        result = colony.unquote_plus(b"\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c", strict = False)
+        result = colony.unquote_plus(
+            b"\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c", strict=False
+        )
         self.assertEqual(result, "你好世界")
 
-        result = colony.unquote_plus(colony.legacy.u("你好世界"), strict = False)
+        result = colony.unquote_plus(colony.legacy.u("你好世界"), strict=False)
         self.assertEqual(result, "你好世界")
 
         self.assert_raises(
             UnicodeDecodeError,
             colony.unquote_plus,
             b"\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c",
-            strict = True
+            strict=True,
         )
 
         self.assert_raises(
             UnicodeEncodeError,
             colony.unquote_plus,
             colony.legacy.u("你好世界"),
-            strict = True
+            strict=True,
         )
 
     def test_url_encode(self):
@@ -167,8 +160,8 @@ class QuoteTest(colony.ColonyTestCase):
 
         items = (("message", "Hello World"), ("mensagem", "Olá Mundo"))
 
-        result = colony.url_encode(attributes_list = items, plus_encoding = False)
+        result = colony.url_encode(attributes_list=items, plus_encoding=False)
         self.assertEqual(result, "message=Hello%20World&mensagem=Ol%C3%A1%20Mundo")
 
-        result = colony.url_encode(attributes_list = items, plus_encoding = True)
+        result = colony.url_encode(attributes_list=items, plus_encoding=True)
         self.assertEqual(result, "message=Hello+World&mensagem=Ol%C3%A1+Mundo")
