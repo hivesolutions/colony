@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -47,10 +38,9 @@ DEFAULT_NUMBER_RETRIES = 3
 DEFAULT_RETRY_SLEEP = 1
 """ The default sleep time between retries """
 
+
 def execute_retries(
-    callable,
-    number_retries = DEFAULT_NUMBER_RETRIES,
-    retry_sleep = DEFAULT_RETRY_SLEEP
+    callable, number_retries=DEFAULT_NUMBER_RETRIES, retry_sleep=DEFAULT_RETRY_SLEEP
 ):
     """
     Executes the given callable retrying the call in case an exception occurs.
@@ -82,13 +72,15 @@ def execute_retries(
         except Exception:
             # in case it's the last index position
             # the exception should be re-raised
-            if index == number_retries: raise
+            if index == number_retries:
+                raise
 
             # sleeps a while to avoid problems
             time.sleep(retry_sleep)
 
     # returns the callable return value
     return return_value
+
 
 def call_safe(callable, *args, **kwargs):
     """
@@ -118,14 +110,16 @@ def call_safe(callable, *args, **kwargs):
     argspec = legacy.getargspec(callable)
     method_args = argspec[0]
     method_kwargs = argspec[2]
-    if method_kwargs: return callable(*args, **kwargs)
+    if method_kwargs:
+        return callable(*args, **kwargs)
 
     # iterates over the complete set of keyword based arguments to be
     # used in the call and validates them against the method specification
     # in case they do not exist in the specification deletes them from
     # the map of keyword based arguments (not going to be sent)
     for name in legacy.keys(kwargs):
-        if name in method_args: continue
+        if name in method_args:
+            continue
         del kwargs[name]
 
     # runs the callable with the "remaining" arguments and keyword arguments

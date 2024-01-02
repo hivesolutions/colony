@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -59,34 +50,35 @@ WARN = WARNING
 """ Alias to WARNING log level """
 
 _levelNames = {
-    CRITICAL : "CRITICAL",
-    ERROR : "ERROR",
-    WARNING : "WARNING",
-    INFO : "INFO",
-    DEBUG : "DEBUG",
-    NOTSET : "NOTSET",
-    "CRITICAL" : CRITICAL,
-    "ERROR" : ERROR,
-    "WARN" : WARNING,
-    "WARNING" : WARNING,
-    "INFO" : INFO,
-    "DEBUG" : DEBUG,
-    "NOTSET" : NOTSET
+    CRITICAL: "CRITICAL",
+    ERROR: "ERROR",
+    WARNING: "WARNING",
+    INFO: "INFO",
+    DEBUG: "DEBUG",
+    NOTSET: "NOTSET",
+    "CRITICAL": CRITICAL,
+    "ERROR": ERROR,
+    "WARN": WARNING,
+    "WARNING": WARNING,
+    "INFO": INFO,
+    "DEBUG": DEBUG,
+    "NOTSET": NOTSET,
 }
 """ The map relating the log levels with the textual
 representation and vice-versa """
 
 _levelValues = {
-    "CRITICAL" : CRITICAL,
-    "ERROR" : ERROR,
-    "WARN" : WARNING,
-    "WARNING" : WARNING,
-    "INFO" : INFO,
-    "DEBUG" : DEBUG,
-    "NOTSET" : NOTSET
+    "CRITICAL": CRITICAL,
+    "ERROR": ERROR,
+    "WARN": WARNING,
+    "WARNING": WARNING,
+    "INFO": INFO,
+    "DEBUG": DEBUG,
+    "NOTSET": NOTSET,
 }
 """ Map tha associated the textual representation of the
 log level with the integer value """
+
 
 def getLogger(name):
     """
@@ -99,6 +91,7 @@ def getLogger(name):
     """
 
     return DummyLogger("dummy")
+
 
 def getLevelName(level):
     """
@@ -113,6 +106,7 @@ def getLevelName(level):
 
     return _levelNames.get(level, ("Level %s" % level))
 
+
 def getLevelInt(levelName):
     """
     Converts the textual representation of the logging level into
@@ -126,12 +120,13 @@ def getLevelInt(levelName):
 
     return _levelValues.get(levelName, NOTSET)
 
+
 class DummyLogger(object):
     """
     The dummy logger class.
     """
 
-    def __init__(self, name, level = NOTSET):
+    def __init__(self, name, level=NOTSET):
         """
         Constructor of the class.
 
@@ -233,6 +228,7 @@ class DummyLogger(object):
 
         pass
 
+
 class StreamHandler(object):
     """
     The stream handler class.
@@ -244,6 +240,7 @@ class StreamHandler(object):
         """
 
         self.formatter = fmt
+
 
 class Formatter(object):
     """

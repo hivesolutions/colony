@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -38,6 +29,7 @@ __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import colony
+
 
 class BarcodeTest(colony.ColonyTestCase):
     """
@@ -70,8 +62,7 @@ class BarcodeTest(colony.ColonyTestCase):
         # that the encoded value is the expected one
         encoded_value = colony.encode_code_128("123456")
         self.assertEqual(
-            encoded_value,
-            colony.legacy.u("\xcb123456/\xce", encoding = "unicode_escape")
+            encoded_value, colony.legacy.u("\xcb123456/\xce", encoding="unicode_escape")
         )
 
         # encodes a "normal" even length based string value and asserts
@@ -79,8 +70,7 @@ class BarcodeTest(colony.ColonyTestCase):
         # is the a code set
         encoded_value = colony.encode_code_128("123456", "A")
         self.assertEqual(
-            encoded_value,
-            colony.legacy.u("\xcb123456/\xce", encoding = "unicode_escape")
+            encoded_value, colony.legacy.u("\xcb123456/\xce", encoding="unicode_escape")
         )
 
         # encodes a "normal" even length based string value and asserts
@@ -88,8 +78,7 @@ class BarcodeTest(colony.ColonyTestCase):
         # is the b code set
         encoded_value = colony.encode_code_128("123456", "B")
         self.assertEqual(
-            encoded_value,
-            colony.legacy.u("\xcc1234560\xce", encoding = "unicode_escape")
+            encoded_value, colony.legacy.u("\xcc1234560\xce", encoding="unicode_escape")
         )
 
         # encodes a "normal" even length based string value and asserts
@@ -97,8 +86,7 @@ class BarcodeTest(colony.ColonyTestCase):
         # is the c code set
         encoded_value = colony.encode_code_128("123456", "C")
         self.assertEqual(
-            encoded_value,
-            colony.legacy.u("\xcd,BXL\xce", encoding = "unicode_escape")
+            encoded_value, colony.legacy.u("\xcd,BXL\xce", encoding="unicode_escape")
         )
 
         # encodes using an invalid code set, should raise a runtime error

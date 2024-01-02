@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -69,7 +60,7 @@ of the process execution (contains user/system information) """
 VERSION_PRE_TEXT = "Python "
 """ The version pre text value """
 
-HELP_TEXT = "Type \"help\" for more information."
+HELP_TEXT = 'Type "help" for more information.'
 """ The help text value """
 
 DEFAULT_CONFIG_FILE_PATH = "config/python/devel.py"
@@ -90,7 +81,8 @@ PLUGIN_PATHS_FILE = "plugins.pth"
 
 # registers the ignore flag in the deprecation warnings so that
 # no message with this kind of warning is printed (clean console)
-warnings.filterwarnings("ignore", category = DeprecationWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 def usage():
     """
@@ -101,6 +93,7 @@ def usage():
 
     print(USAGE)
 
+
 def print_information():
     """
     Prints the system information for the command line.
@@ -108,14 +101,13 @@ def print_information():
     used when running the system.
     """
 
-    print(BRANDING_TEXT % (
-        colony.VERSION,
-        colony.RELEASE,
-        colony.BUILD,
-        colony.RELEASE_DATE
-    ))
+    print(
+        BRANDING_TEXT
+        % (colony.VERSION, colony.RELEASE, colony.BUILD, colony.RELEASE_DATE)
+    )
     print(VERSION_PRE_TEXT + sys.version)
     print(HELP_TEXT)
+
 
 def run(
     manager_path,
@@ -123,19 +115,19 @@ def run(
     library_path,
     meta_path,
     plugin_path,
-    mode = None,
-    margs = [],
-    level = "WARNING",
-    layout_mode = "default",
-    run_mode = "default",
-    stop_on_cycle_error = True,
-    loop = False,
-    threads = True,
-    signals = True,
-    container = "default",
-    prefix_paths = [],
-    daemon_pid = None,
-    daemon_file_path = None
+    mode=None,
+    margs=[],
+    level="WARNING",
+    layout_mode="default",
+    run_mode="default",
+    stop_on_cycle_error=True,
+    loop=False,
+    threads=True,
+    signals=True,
+    container="default",
+    prefix_paths=[],
+    daemon_pid=None,
+    daemon_file_path=None,
 ):
     """
     Starts the loading of the plugin manager. This should be the
@@ -202,18 +194,24 @@ def run(
 
     # checks if the library path is not valid, by splitting its
     # value around the separator token into a valid list
-    if library_path: library_paths = library_path.split(";")
-    else: library_paths = []
+    if library_path:
+        library_paths = library_path.split(";")
+    else:
+        library_paths = []
 
     # checks if the meta path is not valid, by splitting its
     # value around the separator token into a valid list
-    if meta_path: meta_paths = meta_path.split(";")
-    else: meta_paths = []
+    if meta_path:
+        meta_paths = meta_path.split(";")
+    else:
+        meta_paths = []
 
     # checks if the plugin path is not valid, by splitting its
     # value around the separator token into a valid list
-    if plugin_path: plugin_paths = plugin_path.split(";")
-    else: plugin_paths = []
+    if plugin_path:
+        plugin_paths = plugin_path.split(";")
+    else:
+        plugin_paths = []
 
     # retrieves the current executing platform, so that this
     # value may be passed to the next functions to be called
@@ -227,23 +225,23 @@ def run(
     # creates the plugin manager with the given plugin paths, this
     # is the instance that is going to be used for the current loading
     plugin_manager = colony.PluginManager(
-        manager_path = manager_path,
-        logger_path = logger_path,
-        library_paths = library_paths,
-        meta_paths = meta_paths,
-        plugin_paths = plugin_paths,
-        platform = platform,
-        init_complete_handlers = [],
-        stop_on_cycle_error = stop_on_cycle_error,
-        loop = loop,
-        threads = threads,
-        signals = signals,
-        layout_mode = layout_mode,
-        run_mode = run_mode,
-        container = container,
-        prefix_paths = prefix_paths,
-        daemon_pid = daemon_pid,
-        daemon_file_path = daemon_file_path
+        manager_path=manager_path,
+        logger_path=logger_path,
+        library_paths=library_paths,
+        meta_paths=meta_paths,
+        plugin_paths=plugin_paths,
+        platform=platform,
+        init_complete_handlers=[],
+        stop_on_cycle_error=stop_on_cycle_error,
+        loop=loop,
+        threads=threads,
+        signals=signals,
+        layout_mode=layout_mode,
+        run_mode=run_mode,
+        container=container,
+        prefix_paths=prefix_paths,
+        daemon_pid=daemon_pid,
+        daemon_file_path=daemon_file_path,
     )
 
     # resolves the string based level into the proper integer
@@ -261,14 +259,11 @@ def run(
     # call and the flow control is only returned at the end of
     # the execution of the colony infra-structure, then the
     # returned code is returned to the caller function
-    return_code = plugin_manager.load_system(
-        mode = mode,
-        args = margs,
-        callback = callback
-    )
+    return_code = plugin_manager.load_system(mode=mode, args=margs, callback=callback)
     return return_code
 
-def execute(cwd = None, force_exit = True):
+
+def execute(cwd=None, force_exit=True):
     """
     The main entry point of the application, should parse
     the provided command line arguments and then start the
@@ -300,21 +295,19 @@ def execute(cwd = None, force_exit = True):
             sys.argv[1:],
             "hnv:l:r:c:o:f:d:m:g:i:t:p:",
             [
-                 "help"
-                 "noloop",
-                 "level="
-                 "layout_mode=",
-                 "run_mode=",
-                 "container=",
-                 "daemon_pid=",
-                 "config_file=",
-                 "daemon_file=",
-                 "manager_dir=",
-                 "logger_dir=",
-                 "library_dir=",
-                 "meta_dir=",
-                 "plugin_dir="
-            ]
+                "help" "noloop",
+                "level=" "layout_mode=",
+                "run_mode=",
+                "container=",
+                "daemon_pid=",
+                "config_file=",
+                "daemon_file=",
+                "manager_dir=",
+                "logger_dir=",
+                "library_dir=",
+                "meta_dir=",
+                "plugin_dir=",
+            ],
         )
     except getopt.GetoptError as error:
         # prints the error description so that the user is able
@@ -326,8 +319,10 @@ def execute(cwd = None, force_exit = True):
 
     # retrieves the execution mode for colony as the first non parsed
     # value from the command line (as expected)
-    if args: mode = args[0]
-    else: mode = None
+    if args:
+        mode = args[0]
+    else:
+        mode = None
 
     # retrieves the complete set of arguments that are going to be
     # provided for the mode execution, these arguments are considered
@@ -391,9 +386,19 @@ def execute(cwd = None, force_exit = True):
 
     # parses the configuration options, retrieving the various values that
     # control the execution of the plugin system
-    mode, level, layout_mode, run_mode, stop_on_cycle_error,\
-    prefix_paths, daemon_file_path, logger_path, library_path, meta_path,\
-    plugin_path = parse_configuration(
+    (
+        mode,
+        level,
+        layout_mode,
+        run_mode,
+        stop_on_cycle_error,
+        prefix_paths,
+        daemon_file_path,
+        logger_path,
+        library_path,
+        meta_path,
+        plugin_path,
+    ) = parse_configuration(
         cwd,
         mode,
         config_file_path,
@@ -405,7 +410,7 @@ def execute(cwd = None, force_exit = True):
         library_path,
         meta_path,
         plugin_path,
-        manager_path
+        manager_path,
     )
 
     # configures the system using the layout mode, the run mode
@@ -419,7 +424,8 @@ def execute(cwd = None, force_exit = True):
 
     # in case the logger path is not an absolute path, must create
     # the (complete) logger path prepending the manager path
-    if not os.path.isabs(logger_path): logger_path = manager_path + "/" + logger_path
+    if not os.path.isabs(logger_path):
+        logger_path = manager_path + "/" + logger_path
 
     # strips the various component location paths around the
     # semi-colon character so that it's possible to send them
@@ -436,24 +442,26 @@ def execute(cwd = None, force_exit = True):
         library_path_striped,
         meta_path_striped,
         plugin_path_striped,
-        mode = mode,
-        margs = margs,
-        level = level,
-        layout_mode = layout_mode,
-        run_mode = run_mode,
-        stop_on_cycle_error = stop_on_cycle_error,
-        loop = loop,
-        threads = threads,
-        signals = signals,
-        container = container,
-        prefix_paths = prefix_paths,
-        daemon_pid = daemon_pid,
-        daemon_file_path = daemon_file_path
+        mode=mode,
+        margs=margs,
+        level=level,
+        layout_mode=layout_mode,
+        run_mode=run_mode,
+        stop_on_cycle_error=stop_on_cycle_error,
+        loop=loop,
+        threads=threads,
+        signals=signals,
+        container=container,
+        prefix_paths=prefix_paths,
+        daemon_pid=daemon_pid,
+        daemon_file_path=daemon_file_path,
     )
 
     # in case the return code is not success or the force
     # exit flag is set then calls the exit function
-    if not return_code == 0 or force_exit: exit(return_code)
+    if not return_code == 0 or force_exit:
+        exit(return_code)
+
 
 def parse_configuration(
     cwd,
@@ -467,7 +475,7 @@ def parse_configuration(
     library_path,
     meta_path,
     plugin_path,
-    manager_path
+    manager_path,
 ):
     """
     Parses the configuration using the given values as default values.
@@ -528,9 +536,15 @@ def parse_configuration(
     # retrieves the configuration module name and the configuration
     # module extension by splitting the configuration base path into
     # base name and extension and then imports the referring module
-    config_module, _configuration_module_extension = os.path.splitext(config_file_base_path)
-    try: config = __import__(config_module)
-    except ImportError: import colony.config.base as module; config = module
+    config_module, _configuration_module_extension = os.path.splitext(
+        config_file_base_path
+    )
+    try:
+        config = __import__(config_module)
+    except ImportError:
+        import colony.config.base as module
+
+        config = module
 
     # retrieves the contents of the configuration file that has just
     # been loaded, this is the default operation to be performed
@@ -538,13 +552,20 @@ def parse_configuration(
 
     # sets the proper configuration attributes taking into account the
     # presence or not of such attributes in the loaded file
-    if "level" in names: level = level or config.level
-    if "layout_mode" in names: layout_mode = layout_mode or config.layout_mode
-    if "run_mode" in names: run_mode = run_mode or config.run_mode
-    if "prefix_paths" in names: prefix_paths = config.prefix_paths
-    if "stop_on_cycle_error" in names: stop_on_cycle_error = config.stop_on_cycle_error
-    if "daemon_file_path" in names: daemon_file_path = config.daemon_file_path
-    if "logger_path" in names: logger_path = config.logger_path
+    if "level" in names:
+        level = level or config.level
+    if "layout_mode" in names:
+        layout_mode = layout_mode or config.layout_mode
+    if "run_mode" in names:
+        run_mode = run_mode or config.run_mode
+    if "prefix_paths" in names:
+        prefix_paths = config.prefix_paths
+    if "stop_on_cycle_error" in names:
+        stop_on_cycle_error = config.stop_on_cycle_error
+    if "daemon_file_path" in names:
+        daemon_file_path = config.daemon_file_path
+    if "logger_path" in names:
+        logger_path = config.logger_path
 
     # tries to load some of the environment "loadable" properties for the
     # starting of the colony infra-structure, defaulting to the provided
@@ -561,10 +582,10 @@ def parse_configuration(
     # with the various paths to be used by colony and then adds the
     # proper static file based configuration values to them, so that
     # these list are properly started with the initial values
-    library_path_list = colony.conf("LIBRARY_PATH", [], cast = list)
-    meta_path_list = colony.conf("META_PATH", [], cast = list)
-    plugin_path_list = colony.conf("PLUGINS_PATH", [], cast = list)
-    plugin_path_list = colony.conf("PLUGIN_PATH", plugin_path_list, cast = list)
+    library_path_list = colony.conf("LIBRARY_PATH", [], cast=list)
+    meta_path_list = colony.conf("META_PATH", [], cast=list)
+    plugin_path_list = colony.conf("PLUGINS_PATH", [], cast=list)
+    plugin_path_list = colony.conf("PLUGIN_PATH", plugin_path_list, cast=list)
     library_path_list = library_path_list + config.library_path_list
     meta_path_list = meta_path_list + config.meta_path_list
     plugin_path_list = plugin_path_list + config.plugin_path_list
@@ -573,22 +594,28 @@ def parse_configuration(
     # separator to the library path to mark the initial separation
     # otherwise creates a new library path string initializing the
     # value to an empty string so that it can be extended
-    if library_path: library_path += ";"
-    else: library_path = ""
+    if library_path:
+        library_path += ";"
+    else:
+        library_path = ""
 
     # in case the meta path is defined, must appends a
     # separator to the meta path to mark the initial separation
     # otherwise creates a new meta path string initializing the
     # value to an empty string so that it can be extended
-    if meta_path: meta_path += ";"
-    else: meta_path = ""
+    if meta_path:
+        meta_path += ";"
+    else:
+        meta_path = ""
 
     # in case the plugin path is defined, must appends a
     # separator to the plugin path to mark the initial separation
     # otherwise creates a new plugin path string initializing the
     # value to an empty string so that it can be extended
-    if plugin_path: plugin_path += ";"
-    else: plugin_path = ""
+    if plugin_path:
+        plugin_path += ";"
+    else:
+        plugin_path = ""
 
     # retrieves the current prefix paths
     current_prefix_paths = prefix_paths[layout_mode]
@@ -597,10 +624,7 @@ def parse_configuration(
     # from the colony configuration library path list and adds the
     # extra library path to the library path
     extra_library_path = convert_reference_path_list(
-        cwd,
-        manager_path,
-        current_prefix_paths,
-        library_path_list
+        cwd, manager_path, current_prefix_paths, library_path_list
     )
     library_path += extra_library_path
 
@@ -608,10 +632,7 @@ def parse_configuration(
     # from the colony configuration meta path list and adds the
     # extra meta path to the meta path
     extra_meta_path = convert_reference_path_list(
-        cwd,
-        manager_path,
-        current_prefix_paths,
-        meta_path_list
+        cwd, manager_path, current_prefix_paths, meta_path_list
     )
     meta_path += extra_meta_path
 
@@ -624,10 +645,7 @@ def parse_configuration(
     # from the colony configuration plugin path list and adds the
     # extra plugin path to the plugin path
     extra_plugin_path = convert_reference_path_list(
-        cwd,
-        manager_path,
-        current_prefix_paths,
-        plugin_path_list
+        cwd, manager_path, current_prefix_paths, plugin_path_list
     )
     plugin_path += extra_plugin_path
 
@@ -642,10 +660,13 @@ def parse_configuration(
         logger_path,
         library_path,
         meta_path,
-        plugin_path
+        plugin_path,
     )
 
-def convert_reference_path_list(cwd, manager_path, current_prefix_paths, reference_path_list):
+
+def convert_reference_path_list(
+    cwd, manager_path, current_prefix_paths, reference_path_list
+):
     """
     Converts the given list of reference paths. The reference
     paths include references of type %reference_name% to include
@@ -678,8 +699,10 @@ def convert_reference_path_list(cwd, manager_path, current_prefix_paths, referen
         # the prefix value) and in case it's not prepends the manager
         # path to it as the base path (usual situation)
         is_local = reference_path.startswith("./")
-        if is_local: dereferenced_path = cwd + "/" + reference_path
-        else: dereferenced_path = manager_path + "/" + reference_path
+        if is_local:
+            dereferenced_path = cwd + "/" + reference_path
+        else:
+            dereferenced_path = manager_path + "/" + reference_path
 
         # iterates over all the current prefix paths to dereference
         # them into the path "along" the various prefix paths
@@ -691,8 +714,7 @@ def convert_reference_path_list(cwd, manager_path, current_prefix_paths, referen
             current_prefix_path_name = "%" + current_prefix_path + "_prefix_path%"
             current_prefix_path_value = current_prefix_paths[current_prefix_path]
             dereferenced_path = dereferenced_path.replace(
-                current_prefix_path_name,
-                current_prefix_path_value
+                current_prefix_path_name, current_prefix_path_value
             )
 
         # runs the glob based resolver to resolver the "wildcard" patterns
@@ -709,6 +731,7 @@ def convert_reference_path_list(cwd, manager_path, current_prefix_paths, referen
 
     # returns the converted reference path
     return converted_reference_path
+
 
 def load_plugin_paths_file(manager_path):
     """
@@ -730,14 +753,17 @@ def load_plugin_paths_file(manager_path):
     # in case the plugin paths file does not exists (the
     # file is not mandatory) must return immediately because
     # no further processing is taking place
-    if not os.path.exists(plugin_paths_file_path): return ""
+    if not os.path.exists(plugin_paths_file_path):
+        return ""
 
     # opens the plugin paths file for reading then reads the
     # plugin path files contents, and the closes file to avoid
     # any further reading that could cause memory leaks
     plugin_paths_file = open(plugin_paths_file_path, "r")
-    try: plugin_paths_file_contents = plugin_paths_file.read()
-    finally: plugin_paths_file.close()
+    try:
+        plugin_paths_file_contents = plugin_paths_file.read()
+    finally:
+        plugin_paths_file.close()
 
     # splits the paths over the newline character and then
     # filters the invalid values (white spaces)
@@ -754,11 +780,13 @@ def load_plugin_paths_file(manager_path):
         # creates the (complete) path prepending
         # the manager path and then adds the path
         # to the plugin paths string value
-        if not os.path.isabs(path): path = manager_path + "/" + path
+        if not os.path.isabs(path):
+            path = manager_path + "/" + path
         plugin_paths_string_value += path + ";"
 
     # returns the plugin paths string value
     return plugin_paths_string_value
+
 
 def configure_system(layout_mode, run_mode, manager_path):
     """
@@ -786,6 +814,7 @@ def configure_system(layout_mode, run_mode, manager_path):
     # inserts the library path into the system path
     sys.path.insert(0, library_path)
 
+
 def main():
     """
     Execution function for the colony infra-structure may be used
@@ -800,9 +829,10 @@ def main():
     _path = os.getcwd()
     try:
         os.chdir(path)
-        execute(cwd = _path)
+        execute(cwd=_path)
     finally:
         os.chdir(_path)
+
 
 if __name__ == "__main__":
     main()

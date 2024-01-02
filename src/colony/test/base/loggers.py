@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -41,8 +32,11 @@ import logging
 
 import colony
 
-try: import unittest.mock as mock
-except ImportError: mock = None
+try:
+    import unittest.mock as mock
+except ImportError:
+    mock = None
+
 
 class LoggersTest(colony.ColonyTestCase):
     """
@@ -60,10 +54,7 @@ class LoggersTest(colony.ColonyTestCase):
         self.assertEqual(latest, [])
 
         record = logging.makeLogRecord(
-            dict(
-                msg = "hello world",
-                levelname = logging.getLevelName(logging.INFO)
-            )
+            dict(msg="hello world", levelname=logging.getLevelName(logging.INFO))
         )
         memory_handler.emit(record)
         latest = memory_handler.get_latest()
@@ -72,10 +63,7 @@ class LoggersTest(colony.ColonyTestCase):
         self.assertEqual(latest, ["hello world"])
 
         record = logging.makeLogRecord(
-            dict(
-                msg = "hello world 2",
-                levelname = logging.getLevelName(logging.ERROR)
-            )
+            dict(msg="hello world 2", levelname=logging.getLevelName(logging.ERROR))
         )
         memory_handler.emit(record)
         latest = memory_handler.get_latest()
@@ -83,22 +71,22 @@ class LoggersTest(colony.ColonyTestCase):
         self.assertEqual(len(latest), 2)
         self.assertEqual(latest, ["hello world 2", "hello world"])
 
-        latest = memory_handler.get_latest(level = logging.ERROR)
+        latest = memory_handler.get_latest(level=logging.ERROR)
 
         self.assertEqual(len(latest), 1)
         self.assertEqual(latest, ["hello world 2"])
 
-        latest = memory_handler.get_latest(level = logging.CRITICAL)
+        latest = memory_handler.get_latest(level=logging.CRITICAL)
 
         self.assertEqual(len(latest), 0)
         self.assertEqual(latest, [])
 
-        latest = memory_handler.get_latest(level = logging.INFO)
+        latest = memory_handler.get_latest(level=logging.INFO)
 
         self.assertEqual(len(latest), 2)
         self.assertEqual(latest, ["hello world 2", "hello world"])
 
-        latest = memory_handler.get_latest(count = 1, level = logging.INFO)
+        latest = memory_handler.get_latest(count=1, level=logging.INFO)
 
         self.assertEqual(len(latest), 1)
         self.assertEqual(latest, ["hello world 2"])
@@ -113,23 +101,17 @@ class LoggersTest(colony.ColonyTestCase):
         self.assertEqual(latest, [])
 
         record = logging.makeLogRecord(
-            dict(
-                msg = "hello world",
-                levelname = logging.getLevelName(logging.INFO)
-            )
+            dict(msg="hello world", levelname=logging.getLevelName(logging.INFO))
         )
         memory_handler.emit(record)
         record = logging.makeLogRecord(
-            dict(
-                msg = "hello world 2",
-                levelname = logging.getLevelName(logging.INFO)
-            )
+            dict(msg="hello world 2", levelname=logging.getLevelName(logging.INFO))
         )
         memory_handler.emit(record)
 
         file = colony.legacy.BytesIO()
 
-        memory_handler.flush_to_file(file, clear = False)
+        memory_handler.flush_to_file(file, clear=False)
 
         file.seek(0)
         contents = file.read()
@@ -138,14 +120,14 @@ class LoggersTest(colony.ColonyTestCase):
 
         file = colony.legacy.BytesIO()
 
-        memory_handler.flush_to_file(file, reverse = False)
+        memory_handler.flush_to_file(file, reverse=False)
 
         file.seek(0)
         contents = file.read()
 
         self.assertEqual(contents, b"hello world 2\nhello world\n")
 
-        latest = memory_handler.get_latest(count = 1)
+        latest = memory_handler.get_latest(count=1)
         self.assertEqual(len(latest), 0)
 
     def test_logstash_handler(self):
@@ -154,23 +136,24 @@ class LoggersTest(colony.ColonyTestCase):
 
         mock_api_client = mock.Mock()
         mock_api_client_messages = []
-        mock_api_client.log_bulk = lambda messages, tag = "default": mock_api_client_messages.extend(messages)
+        mock_api_client.log_bulk = (
+            lambda messages, tag="default": mock_api_client_messages.extend(messages)
+        )
 
-        logstash_handler = colony.LogstashHandler(api = mock_api_client)
+        logstash_handler = colony.LogstashHandler(api=mock_api_client)
         formatter = logging.Formatter("%(levelname)s - %(message)s")
         logstash_handler.setFormatter(formatter)
 
         self.assertEqual(len(logstash_handler.messages), 0)
 
         record = logging.makeLogRecord(
-            dict(
-                msg = "hello world",
-                levelname = logging.getLevelName(logging.INFO)
-            )
+            dict(msg="hello world", levelname=logging.getLevelName(logging.INFO))
         )
         logstash_handler.emit(record)
         self.assertEqual(len(logstash_handler.messages), 1)
-        self.assertEqual(logstash_handler.messages[0]["message_fmt"], "INFO - hello world")
+        self.assertEqual(
+            logstash_handler.messages[0]["message_fmt"], "INFO - hello world"
+        )
         self.assertEqual(logstash_handler.messages[0]["message"], "hello world")
         self.assertEqual(logstash_handler.messages[0]["level"], "INFO")
         self.assertEqual(logstash_handler.messages[0]["logger"], None)
@@ -179,21 +162,22 @@ class LoggersTest(colony.ColonyTestCase):
         logstash_handler.flush()
         self.assertEqual(len(logstash_handler.messages), 0)
         self.assertEqual(len(mock_api_client_messages), 1)
-        self.assertEqual(mock_api_client_messages[0]["message_fmt"], "INFO - hello world")
+        self.assertEqual(
+            mock_api_client_messages[0]["message_fmt"], "INFO - hello world"
+        )
         self.assertEqual(mock_api_client_messages[0]["message"], "hello world")
         self.assertEqual(mock_api_client_messages[0]["level"], "INFO")
         self.assertEqual(mock_api_client_messages[0]["logger"], None)
         self.assertEqual(mock_api_client_messages[0]["path"], "")
 
         record = logging.makeLogRecord(
-            dict(
-                msg = "hello world 2",
-                levelname = logging.getLevelName(logging.INFO)
-            )
+            dict(msg="hello world 2", levelname=logging.getLevelName(logging.INFO))
         )
         logstash_handler.emit(record)
         self.assertEqual(len(logstash_handler.messages), 1)
-        self.assertEqual(logstash_handler.messages[0]["message_fmt"], "INFO - hello world 2")
+        self.assertEqual(
+            logstash_handler.messages[0]["message_fmt"], "INFO - hello world 2"
+        )
         self.assertEqual(logstash_handler.messages[0]["message"], "hello world 2")
         self.assertEqual(logstash_handler.messages[0]["level"], "INFO")
         self.assertEqual(logstash_handler.messages[0]["logger"], None)

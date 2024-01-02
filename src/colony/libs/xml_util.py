@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -40,6 +31,7 @@ __license__ = "Apache License, Version 2.0"
 import xml.dom.minidom
 
 from colony.base import legacy
+
 
 def xml_to_dict(data):
     """
@@ -56,11 +48,14 @@ def xml_to_dict(data):
     :return: The dictionary representation of the XML data.
     """
 
-    if isinstance(data, xml.dom.Node): node = data
-    else: node = xml.dom.minidom.parseString(data)
+    if isinstance(data, xml.dom.Node):
+        node = data
+    else:
+        node = xml.dom.minidom.parseString(data)
     return _node_to_dict(node)
 
-def dict_to_xml(contents, encoding = "utf-8"):
+
+def dict_to_xml(contents, encoding="utf-8"):
     """
     Converts the provided dictionary structure into an
     XML string string in a recursive fashion.
@@ -80,7 +75,7 @@ def dict_to_xml(contents, encoding = "utf-8"):
     for key in sorted(legacy.keys(contents)):
         value = contents[key]
         if isinstance(value, dict):
-            value = dict_to_xml(value, encoding = encoding)
+            value = dict_to_xml(value, encoding=encoding)
         elif legacy.is_bytes(value):
             value = value.decode(encoding)
         elif value == None:
@@ -88,11 +83,13 @@ def dict_to_xml(contents, encoding = "utf-8"):
         buffer.append(legacy.u("<%s>%s</%s>") % (key, value, key))
     return legacy.u("").join(buffer)
 
+
 def _node_to_dict(node):
     contents = None
     for _node in node.childNodes:
         if _node.nodeType == xml.dom.Node.ELEMENT_NODE:
-            if not contents: contents = dict()
+            if not contents:
+                contents = dict()
             contents[_node.nodeName] = _node_to_dict(_node)
         if _node.nodeType == xml.dom.Node.TEXT_NODE and _node.data.strip():
             contents = _node.data.strip()

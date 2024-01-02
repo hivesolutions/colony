@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -67,6 +58,7 @@ OTHER_OS = "other"
 UID_PRECISION = 8
 """ Unique id precision """
 
+
 class WaitInput(object):
     """
     Wait input file used to overcome the problem
@@ -89,6 +81,7 @@ class WaitInput(object):
         # returns an empty (wait string)
         return ""
 
+
 class QueueEvent(object):
     """
     The class that describes an event to be
@@ -101,7 +94,7 @@ class QueueEvent(object):
     event_args = []
     """ The arguments of the event """
 
-    def __init__(self, event_name, event_args = []):
+    def __init__(self, event_name, event_args=[]):
         """
         Constructor of the class.
 
@@ -114,6 +107,7 @@ class QueueEvent(object):
         self.event_name = event_name
         self.event_args = event_args
 
+
 class Plugins(object):
     """
     Class used as storage for the various plugin
@@ -121,6 +115,7 @@ class Plugins(object):
     """
 
     pass
+
 
 def module_import(module_name):
     """
@@ -141,7 +136,8 @@ def module_import(module_name):
         module = getattr(module, component)
     return module
 
-def resolve_manager(exec_path = None):
+
+def resolve_manager(exec_path=None):
     """
     Master resolver for the manager path, it's responsible
     for the decision to use the current and possible master
@@ -169,6 +165,7 @@ def resolve_manager(exec_path = None):
     manager_path = os.path.normpath(manager_path)
     return manager_path
 
+
 def ensure_tree(path):
     """
     Ensures that the proper colony plugin system directory
@@ -195,18 +192,31 @@ def ensure_tree(path):
     tmp_path = os.path.join(path, "tmp")
     var_path = os.path.join(path, "var")
     env_path = os.path.join(path, "colony.json")
-    if not os.path.exists(path): os.makedirs(path)
-    if not os.path.exists(config_path): os.makedirs(config_path)
-    if not os.path.exists(containers_path): os.makedirs(containers_path)
-    if not os.path.exists(deploy_path): os.makedirs(deploy_path)
-    if not os.path.exists(libraries_path): os.makedirs(libraries_path)
-    if not os.path.exists(log_path): os.makedirs(log_path)
-    if not os.path.exists(meta_path): os.makedirs(meta_path)
-    if not os.path.exists(plugins_path): os.makedirs(plugins_path)
-    if not os.path.exists(scripts_path): os.makedirs(scripts_path)
-    if not os.path.exists(tmp_path): os.makedirs(tmp_path)
-    if not os.path.exists(var_path): os.makedirs(var_path)
-    if not os.path.exists(env_path) and is_personal: open(env_path, "a").close()
+    if not os.path.exists(path):
+        os.makedirs(path)
+    if not os.path.exists(config_path):
+        os.makedirs(config_path)
+    if not os.path.exists(containers_path):
+        os.makedirs(containers_path)
+    if not os.path.exists(deploy_path):
+        os.makedirs(deploy_path)
+    if not os.path.exists(libraries_path):
+        os.makedirs(libraries_path)
+    if not os.path.exists(log_path):
+        os.makedirs(log_path)
+    if not os.path.exists(meta_path):
+        os.makedirs(meta_path)
+    if not os.path.exists(plugins_path):
+        os.makedirs(plugins_path)
+    if not os.path.exists(scripts_path):
+        os.makedirs(scripts_path)
+    if not os.path.exists(tmp_path):
+        os.makedirs(tmp_path)
+    if not os.path.exists(var_path):
+        os.makedirs(var_path)
+    if not os.path.exists(env_path) and is_personal:
+        open(env_path, "a").close()
+
 
 def is_master(path):
     """
@@ -228,10 +238,12 @@ def is_master(path):
     master directory structure for colony.
     """
 
-    if path == None: return False
+    if path == None:
+        return False
     package_path = os.path.join(path, "colony")
     plugins_path = os.path.join(path, "plugins")
     return os.path.isdir(package_path) and os.path.isdir(plugins_path)
+
 
 def get_environment():
     """
@@ -245,9 +257,13 @@ def get_environment():
     """
 
     platform = sys.platform
-    if not platform.find("java") == -1: return JYTHON_ENVIRONMENT
-    elif not platform.find("cli") == -1: return IRON_PYTHON_ENVIRONMENT
-    else: return CPYTHON_ENVIRONMENT
+    if not platform.find("java") == -1:
+        return JYTHON_ENVIRONMENT
+    elif not platform.find("cli") == -1:
+        return IRON_PYTHON_ENVIRONMENT
+    else:
+        return CPYTHON_ENVIRONMENT
+
 
 def get_operative_system():
     """
@@ -260,10 +276,14 @@ def get_operative_system():
     """
 
     os_name = os.name
-    if os_name == "nt" or os_name == "dos": return WINDOWS_OS
-    elif os_name == "mac": return MAC_OS
-    elif os_name == "posix": return UNIX_OS
+    if os_name == "nt" or os_name == "dos":
+        return WINDOWS_OS
+    elif os_name == "mac":
+        return MAC_OS
+    elif os_name == "posix":
+        return UNIX_OS
     return OTHER_OS
+
 
 def get_timestamp_uid():
     """
@@ -277,7 +297,7 @@ def get_timestamp_uid():
     """
 
     timestamp = time.time()
-    float_value = timestamp * (10 ** UID_PRECISION)
+    float_value = timestamp * (10**UID_PRECISION)
     integer_value = legacy.LONG(float_value)
     string_value = str(integer_value)
     return string_value

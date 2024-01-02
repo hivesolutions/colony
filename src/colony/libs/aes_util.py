@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -41,12 +32,15 @@ import os
 
 from colony.base import legacy, exceptions
 
-try: import Crypto.Cipher.AES
-except ImportError: Crypto = None
+try:
+    import Crypto.Cipher.AES
+except ImportError:
+    Crypto = None
 
 BLOCK_SIZE = 16
 """ The block size to be used for the post operation
 should not be too small or security issues may arise """
+
 
 class AesCipher(object):
     """
@@ -67,7 +61,7 @@ class AesCipher(object):
     """ The size of the encryption block to be
     used under this cipher instance """
 
-    def __init__(self, key = None, block_size = BLOCK_SIZE):
+    def __init__(self, key=None, block_size=BLOCK_SIZE):
         """
         Constructor of the class.
 
@@ -98,7 +92,7 @@ class AesCipher(object):
         """
 
         if not Crypto:
-            raise exceptions.OperationalError(message = "PyCrypto is not installed")
+            raise exceptions.OperationalError(message="PyCrypto is not installed")
 
         raw = self.pad(raw)
         cipher = Crypto.Cipher.AES.new(self.key, Crypto.Cipher.AES.MODE_ECB)
@@ -119,7 +113,7 @@ class AesCipher(object):
         """
 
         if not Crypto:
-            raise exceptions.OperationalError(message = "PyCrypto is not installed")
+            raise exceptions.OperationalError(message="PyCrypto is not installed")
 
         cipher = Crypto.Cipher.AES.new(self.key, Crypto.Cipher.AES.MODE_ECB)
         decoded = cipher.decrypt(encoded)

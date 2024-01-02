@@ -22,47 +22,27 @@
 __author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
-prefix_paths = {
-    "default" : {
-    }
-}
+prefix_paths = {"default": {}}
 """ The prefix path maps, contains a series of associated
 values, should be used with care (mostly maintained for legacy reasons) """
 
-plugin_path_list = [
-    "plugins",
-    "plugins/*plugin"
-]
+plugin_path_list = ["plugins", "plugins/*plugin"]
 """ The list of plugin paths, these directories are going
 to be searched for plugin files (via criteria) and the
 plugins that exist there are going to be loaded """
 
-library_path_list = [
-    "libraries"
-]
+library_path_list = ["libraries"]
 """ The list of library paths, these paths are going to
 be exported to the global system path and may be used
 independently of the execution location """
 
-meta_path_list = [
-    "meta",
-    "meta/*config"
-]
+meta_path_list = ["meta", "meta/*config"]
 """ The list of meta paths, that should contain configuration
 directory structures, the runtime loaded properties will
 depend of these values """

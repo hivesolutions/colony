@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt> & Tiago Silva <tsilva@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -50,6 +41,7 @@ UNDERSCORE_SECOND_VALUE = "([a-z0-9])([A-Z])"
 
 UNDERSCORE_SECOND_REGEX = re.compile(UNDERSCORE_SECOND_VALUE)
 """ The underscore second regex """
+
 
 def xor_string_value(first_string, second_string):
     """
@@ -93,6 +85,7 @@ def xor_string_value(first_string, second_string):
     # returns the xor result
     return xor_result
 
+
 def to_underscore(string_value):
     """
     Converts the given camel cased string value into
@@ -110,13 +103,16 @@ def to_underscore(string_value):
     string_value_underscore = UNDERSCORE_FIRST_REGEX.sub(r"\1_\2", string_value)
 
     # converts the string value underscore into the next underscore notation
-    string_value_underscore = UNDERSCORE_SECOND_REGEX.sub(r"\1_\2", string_value_underscore)
+    string_value_underscore = UNDERSCORE_SECOND_REGEX.sub(
+        r"\1_\2", string_value_underscore
+    )
 
     # converts the string value in underscore notation to lowercase
     string_value_underscore = string_value_underscore.lower()
 
     # returns the string value in underscore notation
     return string_value_underscore
+
 
 def to_camelcase(string_value):
     """
@@ -136,7 +132,9 @@ def to_camelcase(string_value):
     string_value_tokens = string_value.split("_")
 
     # creates a list with all the string value tokens capitalized
-    string_value_tokens_capitalized = [value.capitalize() for value in string_value_tokens]
+    string_value_tokens_capitalized = [
+        value.capitalize() for value in string_value_tokens
+    ]
 
     # joins the various string value tokens
     # creating the string value camel case
@@ -144,6 +142,7 @@ def to_camelcase(string_value):
 
     # returns the string value camel case
     return string_value_camelcase
+
 
 def pluralize(string_value):
     """
@@ -157,6 +156,7 @@ def pluralize(string_value):
     """
 
     return "%ss" % string_value
+
 
 def capitalize_all(string_value):
     """
@@ -175,7 +175,9 @@ def capitalize_all(string_value):
     string_value_tokens = string_value.split()
 
     # creates a list with all the string value tokens capitalized
-    string_value_tokens_capitalized = [value.capitalize() for value in string_value_tokens]
+    string_value_tokens_capitalized = [
+        value.capitalize() for value in string_value_tokens
+    ]
 
     # joins the various string value tokens
     # creating the string value capitalized
@@ -184,7 +186,8 @@ def capitalize_all(string_value):
     # returns the string value capitalized
     return string_value_capitalized
 
-def join(first_value, second_value, join_value = "/"):
+
+def join(first_value, second_value, join_value="/"):
     """
     Joins two string making sure that the join value is
     not repeated in the "join point" (no double join).
@@ -204,8 +207,12 @@ def join(first_value, second_value, join_value = "/"):
 
     # removes the join value from both the first and second value
     # to avoid duplicate values in the joining
-    first_value = not first_value.endswith(join_value) and first_value or first_value[:-1]
-    second_value = not second_value.startswith(join_value) and second_value or second_value[1:]
+    first_value = (
+        not first_value.endswith(join_value) and first_value or first_value[:-1]
+    )
+    second_value = (
+        not second_value.startswith(join_value) and second_value or second_value[1:]
+    )
 
     # joins the first and second values using the join
     # value from the join point

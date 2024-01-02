@@ -21,13 +21,6 @@
 
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
-
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
 __date__ = "$LastChangedDate: 2011-01-15 17:29:58 +0000 (sÃ¡b, 15 Jan 2011) $"
 """ The last change date of the module """
 
@@ -39,6 +32,7 @@ __license__ = "Apache License, Version 2.0"
 
 PUBLIC_VALUE = "__public__"
 """ The public value """
+
 
 def public(function):
     """
@@ -54,6 +48,7 @@ def public(function):
     # the function to the caller (default decorator behavior)
     function.__public__ = True
     return function
+
 
 class Protected(object):
     """
@@ -92,14 +87,13 @@ class Protected(object):
             # raises the attribute error, meaning that the attribute
             # exits but it's not exposed as a public attribute
             raise AttributeError(
-                "attribute '%s' of class '%s' is not public" %\
-                (name, cls.__name__)
+                "attribute '%s' of class '%s' is not public" % (name, cls.__name__)
             )
 
         def __setattr__(self, name, value):
             cls.__setattr__(self, name, value)
 
-        def is_own_magic(cls, name, without = []):
+        def is_own_magic(cls, name, without=[]):
             """
             Checks if the given name is a magic attribute
             in the class.

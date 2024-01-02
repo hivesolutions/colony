@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -43,7 +34,8 @@ from . import legacy
 METHOD_NAME_VALUE = "method_name"
 """ The method name value """
 
-def load_plugin(lazy_loading = False, metadata_enabled = True):
+
+def load_plugin(lazy_loading=False, metadata_enabled=True):
     """
     Decorator for the initial load of the plugin.
 
@@ -110,7 +102,8 @@ def load_plugin(lazy_loading = False, metadata_enabled = True):
     # returns the created decorator
     return decorator
 
-def plugin_meta_information(metadata_key, metadata_values = {}):
+
+def plugin_meta_information(metadata_key, metadata_values={}):
     """
     Decorator that sets a defined metadata value in a plugin.
 
@@ -157,6 +150,7 @@ def plugin_meta_information(metadata_key, metadata_values = {}):
 
     # returns the created decorator
     return decorator
+
 
 def load_allowed(function):
     """
@@ -215,7 +209,8 @@ def load_allowed(function):
     # returns the decorator interceptor
     return decorator_interceptor
 
-def load_allowed_capability(capability, load_plugin = False):
+
+def load_allowed_capability(capability, load_plugin=False):
     """
     Decorator that marks a method for loading of allowed plugins.
 
@@ -259,6 +254,7 @@ def load_allowed_capability(capability, load_plugin = False):
 
     # returns the created decorator
     return decorator
+
 
 def unload_allowed(function):
     """
@@ -317,7 +313,8 @@ def unload_allowed(function):
     # returns the decorator interceptor
     return decorator_interceptor
 
-def unload_allowed_capability(capability, load_plugin = False):
+
+def unload_allowed_capability(capability, load_plugin=False):
     """
     Decorator that marks a method for unloading of allowed plugins.
 
@@ -362,6 +359,7 @@ def unload_allowed_capability(capability, load_plugin = False):
     # returns the created decorator
     return decorator
 
+
 def inject_dependencies(function):
     """
     Decorator that injects the dependencies into the defined methods.
@@ -392,20 +390,19 @@ def inject_dependencies(function):
         # creates the dependency plugin tuple
         dependency_plugin_tuple = (
             dependency_plugin.original_id,
-            dependency_plugin.version
+            dependency_plugin.version,
         )
 
         # creates the dependency plugin simple tuple
         # this tuple only contains the
-        dependency_plugin_simple_tuple = (
-            dependency_plugin.original_id,
-            None
-        )
+        dependency_plugin_simple_tuple = (dependency_plugin.original_id, None)
 
         # tries to retrieve the set function using both the complete plugin id and
         # version approach and the version only approach
         set_function = dependency_functions_map.get(dependency_plugin_tuple, None)
-        set_function = set_function or dependency_functions_map.get(dependency_plugin_simple_tuple, None)
+        set_function = set_function or dependency_functions_map.get(
+            dependency_plugin_simple_tuple, None
+        )
 
         # in case the set function is not defined
         if not set_function:
@@ -431,7 +428,8 @@ def inject_dependencies(function):
     # returns the decorator interceptor
     return decorator_interceptor
 
-def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
+
+def plugin_inject(plugin_id, plugin_version=None, load_plugin=False):
     """
     Decorator that marks a method for injection of a dependency.
 
@@ -456,17 +454,16 @@ def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
         """
 
         # creates the dependency plugin tuple
-        dependency_plugin_tuple = (
-            plugin_id,
-            plugin_version
-        )
+        dependency_plugin_tuple = (plugin_id, plugin_version)
 
         # retrieves the current inject dependencies function
         inject_dependencies_current = inject_dependencies.current
 
         # sets the current function for dependency injection
         # in the current function
-        inject_dependencies_current.dependency_functions_map[dependency_plugin_tuple] = function
+        inject_dependencies_current.dependency_functions_map[
+            dependency_plugin_tuple
+        ] = function
 
         # in case the load plugin test should be made before injecting
         # the dependency
@@ -483,6 +480,7 @@ def plugin_inject(plugin_id, plugin_version = None, load_plugin = False):
 
     # returns the created decorator
     return decorator
+
 
 def event_handler(function):
     """
@@ -556,7 +554,8 @@ def event_handler(function):
     # returns the decorator interceptor
     return decorator_interceptor
 
-def event_handler_method(event_name, load_plugin = False):
+
+def event_handler_method(event_name, load_plugin=False):
     """
     Decorator that marks a method for event handling.
 
@@ -601,6 +600,7 @@ def event_handler_method(event_name, load_plugin = False):
     # returns the created decorator
     return decorator
 
+
 def set_configuration_property(function):
     """
     Decorator that redirects the setting of configuration properties into the defined methods.
@@ -621,7 +621,9 @@ def set_configuration_property(function):
         function(*args, **kwargs)
 
         # retrieves the set configuration property functions map
-        set_configuration_property_functions_map = function.set_configuration_property_functions_map
+        set_configuration_property_functions_map = (
+            function.set_configuration_property_functions_map
+        )
 
         # unpacks the function arguments
         original_plugin = args[0]
@@ -635,12 +637,18 @@ def set_configuration_property(function):
             return
 
         # retrieves the set configuration property function from set configuration property functions map
-        set_configuration_property_function = set_configuration_property_functions_map[property_name]
+        set_configuration_property_function = set_configuration_property_functions_map[
+            property_name
+        ]
 
         # retrieves the function name and the set configuration property method from the original
         # plugin
-        set_configuration_property_function_name = set_configuration_property_function.__name__
-        set_configuration_property_method = getattr(original_plugin, set_configuration_property_function_name)
+        set_configuration_property_function_name = (
+            set_configuration_property_function.__name__
+        )
+        set_configuration_property_method = getattr(
+            original_plugin, set_configuration_property_function_name
+        )
 
         # calls the set configuration property method
         set_configuration_property_method(property_name, property)
@@ -656,7 +664,8 @@ def set_configuration_property(function):
     # returns the decorator interceptor
     return decorator_interceptor
 
-def set_configuration_property_method(property_name, load_plugin = False):
+
+def set_configuration_property_method(property_name, load_plugin=False):
     """
     Decorator that marks a method for set configuration property.
 
@@ -683,7 +692,9 @@ def set_configuration_property_method(property_name, load_plugin = False):
 
         # sets the current function for set configuration property
         # in the current function
-        set_configuration_property_current.set_configuration_property_functions_map[property_name] = function
+        set_configuration_property_current.set_configuration_property_functions_map[
+            property_name
+        ] = function
 
         # in case the load plugin test should be made before setting
         # the configuration property
@@ -700,6 +711,7 @@ def set_configuration_property_method(property_name, load_plugin = False):
 
     # returns the created decorator
     return decorator
+
 
 def unset_configuration_property(function):
     """
@@ -722,7 +734,9 @@ def unset_configuration_property(function):
         function(*args, **kwargs)
 
         # retrieves the unset configuration property functions map
-        unset_configuration_property_functions_map = function.unset_configuration_property_functions_map
+        unset_configuration_property_functions_map = (
+            function.unset_configuration_property_functions_map
+        )
 
         # unpacks the function arguments
         original_plugin = args[0]
@@ -735,12 +749,18 @@ def unset_configuration_property(function):
             return
 
         # retrieves the unset configuration property function from unset configuration property functions map
-        unset_configuration_property_function = unset_configuration_property_functions_map[property_name]
+        unset_configuration_property_function = (
+            unset_configuration_property_functions_map[property_name]
+        )
 
         # retrieves the function name and the unset configuration property method from the original
         # plugin
-        unset_configuration_property_function_name = unset_configuration_property_function.__name__
-        unset_configuration_property_method = getattr(original_plugin, unset_configuration_property_function_name)
+        unset_configuration_property_function_name = (
+            unset_configuration_property_function.__name__
+        )
+        unset_configuration_property_method = getattr(
+            original_plugin, unset_configuration_property_function_name
+        )
 
         # calls the unset configuration property method
         unset_configuration_property_method(property_name)
@@ -756,7 +776,8 @@ def unset_configuration_property(function):
     # returns the decorator interceptor
     return decorator_interceptor
 
-def unset_configuration_property_method(property_name, load_plugin = False):
+
+def unset_configuration_property_method(property_name, load_plugin=False):
     """
     Decorator that marks a method for unset configuration property.
 
@@ -783,7 +804,9 @@ def unset_configuration_property_method(property_name, load_plugin = False):
 
         # unsets the current function for unset configuration property
         # in the current function
-        unset_configuration_property_current.unset_configuration_property_functions_map[property_name] = function
+        unset_configuration_property_current.unset_configuration_property_functions_map[
+            property_name
+        ] = function
 
         # in case the load plugin test should be made before unsetting
         # the configuration property
@@ -801,7 +824,8 @@ def unset_configuration_property_method(property_name, load_plugin = False):
     # returns the created decorator
     return decorator
 
-def plugin_call(load_plugin = True):
+
+def plugin_call(load_plugin=True):
     """
     Decorator that intercepts a plugin front-end call method.
 
@@ -832,6 +856,7 @@ def plugin_call(load_plugin = True):
     # returns the created decorator
     return decorator
 
+
 def create_load_plugin_interceptor(function):
     """
     Creates a load plugin interceptor, that loads a lazy plugin on the fly.
@@ -854,7 +879,9 @@ def create_load_plugin_interceptor(function):
             original_plugin_id = original_plugin.id
 
             # in case the plugin load was unsuccessful
-            if not plugin_manager.load_plugin(original_plugin_id, system.FULL_LOAD_TYPE):
+            if not plugin_manager.load_plugin(
+                original_plugin_id, system.FULL_LOAD_TYPE
+            ):
                 return None
 
         # calls the callback function

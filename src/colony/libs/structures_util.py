@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -44,6 +35,7 @@ from colony.base import legacy
 FLOAT_PRECISION = 14
 """ The amount of precision (in decimal places) that
 is going to be used for the decimal internal usage """
+
 
 class Decimal(float):
     """
@@ -60,7 +52,7 @@ class Decimal(float):
     task that are considered performance intensive.
     """
 
-    def __new__(cls, value = 0.0):
+    def __new__(cls, value=0.0):
         value = float(value)
         integer = abs(int(value // 1))
         count = 1 if integer == 0 else int(math.log10(integer)) + 1
@@ -74,8 +66,10 @@ class Decimal(float):
 
     def __cmp__(self, other):
         other = self._normalize(other)
-        if float.__gt__(self, other): return 1
-        if float.__lt__(self, other): return -1
+        if float.__gt__(self, other):
+            return 1
+        if float.__lt__(self, other):
+            return -1
         return 0
 
     def __lt__(self, other):
@@ -198,7 +192,7 @@ class Decimal(float):
         result = float.__invert__(self)
         return Decimal(result)
 
-    def __round__(self, n = 0):
+    def __round__(self, n=0):
         result = float.__round__(self, n)
         return Decimal(result)
 
@@ -215,8 +209,10 @@ class Decimal(float):
         return Decimal(result)
 
     def _normalize(self, value):
-        if not type(value) == float: return value
+        if not type(value) == float:
+            return value
         return round(value, self.places)
+
 
 class JournaledList(list):
     """
@@ -355,6 +351,7 @@ class JournaledList(list):
 
         list.remove(self, object)
 
+
 class OrderedMap(object):
     """
     Structure that allow the usage of a map
@@ -373,7 +370,7 @@ class OrderedMap(object):
     _keys = None
     """ The internal keys list for ordered keys retrieval """
 
-    def __init__(self, ordered_keys = False, map = None):
+    def __init__(self, ordered_keys=False, map=None):
         """
         Constructor of the class.
 
@@ -392,8 +389,10 @@ class OrderedMap(object):
         self.tuples_list = []
         self._map = {}
 
-        if ordered_keys: self._keys = []
-        if map: self._load_map(map)
+        if ordered_keys:
+            self._keys = []
+        if map:
+            self._load_map(map)
 
     def __len__(self):
         return self._map.__len__()
@@ -413,7 +412,7 @@ class OrderedMap(object):
     def __contains__(self, item):
         return self._map.__contains__(item)
 
-    def get(self, key, default_value = None):
+    def get(self, key, default_value=None):
         return self._map.get(key, default_value)
 
     def values(self):
@@ -498,7 +497,8 @@ class OrderedMap(object):
         # adds the key to the keys list (only in case
         # the keys list is available and set and the key
         # is not present in the keys list)
-        if not self._keys == None and not key in self._keys: self._keys.append(key)
+        if not self._keys == None and not key in self._keys:
+            self._keys.append(key)
 
     def __remove_item(self, key):
         """
@@ -521,7 +521,9 @@ class OrderedMap(object):
 
         # removes the key from the keys list (only in case
         # the keys list is available and set)
-        if not self._keys == None: self._keys.remove(key)
+        if not self._keys == None:
+            self._keys.remove(key)
+
 
 class OrderedMapIterator(object):
     """
@@ -584,6 +586,7 @@ class OrderedMapIterator(object):
         # returns the current key value
         return key
 
+
 class MultipleValueMap(object):
     """
     Map that holds multiple values for each key, and considers
@@ -636,7 +639,7 @@ class MultipleValueMap(object):
     def __contains__(self, item):
         return self._map.__contains__(item)
 
-    def get(self, key, default_value = None):
+    def get(self, key, default_value=None):
         return self._map.get(key, default_value)
 
     def values(self):
@@ -671,6 +674,7 @@ class MultipleValueMap(object):
         # the requested value from it
         values = self._map[key]
         values.remove(value)
+
 
 class FormatTuple(object):
     """
@@ -724,7 +728,8 @@ class FormatTuple(object):
         return self.format()
 
     def __eq__(self, other):
-        if other == self.format_string: return True
+        if other == self.format_string:
+            return True
         return False
 
     def __ne__(self, value):
@@ -739,11 +744,13 @@ class FormatTuple(object):
     def __replace__(self, value):
         self.set_format_string(value)
 
-    def json_v(self, format = False):
-        if format: return self.format()
-        else: return (self.format_string, self.arguments)
+    def json_v(self, format=False):
+        if format:
+            return self.format()
+        else:
+            return (self.format_string, self.arguments)
 
-    def format(self, format_string = None):
+    def format(self, format_string=None):
         """
         Formats the current format tuple using the currently loaded
         attributes and the provided format string.
@@ -791,6 +798,7 @@ class FormatTuple(object):
 
         self.format_string = format_string
 
+
 class FileReference(object):
     """
     Simple structure for the description of a file in the
@@ -808,7 +816,7 @@ class FileReference(object):
     """ The encoding used for the file in case the referred
     file is text based, useful for simple reading operations """
 
-    def __init__(self, path, encoding = None):
+    def __init__(self, path, encoding=None):
         """
         Constructor of the class.
 
@@ -823,7 +831,7 @@ class FileReference(object):
         self.path = path
         self.encoding = encoding
 
-    def read_all(self, mode = "rb"):
+    def read_all(self, mode="rb"):
         """
         Reads the complete set of the contents from the file that
         is currently being described.
@@ -834,10 +842,14 @@ class FileReference(object):
         """
 
         file = open(self.path, mode)
-        try: data = file.read()
-        finally: file.close()
-        if self.encoding: data = data.decode(self.encoding)
+        try:
+            data = file.read()
+        finally:
+            file.close()
+        if self.encoding:
+            data = data.decode(self.encoding)
         return data
+
 
 def is_dictionary(object):
     """
@@ -855,11 +867,13 @@ def is_dictionary(object):
     object_type = type(object)
 
     # in case the object type is dictionary
-    if object_type == dict: return True
+    if object_type == dict:
+        return True
 
     # in case the object type id ordered map
     # (this is the custom dictionary class)
-    if object_type == OrderedMap: return True
+    if object_type == OrderedMap:
+        return True
 
     # returns false
     return False

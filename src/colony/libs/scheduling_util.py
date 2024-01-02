@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -46,6 +37,7 @@ SCHEDULING_MAX = getattr(threading, "TIMEOUT_MAX", 3600)
 """ The value for the maximum timeout value allowed
 for the threading await operations (defaults to an hour
 in case no base value is obtainable) """
+
 
 class Scheduler(threading.Thread):
     """
@@ -127,7 +119,6 @@ class Scheduler(threading.Thread):
             # iterates while the continue flag is set, this means
             # that this is a continuous loop operation
             while self.continue_flag:
-
                 # acquires the condition so that we can safely wait for
                 # new "events" and access the underlying data structures
                 # for proper and safe consuming of them
@@ -141,11 +132,12 @@ class Scheduler(threading.Thread):
                         # raise an overflow exception, making this verification
                         # will imply running more wait operations for large values
                         # which is OK as no significant resources will be used
-                        if timeout: timeout = min(SCHEDULING_MAX, timeout)
+                        if timeout:
+                            timeout = min(SCHEDULING_MAX, timeout)
 
                         # waits for the condition and timeouts according to the
                         # provided partial value (if any)
-                        self.condition.wait(timeout = timeout)
+                        self.condition.wait(timeout=timeout)
 
                         # resets the timeout value as we've stepped outside the
                         # wait operation and this value is no longer relevant
@@ -153,7 +145,8 @@ class Scheduler(threading.Thread):
 
                     # in case the continue flag has been unset
                     # (by triggering condition), then breaks loop
-                    if not self.continue_flag: break
+                    if not self.continue_flag:
+                        break
 
                     # retrieves the current timestamp, to be
                     # used in comparison operations
@@ -207,7 +200,8 @@ class Scheduler(threading.Thread):
 
         # if the scheduler is already running avoids
         # duplicate starting, returns immediately
-        if self.continue_flag: return
+        if self.continue_flag:
+            return
 
         # sets the continue flag to the valid value (controls
         # the loop) and then start the main loop process
@@ -223,7 +217,8 @@ class Scheduler(threading.Thread):
 
         # if the scheduler is already stopped avoids
         # duplicate stopping, returns immediately
-        if not self.continue_flag: return
+        if not self.continue_flag:
+            return
 
         # unsets the continue flag, this will trigger
         # the unload of the scheduler as soon as possible
@@ -234,7 +229,7 @@ class Scheduler(threading.Thread):
         with self.condition:
             self.condition.notify()
 
-    def reset_scheduler(self, notify = True):
+    def reset_scheduler(self, notify=True):
         """
         Resets the scheduler to the original state.
         This method may be used to avoid the allocation
@@ -263,9 +258,10 @@ class Scheduler(threading.Thread):
         self._counter = 1
 
         if notify:
-            with _condition: _condition.notify()
+            with _condition:
+                _condition.notify()
 
-    def add_callable(self, callable, timestamp = None, verify = True):
+    def add_callable(self, callable, timestamp=None, verify=True):
         """
         Adds a callable object to the scheduler
         for calling upon the given timestamp value.
@@ -291,11 +287,13 @@ class Scheduler(threading.Thread):
 
         # in case the verify flag is set then we need to make
         # sure that the scheduler is running
-        if verify: verify_util.verify(self.is_running())
+        if verify:
+            verify_util.verify(self.is_running())
 
         # in case no explicit timestamp is provided then uses
         # the current time - immediate task scheduling
-        if timestamp == None: timestamp = time.time()
+        if timestamp == None:
+            timestamp = time.time()
 
         # acquires the condition to be able to safely
         # manipulate the structure and produce item
@@ -329,7 +327,8 @@ class Scheduler(threading.Thread):
             # inserts the timestamp in the timestamp queue
             # for the correct index (in order to maintain order)
             # in case it does not exist already
-            if not timestamp_exists: self.timestamp_queue.insert(index, timestamp)
+            if not timestamp_exists:
+                self.timestamp_queue.insert(index, timestamp)
 
             # retrieves the list of callable for the given timestamp
             # and then updates it with the given callable object
@@ -388,7 +387,7 @@ class Scheduler(threading.Thread):
 
         return self.busy_flag
 
-    def is_running(self, pedantic = False):
+    def is_running(self, pedantic=False):
         """
         Checks if the scheduler is currently running, the scheduler
         is considered to be running if the continue flag is set.
@@ -401,7 +400,8 @@ class Scheduler(threading.Thread):
         :return: If the scheduler is currently running.
         """
 
-        if pedantic: return self.running_flag and self.continue_flag
+        if pedantic:
+            return self.running_flag and self.continue_flag
         return self.continue_flag
 
     def _handle_callables(self, callable_list):

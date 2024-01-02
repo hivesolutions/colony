@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -41,39 +32,41 @@ import unittest
 
 import colony
 
-try: import unittest.mock as mock
-except ImportError: mock = None
+try:
+    import unittest.mock as mock
+except ImportError:
+    mock = None
+
 
 class ConfigTest(unittest.TestCase):
-
     def test_basic(self):
         colony.conf_s("NAME", "name")
         result = colony.conf("NAME")
 
         self.assertEqual(result, "name")
 
-        result = colony.conf("NAME", cast = str)
+        result = colony.conf("NAME", cast=str)
 
         self.assertEqual(result, "name")
         self.assertEqual(type(result), str)
 
-        result = colony.conf("NAME", cast = "str")
+        result = colony.conf("NAME", cast="str")
 
         self.assertEqual(result, "name")
         self.assertEqual(type(result), str)
 
         colony.conf_s("AGE", "10")
-        result = colony.conf("AGE", cast = int)
+        result = colony.conf("AGE", cast=int)
 
         self.assertEqual(result, 10)
         self.assertEqual(type(result), int)
 
-        result = colony.conf("AGE", cast = "int")
+        result = colony.conf("AGE", cast="int")
 
         self.assertEqual(result, 10)
         self.assertEqual(type(result), int)
 
-        result = colony.conf("AGE", cast = str)
+        result = colony.conf("AGE", cast=str)
 
         self.assertEqual(result, "10")
         self.assertEqual(type(result), str)
@@ -84,11 +77,11 @@ class ConfigTest(unittest.TestCase):
 
     def test_none(self):
         colony.conf_s("AGE", None)
-        result = colony.conf("AGE", cast = int)
+        result = colony.conf("AGE", cast=int)
 
         self.assertEqual(result, None)
 
-        result = colony.conf("HEIGHT", cast = int)
+        result = colony.conf("HEIGHT", cast=int)
 
         self.assertEqual(result, None)
 
@@ -96,28 +89,27 @@ class ConfigTest(unittest.TestCase):
         if mock == None:
             self.skipTest("Skipping test: mock unavailable")
 
-        mock_data = mock.mock_open(read_data = b"#This is a comment\nAGE=10\nNAME=colony\n")
+        mock_data = mock.mock_open(
+            read_data=b"#This is a comment\nAGE=10\nNAME=colony\n"
+        )
 
-        with mock.patch("os.path.exists", return_value = True),\
-            mock.patch("builtins.open", mock_data, create = True) as mock_open:
-
-            ctx = dict(
-                configs = {},
-                config_f = []
-            )
+        with mock.patch("os.path.exists", return_value=True), mock.patch(
+            "builtins.open", mock_data, create=True
+        ) as mock_open:
+            ctx = dict(configs={}, config_f=[])
 
             colony.base.config.load_dot_env(".env", "utf-8", ctx)
 
-            result = colony.conf("AGE", cast = int)
+            result = colony.conf("AGE", cast=int)
             self.assertEqual(type(result), int)
             self.assertEqual(result, 10)
 
-            result = colony.conf("AGE", cast = str)
+            result = colony.conf("AGE", cast=str)
 
             self.assertEqual(result, "10")
             self.assertEqual(type(result), str)
 
-            result = colony.conf("HEIGHT", cast = int)
+            result = colony.conf("HEIGHT", cast=int)
             self.assertEqual(result, None)
 
             self.assertEqual(len(ctx["configs"]), 2)

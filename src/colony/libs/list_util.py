@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -38,6 +29,7 @@ __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import copy
+
 
 def list_intersect(first_list, second_list):
     """
@@ -56,7 +48,8 @@ def list_intersect(first_list, second_list):
     # returns the intersection resulting list
     return [value for value in first_list if value in second_list]
 
-def list_extend(base_list, extension_list, copy_base_list = True):
+
+def list_extend(base_list, extension_list, copy_base_list=True):
     """
     Extends the list with the the extension list,
     returning a list resulting of the merge of both list.
@@ -91,7 +84,8 @@ def list_extend(base_list, extension_list, copy_base_list = True):
     # returns the result list
     return result_list
 
-def list_exclude(base_list, exclusion_list, copy_base_list = True):
+
+def list_exclude(base_list, exclusion_list, copy_base_list=True):
     """
     Excludes a series of items from the given base list,
     the resulting list (without the items) is returned.
@@ -123,6 +117,7 @@ def list_exclude(base_list, exclusion_list, copy_base_list = True):
 
     # returns the result list
     return result_list
+
 
 def list_no_duplicates(list):
     """

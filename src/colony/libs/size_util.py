@@ -22,24 +22,13 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
-SIZE_UNITS_LIST = (
-    "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"
-)
+SIZE_UNITS_LIST = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
 """ The size units list """
 
 SIZE_UNIT_COEFFICIENT = 1024
@@ -48,7 +37,8 @@ SIZE_UNIT_COEFFICIENT = 1024
 DEFAULT_MINIMUM = 1024
 """ The default minimum value """
 
-def size_round_unit(size_value, minimum = DEFAULT_MINIMUM, space = False, depth = 0):
+
+def size_round_unit(size_value, minimum=DEFAULT_MINIMUM, space=False, depth=0):
     """
     Rounds the size unit, returning a string representation
     of the value with a good rounding precision.

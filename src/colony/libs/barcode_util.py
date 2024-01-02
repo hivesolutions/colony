@@ -22,15 +22,6 @@
 __author__ = "Luís Martinho <lmartinho@hive.pt> & João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -42,16 +33,16 @@ from colony.base import legacy
 from . import string_buffer_util
 
 DIGIT_ENCODING_MAP = {
-    "0" : "NNWWN",
-    "1" : "WNNNW",
-    "2" : "NWNNW",
-    "3" : "WWNNN",
-    "4" : "NNWNW",
-    "5" : "WNWNN",
-    "6" : "NWWNN",
-    "7" : "NNNWW",
-    "8" : "WNNWN",
-    "9" : "NWNWN"
+    "0": "NNWWN",
+    "1": "WNNNW",
+    "2": "NWNNW",
+    "3": "WWNNN",
+    "4": "NNWNW",
+    "5": "WNWNN",
+    "6": "NWWNN",
+    "7": "NNNWW",
+    "8": "WNNWN",
+    "9": "NWNWN",
 }
 """ The digit encoding map converting the digit into
 N(arrow) and W(ide) combinations, useful for 2 of 5 encoding  """
@@ -62,15 +53,12 @@ START_CODE_2_OF_5 = "NnNn"
 END_CODE_2_OF_5 = "WnN"
 """ The end code for 2 of 5 """
 
-START_CODES_CODE_128 = {
-    "A" : 103,
-    "B" : 104,
-    "C" : 105
-}
+START_CODES_CODE_128 = {"A": 103, "B": 104, "C": 105}
 """ The code 128 start codes for each code set """
 
 END_CODE_CODE_128 = 106
 """ The end code for code 128 """
+
 
 def encode_2_of_5(string_value):
     """
@@ -100,7 +88,8 @@ def encode_2_of_5(string_value):
     # in case the string value does not contains an even
     # number of digits a zero character is prepended to
     # the string value (so that it's possible to codify it)
-    if not is_even_length: string_value = "0" + string_value
+    if not is_even_length:
+        string_value = "0" + string_value
 
     # resets the index counter
     index = 0
@@ -121,11 +110,14 @@ def encode_2_of_5(string_value):
         # in case at least one of the digits is not valid
         # (not possible to encoded) it, this is an error
         # situation and a runtime error must be raised
-        if first_digit_encoded == None or second_digit_encoded == None: raise RuntimeError("Value is not serializable in 2 of 5 encoding")
+        if first_digit_encoded == None or second_digit_encoded == None:
+            raise RuntimeError("Value is not serializable in 2 of 5 encoding")
 
         # interleaves both the first and second encoded
         # digits and then writes the result to the encoded buffer
-        interleaved_digits_string = _interleave_digits(first_digit_encoded, second_digit_encoded)
+        interleaved_digits_string = _interleave_digits(
+            first_digit_encoded, second_digit_encoded
+        )
         encoded_buffer.write(interleaved_digits_string)
 
         # increments the index counter in two values
@@ -141,7 +133,8 @@ def encode_2_of_5(string_value):
     # returns the 2 of 5 encoded value
     return encoded_value
 
-def encode_code_128(value, code_set = "A"):
+
+def encode_code_128(value, code_set="A"):
     """
     Encodes the provided string value into the code 128
     barcode encoding to be used with the most prominent
@@ -162,10 +155,14 @@ def encode_code_128(value, code_set = "A"):
     # encodes the value into the proper representation
     # using the requested code set, in case no valid code
     # set is provided raises a runtime error
-    if code_set == "A": character_values = _encode_code_set_a(value)
-    elif code_set == "B": character_values = _encode_code_set_b(value)
-    elif code_set == "C": character_values = _encode_code_set_c(value)
-    else: raise RuntimeError("Specified code set not supported %s" % code_set)
+    if code_set == "A":
+        character_values = _encode_code_set_a(value)
+    elif code_set == "B":
+        character_values = _encode_code_set_b(value)
+    elif code_set == "C":
+        character_values = _encode_code_set_c(value)
+    else:
+        raise RuntimeError("Specified code set not supported %s" % code_set)
 
     # computes and appends the check digit
     # using the current character values list
@@ -182,6 +179,7 @@ def encode_code_128(value, code_set = "A"):
     character_string = _get_character_string(character_values)
     return character_string
 
+
 def encode_code_39(value):
     """
     Encodes the provided string value into the code 39
@@ -197,6 +195,7 @@ def encode_code_39(value):
     """
 
     return "*" + value + "*"
+
 
 def _interleave_digits(first_digit, second_digit):
     """
@@ -244,6 +243,7 @@ def _interleave_digits(first_digit, second_digit):
     interleaved_digits_string = "".join(interleaved_letters)
     return interleaved_digits_string
 
+
 def _calculate_check_digit(character_values):
     """
     Computes the check digit based on a modulus 103 checksum,
@@ -281,6 +281,7 @@ def _calculate_check_digit(character_values):
     check_digit = checksum % 103
     return check_digit
 
+
 def _encode_code_set_a(string_value):
     """
     Encodes the provided string value into a list of code 128
@@ -306,16 +307,22 @@ def _encode_code_set_a(string_value):
         # retrieves the ordinal value of the character
         # and checks if it's a valid one
         character_ascii_value = ord(character)
-        if character_ascii_value > 95: raise RuntimeError("Code set does not support character '%s' " % character)
+        if character_ascii_value > 95:
+            raise RuntimeError("Code set does not support character '%s' " % character)
 
         # "calculates" the appropriate code 128 code set a
         # for the value and appends it to the character values
-        character_code_128_value = character_ascii_value > 32 and character_ascii_value - 32 or character_ascii_value + 64
+        character_code_128_value = (
+            character_ascii_value > 32
+            and character_ascii_value - 32
+            or character_ascii_value + 64
+        )
         character_values.append(character_code_128_value)
 
     # returns the list containing the code set
     # a encoded values
     return character_values
+
 
 def _encode_code_set_b(string_value):
     """
@@ -342,7 +349,8 @@ def _encode_code_set_b(string_value):
         # retrieves the ordinal value of the character
         # and checks if it's a valid one
         character_ascii_value = ord(character)
-        if character_ascii_value < 32: raise RuntimeError("Code set does not support character '%s' " % character)
+        if character_ascii_value < 32:
+            raise RuntimeError("Code set does not support character '%s' " % character)
 
         # "calculates" the appropriate code 128 code set b
         # for the value and appends it to the character values
@@ -352,6 +360,7 @@ def _encode_code_set_b(string_value):
     # returns the list containing the code set
     # b encoded values
     return character_values
+
 
 def _encode_code_set_c(string_value):
     """
@@ -381,7 +390,7 @@ def _encode_code_set_c(string_value):
         # retrieves the current character slice and
         # parses it as an integer to append it to
         # the character values list
-        characters_slice = string_value[index:index + 2]
+        characters_slice = string_value[index : index + 2]
         character_value = int(characters_slice)
         character_values.append(character_value)
         index += 2
@@ -389,6 +398,7 @@ def _encode_code_set_c(string_value):
     # returns the list containing the code set
     # c encoded values
     return character_values
+
 
 def _get_character_string(character_values):
     """
@@ -415,8 +425,10 @@ def _get_character_string(character_values):
     for character_value in character_values:
         # converts the value offset according to the position
         # in the conversion table
-        if character_value < 95: ordinal_value = character_value + 32
-        else: ordinal_value = character_value + 100
+        if character_value < 95:
+            ordinal_value = character_value + 32
+        else:
+            ordinal_value = character_value + 100
 
         # converts the ordinal value into an
         # unicode encoded value and adds it

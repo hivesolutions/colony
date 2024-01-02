@@ -22,15 +22,6 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
 __copyright__ = "Copyright (c) 2008-2022 Hive Solutions Lda."
 """ The copyright for the module """
 
@@ -58,6 +49,7 @@ ADD_NO_REPLACE_OPERATION = "add_no_replace"
 REMOVE_OPERATION = "remove"
 """ The remove operation """
 
+
 class FileRotator(object):
     """
     Class for handling of writing in files
@@ -82,7 +74,7 @@ class FileRotator(object):
     closed = False
     """ The flag that controls the current status of the file rotator """
 
-    def __init__(self, base_file_path, maximum_file_size = 1048576, file_count = 5):
+    def __init__(self, base_file_path, maximum_file_size=1048576, file_count=5):
         """
         Constructor of the class.
 
@@ -120,7 +112,7 @@ class FileRotator(object):
         # updates the closed status
         self.closed = True
 
-    def write(self, string_value, flush = True, encoding = "utf-8"):
+    def write(self, string_value, flush=True, encoding="utf-8"):
         """
         Writes the given string value using
         the current file rotator.
@@ -145,7 +137,8 @@ class FileRotator(object):
         # if that's the case runs the encoding process using the value
         # of the encoding attribute as the reference for the encoding
         is_unicode = type(string_value) == legacy.UNICODE
-        if is_unicode: string_value = string_value.encode(encoding)
+        if is_unicode:
+            string_value = string_value.encode(encoding)
 
         # writes the string value to the current file, note that the
         # value that is being written is already encoded as bytes
@@ -200,7 +193,7 @@ class FileRotator(object):
         # sets the initial current file size
         self.current_file_size = self.current_file.tell()
 
-    def _close_current_file(self, rename = False):
+    def _close_current_file(self, rename=False):
         """
         Closes the current file being used.
         In case the renaming flag is set the file is
@@ -253,7 +246,8 @@ class FileRotator(object):
 
             # in case the target file path does not exist
             # there's nothing to be done, skips the loop
-            if not os.path.exists(target_file_path): continue
+            if not os.path.exists(target_file_path):
+                continue
 
             # in case the index is small than
             # the file count
@@ -270,6 +264,7 @@ class FileRotator(object):
 
         # opens the current file
         self._open_current_file()
+
 
 class FileContext(object):
     """
@@ -387,7 +382,7 @@ class FileContext(object):
             # closes the file
             file.close()
 
-    def remove_directory(self, directory_path, handle_exception = False):
+    def remove_directory(self, directory_path, handle_exception=False):
         """
         Removes the directory in the given path.
 
@@ -412,9 +407,10 @@ class FileContext(object):
             # the directory in the path (recursively)
             not directory_items and os.removedirs(directory_path)
         except Exception as exception:
-            if not handle_exception: raise exception
+            if not handle_exception:
+                raise exception
 
-    def remove_file(self, file_path, handle_exception = False):
+    def remove_file(self, file_path, handle_exception=False):
         """
         Removes the file in the given path.
 
@@ -435,9 +431,10 @@ class FileContext(object):
             # removes the file path
             os.remove(file_path)
         except Exception as exception:
-            if not handle_exception: raise exception
+            if not handle_exception:
+                raise exception
 
-    def remove_directory_immediate(self, directory_path, handle_exception = False):
+    def remove_directory_immediate(self, directory_path, handle_exception=False):
         """
         Removes the directory in the given directory path.
 
@@ -487,6 +484,7 @@ class FileContext(object):
 
         # creates the various required directories
         os.makedirs(directory_path)
+
 
 class TransactionContext(object):
     """
@@ -540,7 +538,8 @@ class TransactionContext(object):
         upon the final commit.
         """
 
-        if not callback in self.commit_callbacks_list: return
+        if not callback in self.commit_callbacks_list:
+            return
         self.commit_callbacks_list.remove(callback)
 
     def add_pre_commit_callback(self, callback):
@@ -566,7 +565,8 @@ class TransactionContext(object):
         upon the final commit.
         """
 
-        if not callback in self.pre_commit_callbacks_list: return
+        if not callback in self.pre_commit_callbacks_list:
+            return
         self.pre_commit_callbacks_list.remove(callback)
 
     def add_rollback_callback(self, callback):
@@ -592,7 +592,8 @@ class TransactionContext(object):
         upon the final rollback.
         """
 
-        if not callback in self.rollback_callbacks_list: return
+        if not callback in self.rollback_callbacks_list:
+            return
         self.rollback_callbacks_list.remove(callback)
 
     def add_pre_rollback_callback(self, callback):
@@ -618,7 +619,8 @@ class TransactionContext(object):
         upon the final rollback.
         """
 
-        if not callback in self.pre_rollback_callbacks_list: return
+        if not callback in self.pre_rollback_callbacks_list:
+            return
         self.pre_rollback_callbacks_list.remove(callback)
 
     def _call_commit_callbacks(self):
@@ -685,6 +687,7 @@ class TransactionContext(object):
         # empties the pre rollback callbacks
         self.pre_rollback_callbacks_list = []
 
+
 class FileImmediateContext(FileContext, TransactionContext):
     """
     The file immediate context class that controls
@@ -706,7 +709,7 @@ class FileImmediateContext(FileContext, TransactionContext):
 
         pass
 
-    def commit(self, remove_duplicates = True):
+    def commit(self, remove_duplicates=True):
         """
         Commits a new transaction context.
         All the pending file operations
@@ -742,6 +745,7 @@ class FileImmediateContext(FileContext, TransactionContext):
         # calls the "final" rollback callbacks
         self._call_rollback_callbacks()
 
+
 class FileTransactionContext(FileContext, TransactionContext):
     """
     The file transaction context class that controls
@@ -760,7 +764,7 @@ class FileTransactionContext(FileContext, TransactionContext):
     access_lock = None
     """ The lock controlling the access to the file transaction """
 
-    def __init__(self, temporary_path = None):
+    def __init__(self, temporary_path=None):
         """
         Constructor of the class.
 
@@ -828,7 +832,9 @@ class FileTransactionContext(FileContext, TransactionContext):
         # that if the (real) file path exists the removed file path
         # must not exist otherwise if the virtual file path exists
         # the file also exists
-        exists_file_path = (file_path_exists and not removed_file_path) or virtual_file_path_exists
+        exists_file_path = (
+            file_path_exists and not removed_file_path
+        ) or virtual_file_path_exists
 
         # returns the exists file path result
         return exists_file_path
@@ -877,7 +883,7 @@ class FileTransactionContext(FileContext, TransactionContext):
         # returns the file contents
         return file_contents
 
-    def write_file(self, file_path, file_contents, replace_file = True):
+    def write_file(self, file_path, file_contents, replace_file=True):
         """
         Writes the given file contents to a file in
         the given file path.
@@ -906,16 +912,12 @@ class FileTransactionContext(FileContext, TransactionContext):
 
         # creates a path tuple with the virtual file path
         # and the file path for the operation add
-        path_tuple = (
-            operation,
-            virtual_file_path,
-            file_path
-        )
+        path_tuple = (operation, virtual_file_path, file_path)
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
 
-    def remove_directory(self, directory_path, handle_exception = False):
+    def remove_directory(self, directory_path, handle_exception=False):
         """
         Removes the directory in the given path.
         This removal is not persisted immediately and
@@ -942,21 +944,17 @@ class FileTransactionContext(FileContext, TransactionContext):
                 # the directory in the virtual path (recursively)
                 not virtual_directory_items and os.removedirs(virtual_directory_path)
             except Exception as exception:
-                if not handle_exception: raise exception
+                if not handle_exception:
+                    raise exception
 
         # creates a path tuple with the directory path
         # the operation remove, the recursive flag is set
-        path_tuple = (
-            REMOVE_OPERATION,
-            directory_path,
-            handle_exception,
-            True
-        )
+        path_tuple = (REMOVE_OPERATION, directory_path, handle_exception, True)
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
 
-    def remove_file(self, file_path, handle_exception = False):
+    def remove_file(self, file_path, handle_exception=False):
         """
         Removes the file in the given path.
         This removal is not persisted immediately and
@@ -979,21 +977,17 @@ class FileTransactionContext(FileContext, TransactionContext):
                 # removes the virtual file path
                 os.remove(virtual_file_path)
             except Exception as exception:
-                if not handle_exception: raise exception
+                if not handle_exception:
+                    raise exception
 
         # creates a path tuple with the file path
         # the operation remove, the recursive flag is unset
-        path_tuple = (
-            REMOVE_OPERATION,
-            file_path,
-            handle_exception,
-            False
-        )
+        path_tuple = (REMOVE_OPERATION, file_path, handle_exception, False)
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
 
-    def remove_directory_immediate(self, directory_path, handle_exception = False):
+    def remove_directory_immediate(self, directory_path, handle_exception=False):
         """
         Removes the directory in the given directory path.
         In case a transaction exists the directory to be
@@ -1014,9 +1008,10 @@ class FileTransactionContext(FileContext, TransactionContext):
             # removes the directory in the (real) directory path
             path_util.remove_directory(real_directory_path)
         except Exception as exception:
-            if not handle_exception: raise exception
+            if not handle_exception:
+                raise exception
 
-    def get_file_path(self, file_path, replace_files = True):
+    def get_file_path(self, file_path, replace_files=True):
         """
         Retrieves a file path to be used for writing.
         The file path to be used will be used in a
@@ -1039,11 +1034,7 @@ class FileTransactionContext(FileContext, TransactionContext):
 
         # creates a path tuple with the virtual file path
         # and the file path
-        path_tuple = (
-            operation,
-            virtual_file_path,
-            file_path
-        )
+        path_tuple = (operation, virtual_file_path, file_path)
 
         # adds the path tuple
         self._add_path_tuple(path_tuple)
@@ -1066,7 +1057,7 @@ class FileTransactionContext(FileContext, TransactionContext):
             # releases the access lock
             self.access_lock.release()
 
-    def commit(self, remove_duplicates = True):
+    def commit(self, remove_duplicates=True):
         """
         Commits a new transaction context.
         All the pending file operations
@@ -1104,7 +1095,11 @@ class FileTransactionContext(FileContext, TransactionContext):
             # creates a no duplicates list from the path tuples
             # list, this will ensure that no duplicate operations
             # exist (this is a critical performance trick)
-            path_tuples_list = remove_duplicates and list_util.list_no_duplicates(self.path_tuples_list) or self.path_tuples_list
+            path_tuples_list = (
+                remove_duplicates
+                and list_util.list_no_duplicates(self.path_tuples_list)
+                or self.path_tuples_list
+            )
 
             # iterates over all the path tuples in
             # path tuples list
@@ -1113,10 +1108,14 @@ class FileTransactionContext(FileContext, TransactionContext):
                 operation = path_tuple[0]
 
                 # creates the path tuple process method name from the operation
-                path_tuple_process_method_name = PATH_TUPLE_PROCESS_METHOD_PREFIX + operation
+                path_tuple_process_method_name = (
+                    PATH_TUPLE_PROCESS_METHOD_PREFIX + operation
+                )
 
                 # retrieves the path tuple process method
-                path_tuple_process_method = getattr(self, path_tuple_process_method_name)
+                path_tuple_process_method = getattr(
+                    self, path_tuple_process_method_name
+                )
 
                 # calls the path tuple process method
                 path_tuple_process_method(path_tuple)
@@ -1199,7 +1198,9 @@ class FileTransactionContext(FileContext, TransactionContext):
         for temporary_path_item in temporary_path_items:
             # creates the temporary complete path item, by joining the
             # temporary path and the temporary path item
-            temporary_complete_path_item = os.path.join(self.temporary_path, temporary_path_item)
+            temporary_complete_path_item = os.path.join(
+                self.temporary_path, temporary_path_item
+            )
 
             # in case the path does not exist (no need to proceed
             # with removal)
@@ -1289,7 +1290,8 @@ class FileTransactionContext(FileContext, TransactionContext):
 
             # in case the operation is not of type remove
             # continues the loop no removal
-            if not operation == REMOVE_OPERATION: continue
+            if not operation == REMOVE_OPERATION:
+                continue
 
             # unpacks the path tuple (for a remove operation)
             operation, _file_path, _handle_exception, recursive = path_tuple
@@ -1297,7 +1299,8 @@ class FileTransactionContext(FileContext, TransactionContext):
             # in case the recursive flag is not set (possibly just a
             # normal file an not a directory) and the file path does
             # not matches the one required skips extra verification
-            if not recursive and not file_path == _file_path: continue
+            if not recursive and not file_path == _file_path:
+                continue
 
             # checks if the current iteration file path is
             # a parent path to the path being checked
@@ -1305,7 +1308,8 @@ class FileTransactionContext(FileContext, TransactionContext):
 
             # in case it's not a parent path continues
             # the loop no removal detected
-            if not is_parent_path: continue
+            if not is_parent_path:
+                continue
 
             # removal detected
             return True
@@ -1407,7 +1411,8 @@ class FileTransactionContext(FileContext, TransactionContext):
                     # the directory in the path (recursively)
                     not directory_items and os.removedirs(file_path)
                 except Exception as exception:
-                    if not handle_exception: raise exception
+                    if not handle_exception:
+                        raise exception
             # in case the removal is not recursive
             else:
                 try:
@@ -1415,11 +1420,13 @@ class FileTransactionContext(FileContext, TransactionContext):
                     # the directory in the path
                     not directory_items and os.remove(file_path)
                 except Exception as exception:
-                    if not handle_exception: raise exception
+                    if not handle_exception:
+                        raise exception
         # otherwise it must be a "normal" file
         else:
             try:
                 # removes the file path
                 os.remove(file_path)
             except Exception as exception:
-                if not handle_exception: raise exception
+                if not handle_exception:
+                    raise exception
