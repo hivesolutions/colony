@@ -1,4 +1,9 @@
 {
+    "1.4.21": ["Fixed issue with LogStashHandler"],
+    "1.4.20": ["Added type files"],
+    "1.4.19": ["Added LogstashHandler"],
+    "1.4.18": ["Added singleton python class and fixed issue with logLevel"],
+    "1.4.17": ["Made some alias to the more general `colony` config"],
     "1.4.16": ["Fixed early exit issue in Kafka method"],
     "1.4.15": ["Default topic support in Kafka config"],
     "1.4.14": ["Support for the `kafka_config()` method"],
