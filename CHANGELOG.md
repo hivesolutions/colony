@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Issue with the LogStashHandler
 
 ## [1.4.20] - 2023-12-28
 
