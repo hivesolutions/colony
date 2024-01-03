@@ -34,7 +34,7 @@ def version_cmp(version, version_compare):
     Compares the given version string against a compare string
     that may contain wildcard values.
 
-    This way it's possible to compare it against version ranges
+    This way, it's possible to compare it against version ranges
     defined in the form of wildcard values.
 
     :type version: String
@@ -72,7 +72,7 @@ def version_cmp(version, version_compare):
 def version_is_concrete(version):
     """
     Verifies if the provided version number is of type concrete
-    (all the partial number are specified), or if the version
+    (all the partial numbers are specified), or if the version
     string contains wildcard values that match an open range
     of version values.
 
@@ -84,7 +84,7 @@ def version_is_concrete(version):
     """
 
     # checks if the wildcard character is present in the version
-    # string, if it is the version is considered to be wildcard
-    # then returns the negation of that as the is concrete value
+    # string, if it is the version is considered to be a wildcard
+    # then returns the negation of that as the concrete value
     is_wildcard = "x" in version
     return not is_wildcard
