@@ -1,4 +1,5 @@
 {
+    "1.4.22": ["Fixed issue related to KafkaConfig"],
     "1.4.21": ["Fixed issue with LogStashHandler"],
     "1.4.20": ["Added type files"],
     "1.4.19": ["Added LogstashHandler"],

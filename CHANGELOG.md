@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+*
+
+### Fixed
+
+*
+
+## [1.4.22] - 2024-01-03
+
+### Changed
+
 * Code format according to Black
 
 ### Fixed
