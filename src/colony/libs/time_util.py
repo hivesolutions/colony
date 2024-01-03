@@ -110,7 +110,7 @@ def format_seconds_smart(
 ):
     """
     Formats the given seconds according to the given
-    mode, includes and minimization support.
+    mode, including minimization support.
     The smart mode supports the creation of format strings
     dynamically from the pre-built modes.
 
@@ -126,12 +126,12 @@ def format_seconds_smart(
     according to the number of seconds "available". The minimize
     string controls the way of minimization.
     :rtype: String
-    :return: The string containing the formated seconds.
+    :return: The string containing the formatted seconds.
     """
 
     # in case the minimize flag is active
     if minimize:
-        # re-processes the includes to according to the
+        # re-processes the includes according to the
         # amount of seconds available to be processed, the
         # minimize mode controls the way the include are going
         # to be minimized
@@ -152,7 +152,7 @@ def format_seconds_smart(
     # creates the is first flag
     is_first = True
 
-    # creates the format string lisr
+    # creates the format string list
     format_string_list = []
 
     # retrieves the formats for the mode
@@ -201,7 +201,7 @@ def format_seconds(seconds, format_string=DEFAULT_FORMAT):
     :type format_string: String
     :param format_string: The format string to be used.
     :rtype: String
-    :return: The string containing the formated seconds.
+    :return: The string containing the formatted seconds.
     """
 
     # calculates the number of days from the seconds
@@ -285,7 +285,7 @@ def _process_includes(seconds, includes, minimize_mode):
         valid_includes = (
             minimize_mode == MINIMIZE_MULTIPLE and (SECOND_VALUE,) or (SECOND_VALUE,)
         )
-    # in case there are only second and minutes
+    # in case there are only seconds and minutes
     # to be represented
     elif seconds < 3600:
         # sets the valid includes as the minutes
@@ -295,7 +295,7 @@ def _process_includes(seconds, includes, minimize_mode):
             and (MINUTE_VALUE, SECOND_VALUE)
             or (MINUTE_VALUE,)
         )
-    # in case there are seconds, minutes and
+    # in case there are seconds, minutes, and
     # hours to be represented
     elif seconds < 86400:
         # sets the valid includes as the hours, the minutes
