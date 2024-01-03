@@ -251,7 +251,11 @@ def notify_b(operation_name, *arguments, **named_arguments):
 
 
 def notify_kafka(operation_name, *arguments, **named_arguments):
+    # tries to obtain the Kafka configuration map and in case
+    # it does not exists returns immediately
     _kafka_config = kafka_config()
+    if not _kafka_config:
+        return
 
     # in case no Kafka server is defined we act as if no need
     # for the Kafka notification has been requested

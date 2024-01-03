@@ -13,11 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-*
+* Code format according to Black
 
 ### Fixed
 
-*
+* Issue with invalid Kafka configuration
 
 ## [1.4.21] - 2024-01-02
 
