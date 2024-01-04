@@ -19,7 +19,7 @@
 # You should have received a copy of the Apache License along with
 # Hive Colony Framework If not, see <http://www.apache.org/licenses/>.
 
-__author__ = "Hugo Gomes <hugo@hugogomes.eu>"
+__author__ = "Hugo Gomes <hugo@frontdoorhq.com>"
 """ The author(s) of the module """
 
 __copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
