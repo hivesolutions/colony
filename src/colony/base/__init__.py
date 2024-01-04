@@ -34,6 +34,7 @@ from . import loggers
 from . import system
 from . import test
 from . import util
+from . import vars
 
 from .config import conf, conf_prefix, conf_suffix, conf_s, conf_r, conf_d, conf_ctx
 from .decorators import (
@@ -116,3 +117,4 @@ from .util import (
     get_operative_system,
     get_timestamp_uid,
 )
+from .vars import set_global, get_global, has_global
