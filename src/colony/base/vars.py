@@ -22,9 +22,6 @@
 __author__ = "Hugo Gomes <hugo@frontdoorhq.com>"
 """ The author(s) of the module """
 
-__version__ = "1.4.6"
-""" The version of the module """
-
 __copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 """ The copyright for the module """
 
