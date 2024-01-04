@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Sequence
+from typing import Mapping, Sequence
 
 DAY_VALUE: str
 HOUR_VALUE: str
@@ -13,7 +13,7 @@ MINIMIZE_MULTIPLE: str
 MINIMIZE_UNIQUE: str
 DEFAULT_INCLUDES: tuple[str, str, str, str]
 DEFAULT_FORMAT: str
-FORMATS: dict[str, dict[str, str]]
+FORMATS: Mapping[str, Mapping[str, str]]
 SEPARATORS: dict[str, str]
 
 def format_seconds_smart(
