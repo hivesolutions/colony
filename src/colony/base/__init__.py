@@ -117,8 +117,4 @@ from .util import (
     get_operative_system,
     get_timestamp_uid,
 )
-from .vars import (
-    set_global,
-    get_global,
-    has_global
-)
+from .vars import set_global, get_global, has_global
