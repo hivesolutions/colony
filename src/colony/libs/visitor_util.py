@@ -61,12 +61,12 @@ def dispatch_visit(map_name="node_method_map"):
             # node (from bottom to up) so that the best match for the
             # visit operation is found and properly called
             for mro_item in mro:
-                # in case the current mro item class level is nor found
+                # in case the current mro item class level is not found
                 # skips the current iteration (cannot visit at this level)
                 if not mro_item in node_method_map:
                     continue
 
-                # the current class level is valid and so the proper method
+                # the current class level is valid, and so the proper method
                 # is retrieved from the map and then called with the provided
                 # arguments, note that a before visit and an after visit calls
                 # are done so that proper "notification" exists
@@ -79,7 +79,7 @@ def dispatch_visit(map_name="node_method_map"):
                 # value is returned as this is a simple visit operation
                 return
 
-            # in case no visit has been made a normal fallback operation is
+            # in case no visit has been made, a normal fallback operation is
             # performed by calling the "original" function/method
             return function(*args, **kwargs)
 
