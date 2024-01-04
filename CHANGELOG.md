@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Add globals' vars managing utility to base
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [1.4.23] - 2024-01-04
+
+### Added
+
+* Add globals' vars managing utility to base
 
 ## [1.4.22] - 2024-01-03
 
