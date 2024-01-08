@@ -315,7 +315,7 @@ def unload_system():
     # the used resources and killing all the threads
     # this should be enough to return the control to
     # the embedding process
-    plugin_manager.unload_system()
+    plugin_manager.unload_system(kill_timer=False)
 
 
 class ServerThread(threading.Thread):

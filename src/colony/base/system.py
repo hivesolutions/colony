@@ -2286,7 +2286,7 @@ class PluginManager(object):
         # error has occurred or any other value otherwise
         return self.return_code
 
-    def unload_system(self, thread_safe=True):
+    def unload_system(self, thread_safe=True, kill_timer=True):
         """
         Unloads the plugin system from memory, exiting the system.
         A timer is installed to exit the system in a forced way
@@ -2295,6 +2295,9 @@ class PluginManager(object):
         :type thread_safe: bool
         :param thread_safe: If the unloading should use the event mechanism
         to provide thread safety.
+        :type kill_timer: bool
+        :param kill_timer: If the kill timer should be used to kill the system
+        in case it gets stuck for longer than the shutdown timeout.
         """
 
         # in case the system initialization is not complete
@@ -2307,10 +2310,11 @@ class PluginManager(object):
         # creates the kill system timer, to kill the system
         # if it hangs in shutdown and starts it so that the
         # system will be able to kill itself after a timeout
-        self.kill_system_timer = threading.Timer(
-            DEFAULT_UNLOAD_SYSTEM_TIMEOUT, self._kill_system_timeout
-        )
-        self.kill_system_timer.start()
+        if kill_timer:
+            self.kill_system_timer = threading.Timer(
+                DEFAULT_UNLOAD_SYSTEM_TIMEOUT, self._kill_system_timeout
+            )
+            self.kill_system_timer.start()
 
         # iterates over all the plugin instances running the unload process
         # for all of them and according to their set of skill/capabilities
@@ -2346,8 +2350,10 @@ class PluginManager(object):
             # unloads the thread based plugins
             self._unload_thread_plugins()
 
-        # cancels the kill system timer
-        self.kill_system_timer.cancel()
+        # cancels the kill system timer, in case it has been
+        # defined (no need to kill the system anymore)
+        if self.kill_system_timer:
+            self.kill_system_timer.cancel()
 
     def reload_system(self, thread_safe=True):
         """
