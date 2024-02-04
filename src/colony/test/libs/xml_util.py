@@ -145,5 +145,6 @@ class XmlTest(colony.ColonyTestCase):
 
         result = colony.dict_to_xml(dict(person=dict(name="你好世界", age="32")))
         self.assertEqual(
-            result, colony.legacy.u("<person><age>32</age><name>你好世界</name></person>")
+            result,
+            colony.legacy.u("<person><age>32</age><name>你好世界</name></person>"),
         )
