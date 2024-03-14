@@ -5106,18 +5106,15 @@ class PluginManager(object):
         # retrieves the string values list from the file path
         string_values_list = self.resolve_string_value(file_path)
 
-        # in case the string values list
-        # is invalid
+        # in case the string values list is invalid, then
+        # returns an invalid immediately
         if not string_values_list:
-            # returns invalid
             return None
 
-        # iterates over all the string values in
-        # the string values list
+        # iterates over all the string values in the string values list
+        # trying to find the best file path (one that exists)
         for string_value in string_values_list:
-            # in case the paths exists
             if os.path.exists(string_value):
-                # returns the string value
                 return string_value
 
         # in case the not found valid flag is
@@ -5146,6 +5143,12 @@ class PluginManager(object):
         in the file path for the "real" values, and returning the list
         of possible string values, ordered by priority.
 
+        As an example a string value like "%manager_path%" would be resolved
+        to the path of the current plugin manager execution.
+
+        To obtain the path to a certain plugin one should use for instance
+        "%plugin_path:pt.hive.main%".
+
         :type string_value: String
         :param string_value: The base string value to be used as substitution
         base.
@@ -5153,10 +5156,9 @@ class PluginManager(object):
         :return: The list of possible string values, ordered by priority.
         """
 
-        # in case the string value is invalid
-        # (empty or none)
+        # in case the string value is invalid (empty or none)
+        # then returns an empty list immediately
         if not string_value:
-            # returns an empty list
             return []
 
         # finds all the matches using the special value regex
@@ -5187,6 +5189,13 @@ class PluginManager(object):
             # runs the process method with the arguments
             # retrieving the values
             values = process_method(arguments_splitted)
+
+            # validates that the process result was successful, raising
+            # an exception otherwise
+            if values == None or values == (None,):
+                raise exceptions.ColonyException(
+                    "no value resolved while processing command '%s'" % command
+                )
 
             # retrieves the start and end position of the match
             start_position = special_value_match.start()
