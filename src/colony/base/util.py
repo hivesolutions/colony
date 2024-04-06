@@ -44,19 +44,19 @@ IRON_PYTHON_ENVIRONMENT = "iron_python"
 """ IronPython environment value """
 
 WINDOWS_OS = "windows"
-""" The windows os value """
+""" The windows OS value """
 
 MAC_OS = "mac"
-""" The mac os value """
+""" The mac OS value """
 
 UNIX_OS = "unix"
-""" The unix os value """
+""" The unix OS value """
 
 OTHER_OS = "other"
-""" The other os value """
+""" The other OS value """
 
 UID_PRECISION = 8
-""" Unique id precision """
+""" Unique ID precision """
 
 
 class WaitInput(object):
@@ -287,13 +287,13 @@ def get_operative_system():
 
 def get_timestamp_uid():
     """
-    Retrieves a unique id based in the current timestamp.
+    Retrieves a unique ID based in the current timestamp.
     This value should not be used for high accuracy or
     cryptographic operations as it's not very unique and
     it is not entropy safe.
 
     :rtype: String
-    :return: A unique id based in the current timestamp.
+    :return: A unique ID based in the current timestamp.
     """
 
     timestamp = time.time()
