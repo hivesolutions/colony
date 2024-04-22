@@ -29,6 +29,7 @@ __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import os
+import time
 import socket
 import logging
 import itertools
@@ -51,6 +52,16 @@ MAX_LENGTH = 10000
 memory until they are discarded, avoid a very large
 number for this value or else a large amount of memory
 may be used for logging purposes """
+
+MAX_LENGTH_LOGSTASH = 64
+""" The maximum amount of messages that are kept in
+memory until they are flushed, avoid a very large
+number for this value or else a large amount of memory
+may be used for logging purposes """
+
+TIMEOUT_LOGSTASH = 30.0
+""" The maximum amount of time in between flush 
+operations in the logstash handler """
 
 LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
 """ The sequence of levels from the least sever to the
@@ -241,13 +252,21 @@ class MemoryHandler(logging.Handler):
 
 class LogstashHandler(logging.Handler):
 
-    def __init__(self, level=logging.NOTSET, max_length=MAX_LENGTH, api=None):
+    def __init__(
+        self,
+        level=logging.NOTSET,
+        max_length=MAX_LENGTH_LOGSTASH,
+        timeout=TIMEOUT_LOGSTASH,
+        api=None,
+    ):
         logging.Handler.__init__(self, level=level)
         if not api:
             api = self._build_api()
         self.messages = collections.deque()
         self.max_length = max_length
+        self.timeout = timeout
         self.api = api
+        self._last_flush = time.time()
 
     @classmethod
     def is_ready(cls):
@@ -292,6 +311,7 @@ class LogstashHandler(logging.Handler):
 
         self.messages.append(log)
         should_flush = len(self.messages) >= self.max_length
+        should_flush = should_flush or time.time() - self._last_flush > self.timeout
         if should_flush:
             self.flush()
 
@@ -310,8 +330,10 @@ class LogstashHandler(logging.Handler):
             return
 
         # posts the complete set of messages to logstash and then clears the messages
+        # and updates the last flush time
         self.api.log_bulk(messages, tag="default")
         self.messages = []
+        self.last_flush = time.time()
 
     def _build_api(self):
         try:
