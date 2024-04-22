@@ -240,6 +240,7 @@ class MemoryHandler(logging.Handler):
 
 
 class LogstashHandler(logging.Handler):
+
     def __init__(self, level=logging.NOTSET, max_length=MAX_LENGTH, api=None):
         logging.Handler.__init__(self, level=level)
         if not api:
@@ -272,6 +273,7 @@ class LogstashHandler(logging.Handler):
             "level": record.levelname,
             "path": record.pathname,
             "lineno": record.lineno,
+            "meta": getattr(record, "meta", None),
             "host": socket.gethostname(),
             "hostname": socket.gethostname(),
             "tid": threading.current_thread().ident,
