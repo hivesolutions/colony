@@ -54,7 +54,7 @@ memory until they are discarded, avoid a very large
 number for this value or else a large amount of memory
 may be used for logging purposes """
 
-MAX_LENGTH_LOGSTASH = 64
+MAX_LENGTH_LOGSTASH = 256
 """ The maximum amount of messages that are kept in
 memory until they are flushed, avoid a very large
 number for this value or else a large amount of memory
