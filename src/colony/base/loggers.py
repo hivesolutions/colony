@@ -249,6 +249,16 @@ class LogstashHandler(logging.Handler):
         self.max_length = max_length
         self.api = api
 
+    @classmethod
+    def is_ready(cls):
+        try:
+            import logstash
+        except ImportError:
+            return False
+        if not config.conf("LOGGING_LOGSTASH", False, cast=bool):
+            return False
+        return True
+
     def emit(self, record):
         # verifies if the API structure is defined and set and if
         # that's not the case returns immediately
