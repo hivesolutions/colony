@@ -285,6 +285,11 @@ class LogstashHandler(logging.Handler):
         if not self.api:
             return
 
+        # in case the record to be emitted has been marked as being
+        # part of a stack (traceback) then ignores it (noise)
+        if hasattr(record, "stack") and record.stack:
+            return
+
         # retrieves the current date time value as an utc value
         # and then formats it according to the provided format string
         message = self.format(record)
@@ -301,7 +306,9 @@ class LogstashHandler(logging.Handler):
         if hasattr(record, "meta"):
             meta = record.meta
         elif hasattr(record, "meta_c"):
-            meta = record.meta_c()
+            meta = dict()
+            for callable in record.meta_c:
+                meta.update(callable())
         else:
             meta = None
 
