@@ -279,7 +279,7 @@ class LogstashHandler(logging.Handler):
             return False
         return True
 
-    def emit(self, record):
+    def emit(self, record, raise_e=False):
         # verifies if the API structure is defined and set and if
         # that's not the case returns immediately
         if not self.api:
@@ -328,9 +328,13 @@ class LogstashHandler(logging.Handler):
         should_flush = len(self.messages) >= self.max_length
         should_flush = should_flush or time.time() - self._last_flush > self.timeout
         if should_flush:
-            self.flush()
+            try:
+                self.flush(raise_e=raise_e)
+            except Exception:
+                if raise_e:
+                    raise
 
-    def flush(self, force=False):
+    def flush(self, force=False, raise_e=False):
         logging.Handler.flush(self)
 
         # verifies if the API structure is defined and set and if
@@ -346,7 +350,7 @@ class LogstashHandler(logging.Handler):
 
         # posts the complete set of messages to logstash and then clears the messages
         # and updates the last flush time
-        self.api.log_bulk(messages, tag="default")
+        self.api.log_bulk(messages, tag="default", raise_e=raise_e)
         self.messages = []
         self.last_flush = time.time()
 
