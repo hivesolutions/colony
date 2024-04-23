@@ -137,7 +137,9 @@ class LoggersTest(colony.ColonyTestCase):
         mock_api_client = mock.Mock()
         mock_api_client_messages = []
         mock_api_client.log_bulk = (
-            lambda messages, tag="default": mock_api_client_messages.extend(messages)
+            lambda messages, tag, raise_e="default": mock_api_client_messages.extend(
+                messages
+            )
         )
 
         logstash_handler = colony.LogstashHandler(api=mock_api_client)
