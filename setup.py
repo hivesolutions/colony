@@ -53,7 +53,7 @@ setuptools.setup(
     ],
     test_suite="colony.test",
     package_dir={"": os.path.normpath("src")},
-    package_data={"colony": ["res/*", "**/*.pyi", "**/*.typed"]},
+    package_data={"colony": ["*.pyi", "res/*", "**/*.pyi", "**/*.typed"]},
     entry_points={
         "console_scripts": [
             "cpm = colony_adm:main",
