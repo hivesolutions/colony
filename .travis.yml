@@ -22,6 +22,8 @@ install:
   - pip install -r requirements.txt
   - pip install -r extra.txt
   - if [[ $TRAVIS_PYTHON_VERSION != pypy* ]]; then pip install coveralls; fi
+env:
+  - PIP_TRUSTED_HOST="pypi.python.org pypi.org files.pythonhosted.org"
 script: if [[ $TRAVIS_PYTHON_VERSION != pypy* ]]; then coverage run --source=colony setup.py test; else python setup.py test; fi
 after_success: if [[ $TRAVIS_PYTHON_VERSION != pypy* ]]; then coveralls; fi
 git:
