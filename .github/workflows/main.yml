@@ -51,4 +51,8 @@ jobs:
           pip install black
           black . --check
         if: matrix.python-version == '3.12'
+      - run: |
+          pip install pytest
+          pytest
       - run: pypy setup.py test
+        if: matrix.python-version != '3.12' && matrix.python-version != 'latest'
