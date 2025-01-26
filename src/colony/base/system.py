@@ -2204,7 +2204,7 @@ class PluginManager(object):
             # prints an info message about the initialization of
             # of the plugin manager, this should be one of the
             # first logging messages printed by the system
-            self.info("Starting plugin manager...")
+            self.info("Starting plugin manager %s..." % colony.VERSION)
             self.info(
                 "Using %s run mode and %s layout mode"
                 % (self.run_mode, self.layout_mode)

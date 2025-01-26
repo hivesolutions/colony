@@ -29,8 +29,10 @@ __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import json
+import socket
+import datetime
 
-from colony.base import config, legacy
+from colony.base import config, legacy, information
 
 COUNTER = 0
 """ The global counter value that will be used in the
@@ -56,6 +58,10 @@ no specific handlers map is defined """
 KAFKA_PRODUCERS = {}
 """ Global map that associates hosts (servers) with producers,
 to be used to power singleton based retrieval """
+
+LOGSTASH_APIS = {}
+""" Global map that associates hosts (servers) with Logstash API
+clients, to be used to power singleton based retrieval """
 
 _KAFKA_CONFIG = None
 """ Cache configuration value, to avoid the constant
@@ -248,6 +254,7 @@ def notify_g(operation_name, *arguments, **named_arguments):
 
 def notify_b(operation_name, *arguments, **named_arguments):
     notify_kafka(operation_name, *arguments, **named_arguments)
+    notify_logstash(operation_name, *arguments, **named_arguments)
 
 
 def notify_kafka(operation_name, *arguments, **named_arguments):
@@ -339,3 +346,42 @@ def _kafka_producer():
     KAFKA_PRODUCERS[kafka_server] = producer
 
     return producer
+
+
+def notify_logstash(operation_name, *arguments, **named_arguments):
+    _logstash_api = logstash_api()
+    if not _logstash_api:
+        return
+
+    now = datetime.datetime.utcnow()
+    now_s = now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    arguments_s = ", ".join([str(argument) for argument in arguments])
+
+    message = {
+        "@timestamp": now_s,
+        "host": socket.gethostname(),
+        "hostname": socket.gethostname(),
+        "type": "notification",
+        "colony": information.VERSION,
+        "name": operation_name,
+        "args": arguments_s,
+        "kwargs": named_arguments,
+    }
+    _logstash_api.log_buffer(message)
+
+
+def logstash_api(host="main"):
+    if host in LOGSTASH_APIS:
+        return LOGSTASH_APIS[host]
+
+    try:
+        import logstash
+    except ImportError:
+        return None
+
+    if not config.conf("NOTIFY_LOGSTASH", False, cast=bool):
+        return None
+
+    api = logstash.API()
+    LOGSTASH_APIS[host] = api
+    return api
