@@ -9,16 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+*
+
+### Changed
+
+*
+
+### Fixed
+
+*
+
+## [1.4.25] - 2025-01-26
+
+### Changed
+
+### Added
+
 * Support for datetime and timestamp function in legacy
 * Support for the Logstash notification system
 
 ### Changed
 
 * Added more logging information to the logstash handler
-
-### Fixed
-
-*
 
 ## [1.4.24] - 2024-01-08
 
