@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Issue with logstash logging strategy
 
 ## [1.4.25] - 2025-01-26
 
