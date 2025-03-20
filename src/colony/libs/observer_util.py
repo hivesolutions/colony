@@ -335,6 +335,8 @@ def _kafka_producer():
     sasl_mechanism = _kafka_config["sasl_mechanism"]
     sasl_plain_username = _kafka_config["sasl_plain_username"]
     sasl_plain_password = _kafka_config["sasl_plain_password"]
+    reconnect_backoff_ms = _kafka_config.get("reconnect_backoff_ms", 150)
+    reconnect_backoff_max_ms = _kafka_config.get("reconnect_backoff_max_ms", 120000)
 
     producer = kafka.KafkaProducer(
         bootstrap_servers=kafka_server,
@@ -342,6 +344,8 @@ def _kafka_producer():
         sasl_mechanism=sasl_mechanism,
         sasl_plain_username=sasl_plain_username,
         sasl_plain_password=sasl_plain_password,
+        reconnect_backoff_ms=reconnect_backoff_ms,
+        reconnect_backoff_max_ms=reconnect_backoff_max_ms,
     )
     KAFKA_PRODUCERS[kafka_server] = producer
 
