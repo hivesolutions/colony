@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* New reconnect backoff times for kafka
+*
 
 ### Fixed
 
 *
+
+## [1.4.27] - 2025-04-06
+
+### Changed
+
+* New reconnect backoff times for kafka
 
 ## [1.4.26] - 2025-02-17
 

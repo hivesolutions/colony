@@ -1,4 +1,5 @@
 {
+    "1.4.27": ["Reconnect support for Kafka"],
     "1.4.26": ["Fixed issue with Logstash logging strategy"],
     "1.4.25": ["Support for Logstash notification system"],
     "1.4.24": ["Added support for optional `kill_timer` avoiding `@atexit` issues"],
