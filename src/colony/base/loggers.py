@@ -61,7 +61,7 @@ number for this value or else a large amount of memory
 may be used for logging purposes """
 
 TIMEOUT_LOGSTASH = 30.0
-""" The maximum amount of time in between flush 
+""" The maximum amount of time in between flush
 operations in the logstash handler """
 
 LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
