@@ -720,7 +720,7 @@ class FileImmediateContext(FileContext, TransactionContext):
         to be removed.
 
         :type remove_duplicates: bool
-        :param remove_duplicats: If duplicate operations
+        :param remove_duplicates: If duplicate operations
         are meant to be removed so that no duplicate
         operation are performed (performance impact).
         """
@@ -1068,7 +1068,7 @@ class FileTransactionContext(FileContext, TransactionContext):
         to be removed.
 
         :type remove_duplicates: bool
-        :param remove_duplicats: If duplicate operations
+        :param remove_duplicates: If duplicate operations
         are meant to be removed so that no duplicate
         operation are performed (performance impact).
         """
