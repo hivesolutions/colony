@@ -158,7 +158,7 @@ def copy_directory(source_path, target_path, replace_files=True, copy_hidden=Tru
     # in case the source path is not a directory
     if not os.path.isdir(source_path):
         # raises an exception
-        raise Exception("Source path is not a directory: '%s" % source_path)
+        raise Exception("Source path is not a directory: '%s'" % source_path)
 
     # in case the target path does not exist
     if not os.path.exists(target_path):
@@ -168,7 +168,7 @@ def copy_directory(source_path, target_path, replace_files=True, copy_hidden=Tru
     # in case the target path is not a directory
     if not os.path.isdir(target_path):
         # raises an exception
-        raise Exception("Target path is not a directory: '%s" % target_path)
+        raise Exception("Target path is not a directory: '%s'" % target_path)
 
     # retrieves the directory list from the source path
     directory_list = os.listdir(source_path)
