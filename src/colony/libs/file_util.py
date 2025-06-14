@@ -145,7 +145,8 @@ class FileRotator(object):
         self.current_file.write(string_value)
 
         # flushes the data in the current file
-        flush and self.current_file.flush()
+        if flush:
+            self.current_file.flush()
 
         # increments the current file size with
         # the string value length
@@ -343,17 +344,9 @@ class FileContext(object):
         :return: The (read) contents from the file.
         """
 
-        # open the file
-        file = open(file_path, "rb")
-
-        try:
-            # reads the file contents
+        # opens the file and reads the contents from it
+        with open(file_path, "rb") as file:
             file_contents = file.read()
-        finally:
-            # closes the file
-            file.close()
-
-        # returns the file contents
         return file_contents
 
     def write_file(self, file_path, file_contents):
@@ -372,15 +365,9 @@ class FileContext(object):
         # creates the directory for the file path
         self._create_directory(file_path)
 
-        # open the file
-        file = open(file_path, "wb")
-
-        try:
-            # writes the file contents
+        # opens the file and write the contents to it
+        with open(file_path, "wb") as file:
             file.write(file_contents)
-        finally:
-            # closes the file
-            file.close()
 
     def remove_directory(self, directory_path, handle_exception=False):
         """
@@ -405,7 +392,8 @@ class FileContext(object):
         try:
             # checks the directory for items and removes
             # the directory in the path (recursively)
-            not directory_items and os.removedirs(directory_path)
+            if not directory_items:
+                os.removedirs(directory_path)
         except Exception as exception:
             if not handle_exception:
                 raise exception
@@ -422,9 +410,9 @@ class FileContext(object):
         be handled gracefully.
         """
 
-        # in case the file path does not exists
+        # in case the file path does not exists, then
+        # returns immediately
         if not os.path.exists(file_path):
-            # returns immediately
             return
 
         try:
