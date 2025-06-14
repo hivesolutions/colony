@@ -31,6 +31,7 @@ __license__ = "Apache License, Version 2.0"
 import os
 import sys
 import stat
+import shutil
 
 BUFFER_SIZE = 4096
 """ The size of the buffer for file operations """
@@ -278,31 +279,11 @@ def copy_file(source_path, target_path, replace_file=True):
         # returns immediately (no copy)
         return
 
-    # opens the source file
-    source_file = open(source_path, "rb")
-
-    # opens the target file
-    target_file = open(target_path, "wb")
-
-    try:
-        # iterates continuously
-        while True:
-            # reads contents from the source file
-            contents = source_file.read(BUFFER_SIZE)
-
-            # in case the contents are not valid
-            if not contents:
-                # breaks the cycle
-                break
-
-            # writes the contents in the target file
-            target_file.write(contents)
-    finally:
-        # closes the source file
-        source_file.close()
-
-        # closes the target file
-        target_file.close()
+    # opens the source file and the target file, and
+    # copies the file contents from the source file to
+    # the target file
+    with open(source_path, "rb") as source_file, open(target_path, "wb") as target_file:
+        shutil.copyfileobj(source_file, target_file, BUFFER_SIZE)
 
 
 def remove_directory(directory_path):
@@ -427,8 +408,7 @@ def link_copy(target_path, link_path):
 
 def ensure_file_path(file_path, default_file_path):
     """
-    Ensures that the given file path is set with
-    contents.
+    Ensures that the given file path is set with contents.
     In case the file does not exists the file in the default
     file path is copied to the file path.
 
@@ -448,9 +428,9 @@ def ensure_file_path(file_path, default_file_path):
     # checks if the file exists
     file_exists = os.path.exists(file_path)
 
-    # in case the file already exists
+    # in case the file already exists, then
+    # returns immediately
     if file_exists:
-        # returns immediately
         return
 
     # retrieves the file directory path
@@ -461,28 +441,17 @@ def ensure_file_path(file_path, default_file_path):
 
     # in case the file directory path does not exists creates the
     # directories required recursively
-    not file_directory_path_exists and os.makedirs(file_directory_path)
+    if not file_directory_path_exists:
+        os.makedirs(file_directory_path)
 
-    # opens the default file
-    default_file = open(default_file_path, "rb")
-
-    try:
-        # reads the default file contents
+    # opens the default file and reads the contents from it
+    # to be used in writing of contents to the file path
+    with open(default_file_path, "rb") as default_file:
         default_file_contents = default_file.read()
-    finally:
-        # closes the default file
-        default_file.close()
 
-    # opens the file
-    file = open(file_path, "wb")
-
-    try:
-        # writes the default file contents to it
-        # in order to set the value
+    # opens the file and writes the default contents to it
+    with open(file_path, "wb") as file:
         file.write(default_file_contents)
-    finally:
-        # closes the file
-        file.close()
 
 
 def is_parent_path(path, parent_path):
