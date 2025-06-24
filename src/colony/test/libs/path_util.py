@@ -45,6 +45,9 @@ class PathTest(colony.ColonyTestCase):
         handles file creation and copying from default file.
         """
 
+        if not hasattr(tempfile, "TemporaryDirectory"):
+            self.skipTest("TemporaryDirectory is not available")
+
         with tempfile.TemporaryDirectory() as temp_dir:
             default_file_path = os.path.join(temp_dir, "default.txt")
             default_content = b"Default content for ensure_file_path"
