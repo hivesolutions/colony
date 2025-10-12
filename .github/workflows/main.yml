@@ -37,7 +37,7 @@ jobs:
           pip install pytest
           pytest
       - run: python setup.py test
-        if: matrix.python-version != '3.12' && matrix.python-version != 'latest'
+        if: ${{ !contains(fromJson('["3.9", "3.10", "3.11", "3.12","latest"]'), matrix.python-version) }}
   build-pypy:
     name: Build PyPy
     timeout-minutes: 10
@@ -62,4 +62,4 @@ jobs:
           pip install pytest
           pytest
       - run: pypy setup.py test
-        if: matrix.python-version != '3.12' && matrix.python-version != 'latest'
+        if: ${{ !contains(fromJson('["3.9", "3.10", "3.11", "3.12","latest"]'), matrix.python-version) }}
