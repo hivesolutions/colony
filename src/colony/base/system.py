@@ -31,6 +31,7 @@ __license__ = "Apache License, Version 2.0"
 import os
 import re
 import sys
+import glob
 import copy
 import stat
 import time
@@ -38,6 +39,7 @@ import signal
 import inspect
 import unittest
 import tempfile
+import warnings
 import threading
 import traceback
 import subprocess
@@ -163,6 +165,15 @@ NEW_DIFFUSION_SCOPE = 3
 
 FILE_REMOVED_TYPE = "file_removed"
 """ The file removed plugin loading/unloading type """
+
+CONFIG_FILE_ENV = "COLONY_CONFIG_FILE"
+""" The name of the environment variable to be used
+to retrieve the path to the configuration file """
+
+DEFAULT_CONFIG_PATH = "config/python/devel.py"
+""" The path to the default configuration file to be
+used in case no path is specified using the environment
+variable bases strategy """
 
 SPECIAL_VALUE_REGEX_VALUE = (
     r"%(?P<command>[a-zA-Z0-0_]*)(:(?P<arguments>[a-zA-Z0-9_.,]*))?%"
@@ -1435,9 +1446,9 @@ class Plugin(object):
         Formats the given message into a logging message.
 
         :type message: String
-        :param message: The message to be formated into logging message.
+        :param message: The message to be formatted into logging message.
         :rtype: String
-        :return: The formated logging message.
+        :return: The formatted logging message.
         """
 
         # the default formatting message
@@ -1878,6 +1889,154 @@ class PluginManager(object):
         self.diffusion_scope_loaded_plugins_map = {}
         self.deleted_plugin_classes = []
         self.event_plugins_fired_loaded_map = {}
+
+    @classmethod
+    def build(
+        cls,
+        loop=False,
+        threads=False,
+        signals=False,
+        layout_mode=None,
+        run_mode=None,
+        container="default",
+        base_path=None,
+        start_logger=True,
+        load_system=True,
+    ):
+        # obtains the reference to the base path based on the current
+        # file path, to be able to assess the colony folder and its contents
+        # only do this in case the value is not provided as argument
+        if not base_path:
+            base_path = os.path.join(os.path.dirname(__file__), "..", "..")
+            base_path = os.path.abspath(base_path)
+
+        # runs the resolution process in order to be able to retrieve
+        # the "real" a "best" match for the manager path, this method
+        # should decide between the personal and the master versions
+        # then ensures that the proper directory tree is created
+        manager_path = colony.resolve_manager(base_path)
+        colony.ensure_tree(manager_path)
+
+        # registers the ignore flag in the deprecation warnings so that
+        # no message with this kind of warning is printed (clean console)
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+        # retrieves the layout mode that is going to be used for the
+        # resolution of resources in the colony infra-structure
+        if not layout_mode:
+            layout_mode = config.conf("LAYOUT_MODE", "default")
+            layout_mode = config.conf("COLONY_LAYOUT_MODE", layout_mode)
+
+        # tries to retrieve the run mode from the currently set
+        # environment variables, in case of failure defaults to
+        # the default value (as expected by the specification)
+        if not run_mode:
+            run_mode = config.conf("RUN_MODE", "development")
+            run_mode = config.conf("COLONY_RUN_MODE", run_mode)
+
+        # retrieves the (verbosity) level for the debugger using the provided
+        # configuration support, defaulting to the default level in case the
+        # value is not provided through configuration
+        level = config.conf("LEVEL", logging.INFO)
+        level = colony.getLevelInt(level)
+
+        # retrieves the complete set of configuration variables associated
+        # with the various paths to be used by colony, these are going to
+        # be used as the initial values for the various path lists
+        meta_paths = config.conf("META_PATH", [], cast=list)
+        plugin_paths = config.conf("PLUGINS_PATH", [], cast=list)
+        plugin_paths = config.conf("PLUGIN_PATH", plugin_paths, cast=list)
+
+        # checks if the default meta and plugins included in the colony folder
+        # should be loaded or not, not loading this paths is considered non
+        # standard and should only be used for special situations
+        default_meta = config.conf("DEFAULT_META", True, cast=bool)
+        default_plugins = config.conf("DEFAULT_PLUGINS", True, cast=bool)
+
+        # tries to retrieve the configuration file from the environment
+        # variable associated in case it fails uses the default configuration
+        # file path then joins the "relative" file path to the base path
+        # and resolves it as an absolute path
+        config_file_path = config.conf(CONFIG_FILE_ENV, None) or DEFAULT_CONFIG_PATH
+        config_file_path = os.path.join(manager_path, config_file_path)
+        config_file_path = os.path.abspath(config_file_path)
+
+        # retrieves the name of the directory containing the configuration
+        # files and adds it to the system path, so that it's possible to
+        # import the configuration file module
+        configuration_directory_path = os.path.dirname(config_file_path)
+        if not configuration_directory_path in sys.path:
+            sys.path.insert(0, configuration_directory_path)
+
+        # retrieves the configuration file base path from the configuration
+        # file path, this values is going to be used to retrieve the "final"
+        # module name to be imported in the python interpreter
+        config_file_base_path = os.path.basename(config_file_path)
+
+        # retrieves the configuration module name and the configuration
+        # module extension by splitting the configuration base path into
+        # base name and extension and then imports the referring module
+        configuration_module_name, _configuration_module_extension = os.path.splitext(
+            config_file_base_path
+        )
+        try:
+            colony_configuration = __import__(configuration_module_name)
+        except ImportError:
+            import colony.config.base as module
+
+            colony_configuration = module
+
+        # initializes the lists that will contain both the path to the
+        # plugins and the paths to the configuration (meta) files, these
+        # are only going to be used temporarily for glob expansion
+        _meta_paths = []
+        _plugin_paths = []
+
+        # iterates over each of the plugin paths to resolve them using
+        # the glob based approach then "takes" the final list into a
+        # final step of absolute path normalization
+        for plugin_path in (
+            colony_configuration.plugin_path_list if default_plugins else []
+        ):
+            plugin_paths.append(os.path.join(manager_path, plugin_path))
+        for plugin_path in plugin_paths:
+            _plugin_paths += glob.glob(plugin_path)
+        plugin_paths = [os.path.abspath(plugin_path) for plugin_path in _plugin_paths]
+
+        # iterates over each of the meta paths to resolve them using
+        # the glob based approach then "takes" the final list into a
+        # final step of absolute path normalization
+        for meta_path in colony_configuration.meta_path_list if default_meta else []:
+            meta_paths.append(os.path.join(manager_path, meta_path))
+        for meta_path in meta_paths:
+            _meta_paths += glob.glob(meta_path)
+        meta_paths = [os.path.abspath(meta_path) for meta_path in _meta_paths]
+
+        # creates the plugin manager instance with the current file path
+        # as the manager path and the corresponding relative log path,
+        # then provides the plugin and meta paths and unsets the global
+        # loop strategy (avoids blocking the process), note also that
+        # threads are disallowed to avoid creation of extra threads, the
+        # signal handlers are disabled to avoid collisions
+        plugin_manager = cls(
+            manager_path=manager_path,
+            logger_path=os.path.join(manager_path, "log"),
+            plugin_paths=plugin_paths,
+            meta_paths=meta_paths,
+            loop=loop,
+            threads=threads,
+            signals=signals,
+            layout_mode=layout_mode,
+            run_mode=run_mode,
+            container=container,
+        )
+        if start_logger:
+            plugin_manager.start_logger(level)
+        if load_system:
+            return_code = plugin_manager.load_system()
+        else:
+            return_code = None
+        return (plugin_manager, return_code)
 
     def create_plugin(self, plugin_id, plugin_version):
         """
