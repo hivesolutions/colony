@@ -2059,6 +2059,10 @@ class PluginManager(object):
             + DEFAULT_LOGGING_ERR_FILE_NAME_EXTENSION
         )
 
+        # in case the logger path does not exist, creates it
+        # making sure the files can be created
+        os.makedirs(self.logger_path, exist_ok=True)
+
         # creates the complete logger file path by adding the "complete"
         # logger file name to the "base" logger path, this is done both
         # for the "normal" logger path and for the error based path
