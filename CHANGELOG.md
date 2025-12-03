@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+*
+
+## [1.4.29] - 2025-12-03
+
+### Fixed
+
 * Removed Python 2 issue with the new code
 
 ## [1.4.28] - 2025-12-03
