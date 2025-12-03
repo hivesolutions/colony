@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Directory creation fix, for Python 2
 
 ## [1.4.29] - 2025-12-03
 
