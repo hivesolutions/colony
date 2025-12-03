@@ -1,4 +1,5 @@
 {
+    "1.4.30": ["Fixed directory creation issue for Python 2"],
     "1.4.29": ["Removed Python 2 issue with the new code"],
     "1.4.28": ["New loading strategy for the manager `PluginManager.build()`"],
     "1.4.27": ["Reconnect support for Kafka"],
