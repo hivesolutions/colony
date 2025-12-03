@@ -1900,6 +1900,7 @@ class PluginManager(object):
         run_mode=None,
         container="default",
         base_path=None,
+        level=None,
         start_logger=True,
         load_system=True,
     ):
@@ -1937,7 +1938,8 @@ class PluginManager(object):
         # retrieves the (verbosity) level for the debugger using the provided
         # configuration support, defaulting to the default level in case the
         # value is not provided through configuration
-        level = config.conf("LEVEL", logging.INFO)
+        if not level:
+            level = config.conf("LEVEL", logging.INFO)
         level = colony.getLevelInt(level)
 
         # retrieves the complete set of configuration variables associated
