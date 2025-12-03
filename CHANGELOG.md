@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* New loading strategy for the manager `PluginManager.build()`
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [1.4.28] - 2025-12-03
+
+### Added
+
+* New loading strategy for the manager `PluginManager.build()`
 
 ## [1.4.27] - 2025-04-06
 
