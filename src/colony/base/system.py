@@ -2222,7 +2222,7 @@ class PluginManager(object):
 
         # in case the logger path does not exist, creates it
         # making sure the files can be created
-        os.makedirs(self.logger_path, exist_ok=True)
+        os.makedirs(self.logger_path)
 
         # creates the complete logger file path by adding the "complete"
         # logger file name to the "base" logger path, this is done both
