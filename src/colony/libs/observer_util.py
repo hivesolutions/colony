@@ -253,6 +253,20 @@ def notify_g(operation_name, *arguments, **named_arguments):
 
 
 def notify_b(operation_name, *arguments, **named_arguments):
+    """
+    Broadcasts a notification to external distributed systems,
+    enabling cross-machine event propagation as part of the
+    Observer pattern.
+
+    The `_b` suffix stands for "broadcast", indicating that
+    this notification extends beyond the local memory space.
+    Currently dispatches to Kafka and Logstash backends.
+
+    :type operation_name: String
+    :param operation_name: The name of the operation/event to
+    broadcast to external systems.
+    """
+
     notify_kafka(operation_name, *arguments, **named_arguments)
     notify_logstash(operation_name, *arguments, **named_arguments)
 
