@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-*
+* New `get_container()` method to the `PluginManager` class
+* Added `container` field to the system information map
 
 ### Changed
 
-*
+* Removed unused import from `colony_wsgi.py`
 
 ### Fixed
 

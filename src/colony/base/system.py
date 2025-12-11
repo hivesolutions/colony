@@ -5921,6 +5921,7 @@ class PluginManager(object):
         self.system_information_map = dict(
             layout_mode=self.get_layout_mode(),
             run_mode=self.get_run_mode(),
+            container=self.get_container(),
             timestamp=self.get_timestamp(),
             version=self.get_version(),
             release=self.get_release(),
@@ -6405,6 +6406,16 @@ class PluginManager(object):
         """
 
         return self.run_mode
+
+    def get_container(self):
+        """
+        Retrieves the current base (plugin manager) container.
+
+        :rtype: String
+        :return: The current base (plugin manager) container.
+        """
+
+        return self.container
 
     def get_timestamp(self):
         """

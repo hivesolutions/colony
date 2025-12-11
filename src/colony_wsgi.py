@@ -93,8 +93,6 @@ plugin_manager, return_code = colony.PluginManager.build(
 alias = None
 rewrite = None
 
-import colony.config.base as config
-
 
 def application(environ, start_response):
     try:
