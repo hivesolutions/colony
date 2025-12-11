@@ -301,12 +301,21 @@ def serve(
     kwargs=dict(),
 ):
     _globals = globals()
-    sys.stderr.write("Starting with '%s' ..." % server + "\n")
+
     method = _globals.get("serve_" + server, serve_legacy)
+    version_method = _globals.get("version_" + server, None)
+    server_version = version_method() if version_method else None
+    if server_version:
+        sys.stderr.write(
+            "Starting Colony WSGI with '%s' version '%s' ..." % (server, server_version)
+            + "\n"
+        )
+    else:
+        sys.stderr.write("Starting Colony WSGI with '%s' ..." % server + "\n")
     return_value = method(
         host=host, port=port, ssl=ssl, key_file=key_file, cer_file=cer_file, **kwargs
     )
-    sys.stderr.write("Stopped in '%s' ..." % server + "\n")
+    sys.stderr.write("Stopped Colony WSGI using '%s' ..." % server + "\n")
     return return_value
 
 
@@ -354,6 +363,12 @@ def serve_legacy(host, port, **kwargs):
     httpd.serve_forever()
 
 
+def version_netius():
+    import netius
+
+    return netius.VERSION
+
+
 def main():
     kwargs = dict()
     server = colony.conf("SERVER", "legacy")
@@ -376,6 +391,10 @@ def main():
     hosts = [value.strip() for value in host.split(",")]
     ports = [int(value.strip()) for value in port.split(",")]
 
+    _globals = globals()
+    version_method = _globals.get("version_" + server, None)
+    server_version = version_method() if version_method else None
+
     plugin_manager.set_exec_param("server", server)
     plugin_manager.set_exec_param("hosts", hosts)
     plugin_manager.set_exec_param("ports", ports)
@@ -384,6 +403,7 @@ def main():
     plugin_manager.set_exec_param("cer_file", cer_file)
     plugin_manager.set_exec_param("kwargs", kwargs)
     plugin_manager.set_exec_param("thread_count", len(hosts))
+    plugin_manager.set_exec_param("server_version", server_version)
 
     serve_multiple(
         server=server,
