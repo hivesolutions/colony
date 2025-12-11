@@ -101,7 +101,7 @@
     "1.1.17": ["New colony WSGI execution script"],
     "1.1.16": ["Fine feature tuning"],
     "1.1.15": ["More strict support in unit testing"],
-    "1.1.14": ["Fixed bug in comparision of lazy class"],
+    "1.1.14": ["Fixed bug in comparison of lazy class"],
     "1.1.13": ["Fixed cwd bug in colony start execution"],
     "1.1.12": ["Support for env variables and path configuration"],
     "1.1.11": ["Fixed minimal bug in testing"],
