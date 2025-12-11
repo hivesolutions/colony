@@ -1229,21 +1229,21 @@ class Plugin(object):
         # acquires the ready semaphore lock
         self.ready_semaphore_lock.acquire()
 
-        # increment the ready semaphore release count
-        self.ready_semaphore_release_count += 1
-
-        # releases the ready semaphore
-        self.ready_semaphore.release()
-
-        # releases the ready semaphore lock
-        self.ready_semaphore_lock.release()
+        try:
+            # increments the ready semaphore release count
+            # and releases the ready semaphore
+            self.ready_semaphore_release_count += 1
+            self.ready_semaphore.release()
+        finally:
+            # releases the ready semaphore lock
+            self.ready_semaphore_lock.release()
 
     def ready_semaphore_status(self):
         """
         Retrieves the status of the ready semaphore (useful for thread enabled plugins).
         """
 
-        # retrieves thre ready semaphore condition
+        # retrieves the ready semaphore condition
         ready_semaphore_condition = self.ready_semaphore._Semaphore__cond
 
         # retrieves the ready semaphore condition lock
