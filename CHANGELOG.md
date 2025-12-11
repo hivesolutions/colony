@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * New `get_container()` method to the `PluginManager` class
 * Added `container` field to the system information map
+* New `get_exec_params()` method to retrieve execution parameters
+* New `set_exec_param()` method to set execution parameters
+* Added `exec_params` field to the system information map
 
 ### Changed
 

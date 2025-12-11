@@ -376,6 +376,15 @@ def main():
     hosts = [value.strip() for value in host.split(",")]
     ports = [int(value.strip()) for value in port.split(",")]
 
+    plugin_manager.set_exec_param("server", server)
+    plugin_manager.set_exec_param("hosts", hosts)
+    plugin_manager.set_exec_param("ports", ports)
+    plugin_manager.set_exec_param("ssl", ssl)
+    plugin_manager.set_exec_param("key_file", key_file)
+    plugin_manager.set_exec_param("cer_file", cer_file)
+    plugin_manager.set_exec_param("kwargs", kwargs)
+    plugin_manager.set_exec_param("thread_count", len(hosts))
+
     serve_multiple(
         server=server,
         hosts=hosts,

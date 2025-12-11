@@ -1613,6 +1613,11 @@ class PluginManager(object):
     used for situations where the plugin manager is running
     under a "contained" environment (eg: wsgi, mod_python, etc.) """
 
+    exec_params = {}
+    """ Unstructured dictionary with parameters used to describe
+    the execution environment of the plugin manager currently
+    loaded (eg: server=netius, threads=16) """
+
     daemon_pid = None
     """ The pid of the daemon process running the instance
     of plugin manager, this is only used for situations where
@@ -1784,6 +1789,7 @@ class PluginManager(object):
         layout_mode="default",
         run_mode="default",
         container="default",
+        exec_params={},
         prefix_paths=[],
         daemon_pid=None,
         daemon_file_path=None,
@@ -1825,6 +1831,9 @@ class PluginManager(object):
         :param run_mode: The run mode used in the plugin loading.
         :type container: String
         :param container: The name of the plugin manager container.
+        :type exec_params: dict
+        :param exec_params: The dictionary with parameters used to describe
+        the execution environment of the plugin manager.
         :type prefix_paths: List
         :param prefix_paths: The list of manager path relative paths to be
         set as reference for sub-projects.
@@ -1838,11 +1847,11 @@ class PluginManager(object):
 
         self.manager_path = manager_path
         self.logger_path = logger_path
-        self.library_paths = library_paths
-        self.meta_paths = meta_paths
-        self.plugin_paths = plugin_paths
+        self.library_paths = library_paths or []
+        self.meta_paths = meta_paths or []
+        self.plugin_paths = plugin_paths or []
         self.platform = platform
-        self.init_complete_handlers = init_complete_handlers
+        self.init_complete_handlers = init_complete_handlers or []
         self.stop_on_cycle_error = stop_on_cycle_error
         self.main_loop_active = loop
         self.allow_threads = threads
@@ -1850,7 +1859,8 @@ class PluginManager(object):
         self.layout_mode = ALIAS_MAP.get(layout_mode, layout_mode)
         self.run_mode = ALIAS_MAP.get(run_mode, run_mode)
         self.container = container
-        self.prefix_paths = prefix_paths
+        self.exec_params = exec_params or {}
+        self.prefix_paths = prefix_paths or []
         self.daemon_pid = daemon_pid
         self.daemon_file_path = daemon_file_path
 
@@ -1899,6 +1909,7 @@ class PluginManager(object):
         layout_mode=None,
         run_mode=None,
         container="default",
+        exec_params={},
         base_path=None,
         level=None,
         start_logger=True,
@@ -2031,6 +2042,7 @@ class PluginManager(object):
             layout_mode=layout_mode,
             run_mode=run_mode,
             container=container,
+            exec_params=exec_params,
         )
         if start_logger:
             plugin_manager.start_logger(level)
@@ -5922,6 +5934,7 @@ class PluginManager(object):
             layout_mode=self.get_layout_mode(),
             run_mode=self.get_run_mode(),
             container=self.get_container(),
+            exec_params=self.get_exec_params(),
             timestamp=self.get_timestamp(),
             version=self.get_version(),
             release=self.get_release(),
@@ -6416,6 +6429,28 @@ class PluginManager(object):
         """
 
         return self.container
+
+    def get_exec_params(self):
+        """
+        Retrieves the current base (plugin manager) execution parameters.
+
+        :rtype: dict
+        :return: The current base (plugin manager) execution parameters.
+        """
+
+        return self.exec_params
+
+    def set_exec_param(self, key, value):
+        """
+        Sets an execution parameter to the plugin manager.
+
+        :type key: String
+        :param key: The key of the execution parameter to be set.
+        :type value: String
+        :param value: The value of the execution parameter to be set.
+        """
+
+        self.exec_params[key] = value
 
     def get_timestamp(self):
         """
