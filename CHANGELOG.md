@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-*
+* Support for `BASE_PORT` and `NUMBER_THREADS` configuration options in WSGI
+* Automatic port calculation based on base port and thread count
+* Automatic host duplication for multi-port server configurations
+* New `base_port`, `end_port`, and `number_threads` execution parameters
 
 ### Changed
 

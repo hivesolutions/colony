@@ -374,6 +374,8 @@ def main():
     server = colony.conf("SERVER", "legacy")
     host = colony.conf("HOST", "127.0.0.1")
     port = colony.conf("PORT", "8080")
+    base_port = colony.conf("BASE_PORT", None, cast=int)
+    number_threads = colony.conf("NUMBER_THREADS", None, cast=int)
     ssl = colony.conf("SSL", False, cast=bool)
     key_file = colony.conf("KEY_FILE", None)
     cer_file = colony.conf("CER_FILE", None)
@@ -391,6 +393,21 @@ def main():
     hosts = [value.strip() for value in host.split(",")]
     ports = [int(value.strip()) for value in port.split(",")]
 
+    # in case a base port and number of threads are defined
+    # then the ports are calculated by adding the base port
+    # to the index for the number of threads
+    if base_port and number_threads:
+        ports = [base_port + index for index in range(number_threads)]
+        end_port = ports[-1]
+    else:
+        end_port = None
+
+    # in case there's only one host defined but multiple ports
+    # are defined (more than one server instance is required)
+    # then the host is duplicated for the number of ports
+    if len(hosts) == 1 and len(ports) > 1:
+        hosts = hosts * len(ports)
+
     _globals = globals()
     version_method = _globals.get("version_" + server, None)
     server_version = version_method() if version_method else None
@@ -398,6 +415,9 @@ def main():
     plugin_manager.set_exec_param("server", server)
     plugin_manager.set_exec_param("hosts", hosts)
     plugin_manager.set_exec_param("ports", ports)
+    plugin_manager.set_exec_param("base_port", base_port)
+    plugin_manager.set_exec_param("end_port", end_port)
+    plugin_manager.set_exec_param("number_threads", number_threads)
     plugin_manager.set_exec_param("ssl", ssl)
     plugin_manager.set_exec_param("key_file", key_file)
     plugin_manager.set_exec_param("cer_file", cer_file)
