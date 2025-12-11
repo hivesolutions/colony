@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+*
+
+### Changed
+
+*
+
+### Fixed
+
+*
+
+## [1.4.31] - 2025-12-11
+
+### Added
+
 * New `get_container()` method to the `PluginManager` class
 * Added `container` field to the system information map
 * New `get_exec_params()` method to retrieve execution parameters
@@ -18,10 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * Removed unused import from `colony_wsgi.py`
-
-### Fixed
-
-*
 
 ## [1.4.30] - 2025-12-03
 
