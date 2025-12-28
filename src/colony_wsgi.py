@@ -15,7 +15,7 @@ handling to the Colony WSGI plugin.
 
 Basic standalone usage::
 
-    $ python colony_wsgi.py
+    $ python -m colony_wsgi
 
 With Gunicorn (4 workers)::
 
@@ -23,15 +23,19 @@ With Gunicorn (4 workers)::
 
 With uWSGI::
 
-    $ uwsgi --http :8080 --wsgi-file colony_wsgi.py --callable application
+    $ uwsgi --http :8080 -w colony_wsgi:application
+
+With Uvicorn::
+
+    $ uvicorn colony_wsgi:application --host 0.0.0.0 --port 8080 --interface wsgi
 
 Development with auto-reload::
 
-    $ SERVER=legacy HOST=127.0.0.1 PORT=8080 python colony_wsgi.py
+    $ SERVER=legacy HOST=127.0.0.1 PORT=8080 python -m colony_wsgi
 
 Production with SSL::
 
-    $ SERVER=netius SSL=true KEY_FILE=server.key CER_FILE=server.crt python colony_wsgi.py
+    $ SERVER=netius SSL=true KEY_FILE=server.key CER_FILE=server.crt python -m colony_wsgi
 """
 
 # Hive Colony Framework
