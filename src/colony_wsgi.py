@@ -147,6 +147,8 @@ def application(environ, start_response):
         wsgi_plugin = plugin_manager.get_plugin("pt.hive.colony.plugins.wsgi")
         if not wsgi_plugin:
             raise colony.PluginSystemException("no WSGI plugin found")
+        if not wsgi_plugin.is_loaded():
+            raise colony.PluginSystemException("WSGI plugin not loaded")
         sequence = wsgi_plugin.handle(environ, start_response, prefix, alias, rewrite)
     except Exception:
         # in case the run mode is development the exception should
