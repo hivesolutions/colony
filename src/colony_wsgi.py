@@ -1,6 +1,39 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+"""
+WSGI Adapter for Hive Colony Framework
+
+This module provides a WSGI (Web Server Gateway Interface) compliant adapter
+that allows the Hive Colony plugin-based framework to be deployed behind any
+WSGI-compatible web server (e.g., Gunicorn, uWSGI, mod_wsgi, etc.).
+
+The primary purpose of this module is to bridge the Colony plugin system with
+standard Python web server infrastructure. It initializes the Colony plugin
+manager and exposes a WSGI `application` callable that delegates HTTP request
+handling to the Colony WSGI plugin.
+
+Basic standalone usage::
+
+    $ python colony_wsgi.py
+
+With Gunicorn (4 workers)::
+
+    $ gunicorn colony_wsgi:application -w 4 --bind 0.0.0.0:8080
+
+With uWSGI::
+
+    $ uwsgi --http :8080 --wsgi-file colony_wsgi.py --callable application
+
+Development with auto-reload::
+
+    $ SERVER=legacy HOST=127.0.0.1 PORT=8080 python colony_wsgi.py
+
+Production with SSL::
+
+    $ SERVER=netius SSL=true KEY_FILE=server.key CER_FILE=server.crt python colony_wsgi.py
+"""
+
 # Hive Colony Framework
 # Copyright (c) 2008-2024 Hive Solutions Lda.
 #
