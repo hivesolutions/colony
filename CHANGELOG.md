@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-*
+* Export of `conf_override` in `colony.base` module `__init__.py`
 
 ### Changed
 
