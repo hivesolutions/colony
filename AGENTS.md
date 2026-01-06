@@ -51,6 +51,7 @@ Before committing, ensure that the following operations items check:
 
 To create a new release follow the following steps:
 
+- Make sure that both the tests pass and the code formatting are valid.
 - Increment (look at `CHANGELOG.md` for semver changes) the `version` value in `setup.py`.
 - Update the version value in `src/colony/res/colony.json`.
 - Add a new single line entry as a list in the `src/colony/res/colony.log.json` with a simple description of the change in line with the previous changes structure.
