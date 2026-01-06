@@ -122,7 +122,12 @@ DEFAULT_PLUGIN_PATHS_FILE_PATH = "config/general/plugins.pth"
 """ The default plugin paths file path """
 
 DEFAULT_WORKSPACE_PATH = "~/.colony_workspace"
-""" The default workspace path """
+""" The default workspace path, this path is typically located
+in the user's home directory and is used to store user-specific
+configuration files and data for plugins, this allows plugins to
+maintain private/persistent state that is separate from the global
+(shared) configuration path, each plugin gets its own subdirectory
+under the workspace path (eg: ~/.colony_workspace/<plugin_id>) """
 
 DEFAULT_UNLOAD_SYSTEM_TIMEOUT = 600.0
 """ The default unload system timeout """
@@ -1635,7 +1640,12 @@ class PluginManager(object):
     """ The current configuration path """
 
     workspace_path = DEFAULT_WORKSPACE_PATH
-    """ The current workspace path """
+    """ The current workspace path, this is a user-specific directory
+    used to store private configuration files and persistent data for
+    plugins, unlike the configuration_path which is global/shared, the
+    workspace_path allows each user to have their own isolated plugin
+    data, each plugin stores its data in a subdirectory identified by
+    the plugin_id (eg: <workspace_path>/<plugin_id>) """
 
     timestamp = 0
     """ The plugin manager timestamp, this value should be set
