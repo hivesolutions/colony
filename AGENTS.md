@@ -47,6 +47,18 @@ Before committing, ensure that the following operations items check:
 - [ ] CRLF line endings are preserved
 - [ ] No type annotations in .py files (use .pyi if needed)
 
+## New Release
+
+To create a new release follow the following steps:
+
+- Increment (look at `CHANGELOG.md` for semver changes) the `version` value in `setup.py`.
+- Update the version value in `src/colony/res/colony.json`.
+- Add a new single line entry as a list in the `src/colony/res/colony.log.json` with a simple description of the change in line with the previous changes structure.
+- Move all the `CHANGELOG.md` Unreleased items that have at least one non empty item the into a new section with the new version number and date, and then create new empty sub-sections (Added, Changed and Fixed) for the Unreleased section with a single empty item.
+- Create a commit with the following message `version: $VERSION_NUMBER`.
+- Push the commit.
+- Create a new tag with the value fo the new version number `$VERSION_NUMBER`.
+
 ## License
 
 Hive Colony Framework is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/).
