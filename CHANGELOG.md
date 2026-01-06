@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Export of `conf_override` in `colony.base` module `__init__.py`
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [1.4.34] - 2025-01-06
+
+### Added
+
+* Export of `conf_override` in `colony.base` module `__init__.py`
 
 ## [1.4.33] - 2025-01-06
 
