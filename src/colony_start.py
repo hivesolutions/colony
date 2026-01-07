@@ -698,7 +698,14 @@ def convert_reference_path_list(
         # verifies if the current reference path is a local one (using
         # the prefix value) and in case it's not prepends the manager
         # path to it as the base path (usual situation)
-        is_local = reference_path.startswith("./")
+        is_local = (
+            reference_path.startswith("./")
+            or reference_path.startswith("../")
+            or reference_path.startswith(".../")
+            or reference_path.startswith(".\\")
+            or reference_path.startswith("..\\")
+            or reference_path.startswith("...\\")
+        )
         if is_local:
             dereferenced_path = cwd + "/" + reference_path
         else:

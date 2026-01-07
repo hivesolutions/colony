@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Extended local path detection in `convert_reference_path_list()` to support parent directory patterns (`../`, `.../`) and Windows-style paths (`.\`, `..\`, `...\`)
 
 ## [1.4.34] - 2025-01-06
 

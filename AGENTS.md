@@ -1,5 +1,9 @@
 # AGENTS.md file
 
+## Python Virtual Environment (venv)
+
+The Python virtual environment for this repository is typically located in `.venv`.
+
 ## Formatting
 
 Always format the code before commiting using, making sure that the Python code is properly formatted using:
@@ -35,6 +39,51 @@ python setup.py test
 - Prefer `item not in list` over `not item in list`.
 - Prefer `item == None` over `item is None`.
 - The commenting style of the project is unique, try to keep commenting style consistent.
+
+## Commit Messages
+
+This project follows [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) with the following structure:
+
+```text
+<type>: <description>
+
+<body>
+```
+
+### Commit Types
+
+| Type       | Description                                             |
+| ---------- | ------------------------------------------------------- |
+| `feat`     | A new feature or functionality                          |
+| `fix`      | A bug fix                                               |
+| `docs`     | Documentation only changes                              |
+| `refactor` | Code change that neither fixes a bug nor adds a feature |
+| `chore`    | Maintenance tasks, dependency updates, build changes    |
+| `test`     | Adding or updating tests                                |
+| `version`  | Version bump commits (reserved for releases)            |
+
+### Guidelines
+
+- Use lowercase for the type prefix.
+- Use imperative mood in the description (e.g., "Add feature" not "Added feature").
+- Keep the first line under 50 characters.
+- Reference issue/PR numbers when applicable using `(#123)` at the end.
+- For version releases, use the format `version: X.Y.Z`.
+- Add an extra newline between subject and body.
+- Make the body a series of bullet points about the commit.
+- Be descriptive always making use of the body of the message.
+
+### Examples
+
+```text
+feat: Add user authentication with OAuth 2.0 support (#138)
+fix: Resolve race condition in database connection pool
+docs: Add API endpoint documentation for v2 routes
+refactor: Extract validation logic into reusable utility module
+chore: Update dependencies to latest stable versions
+test: Add integration tests for payment processing flow
+version: 1.8.0
+```
 
 ## Pre-Commit Checklist
 
