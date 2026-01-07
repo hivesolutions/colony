@@ -294,8 +294,8 @@ class ServerThread(threading.Thread):
                 cer_file=self.cer_file,
                 kwargs=self.kwargs,
             )
-        except Exception:
-            sys.stderr.write("Problem in '%s'" % str(self) + "\n")
+        except Exception as exception:
+            sys.stderr.write("Problem in '%s': %s" % (str(self), str(exception)) + "\n")
             raise
 
 
