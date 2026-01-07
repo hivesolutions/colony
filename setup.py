@@ -33,7 +33,7 @@ import setuptools
 
 setuptools.setup(
     name="colony",
-    version="1.4.34",
+    version="1.4.35",
     author="Hive Solutions Lda.",
     author_email="development@hive.pt",
     description="Colony Framework",
