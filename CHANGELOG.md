@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Support for optional `name` parameter in `Scheduler.add_callable()` to provide human-readable names for scheduled callables
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [1.4.36] - 2026-01-22
+
+### Added
+
+* Support for optional `name` parameter in `Scheduler.add_callable()` to provide human-readable names for scheduled callables
 
 ## [1.4.35] - 2025-01-07
 

@@ -45,13 +45,16 @@ class XmlTest(colony.ColonyTestCase):
         dictionary conversion.
         """
 
-        result = colony.xml_to_dict("""<person>
+        result = colony.xml_to_dict(
+            """<person>
             <name>Hello World</name>
             <age>32</age>
-        </person>""")
+        </person>"""
+        )
         self.assertEqual(result, dict(person=dict(name="Hello World", age="32")))
 
-        result = colony.xml_to_dict("""<person>
+        result = colony.xml_to_dict(
+            """<person>
             <name>Hello World</name>
             <age>32</age>
             <address>
@@ -59,7 +62,8 @@ class XmlTest(colony.ColonyTestCase):
                 <city>London</city>
                 <country>United Kingdom</country>
             </address>
-        </person>""")
+        </person>"""
+        )
         self.assertEqual(
             result,
             dict(
@@ -73,27 +77,35 @@ class XmlTest(colony.ColonyTestCase):
             ),
         )
 
-        result = colony.xml_to_dict("""<person>
+        result = colony.xml_to_dict(
+            """<person>
             <name>Hello World</name>
             <age>32</age>
             <address></address>
-        </person>""")
+        </person>"""
+        )
         self.assertEqual(
             result, dict(person=dict(name="Hello World", age="32", address=None))
         )
 
-        result = colony.xml_to_dict("""<person>
+        result = colony.xml_to_dict(
+            """<person>
             <name>你好世界</name>
             <age>32</age>
-        </person>""")
+        </person>"""
+        )
         self.assertEqual(
             result, dict(person=dict(name=colony.legacy.u("你好世界"), age="32"))
         )
 
-        result = colony.xml_to_dict(xml.dom.minidom.parseString("""<person>
+        result = colony.xml_to_dict(
+            xml.dom.minidom.parseString(
+                """<person>
                 <name>Hello World</name>
                 <age>32</age>
-            </person>"""))
+            </person>"""
+            )
+        )
         self.assertEqual(result, dict(person=dict(name="Hello World", age="32")))
 
     def test_dict_to_xml(self):
