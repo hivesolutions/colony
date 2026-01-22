@@ -63,6 +63,10 @@ class Scheduler(threading.Thread):
     timestamp_map = {}
     """ The map associating the timestamp with a list of callables """
 
+    current_callables = []
+    """ The list of callables that are currently being executed
+    under the scheduler thread """
+
     tasks = set()
     """ The complete set of tasks that are currently under pending
     execution, this should be a set of unique identifiers """
@@ -100,6 +104,7 @@ class Scheduler(threading.Thread):
         self.daemon = True
         self.timestamp_queue = []
         self.timestamp_map = {}
+        self.current_callables = []
         self.tasks = set()
         self.waits = set()
         self.condition = threading.Condition()
@@ -412,6 +417,11 @@ class Scheduler(threading.Thread):
         # of callable object happening
         self.busy_flag = True
 
+        # updates the current callables with the list of tuples
+        # that contain the callable, identifier and name of everything
+        # that is going to be executed
+        self.current_callables = callable_list
+
         try:
             # iterates over all the callables to call
             # them (calls the proper function)
@@ -427,6 +437,7 @@ class Scheduler(threading.Thread):
                         print(exception)
         finally:
             self.busy_flag = False
+            self.current_callables = []
 
         # runs a final waits condition operation that will
         # make sure that the pending waits values are notified
