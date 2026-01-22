@@ -261,7 +261,7 @@ class Scheduler(threading.Thread):
             with _condition:
                 _condition.notify()
 
-    def add_callable(self, callable, timestamp=None, verify=True):
+    def add_callable(self, callable, timestamp=None, name=None, verify=True):
         """
         Adds a callable object to the scheduler
         for calling upon the given timestamp value.
@@ -277,6 +277,9 @@ class Scheduler(threading.Thread):
         :param timestamp: The timestamp describing the
         time for calling the callable object, if not defined
         the current timestamp is used (immediate scheduling).
+        :type name: String
+        :param name: The name of the callable, to be used as
+        a human-readable name for the callable.
         :type ensure: bool
         :param ensure: If set makes sure that the scheduler
         is running, raising an exception otherwise.
@@ -333,7 +336,7 @@ class Scheduler(threading.Thread):
             # retrieves the list of callable for the given timestamp
             # and then updates it with the given callable object
             callable_list = self.timestamp_map.get(timestamp, [])
-            callable_list.append((callable, identifier))
+            callable_list.append((callable, identifier, name))
             self.timestamp_map[timestamp] = callable_list
 
             # adds the identifier to the sequence that controls the
@@ -412,7 +415,7 @@ class Scheduler(threading.Thread):
         try:
             # iterates over all the callables to call
             # them (calls the proper function)
-            for callable, _identifier in callable_list:
+            for callable, _identifier, _name in callable_list:
                 try:
                     # calls the callable (element)
                     # this can be of long duration
@@ -433,7 +436,7 @@ class Scheduler(threading.Thread):
         with self.waits_condition:
             notify = False
 
-            for callable, identifier in callable_list:
+            for callable, identifier, _name in callable_list:
                 if identifier in self.waits:
                     self.waits.remove(identifier)
                     notify = True
