@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *
 
+## [1.4.37] - 2026-01-22
+
+### Changed
+
+* Streamlined XML string formatting in `xml_util.py` test cases for improved readability
+
 ## [1.4.36] - 2026-01-22
 
 ### Added

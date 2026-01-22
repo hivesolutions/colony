@@ -1,4 +1,5 @@
 {
+    "1.4.37": ["Streamlined XML string formatting in test cases"],
     "1.4.36": ["Support for optional `name` parameter in `Scheduler.add_callable()`"],
     "1.4.35": ["Extended local path detection in `convert_reference_path_list()`"],
     "1.4.34": ["Export of `conf_override` in `colony.base` module"],
