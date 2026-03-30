@@ -9,15 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+*
+
+### Changed
+
+*
+
+### Fixed
+
+*
+
+## [1.4.38] - 2026-03-30
+
+### Added
+
 * Added `delete_global()` function to `vars` module for removing global variables
 
 ### Changed
 
 * Improved docstring formatting in `vars` module with consistent `:type` and `:rtype` annotations
-
-### Fixed
-
-*
 
 ## [1.4.37] - 2026-01-22
 
