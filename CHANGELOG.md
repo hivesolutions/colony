@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *
 
+## [1.4.39] - 2026-03-30
+
+### Fixed
+
+* Export of `delete_global` in `colony.base` module
+
 ## [1.4.38] - 2026-03-30
 
 ### Added
