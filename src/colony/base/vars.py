@@ -35,9 +35,12 @@ def set_global(name, value):
     """
     Sets a global variable with the given name and value.
 
+    :type name: str
     :param name: The name of the global variable.
+    :type: value: object
     :param value: The value to assign to the global variable.
     """
+
     GLOBALS[name] = value
 
 
@@ -46,12 +49,16 @@ def get_global(name, default=None):
     Returns the value of a global variable,
     if found, otherwise the default value.
 
+    :type name: str
     :param name: The name of the global variable.
+    :type name: object
     :param default: The default value to return if
     the global variable is not found.
+    :rtype: object
     :return: The value of the global variable if found,
     otherwise the default value.
     """
+
     return GLOBALS.get(name, default)
 
 
@@ -59,9 +66,23 @@ def has_global(name):
     """
     Checks if a global variable with the given name exists.
 
-    :param name: The name of the global variable to check.
     :type name: str
-    :return: True if the global variable exists, False otherwise.
+    :param name: The name of the global variable to check.
     :rtype: bool
+    :return: True if the global variable exists, False otherwise.
     """
+
     return name in GLOBALS
+
+
+def delete_global(name):
+    """
+    Deletes a global variable with the given name.
+
+    :type name: str
+    :param name: The name of the global variable to delete.
+    """
+
+    if name not in GLOBALS:
+        return
+    del GLOBALS[name]
