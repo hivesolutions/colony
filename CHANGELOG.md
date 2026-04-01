@@ -9,16 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+*
+
+### Changed
+
+*
+
+### Fixed
+
+*
+
+## [1.4.41] - 2026-04-01
+
+### Added
+
 * Added debug logging for Kafka and Logstash notification sending in `observer_util`
 
 ### Changed
 
 * Renamed default logger from `default_messages` to `colony` for consistency across the codebase
 * Unified `observer_util` logger to use module-level `colony` logger instead of per-function declarations
-
-### Fixed
-
-*
 
 ## [1.4.40] - 2026-04-01
 
