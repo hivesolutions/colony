@@ -68,8 +68,10 @@ JYTHON_ENVIRONMENT = util.JYTHON_ENVIRONMENT
 IRON_PYTHON_ENVIRONMENT = util.IRON_PYTHON_ENVIRONMENT
 """ IronPython environment value """
 
-DEFAULT_LOGGER = "default_messages"
-""" The default logger name """
+DEFAULT_LOGGER = "colony"
+""" The default logger name, used by convention for the
+default loggers, this is used even from other places in
+the code base so that the default loggers are always consistent """
 
 DEFAULT_LOGGING_LEVEL = logging.INFO
 """ The default logging level to be used as the minimal

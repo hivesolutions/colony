@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-*
+* Renamed default logger from `default_messages` to `colony` for consistency across the codebase
+* Unified `observer_util` logger to use module-level `colony` logger instead of per-function declarations
 
 ### Fixed
 

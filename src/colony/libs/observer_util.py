@@ -68,7 +68,7 @@ _KAFKA_CONFIG = None
 """ Cache configuration value, to avoid the constant
 building of the Kafka configuration map """
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("colony")
 
 
 def unique():
@@ -297,7 +297,6 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
     if not producer:
         return
 
-    logger = logging.getLogger(__name__)
     logger.debug(
         "Sending Kafka notification '%s' to topic '%s'"
         % (operation_name, default_topic)
@@ -401,7 +400,6 @@ def notify_logstash(operation_name, *arguments, **named_arguments):
         "kwargs": named_arguments,
     }
 
-    logger = logging.getLogger(__name__)
     logger.debug(
         "Sending Logstash notification '%s' to '%s'"
         % (operation_name, _logstash_api.base_url)
