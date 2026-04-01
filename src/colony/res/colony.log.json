@@ -1,4 +1,5 @@
 {
+    "1.4.40": ["Improved Plugin logging passthrough and observer error handling"],
     "1.4.39": ["Export of `delete_global` in `colony.base` module"],
     "1.4.38": ["Added `delete_global()` function and improved vars docstrings"],
     "1.4.37": ["Streamlined XML string formatting in test cases"],

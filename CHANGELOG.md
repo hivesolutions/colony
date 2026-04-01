@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+*
+
+### Fixed
+
+*
+
+## [1.4.40] - 2026-04-01
+
+### Changed
+
 * Added `*args` and `**kwargs` passthrough to Plugin logging methods (debug, info, warning, error, critical)
 * Added error handling for logstash buffering in `notify_logstash` with proper logging
 * Added error handling and logging for Kafka notification sending in `notify_kafka`
