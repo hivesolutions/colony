@@ -297,6 +297,12 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
     if not producer:
         return
 
+    logger = logging.getLogger(__name__)
+    logger.debug(
+        "Sending Kafka notification '%s' to topic '%s'"
+        % (operation_name, default_topic)
+    )
+
     try:
         producer.send(default_topic, data_b)
     except Exception as exception:
@@ -394,6 +400,12 @@ def notify_logstash(operation_name, *arguments, **named_arguments):
         "args": arguments_s,
         "kwargs": named_arguments,
     }
+
+    logger = logging.getLogger(__name__)
+    logger.debug(
+        "Sending Logstash notification '%s' to '%s'"
+        % (operation_name, _logstash_api.base_url)
+    )
 
     try:
         _logstash_api.log_buffer(message)

@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-*
+* Added debug logging for Kafka and Logstash notification sending in `observer_util`
 
 ### Changed
 
