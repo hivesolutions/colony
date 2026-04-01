@@ -87,7 +87,7 @@ def getLogger(name):
     :type name: String
     :param name: The name of the logger to retrieve.
     :rtype: DummyLogger
-    :return: The dummy logger for the fiven name.
+    :return: The dummy logger for the given name.
     """
 
     return DummyLogger("dummy")
