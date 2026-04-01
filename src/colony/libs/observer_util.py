@@ -297,7 +297,13 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
     if not producer:
         return
 
-    producer.send(default_topic, data_b)
+    try:
+        producer.send(default_topic, data_b)
+    except Exception as exception:
+        logger.warning(
+            "Failed to send Kafka notification '%s': %s" % (operation_name, exception)
+        )
+        raise
 
 
 def kafka_config():
