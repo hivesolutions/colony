@@ -394,10 +394,11 @@ def notify_logstash(operation_name, *arguments, **named_arguments):
         "host": socket.gethostname(),
         "hostname": socket.gethostname(),
         "type": "notification",
-        "colony": information.VERSION,
         "name": operation_name,
         "args": arguments_s,
         "kwargs": named_arguments,
+        "version": information.VERSION,
+        "colony": True,
     }
 
     logger.debug(

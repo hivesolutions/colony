@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-*
+* Restructured Logstash notification payload to use dedicated `version` field and `colony` boolean flag
 
 ### Fixed
 
