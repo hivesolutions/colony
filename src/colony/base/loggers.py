@@ -268,6 +268,7 @@ class LogstashHandler(logging.Handler):
         self.timeout = timeout
         self.api = api
         self._last_flush = time.time()
+        self._flush_lock = threading.RLock()
 
     @classmethod
     def is_ready(cls):
@@ -356,19 +357,22 @@ class LogstashHandler(logging.Handler):
         if not self.api:
             return
 
-        # in case the force flag is not set and there are no messages
-        # to be flushed returns immediately (nothing to be done)
-        messages = self.messages
-        if not messages and not force:
-            return
+        with self._flush_lock:
+            # in case the force flag is not set and there are no messages
+            # to be flushed returns immediately (nothing to be done)
+            messages = self.messages
+            if not messages and not force:
+                return
 
-        # clears the current set of messages and updates the last flush timestamp
-        # does this before the actual flush operation to avoid duplicated messages
-        self.messages = []
-        self._last_flush = time.time()
+            # clears the current set of messages and updates the last flush
+            # timestamp, does this before the actual flush operation to avoid
+            # duplicated messages being sent by concurrent threads
+            self.messages = collections.deque()
+            self._last_flush = time.time()
 
-        # posts the complete set of messages to logstash, notice that this is a blocking
-        # call and may take some time to be completed
+        # posts the complete set of messages to logstash, notice that this
+        # is a blocking call and may take some time to be completed, runs
+        # outside the lock to avoid blocking other threads from buffering
         self.api.log_bulk(messages, tag="default", raise_e=raise_e)
 
     def _build_api(self):
