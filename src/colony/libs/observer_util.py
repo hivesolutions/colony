@@ -30,6 +30,7 @@ __license__ = "Apache License, Version 2.0"
 
 import json
 import socket
+import logging
 import datetime
 
 from colony.base import config, legacy, information
@@ -66,6 +67,8 @@ clients, to be used to power singleton based retrieval """
 _KAFKA_CONFIG = None
 """ Cache configuration value, to avoid the constant
 building of the Kafka configuration map """
+
+logger = logging.getLogger(__name__)
 
 
 def unique():
@@ -385,7 +388,15 @@ def notify_logstash(operation_name, *arguments, **named_arguments):
         "args": arguments_s,
         "kwargs": named_arguments,
     }
-    _logstash_api.log_buffer(message)
+
+    try:
+        _logstash_api.log_buffer(message)
+    except Exception as exception:
+        logger.warning(
+            "Failed to buffer logstash notification '%s': %s"
+            % (operation_name, exception)
+        )
+        raise
 
 
 def logstash_api(host="main"):

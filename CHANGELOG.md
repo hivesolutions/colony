@@ -13,11 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-*
+* Added `*args` and `**kwargs` passthrough to Plugin logging methods (debug, info, warning, error, critical)
+* Added error handling for logstash buffering in `notify_logstash` with proper logging
 
 ### Fixed
 
-*
+* Fixed `formated` typo to `formatted` in Plugin and PluginManager traceback and logging methods
 
 ## [1.4.39] - 2026-03-30
 

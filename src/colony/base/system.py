@@ -1364,21 +1364,21 @@ class Plugin(object):
 
         # in case the traceback list is valid formats it
         # correctly otherwise falls-back to the empty tuple
-        # as the default formated traceback (no traceback)
-        formated_traceback = (
+        # as the default formatted traceback (no traceback)
+        formatted_traceback = (
             traceback.format_tb(traceback_list) if traceback_list else ()
         )
 
         # iterates over the traceback lines to log
         # them into the current logger
-        for formated_traceback_line in formated_traceback:
-            # strips the formated traceback line and then
-            # logs the message with the formated traceback line
+        for formatted_traceback_line in formatted_traceback:
+            # strips the formatted traceback line and then
+            # logs the message with the formatted traceback line
             # with the requested log level (as specified)
-            formated_traceback_line_stripped = formated_traceback_line.rstrip()
-            self.logger.log(level, formated_traceback_line_stripped)
+            formatted_traceback_line_stripped = formatted_traceback_line.rstrip()
+            self.logger.log(level, formatted_traceback_line_stripped)
 
-    def debug(self, message):
+    def debug(self, message, *args, **kwargs):
         """
         Adds the given debug message to the logger.
 
@@ -1389,9 +1389,9 @@ class Plugin(object):
         # formats the logger message then prints the
         # debug message to the current stream
         logger_message = self.format_logger_message(message)
-        self.logger.debug(logger_message)
+        self.logger.debug(logger_message, *args, **kwargs)
 
-    def info(self, message):
+    def info(self, message, *args, **kwargs):
         """
         Adds the given info message to the logger.
 
@@ -1402,9 +1402,9 @@ class Plugin(object):
         # formats the logger message then prints the
         # info message to the current stream
         logger_message = self.format_logger_message(message)
-        self.logger.info(logger_message)
+        self.logger.info(logger_message, *args, **kwargs)
 
-    def warning(self, message):
+    def warning(self, message, *args, **kwargs):
         """
         Adds the given warning message to the logger.
 
@@ -1415,10 +1415,10 @@ class Plugin(object):
         # formats the logger message then prints the
         # warning message and logs the current stack trace
         logger_message = self.format_logger_message(message)
-        self.logger.warning(logger_message)
+        self.logger.warning(logger_message, *args, **kwargs)
         self.log_stack_trace(level=logging.INFO)
 
-    def error(self, message):
+    def error(self, message, *args, **kwargs):
         """
         Adds the given error message to the logger.
 
@@ -1429,10 +1429,10 @@ class Plugin(object):
         # formats the logger message then prints the
         # error message and logs the current stack trace
         logger_message = self.format_logger_message(message)
-        self.logger.error(logger_message)
+        self.logger.error(logger_message, *args, **kwargs)
         self.log_stack_trace(level=logging.WARNING)
 
-    def critical(self, message):
+    def critical(self, message, *args, **kwargs):
         """
         Adds the given critical message to the logger.
 
@@ -1443,7 +1443,7 @@ class Plugin(object):
         # formats the logger message then prints the
         # critical message and logs the current stack trace
         logger_message = self.format_logger_message(message)
-        self.logger.critical(logger_message)
+        self.logger.critical(logger_message, *args, **kwargs)
         self.log_stack_trace(level=logging.ERROR)
 
     def format_logger_message(self, message):
@@ -5988,19 +5988,19 @@ class PluginManager(object):
 
         # in case the traceback list is valid
         if traceback_list:
-            formated_traceback = traceback.format_tb(traceback_list)
+            formatted_traceback = traceback.format_tb(traceback_list)
         # otherwise there is no traceback list
         else:
-            formated_traceback = ()
+            formatted_traceback = ()
 
         # iterates over the traceback lines to log
         # them into the current logger
-        for formated_traceback_line in formated_traceback:
-            # strips the formated traceback line
-            formated_traceback_line_stripped = formated_traceback_line.rstrip()
+        for formatted_traceback_line in formatted_traceback:
+            # strips the formatted traceback line
+            formatted_traceback_line_stripped = formatted_traceback_line.rstrip()
 
-            # prints a log message with the formated traceback line
-            self.logger.log(level, formated_traceback_line_stripped)
+            # prints a log message with the formatted traceback line
+            self.logger.log(level, formatted_traceback_line_stripped)
 
     def debug(self, message):
         """
@@ -6102,9 +6102,9 @@ class PluginManager(object):
         Formats the given message into a logging message.
 
         :type message: String
-        :param message: The message to be formated into logging message.
+        :param message: The message to be formatted into logging message.
         :rtype: String
-        :return: The formated logging message.
+        :return: The formatted logging message.
         """
 
         # the default formatting message
