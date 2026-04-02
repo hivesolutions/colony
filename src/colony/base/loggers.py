@@ -338,9 +338,10 @@ class LogstashHandler(logging.Handler):
         if not meta == None:
             log["meta"] = meta
 
-        self.messages.append(log)
-        message_overflow = len(self.messages) >= self.max_length
-        time_overflow = time.time() - self._last_flush > self.timeout
+        with self._flush_lock:
+            self.messages.append(log)
+            message_overflow = len(self.messages) >= self.max_length
+            time_overflow = time.time() - self._last_flush > self.timeout
         should_flush = message_overflow or time_overflow
         if should_flush:
             try:
