@@ -29,6 +29,7 @@ __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import json
+import uuid
 import socket
 import logging
 import datetime
@@ -289,7 +290,12 @@ def notify_kafka(operation_name, *arguments, **named_arguments):
 
     default_topic = _kafka_config["default_topic"]
 
-    message = dict(name=operation_name, args=arguments, kwargs=named_arguments)
+    message = dict(
+        name=operation_name,
+        args=arguments,
+        kwargs=named_arguments,
+        uuid=str(uuid.uuid4()),
+    )
     data = json.dumps(message)
     data_b = legacy.bytes(data, encoding="utf-8", force=True)
 
@@ -399,6 +405,7 @@ def notify_logstash(operation_name, *arguments, **named_arguments):
         "name": operation_name,
         "args": arguments_s,
         "kwargs": named_arguments,
+        "uuid": str(uuid.uuid4()),
     }
 
     logger.debug(

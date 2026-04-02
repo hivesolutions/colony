@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-*
+* Added UUID generation to Kafka and Logstash notification payloads for unique event tracking
 
 ### Changed
 
