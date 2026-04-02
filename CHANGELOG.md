@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Added UUID generation to Kafka and Logstash notification payloads for unique event tracking
+*
 
 ### Changed
 
@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [1.4.43] - 2026-04-02
+
+### Added
+
+* Added UUID generation to Kafka and Logstash notification payloads for unique event tracking
 
 ## [1.4.42] - 2026-04-01
 
