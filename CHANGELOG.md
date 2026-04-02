@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+*
+
+## [1.4.44] - 2026-04-02
+
+### Fixed
+
 * Race condition in LogstashHandler.emit where concurrent threads could both trigger a flush operation
 
 ## [1.4.43] - 2026-04-02
