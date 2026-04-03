@@ -2332,6 +2332,8 @@ class PluginManager(object):
             DEFAULT_LOGGING_FORMAT_TRACE if is_trace else DEFAULT_LOGGING_FORMAT
         )
         logging_format = GLOBAL_CONFIG.get("logging_format", default_format)
+        if logging_format == DEFAULT_LOGGING_FORMAT and is_trace:
+            logging_format = DEFAULT_LOGGING_FORMAT_TRACE
         formatter = logging.Formatter(logging_format)
 
         # sets the formatter in the stream and rotating
