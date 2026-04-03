@@ -28,6 +28,11 @@ __copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+SILENT = 51
+""" The silent level used to silent all the logging
+or an handler, this is used as an utility for debugging
+purposes more that a real feature for production systems """
+
 CRITICAL = 50
 """ Critical logging level """
 
@@ -43,6 +48,12 @@ INFO = 20
 DEBUG = 10
 """ Debug logging level """
 
+TRACE = 5
+""" The trace level used for extremely detailed and verbose
+logging of protocol-level operations, this is meant to be
+used for fine-grained debugging of low-level operations
+like raw byte transfers and frame parsing """
+
 NOTSET = 0
 """ Not set logging level """
 
@@ -50,30 +61,36 @@ WARN = WARNING
 """ Alias to WARNING log level """
 
 _levelNames = {
+    SILENT: "SILENT",
     CRITICAL: "CRITICAL",
     ERROR: "ERROR",
     WARNING: "WARNING",
     INFO: "INFO",
     DEBUG: "DEBUG",
+    TRACE: "TRACE",
     NOTSET: "NOTSET",
+    "SILENT": SILENT,
     "CRITICAL": CRITICAL,
     "ERROR": ERROR,
     "WARN": WARNING,
     "WARNING": WARNING,
     "INFO": INFO,
     "DEBUG": DEBUG,
+    "TRACE": TRACE,
     "NOTSET": NOTSET,
 }
 """ The map relating the log levels with the textual
 representation and vice-versa """
 
 _levelValues = {
+    "SILENT": SILENT,
     "CRITICAL": CRITICAL,
     "ERROR": ERROR,
     "WARN": WARNING,
     "WARNING": WARNING,
     "INFO": INFO,
     "DEBUG": DEBUG,
+    "TRACE": TRACE,
     "NOTSET": NOTSET,
 }
 """ Map tha associated the textual representation of the
@@ -144,6 +161,16 @@ class DummyLogger(object):
 
         :type level: int
         :param level: The level of the logger.
+        """
+
+        pass
+
+    def trace(self, msg, *args, **kwargs):
+        """
+        Prints a trace message to the logger.
+
+        :type msg: String
+        :param msg: The message to print.
         """
 
         pass

@@ -2223,6 +2223,11 @@ class PluginManager(object):
         :param log_level: The log level of the logger.
         """
 
+        # patches the logging infra-structure so that the TRACE level
+        # is properly registered and available for usage, this call
+        # is idempotent and safe to be called multiple times
+        loggers.patch_logging()
+
         # retrieves the minimal log level between the current
         # log level and the default one (as specified)
         minimal_log_level = (
@@ -6569,6 +6574,23 @@ class PluginManager(object):
         # returns the message containing the description
         # about the uptime for the current plugin system
         return uptime
+
+    def is_trace(self):
+        """
+        Checks if the current logging level is set to trace,
+        this check may be used to action conditional code
+        execution for fine-grained debugging purposes.
+
+        :rtype: bool
+        :return: Value indicating if the current logging level
+        is set to trace (for fine-grained debugging).
+        """
+
+        if not self.logger:
+            return False
+        if not self.logger.level:
+            return False
+        return self.logger.level <= loggers.TRACE
 
     def is_development(self):
         """
