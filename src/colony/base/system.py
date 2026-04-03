@@ -80,6 +80,13 @@ logging level to all the default (verbose) loggers """
 DEFAULT_LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
 """ The default logging format """
 
+DEFAULT_LOGGING_FORMAT_TRACE = (
+    "%(asctime)s [%(levelname)s] %(pathname)s:%(lineno)d | %(message)s"
+)
+""" The format to be used when the logging level is set to TRACE,
+includes file path and line number to allow for fine-grained debugging
+of low-level protocol operations """
+
 DEFAULT_LOGGING_FILE_NAME_PREFIX = "colony"
 """ The default logging file name prefix """
 
@@ -2317,8 +2324,14 @@ class PluginManager(object):
         logstash_handler.setLevel(minimal_log_level)
 
         # retrieves the logging format and uses it
-        # to create the proper logging formatter
-        logging_format = GLOBAL_CONFIG.get("logging_format", DEFAULT_LOGGING_FORMAT)
+        # to create the proper logging formatter, in case the
+        # log level is set to trace uses the trace format that
+        # includes the file path and line number for debugging
+        is_trace = log_level <= loggers.TRACE
+        default_format = (
+            DEFAULT_LOGGING_FORMAT_TRACE if is_trace else DEFAULT_LOGGING_FORMAT
+        )
+        logging_format = GLOBAL_CONFIG.get("logging_format", default_format)
         formatter = logging.Formatter(logging_format)
 
         # sets the formatter in the stream and rotating
