@@ -6009,7 +6009,25 @@ class PluginManager(object):
             # prints a log message with the formatted traceback line
             self.logger.log(level, formatted_traceback_line_stripped)
 
-    def debug(self, message):
+    def trace(self, message, *args, **kwargs):
+        """
+        Adds the given trace message to the logger.
+
+        :type message: String
+        :param message: The trace message to be added to the logger.
+        """
+
+        # in case no logger is defined it's not possible
+        # to print the message as a trace
+        if not self.logger:
+            return
+
+        # formats the logger message and prints it
+        # as a trace message into the logger
+        logger_message = self.format_logger_message(message)
+        self.logger.log(loggers.TRACE, logger_message, *args, **kwargs)
+
+    def debug(self, message, *args, **kwargs):
         """
         Adds the given debug message to the logger.
 
@@ -6025,9 +6043,9 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as a debug message into the logger
         logger_message = self.format_logger_message(message)
-        self.logger.debug(logger_message)
+        self.logger.debug(logger_message, *args, **kwargs)
 
-    def info(self, message):
+    def info(self, message, *args, **kwargs):
         """
         Adds the given info message to the logger.
 
@@ -6043,9 +6061,9 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as an info message into the logger
         logger_message = self.format_logger_message(message)
-        self.logger.info(logger_message)
+        self.logger.info(logger_message, *args, **kwargs)
 
-    def warning(self, message):
+    def warning(self, message, *args, **kwargs):
         """
         Adds the given warning message to the logger.
 
@@ -6061,12 +6079,12 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as a warning message into the logger
         logger_message = self.format_logger_message(message)
-        self.logger.warning(logger_message)
+        self.logger.warning(logger_message, *args, **kwargs)
 
         # logs the stack trace
         self.log_stack_trace(level=logging.INFO)
 
-    def error(self, message):
+    def error(self, message, *args, **kwargs):
         """
         Adds the given error message to the logger.
 
@@ -6082,12 +6100,12 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as an error message into the logger
         logger_message = self.format_logger_message(message)
-        self.logger.error(logger_message)
+        self.logger.error(logger_message, *args, **kwargs)
 
         # logs the stack trace
         self.log_stack_trace(level=logging.WARNING)
 
-    def critical(self, message):
+    def critical(self, message, *args, **kwargs):
         """
         Adds the given critical message to the logger.
 
@@ -6099,7 +6117,7 @@ class PluginManager(object):
         logger_message = self.format_logger_message(message)
 
         # prints the critical message
-        self.logger.critical(logger_message)
+        self.logger.critical(logger_message, *args, **kwargs)
 
         # logs the stack trace
         self.log_stack_trace(level=logging.ERROR)
