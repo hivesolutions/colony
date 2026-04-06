@@ -81,7 +81,7 @@ DEFAULT_LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
 """ The default logging format """
 
 DEFAULT_LOGGING_FORMAT_TRACE = (
-    "%(asctime)s [%(levelname)s] %(pathname)s:%(lineno)d | %(message)s"
+    "%(asctime)s [%(name)s] [%(levelname)s] %(message)s"
 )
 """ The format to be used when the logging level is set to TRACE,
 includes file path and line number to allow for fine-grained debugging
