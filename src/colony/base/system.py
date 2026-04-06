@@ -80,9 +80,7 @@ logging level to all the default (verbose) loggers """
 DEFAULT_LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
 """ The default logging format """
 
-DEFAULT_LOGGING_FORMAT_TRACE = (
-    "%(asctime)s [%(name)s] [%(levelname)s] %(message)s"
-)
+DEFAULT_LOGGING_FORMAT_TRACE = "%(asctime)s [%(name)s] [%(levelname)s] %(message)s"
 """ The format to be used when the logging level is set to TRACE,
 includes file path and line number to allow for fine-grained debugging
 of low-level protocol operations """
