@@ -80,10 +80,14 @@ logging level to all the default (verbose) loggers """
 DEFAULT_LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
 """ The default logging format """
 
-DEFAULT_LOGGING_FORMAT_TRACE = "%(asctime)s [%(name)s] [%(levelname)s] %(message)s"
+DEFAULT_LOGGING_FORMAT_TRACE = (
+    "%(asctime)s [%(levelname)s] %(pathname)s:%(lineno)d | %(message)s"
+    if sys.version_info >= (3, 8)
+    else "%(asctime)s [%(levelname)s] %(message)s"
+)
 """ The format to be used when the logging level is set to TRACE,
-includes file path and line number to allow for fine-grained debugging
-of low-level protocol operations """
+includes file path and line number on Python 3.8+ where stacklevel
+is supported for accurate caller information """
 
 DEFAULT_LOGGING_FILE_NAME_PREFIX = "colony"
 """ The default logging file name prefix """
@@ -6038,6 +6042,8 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as a trace message into the logger
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.log(loggers.TRACE, logger_message, *args, **kwargs)
 
     def debug(self, message, *args, **kwargs):
@@ -6056,6 +6062,8 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as a debug message into the logger
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.debug(logger_message, *args, **kwargs)
 
     def info(self, message, *args, **kwargs):
@@ -6074,6 +6082,8 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as an info message into the logger
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.info(logger_message, *args, **kwargs)
 
     def warning(self, message, *args, **kwargs):
@@ -6092,6 +6102,8 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as a warning message into the logger
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.warning(logger_message, *args, **kwargs)
 
         # logs the stack trace
@@ -6113,6 +6125,8 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as an error message into the logger
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.error(logger_message, *args, **kwargs)
 
         # logs the stack trace
@@ -6130,6 +6144,8 @@ class PluginManager(object):
         logger_message = self.format_logger_message(message)
 
         # prints the critical message
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.critical(logger_message, *args, **kwargs)
 
         # logs the stack trace
