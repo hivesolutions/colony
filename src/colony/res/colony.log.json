@@ -1,4 +1,5 @@
 {
+    "1.4.45": ["Added TRACE log level and patch_logging() for fine-grained protocol-level debugging"],
     "1.4.44": ["Fixed thread safety race condition in LogstashHandler"],
     "1.4.43": ["Added UUID generation to Kafka and Logstash notification payloads"],
     "1.4.42": ["Restructured Logstash notification payload fields"],
