@@ -64,6 +64,17 @@ TIMEOUT_LOGSTASH = 30.0
 """ The maximum amount of time in between flush
 operations in the logstash handler """
 
+SILENT = logging.CRITICAL + 1
+""" The silent level used to silent all the logging
+or an handler, this is used as an utility for debugging
+purposes more that a real feature for production systems """
+
+TRACE = logging.DEBUG - 5
+""" The trace level used for extremely detailed and verbose
+logging of protocol-level operations, this is meant to be
+used for fine-grained debugging of low-level operations
+like raw byte transfers and frame parsing """
+
 LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
 """ The sequence of levels from the least sever to the
 most sever this sequence may be used to find all the
@@ -386,3 +397,20 @@ class LogstashHandler(logging.Handler):
             return None
 
         return logstash.API()
+
+
+def patch_logging():
+    if hasattr(logging, "_colony_patched"):
+        return
+
+    # patches the logging infra-structure adding the trace level
+    # support and the corresponding trace method to the logger
+    logging.addLevelName(TRACE, "TRACE")
+    logging.Logger.trace = _trace
+
+    logging._colony_patched = True
+
+
+def _trace(self, message, *args, **kwargs):
+    if self.isEnabledFor(TRACE):
+        self._log(TRACE, message, args, **kwargs)

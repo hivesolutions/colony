@@ -111,6 +111,8 @@ from .import_util import reload_import
 from .lazy_util import LazyClass, LazyIteratorClass, is_lazy, Lazy, LazyIterator
 from .list_util import list_intersect, list_extend, list_no_duplicates
 from .logging_util import (
+    SILENT,
+    TRACE,
     getLogger,
     getLevelName,
     getLevelInt,

@@ -590,7 +590,7 @@ def _generate_plugin(path, use_path=True):
     # filters the resources that have been gathered so that only the ones that
     # matter are defined in the structure and then creates the sequence of dependency
     # maps that are going to be defining the dependencies of the plugin
-    resources = _fitler_resources(resources)
+    resources = _filter_resources(resources)
     dependencies = [dependency.get_map() for dependency in plugin.dependencies]
 
     # creates the "final" plugin definition structure with the complete set of
@@ -653,7 +653,7 @@ def _generate_config(path):
     output("Generating config descriptor for %s" % name)
 
     resources = _gather_config(path)
-    resources = _fitler_resources(resources)
+    resources = _filter_resources(resources)
 
     structure = dict(
         type="config",
@@ -838,7 +838,7 @@ def _deploy(path, timestamp=None):
 
     # dumps the current descriptor object for the item that is going to be
     # deployed and then writes the contents of it into the info based file
-    # that is going to be used as a meta information provid3er
+    # that is going to be used as a meta information provider
     descriptor_s = json.dumps(descriptor)
     is_unicode = colony.legacy.is_unicode(descriptor_s)
     if is_unicode:
@@ -1034,7 +1034,7 @@ def _upgrade():
 
     # "calculates" both the path to the plugins directory and to the
     # meta information directory, both of them will be used to gather
-    # the information on the current instace's deployment
+    # the information on the current instance's deployment
     plugins_path = os.path.join(manager_path, "plugins")
     meta_path = os.path.join(manager_path, "meta")
 
@@ -1230,7 +1230,7 @@ def _dependencies(info, upgrade=False):
         _install(id=dependency["id"], version=dependency["version"], upgrade=upgrade)
 
 
-def _fitler_resources(resources, exclusion=(".pyc", ".temp", ".tmp")):
+def _filter_resources(resources, exclusion=(".pyc", ".temp", ".tmp")):
     filtered = []
     for resource in resources:
         if resource.endswith(exclusion):

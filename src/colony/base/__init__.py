@@ -89,7 +89,14 @@ from .information import (
     DATE_TIME_FORMAT,
     INFORMATION_PATH,
 )
-from .loggers import BroadcastHandler, MemoryHandler, LogstashHandler
+from .loggers import (
+    SILENT,
+    TRACE,
+    BroadcastHandler,
+    MemoryHandler,
+    LogstashHandler,
+    patch_logging,
+)
 from .system import (
     System,
     Plugin,

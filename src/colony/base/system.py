@@ -80,6 +80,15 @@ logging level to all the default (verbose) loggers """
 DEFAULT_LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
 """ The default logging format """
 
+DEFAULT_LOGGING_FORMAT_TRACE = (
+    "%(asctime)s [%(levelname)s] %(pathname)s:%(lineno)d | %(message)s"
+    if sys.version_info >= (3, 8)
+    else "%(asctime)s [%(levelname)s] %(message)s"
+)
+""" The format to be used when the logging level is set to TRACE,
+includes file path and line number on Python 3.8+ where stacklevel
+is supported for accurate caller information """
+
 DEFAULT_LOGGING_FILE_NAME_PREFIX = "colony"
 """ The default logging file name prefix """
 
@@ -235,6 +244,11 @@ class System(object):
         if self.plugin == None:
             raise exceptions.PluginSystemException("no plugin available")
         return self.plugin.manager
+
+    def trace(self, *args, **kwargs):
+        if self.plugin == None:
+            raise exceptions.PluginSystemException("no plugin available")
+        return self.plugin.trace(*args, **kwargs)
 
     def debug(self, *args, **kwargs):
         if self.plugin == None:
@@ -1380,6 +1394,19 @@ class Plugin(object):
             formatted_traceback_line_stripped = formatted_traceback_line.rstrip()
             self.logger.log(level, formatted_traceback_line_stripped)
 
+    def trace(self, message, *args, **kwargs):
+        """
+        Adds the given trace message to the logger.
+
+        :type message: String
+        :param message: The trace message to be added to the logger.
+        """
+
+        # formats the logger message then prints the
+        # trace message to the current stream
+        logger_message = self.format_logger_message(message)
+        self.logger.trace(logger_message, *args, **kwargs)
+
     def debug(self, message, *args, **kwargs):
         """
         Adds the given debug message to the logger.
@@ -2223,6 +2250,11 @@ class PluginManager(object):
         :param log_level: The log level of the logger.
         """
 
+        # patches the logging infra-structure so that the TRACE level
+        # is properly registered and available for usage, this call
+        # is idempotent and safe to be called multiple times
+        loggers.patch_logging()
+
         # retrieves the minimal log level between the current
         # log level and the default one (as specified)
         minimal_log_level = (
@@ -2312,8 +2344,16 @@ class PluginManager(object):
         logstash_handler.setLevel(minimal_log_level)
 
         # retrieves the logging format and uses it
-        # to create the proper logging formatter
-        logging_format = GLOBAL_CONFIG.get("logging_format", DEFAULT_LOGGING_FORMAT)
+        # to create the proper logging formatter, in case the
+        # log level is set to trace uses the trace format that
+        # includes the file path and line number for debugging
+        is_trace = log_level <= loggers.TRACE
+        default_format = (
+            DEFAULT_LOGGING_FORMAT_TRACE if is_trace else DEFAULT_LOGGING_FORMAT
+        )
+        logging_format = GLOBAL_CONFIG.get("logging_format", default_format)
+        if logging_format == DEFAULT_LOGGING_FORMAT and is_trace:
+            logging_format = DEFAULT_LOGGING_FORMAT_TRACE
         formatter = logging.Formatter(logging_format)
 
         # sets the formatter in the stream and rotating
@@ -6004,7 +6044,27 @@ class PluginManager(object):
             # prints a log message with the formatted traceback line
             self.logger.log(level, formatted_traceback_line_stripped)
 
-    def debug(self, message):
+    def trace(self, message, *args, **kwargs):
+        """
+        Adds the given trace message to the logger.
+
+        :type message: String
+        :param message: The trace message to be added to the logger.
+        """
+
+        # in case no logger is defined it's not possible
+        # to print the message as a trace
+        if not self.logger:
+            return
+
+        # formats the logger message and prints it
+        # as a trace message into the logger
+        logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
+        self.logger.log(loggers.TRACE, logger_message, *args, **kwargs)
+
+    def debug(self, message, *args, **kwargs):
         """
         Adds the given debug message to the logger.
 
@@ -6020,9 +6080,11 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as a debug message into the logger
         logger_message = self.format_logger_message(message)
-        self.logger.debug(logger_message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
+        self.logger.debug(logger_message, *args, **kwargs)
 
-    def info(self, message):
+    def info(self, message, *args, **kwargs):
         """
         Adds the given info message to the logger.
 
@@ -6038,9 +6100,11 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as an info message into the logger
         logger_message = self.format_logger_message(message)
-        self.logger.info(logger_message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
+        self.logger.info(logger_message, *args, **kwargs)
 
-    def warning(self, message):
+    def warning(self, message, *args, **kwargs):
         """
         Adds the given warning message to the logger.
 
@@ -6056,12 +6120,14 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as a warning message into the logger
         logger_message = self.format_logger_message(message)
-        self.logger.warning(logger_message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
+        self.logger.warning(logger_message, *args, **kwargs)
 
         # logs the stack trace
         self.log_stack_trace(level=logging.INFO)
 
-    def error(self, message):
+    def error(self, message, *args, **kwargs):
         """
         Adds the given error message to the logger.
 
@@ -6077,12 +6143,14 @@ class PluginManager(object):
         # formats the logger message and prints it
         # as an error message into the logger
         logger_message = self.format_logger_message(message)
-        self.logger.error(logger_message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
+        self.logger.error(logger_message, *args, **kwargs)
 
         # logs the stack trace
         self.log_stack_trace(level=logging.WARNING)
 
-    def critical(self, message):
+    def critical(self, message, *args, **kwargs):
         """
         Adds the given critical message to the logger.
 
@@ -6094,7 +6162,9 @@ class PluginManager(object):
         logger_message = self.format_logger_message(message)
 
         # prints the critical message
-        self.logger.critical(logger_message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
+        self.logger.critical(logger_message, *args, **kwargs)
 
         # logs the stack trace
         self.log_stack_trace(level=logging.ERROR)
@@ -6569,6 +6639,23 @@ class PluginManager(object):
         # returns the message containing the description
         # about the uptime for the current plugin system
         return uptime
+
+    def is_trace(self):
+        """
+        Checks if the current logging level is set to trace,
+        this check may be used to action conditional code
+        execution for fine-grained debugging purposes.
+
+        :rtype: bool
+        :return: Value indicating if the current logging level
+        is set to trace (for fine-grained debugging).
+        """
+
+        if not self.logger:
+            return False
+        if not self.logger.level:
+            return False
+        return self.logger.level <= loggers.TRACE
 
     def is_development(self):
         """

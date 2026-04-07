@@ -32,6 +32,8 @@ import logging
 
 import colony
 
+from colony.base import loggers
+
 try:
     import unittest.mock as mock
 except ImportError:
@@ -43,6 +45,131 @@ class LoggersTest(colony.ColonyTestCase):
     Test case for the verification of logging related
     methods and functions of colony.
     """
+
+    def test_silent_value(self):
+        self.assertEqual(colony.SILENT, logging.CRITICAL + 1)
+        self.assertEqual(type(colony.SILENT), int)
+
+    def test_silent_above_critical(self):
+        self.assertTrue(colony.SILENT > logging.CRITICAL)
+
+    def test_trace_value(self):
+        self.assertEqual(colony.TRACE, 5)
+        self.assertEqual(colony.TRACE, logging.DEBUG - 5)
+        self.assertEqual(type(colony.TRACE), int)
+
+    def test_trace_below_debug(self):
+        self.assertTrue(colony.TRACE < logging.DEBUG)
+
+    def test_level_ordering(self):
+        self.assertTrue(colony.TRACE < logging.DEBUG)
+        self.assertTrue(logging.DEBUG < logging.INFO)
+        self.assertTrue(logging.INFO < logging.WARNING)
+        self.assertTrue(logging.WARNING < logging.ERROR)
+        self.assertTrue(logging.ERROR < logging.CRITICAL)
+        self.assertTrue(logging.CRITICAL < colony.SILENT)
+
+    def test_patch_logging(self):
+        colony.patch_logging()
+
+        result = logging.getLevelName(colony.TRACE)
+
+        self.assertEqual(result, "TRACE")
+
+    def test_patch_logging_reverse(self):
+        colony.patch_logging()
+
+        result = logging.getLevelName("TRACE")
+
+        self.assertEqual(result, colony.TRACE)
+
+    def test_patch_logging_idempotent(self):
+        colony.patch_logging()
+        colony.patch_logging()
+
+        result = logging.getLevelName(colony.TRACE)
+
+        self.assertEqual(result, "TRACE")
+
+    def test_patch_logging_logger_trace(self):
+        colony.patch_logging()
+
+        logger = logging.getLogger("colony.test.trace")
+
+        self.assertTrue(hasattr(logger, "trace"))
+        self.assertTrue(callable(logger.trace))
+
+    def test_patch_logging_logger_trace_call(self):
+        colony.patch_logging()
+
+        logger = logging.getLogger("colony.test.trace.call")
+        logger.setLevel(colony.TRACE)
+        records = []
+        handler = logging.Handler()
+        handler.setLevel(colony.TRACE)
+        handler.emit = lambda record: records.append(record)
+        logger.addHandler(handler)
+
+        try:
+            logger.trace("trace test message")
+
+            self.assertEqual(len(records), 1)
+            self.assertEqual(records[0].getMessage(), "trace test message")
+            self.assertEqual(records[0].levelno, colony.TRACE)
+            self.assertEqual(records[0].levelname, "TRACE")
+        finally:
+            logger.removeHandler(handler)
+
+    def test_patch_logging_logger_trace_filtered(self):
+        colony.patch_logging()
+
+        logger = logging.getLogger("colony.test.trace.filtered")
+        logger.setLevel(logging.DEBUG)
+        records = []
+        handler = logging.Handler()
+        handler.setLevel(colony.TRACE)
+        handler.emit = lambda record: records.append(record)
+        logger.addHandler(handler)
+
+        try:
+            # the trace message should be filtered since the logger
+            # level is set to DEBUG which is above TRACE
+            logger.trace("this should be filtered")
+
+            self.assertEqual(len(records), 0)
+        finally:
+            logger.removeHandler(handler)
+
+    def test_get_level_int_trace(self):
+        result = colony.getLevelInt("TRACE")
+
+        self.assertEqual(result, colony.TRACE)
+        self.assertEqual(result, 5)
+
+    def test_get_level_int_silent(self):
+        result = colony.getLevelInt("SILENT")
+
+        self.assertEqual(result, colony.SILENT)
+        self.assertEqual(result, 51)
+
+    def test_get_level_name_trace(self):
+        result = colony.getLevelName("TRACE")
+
+        self.assertEqual(result, loggers.TRACE)
+
+    def test_get_level_name_silent(self):
+        result = colony.getLevelName("SILENT")
+
+        self.assertEqual(result, loggers.SILENT)
+
+    def test_dummy_logger_trace(self):
+        logger = colony.DummyLogger("test")
+
+        self.assertTrue(hasattr(logger, "trace"))
+        self.assertTrue(callable(logger.trace))
+
+        # should not raise, just a no-op
+        logger.trace("test message")
 
     def test_memory_handler(self):
         memory_handler = colony.MemoryHandler()
