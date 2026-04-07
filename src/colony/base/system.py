@@ -248,31 +248,43 @@ class System(object):
     def trace(self, *args, **kwargs):
         if self.plugin == None:
             raise exceptions.PluginSystemException("no plugin available")
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 4)
         return self.plugin.trace(*args, **kwargs)
 
     def debug(self, *args, **kwargs):
         if self.plugin == None:
             raise exceptions.PluginSystemException("no plugin available")
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 3)
         return self.plugin.debug(*args, **kwargs)
 
     def info(self, *args, **kwargs):
         if self.plugin == None:
             raise exceptions.PluginSystemException("no plugin available")
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 3)
         return self.plugin.info(*args, **kwargs)
 
     def warning(self, *args, **kwargs):
         if self.plugin == None:
             raise exceptions.PluginSystemException("no plugin available")
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 3)
         return self.plugin.warning(*args, **kwargs)
 
     def error(self, *args, **kwargs):
         if self.plugin == None:
             raise exceptions.PluginSystemException("no plugin available")
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 3)
         return self.plugin.error(*args, **kwargs)
 
     def critical(self, *args, **kwargs):
         if self.plugin == None:
             raise exceptions.PluginSystemException("no plugin available")
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 3)
         return self.plugin.critical(*args, **kwargs)
 
 
@@ -1405,6 +1417,8 @@ class Plugin(object):
         # formats the logger message then prints the
         # trace message to the current stream
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 3)
         self.logger.trace(logger_message, *args, **kwargs)
 
     def debug(self, message, *args, **kwargs):
@@ -1418,6 +1432,8 @@ class Plugin(object):
         # formats the logger message then prints the
         # debug message to the current stream
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.debug(logger_message, *args, **kwargs)
 
     def info(self, message, *args, **kwargs):
@@ -1431,6 +1447,8 @@ class Plugin(object):
         # formats the logger message then prints the
         # info message to the current stream
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.info(logger_message, *args, **kwargs)
 
     def warning(self, message, *args, **kwargs):
@@ -1444,6 +1462,8 @@ class Plugin(object):
         # formats the logger message then prints the
         # warning message and logs the current stack trace
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.warning(logger_message, *args, **kwargs)
         self.log_stack_trace(level=logging.INFO)
 
@@ -1458,6 +1478,8 @@ class Plugin(object):
         # formats the logger message then prints the
         # error message and logs the current stack trace
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.error(logger_message, *args, **kwargs)
         self.log_stack_trace(level=logging.WARNING)
 
@@ -1472,6 +1494,8 @@ class Plugin(object):
         # formats the logger message then prints the
         # critical message and logs the current stack trace
         logger_message = self.format_logger_message(message)
+        if sys.version_info >= (3, 8):
+            kwargs.setdefault("stacklevel", 2)
         self.logger.critical(logger_message, *args, **kwargs)
         self.log_stack_trace(level=logging.ERROR)
 
