@@ -93,7 +93,7 @@ _levelValues = {
     "TRACE": TRACE,
     "NOTSET": NOTSET,
 }
-""" Map tha associated the textual representation of the
+""" Map the associated the textual representation of the
 log level with the integer value """
 
 

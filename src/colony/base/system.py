@@ -245,6 +245,11 @@ class System(object):
             raise exceptions.PluginSystemException("no plugin available")
         return self.plugin.manager
 
+    def trace(self, *args, **kwargs):
+        if self.plugin == None:
+            raise exceptions.PluginSystemException("no plugin available")
+        return self.plugin.trace(*args, **kwargs)
+
     def debug(self, *args, **kwargs):
         if self.plugin == None:
             raise exceptions.PluginSystemException("no plugin available")
@@ -1388,6 +1393,19 @@ class Plugin(object):
             # with the requested log level (as specified)
             formatted_traceback_line_stripped = formatted_traceback_line.rstrip()
             self.logger.log(level, formatted_traceback_line_stripped)
+
+    def trace(self, message, *args, **kwargs):
+        """
+        Adds the given trace message to the logger.
+
+        :type message: String
+        :param message: The trace message to be added to the logger.
+        """
+
+        # formats the logger message then prints the
+        # trace message to the current stream
+        logger_message = self.format_logger_message(message)
+        self.logger.trace(logger_message, *args, **kwargs)
 
     def debug(self, message, *args, **kwargs):
         """
