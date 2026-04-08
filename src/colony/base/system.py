@@ -81,9 +81,9 @@ DEFAULT_LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
 """ The default logging format """
 
 DEFAULT_LOGGING_FORMAT_TRACE = (
-    "%(asctime)s [%(levelname)s] %(pathname)s:%(lineno)d | %(message)s"
+    "%(asctime)s [%(name)s] [%(levelname)s] %(pathname)s:%(lineno)d | %(message)s"
     if sys.version_info >= (3, 8)
-    else "%(asctime)s [%(levelname)s] %(message)s"
+    else "%(asctime)s [%(name)s] [%(levelname)s] %(message)s"
 )
 """ The format to be used when the logging level is set to TRACE,
 includes file path and line number on Python 3.8+ where stacklevel
