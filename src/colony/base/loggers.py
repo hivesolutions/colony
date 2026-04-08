@@ -413,7 +413,7 @@ def patch_logging():
 
 
 def _trace(self, message, *args, **kwargs):
-    if self.isEnabledFor(TRACE):
+    if not self.isEnabledFor(TRACE):
         return
     if sys.version_info >= (3, 8):
         kwargs.setdefault("stacklevel", 2)
