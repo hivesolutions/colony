@@ -29,6 +29,7 @@ __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
 import os
+import sys
 import time
 import socket
 import logging
@@ -413,4 +414,7 @@ def patch_logging():
 
 def _trace(self, message, *args, **kwargs):
     if self.isEnabledFor(TRACE):
-        self._log(TRACE, message, args, **kwargs)
+        return
+    if sys.version_info >= (3, 8):
+        kwargs.setdefault("stacklevel", 2)
+    self._log(TRACE, message, args, **kwargs)
