@@ -44,6 +44,7 @@ To actually do something useful, look into [How to Establish your Colony in 3 Ea
 | --------------------------- | ------ | ------------- | -------------------------------------------------------------------------------------------------------------------- |
 | **RUN_MODE**                | `str`  | `development` | The mode in which the Colony will be running.                                                                        |
 | **COLONY_LOGGING_LOGSTASH** | `bool` | `False`       | If the [Logstash](https://www.elastic.co/logstash) logging adapter should be enabled (fallback: `LOGGING_LOGSTASH`). |
+| **LOGGING_LOGSTASH**        | `bool` | `False`       | Same as `LOGGING_LOGSTASH`.                                                                                          |
 
 ## Usage
 
