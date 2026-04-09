@@ -13,11 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Added `COLONY_LOGGING_LOGSTASH` config alias with fallback to `LOGGING_LOGSTASH` for Logstash adapter activation
+*
 
 ### Fixed
 
 *
+
+## [1.4.48] - 2026-04-09
+
+### Changed
+
+* Added `COLONY_LOGGING_LOGSTASH` config alias with fallback to `LOGGING_LOGSTASH` for Logstash adapter activation
+* Updated README configuration documentation with new config options
 
 ## [1.4.47] - 2026-04-09
 
