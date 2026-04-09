@@ -40,10 +40,10 @@ To actually do something useful, look into [How to Establish your Colony in 3 Ea
 
 ## Configuration
 
-| Name                 | Type   | Default       | Description                                                                           |
-| -------------------- | ------ | ------------- | ------------------------------------------------------------------------------------- |
-| **RUN_MODE**         | `str`  | `development` | The mode in which the Colony will be running.                                         |
-| **LOGGING_LOGSTASH** | `bool` | `False`       | If the [Logstash](https://www.elastic.co/logstash) logging adapter should be enabled. |
+| Name                        | Type   | Default       | Description                                                                                                          |
+| --------------------------- | ------ | ------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **RUN_MODE**                | `str`  | `development` | The mode in which the Colony will be running.                                                                        |
+| **COLONY_LOGGING_LOGSTASH** | `bool` | `False`       | If the [Logstash](https://www.elastic.co/logstash) logging adapter should be enabled (fallback: `LOGGING_LOGSTASH`). |
 
 ## Usage
 
