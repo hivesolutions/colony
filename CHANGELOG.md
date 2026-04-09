@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* New logging format
+*
 
 ### Fixed
 
 *
+
+## [1.4.47] - 2026-04-09
+
+### Changed
+
+* New logging format
 
 ## [1.4.46] - 2026-04-09
 

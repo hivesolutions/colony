@@ -1,4 +1,5 @@
 {
+    "1.4.47": ["New logging format"],
     "1.4.46": ["Improved TRACE logging with proper stacklevel support and logger name in format"],
     "1.4.45": ["Added TRACE log level and patch_logging() for fine-grained protocol-level debugging"],
     "1.4.44": ["Fixed thread safety race condition in LogstashHandler"],
