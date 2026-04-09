@@ -19,6 +19,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *
 
+## [1.4.46] - 2026-04-09
+
+### Added
+
+* Logger name to TRACE logging format for better log identification
+
+### Changed
+
+* Proper `stacklevel` support in Plugin and System logging methods for accurate file/line reporting on Python 3.8+
+
+### Fixed
+
+* Negation condition in TRACE log level handler that prevented trace messages from being logged
+
 ## [1.4.45] - 2026-04-07
 
 ### Added
