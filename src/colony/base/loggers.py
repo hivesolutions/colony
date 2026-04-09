@@ -398,7 +398,11 @@ class LogstashHandler(logging.Handler):
         except ImportError:
             return None
 
-        if not config.conf("LOGGING_LOGSTASH", False, cast=bool):
+        if not config.conf(
+            "COLONY_LOGGING_LOGSTASH",
+            config.conf("LOGGING_LOGSTASH", False, cast=bool),
+            cast=bool,
+        ):
             return None
 
         return logstash.API()
