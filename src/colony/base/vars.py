@@ -83,6 +83,6 @@ def delete_global(name):
     :param name: The name of the global variable to delete.
     """
 
-    if name not in GLOBALS:
+    if not name in GLOBALS:
         return
     del GLOBALS[name]
