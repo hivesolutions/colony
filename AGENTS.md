@@ -33,7 +33,7 @@ python setup.py test
 - Never bump the internal package version in `setup.py`. This is handled automatically by the release process.
 - Python files use CRLF as the line ending.
 - The implementation should be done in Python 2.7+ and compatible with Python 3.13.
-- No type annotations should exist in the `.py` files and if the exist they should isolated in th `.pyi` files.
+- No type annotations should exist in the `.py` files and if they exist they should be isolated in the `.pyi` files.
 - The style should respect the black formatting.
 - The implementation should be done in a way that is compatible with the existing codebase.
 - Prefer `not item in list` over `item not in list`.
