@@ -9,11 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Options to choose the digits, the trailing zeros, the alignment and the short units of the presented sizes - [#21](https://github.com/hivesolutions/colony/issues/21)
+*
 
 ### Changed
 
 *
+
+### Fixed
+
+*
+
+## [1.4.50] - 2026-11-02
+
+### Added
+
+* Options to choose the digits, the trailing zeros, the alignment and the short units of the presented sizes - [#21](https://github.com/hivesolutions/colony/issues/21)
 
 ### Fixed
 
