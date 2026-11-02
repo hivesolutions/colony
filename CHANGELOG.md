@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-*
+* Options to choose the digits, the trailing zeros, the alignment and the short units of the presented sizes - [#21](https://github.com/hivesolutions/colony/issues/21)
 
 ### Changed
 
@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-*
+* Sizes rounded to three significant digits instead of truncated, eg: 1.71TB instead of 1TB, as netius does - [#21](https://github.com/hivesolutions/colony/issues/21)
 
 ## [1.4.49] - 2026-04-09
 
