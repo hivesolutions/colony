@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Python release candidate removed from the continuous integration pipeline
+*
 
 ### Fixed
 
 *
+
+## [1.4.51] - 2026-11-02
+
+### Changed
+
+* Python release candidate removed from the continuous integration pipeline
 
 ## [1.4.50] - 2026-11-02
 
