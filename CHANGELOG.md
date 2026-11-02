@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-*
+* Jobs and steps of the continuous integration named and laid out as the ones of omni
 
 ### Fixed
 

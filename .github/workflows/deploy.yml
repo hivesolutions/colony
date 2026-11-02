@@ -3,28 +3,46 @@ on:
   push:
     tags:
       - "*"
+
 jobs:
-  build:
-    name: Build
+  deploy:
+    name: Deploy Package
     timeout-minutes: 10
     strategy:
       matrix:
         python-version: [2.7]
     runs-on: ubuntu-latest
     container: python:${{ matrix.python-version }}
+
     steps:
-      - uses: actions/checkout@v4
-      - run: python --version
-      - run: pip install -r requirements.txt
-      - run: pip install -r extra.txt
-      - run: |
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Show Python version
+        run: python --version
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r extra.txt
+
+      - name: Check formatting
+        if: matrix.python-version == '3.12'
+        run: |
           pip install black
           black . --check
-        if: matrix.python-version == '3.12'
-      - run: python setup.py test
-      - run: pip install twine wheel
-      - run: python setup.py sdist bdist_wheel
-      - run: python -m twine upload -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD} dist/*
+
+      - name: Run tests
+        run: python setup.py test
+
+      - name: Install build tools
+        run: pip install twine wheel
+
+      - name: Build package
+        run: python setup.py sdist bdist_wheel
+
+      - name: Upload package
+        run: python -m twine upload -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD} dist/*
         env:
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}

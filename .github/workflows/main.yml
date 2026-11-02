@@ -3,6 +3,7 @@ on:
   push:
   schedule:
     - cron: "0 0 * * 0"
+
 jobs:
   build:
     name: Build
@@ -23,20 +24,34 @@ jobs:
         ]
     runs-on: ubuntu-latest
     container: python:${{ matrix.python-version }}
+
     steps:
-      - uses: actions/checkout@v4
-      - run: python --version
-      - run: pip install -r requirements.txt
-      - run: pip install -r extra.txt
-      - run: |
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Show Python version
+        run: python --version
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r extra.txt
+
+      - name: Check formatting
+        if: matrix.python-version == '3.12'
+        run: |
           pip install black
           black . --check
-        if: matrix.python-version == '3.12'
-      - run: |
+
+      - name: Run tests
+        run: |
           pip install pytest
           pytest
-      - run: python setup.py test
+
+      - name: Run legacy tests
         if: ${{ !contains(fromJson('["3.9", "3.10", "3.11", "3.12", "latest"]'), matrix.python-version) }}
+        run: python setup.py test
+
   build-pypy:
     name: Build PyPy
     timeout-minutes: 10
@@ -45,20 +60,36 @@ jobs:
         python-version: [2.7, 3.6, 3.9, "3.10", latest]
     runs-on: ubuntu-latest
     container: pypy:${{ matrix.python-version }}
+
     steps:
-      - uses: actions/checkout@v4
-      - run: pypy --version
-      - run: pip install -r requirements.txt
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Show PyPy version
+        run: pypy --version
+
+      - name: Install dependencies
         if: matrix.python-version != 'latest'
-      - run: pip install --no-compile -r requirements.txt
+        run: pip install -r requirements.txt
+
+      - name: Install dependencies without compiling
         if: matrix.python-version == 'latest'
-      - run: pip install -r extra.txt
-      - run: |
+        run: pip install --no-compile -r requirements.txt
+
+      - name: Install extra dependencies
+        run: pip install -r extra.txt
+
+      - name: Check formatting
+        if: matrix.python-version == '3.12'
+        run: |
           pip install black
           black . --check
-        if: matrix.python-version == '3.12'
-      - run: |
+
+      - name: Run tests
+        run: |
           pip install pytest
           pytest
-      - run: pypy setup.py test
+
+      - name: Run legacy tests
         if: ${{ !contains(fromJson('["3.9", "3.10", "3.11", "3.12", "latest"]'), matrix.python-version) }}
+        run: pypy setup.py test
