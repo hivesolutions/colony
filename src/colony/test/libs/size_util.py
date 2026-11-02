@@ -55,3 +55,63 @@ class SizeTest(colony.ColonyTestCase):
 
         result = colony.size_round_unit(2049, space=True)
         self.assertEqual(result, "2 KB")
+
+        result = colony.size_round_unit(2500)
+        self.assertEqual(result, "2.44KB")
+
+        result = colony.size_round_unit(2500, space=True)
+        self.assertEqual(result, "2.44 KB")
+
+        result = colony.size_round_unit(2048, reduce=False)
+        self.assertEqual(result, "2.00KB")
+
+        result = colony.size_round_unit(2500, reduce=False)
+        self.assertEqual(result, "2.44KB")
+
+        result = colony.size_round_unit(209715200)
+        self.assertEqual(result, "200MB")
+
+        result = colony.size_round_unit(107073781760)
+        self.assertEqual(result, "99.7GB")
+
+        result = colony.size_round_unit(940592644096)
+        self.assertEqual(result, "876GB")
+
+        result = colony.size_round_unit(1883405279232)
+        self.assertEqual(result, "1.71TB")
+
+        result = colony.size_round_unit(1883405279232, places=1)
+        self.assertEqual(result, "2TB")
+
+        result = colony.size_round_unit(2500, simplified=True)
+        self.assertEqual(result, "2.44K")
+
+        result = colony.size_round_unit(2048, justify=True)
+        self.assertEqual(result, "   2KB")
+
+        result = colony.size_round_unit(0)
+        self.assertEqual(result, "0B")
+
+        result = colony.size_round_unit(1)
+        self.assertEqual(result, "1B")
+
+        result = colony.size_round_unit(1023)
+        self.assertEqual(result, "1023B")
+
+        result = colony.size_round_unit(1023.6)
+        self.assertEqual(result, "1KB")
+
+        result = colony.size_round_unit(1048063)
+        self.assertEqual(result, "1023KB")
+
+        result = colony.size_round_unit(1048575)
+        self.assertEqual(result, "1MB")
+
+        result = colony.size_round_unit(1073741823)
+        self.assertEqual(result, "1GB")
+
+        result = colony.size_round_unit(1024**8)
+        self.assertEqual(result, "1YB")
+
+        result = colony.size_round_unit(1024**9)
+        self.assertEqual(result, "1024YB")
