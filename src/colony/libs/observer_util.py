@@ -339,12 +339,27 @@ def kafka_config():
     sasl_plain_password = config.conf("KAFKA_SASL_PASSWORD", None)
     default_topic = config.conf("KAFKA_TOPIC", "colony")
 
+    # retrieves the (optional) SSL settings that allow the broker
+    # to be verified against a custom CA bundle and the client to
+    # authenticate itself using a certificate (mutual TLS), notice
+    # that the hostname check is enabled by default
+    ssl_cafile = config.conf("KAFKA_SSL_CAFILE", None)
+    ssl_certfile = config.conf("KAFKA_SSL_CERTFILE", None)
+    ssl_keyfile = config.conf("KAFKA_SSL_KEYFILE", None)
+    ssl_password = config.conf("KAFKA_SSL_PASSWORD", None)
+    ssl_check_hostname = config.conf("KAFKA_SSL_CHECK_HOSTNAME", True, cast=bool)
+
     _KAFKA_CONFIG = dict(
         kafka_server=kafka_server,
         security_protocol=security_protocol,
         sasl_mechanism=sasl_mechanism,
         sasl_plain_username=sasl_plain_username,
         sasl_plain_password=sasl_plain_password,
+        ssl_cafile=ssl_cafile,
+        ssl_certfile=ssl_certfile,
+        ssl_keyfile=ssl_keyfile,
+        ssl_password=ssl_password,
+        ssl_check_hostname=ssl_check_hostname,
         default_topic=default_topic,
         client_version=kafka.__version__,
     )
@@ -369,6 +384,11 @@ def _kafka_producer():
     sasl_mechanism = _kafka_config["sasl_mechanism"]
     sasl_plain_username = _kafka_config["sasl_plain_username"]
     sasl_plain_password = _kafka_config["sasl_plain_password"]
+    ssl_cafile = _kafka_config.get("ssl_cafile", None)
+    ssl_certfile = _kafka_config.get("ssl_certfile", None)
+    ssl_keyfile = _kafka_config.get("ssl_keyfile", None)
+    ssl_password = _kafka_config.get("ssl_password", None)
+    ssl_check_hostname = _kafka_config.get("ssl_check_hostname", True)
     reconnect_backoff_ms = _kafka_config.get("reconnect_backoff_ms", 150)
     reconnect_backoff_max_ms = _kafka_config.get("reconnect_backoff_max_ms", 120000)
 
@@ -378,6 +398,11 @@ def _kafka_producer():
         sasl_mechanism=sasl_mechanism,
         sasl_plain_username=sasl_plain_username,
         sasl_plain_password=sasl_plain_password,
+        ssl_cafile=ssl_cafile,
+        ssl_certfile=ssl_certfile,
+        ssl_keyfile=ssl_keyfile,
+        ssl_password=ssl_password,
+        ssl_check_hostname=ssl_check_hostname,
         reconnect_backoff_ms=reconnect_backoff_ms,
         reconnect_backoff_max_ms=reconnect_backoff_max_ms,
     )
