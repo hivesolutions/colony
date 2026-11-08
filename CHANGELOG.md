@@ -9,15 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+*
+
+### Changed
+
+*
+
+### Fixed
+
+*
+
+## [1.4.52] - 2026-11-08
+
+### Added
+
 * Support for Kafka TLS with a custom CA and client certificates
 
 ### Changed
 
 * Jobs and steps of the continuous integration named and laid out as the ones of omni
-
-### Fixed
-
-*
 
 ## [1.4.51] - 2026-11-02
 
