@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-*
+* PBKDF2 SHA256 password hashes with a random salt per hash, in the standard format of passlib, side by side with the previous ones
+* Way of checking if a password hash is outdated and should be replaced by a PBKDF2 SHA256 one
 
 ### Changed
 
-*
+* Password hashes compared in constant time
 
 ### Fixed
 
