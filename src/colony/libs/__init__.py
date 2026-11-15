@@ -77,6 +77,7 @@ from .country_util import COUNTRIES, country_get
 from .crypt_util import (
     password_crypt,
     password_match,
+    password_outdated,
     password_strength,
     md5_crypt,
     generate_hash_digest_map,

@@ -28,7 +28,10 @@ __copyright__ = "Copyright (c) 2008-2024 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+import os
 import re
+import hmac
+import base64
 import hashlib
 
 from colony.base import legacy
@@ -38,6 +41,12 @@ HASH_VALUE = "hash"
 
 VALUE_VALUE = "value"
 """ The value value """
+
+ITERATIONS_VALUE = "iterations"
+""" The iterations value """
+
+SALT_VALUE = "salt"
+""" The salt value """
 
 PLAIN_VALUE = "plain"
 """ The plain value """
@@ -51,11 +60,30 @@ SHA1_VALUE = "sha1"
 SHA256_VALUE = "sha256"
 """ The SHA256 value """
 
+PBKDF2_SHA256_VALUE = "pbkdf2_sha256"
+""" The PBKDF2 SHA256 value """
+
 MD5_CRYPT_SEPARATOR = "$"
 """ The MD5 crypt separator """
 
 DEFAULT_MD5_CRYPT_MAGIC = "$1$"
 """ The default MD5 crypt magic value """
+
+PBKDF2_SEPARATOR = "$"
+""" The PBKDF2 separator, used between the parts of
+the hash in the PHC string format """
+
+PBKDF2_SHA256_MAGIC = "$pbkdf2-sha256$"
+""" The PBKDF2 SHA256 magic value, the prefix of the hashes
+in the PHC string format (as used by passlib) """
+
+PBKDF2_SHA256_ITERATIONS = 600000
+""" The default number of iterations of the PBKDF2 SHA256
+hashes, as recommended by OWASP """
+
+PBKDF2_SALT_SIZE = 16
+""" The size (in bytes) of the random salt generated
+for each of the PBKDF2 hashes """
 
 DEFAULT_HASH_SET = (MD5_VALUE, SHA1_VALUE, SHA256_VALUE)
 """ The default hash set """
@@ -65,6 +93,9 @@ INTEGER_TO_ASCII_64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 PASSWORD_VALUE_REGEX_VALUE = r"^\{(?P<hash>\w+)\}(?P<value>.+)$"
 """ The password value regex value """
+
+PBKDF2_SHA256_VALUE_REGEX_VALUE = r"^\$pbkdf2-sha256\$(?P<iterations>\d+)\$(?P<salt>[A-Za-z0-9./]+)\$(?P<value>[A-Za-z0-9./]+)$"
+""" The PBKDF2 SHA256 value regex value """
 
 NUMBER_REGEX_VALUE = r"\d+"
 """ The number regex value """
@@ -81,6 +112,9 @@ SPECIAL_CHARACTER_REGEX_VALUE = r".[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]"
 PASSWORD_VALUE_REGEX = re.compile(PASSWORD_VALUE_REGEX_VALUE)
 """ The password value regex """
 
+PBKDF2_SHA256_VALUE_REGEX = re.compile(PBKDF2_SHA256_VALUE_REGEX_VALUE)
+""" The PBKDF2 SHA256 value regex """
+
 NUMBER_REGEX = re.compile(NUMBER_REGEX_VALUE)
 """ The number regex """
 
@@ -94,11 +128,16 @@ SPECIAL_CHARACTER_REGEX = re.compile(SPECIAL_CHARACTER_REGEX_VALUE)
 """ The special character regex """
 
 
-def password_crypt(password, salt="", hash_method=MD5_VALUE):
+def password_crypt(
+    password, salt="", hash_method=MD5_VALUE, iterations=PBKDF2_SHA256_ITERATIONS
+):
     """
     Encrypts the given password using the provided hash method.
     An optional salt may be provided for extra security.
-    The generated hash is always defined in hexadecimal.
+    The generated hash is always defined in hexadecimal, except
+    for the PBKDF2 SHA256 hash method that generates a hash in
+    the PHC string format with its own random salt (ignoring
+    the provided salt).
 
     :type password: String
     :param password: The password to be encrypted using
@@ -109,6 +148,9 @@ def password_crypt(password, salt="", hash_method=MD5_VALUE):
     :type hash_method: String
     :param hash_method: The name of the hash method to be used
     for encryption.
+    :type iterations: int
+    :param iterations: The number of iterations to be used by
+    the PBKDF2 SHA256 hash method.
     :rtype: String
     :return: The generated (complete) hash hexadecimal string.
     """
@@ -116,6 +158,12 @@ def password_crypt(password, salt="", hash_method=MD5_VALUE):
     # converts the name of the hash method to lower
     # case string
     hash_method_lower = hash_method.lower()
+
+    # in case the hash method is of type PBKDF2 SHA256 the
+    # hash is generated with its own random salt (stored in
+    # the hash), the provided salt is ignored
+    if hash_method_lower == PBKDF2_SHA256_VALUE:
+        return _pbkdf2_sha256_crypt(password, iterations=iterations)
 
     # creates the password (word) from the
     # password an the salt
@@ -156,7 +204,8 @@ def password_match(password_hash, password, salt=""):
     Checks if the given password hash value matched
     the given password using the given (optional) salt.
     The matching process executes the original hash function
-    in order to check for same results.
+    in order to check for same results, the hashes in the
+    PBKDF2 SHA256 (PHC string) format using their own salt.
 
     :type password_hash: String
     :param password_hash: The complete password hash hexadecimal string.
@@ -167,6 +216,12 @@ def password_match(password_hash, password, salt=""):
     :rtype: bool
     :return: The result of the password match checking.
     """
+
+    # in case the password hash is of type PBKDF2 SHA256 (PHC
+    # string format) the match is done with the salt and the
+    # iterations stored in the hash, ignoring the provided salt
+    if password_hash.startswith(PBKDF2_SHA256_MAGIC):
+        return _pbkdf2_sha256_match(password_hash, password)
 
     # tries to match the base password hash
     base_password_match = PASSWORD_VALUE_REGEX.match(password_hash)
@@ -188,7 +243,7 @@ def password_match(password_hash, password, salt=""):
     # in case the base password hash is of type plain
     if base_password_hash == PLAIN_VALUE:
         # checks if both passwords match
-        passwords_match = password_word == base_password_value
+        passwords_match = _compare(password_word, base_password_value)
     # otherwise it must be a general hash function
     else:
         # creates the new hash object from the
@@ -206,10 +261,53 @@ def password_match(password_hash, password, salt=""):
         hash_value = hash.hexdigest()
 
         # checks if both password (hashes) match
-        passwords_match = hash_value == base_password_value
+        passwords_match = _compare(hash_value, base_password_value)
 
     # returns if both password match
     return passwords_match
+
+
+def password_outdated(
+    password_hash, hash_method=PBKDF2_SHA256_VALUE, iterations=PBKDF2_SHA256_ITERATIONS
+):
+    """
+    Checks if the given password hash is outdated for the given
+    hash method, meaning that it should be replaced by a new hash
+    (eg: on the next successful match of the password).
+    Only the PBKDF2 SHA256 hash method is an upgrade target, a
+    hash is outdated when it's not of that type or when it uses
+    less iterations than the given ones, for the other hash methods
+    no hash is ever considered outdated (no downgrade).
+
+    :type password_hash: String
+    :param password_hash: The complete password hash string.
+    :type hash_method: String
+    :param hash_method: The name of the hash method that the
+    password hash should be using.
+    :type iterations: int
+    :param iterations: The minimum number of iterations that a
+    PBKDF2 SHA256 hash should be using.
+    :rtype: bool
+    :return: If the password hash is outdated and should be
+    replaced by a new one.
+    """
+
+    # in case the hash method is not of type PBKDF2 SHA256
+    # no hash is considered outdated, as that's the only
+    # hash method that is an upgrade target
+    if not hash_method.lower() == PBKDF2_SHA256_VALUE:
+        return False
+
+    # tries to match the password hash as a PBKDF2 SHA256
+    # one, in case it fails the hash is outdated (legacy)
+    pbkdf2_match = PBKDF2_SHA256_VALUE_REGEX.match(password_hash)
+    if pbkdf2_match == None:
+        return True
+
+    # retrieves the number of iterations of the hash and
+    # checks if it's less than the expected ones
+    hash_iterations = int(pbkdf2_match.group(ITERATIONS_VALUE))
+    return hash_iterations < iterations
 
 
 def password_strength(password):
@@ -510,3 +608,133 @@ def generate_hash_digest_map(file_path, hash_set=DEFAULT_HASH_SET):
 
     # returns the hash digest map
     return hash_digest_map
+
+
+def _pbkdf2_sha256_crypt(password, salt=None, iterations=PBKDF2_SHA256_ITERATIONS):
+    """
+    Generates the PBKDF2 SHA256 hash of the given password in
+    the PHC string format (as used by passlib), with the given
+    salt or a new random one.
+
+    :type password: String
+    :param password: The password to be hashed.
+    :type salt: String
+    :param salt: The (bytes) salt to be used, a new random
+    one is generated in case none is provided.
+    :type iterations: int
+    :param iterations: The number of iterations to be used.
+    :rtype: String
+    :return: The PBKDF2 SHA256 hash in the PHC string format.
+    """
+
+    # generates a new random salt in case none is provided
+    # (the default behaviour, a salt per hash)
+    if salt == None:
+        salt = os.urandom(PBKDF2_SALT_SIZE)
+
+    # converts the password into a bytes based string and
+    # derives the hash value from it with PBKDF2 (HMAC SHA256)
+    password_word = legacy.bytes(password, "utf-8", force=True)
+    hash_value = hashlib.pbkdf2_hmac("sha256", password_word, salt, iterations)
+
+    # creates the final password hash in the PHC string format
+    # with the iterations, the salt and the hash value
+    password_hash = (
+        PBKDF2_SHA256_MAGIC
+        + str(iterations)
+        + PBKDF2_SEPARATOR
+        + _ab64_encode(salt)
+        + PBKDF2_SEPARATOR
+        + _ab64_encode(hash_value)
+    )
+
+    # returns the password (final) hash value
+    return password_hash
+
+
+def _pbkdf2_sha256_match(password_hash, password):
+    """
+    Checks if the given PBKDF2 SHA256 hash (PHC string format)
+    matches the given password, using the salt and the iterations
+    stored in the hash, a malformed hash never matches.
+
+    :type password_hash: String
+    :param password_hash: The PBKDF2 SHA256 hash in the PHC
+    string format.
+    :type password: String
+    :param password: The base password for checking.
+    :rtype: bool
+    :return: The result of the password match checking.
+    """
+
+    # tries to match the PBKDF2 SHA256 hash, in case
+    # it fails the hash is malformed and never matches
+    pbkdf2_match = PBKDF2_SHA256_VALUE_REGEX.match(password_hash)
+    if pbkdf2_match == None:
+        return False
+
+    # retrieves the iterations, the salt and the value of the
+    # hash, decoding both the salt and the value (adapted base 64)
+    # and deriving the value of the password with them, in case
+    # any of them is invalid the hash never matches
+    try:
+        iterations = int(pbkdf2_match.group(ITERATIONS_VALUE))
+        salt = _ab64_decode(pbkdf2_match.group(SALT_VALUE))
+        base_hash_value = _ab64_decode(pbkdf2_match.group(VALUE_VALUE))
+        password_word = legacy.bytes(password, "utf-8", force=True)
+        hash_value = hashlib.pbkdf2_hmac("sha256", password_word, salt, iterations)
+    except (TypeError, ValueError, OverflowError):
+        return False
+
+    # checks if both password (hashes) match
+    return _compare(hash_value, base_hash_value)
+
+
+def _ab64_encode(value):
+    """
+    Encodes the given (bytes) value in the adapted base 64
+    of passlib, the standard alphabet with dots instead of
+    the plus signs and without the padding.
+
+    :type value: String
+    :param value: The (bytes) value to be encoded.
+    :rtype: String
+    :return: The value encoded in adapted base 64.
+    """
+
+    value_base64 = legacy.str(base64.b64encode(value))
+    return value_base64.replace("+", ".").rstrip("=")
+
+
+def _ab64_decode(value):
+    """
+    Decodes the given adapted base 64 value (as encoded by
+    passlib) into its (bytes) value.
+
+    :type value: String
+    :param value: The value encoded in adapted base 64.
+    :rtype: String
+    :return: The decoded (bytes) value.
+    """
+
+    value_base64 = value.replace(".", "+")
+    value_base64 += "=" * (-len(value_base64) % 4)
+    return base64.b64decode(legacy.bytes(value_base64))
+
+
+def _compare(first, second):
+    """
+    Compares the two given (string) values in constant time,
+    converting them into bytes as required by the comparison.
+
+    :type first: String
+    :param first: The first value to be compared.
+    :type second: String
+    :param second: The second value to be compared.
+    :rtype: bool
+    :return: If both values are equal.
+    """
+
+    first = legacy.bytes(first, "utf-8", force=True)
+    second = legacy.bytes(second, "utf-8", force=True)
+    return hmac.compare_digest(first, second)
